@@ -1,21 +1,4 @@
+import type { Monster } from "../data/monsters";
 import { Panel } from "./panel";
-
-export function CalculatorResults() {
-  return (
-    <Panel eyebrow="Analysis" title="Calculator Results" action={<button type="button" className="text-xs font-medium text-[#79e3ae]">Clear results</button>}>
-      <div className="flex flex-1 flex-col p-5">
-        <div className="grid grid-cols-3 gap-2 rounded-lg border border-[#303848] bg-[#0d1017] p-1 text-center text-xs">
-          {["Damage", "Matchups", "Summary"].map((tab, index) => <button key={tab} type="button" className={`rounded-md px-2 py-2 ${index === 0 ? "bg-[#202632] font-semibold text-white" : "text-[#788295]"}`}>{tab}</button>)}
-        </div>
-        <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-          <div className="mb-5 grid size-16 place-items-center rounded-2xl border border-[#303848] bg-[#171b25] text-2xl text-[#79e3ae]">↗</div>
-          <p className="text-base font-semibold text-[#e8ebf0]">Results will appear here</p>
-          <p className="mt-2 max-w-sm text-sm leading-6 text-[#99a2b3]">Choose a monster and configure its build to preview matchup and damage calculations.</p>
-        </div>
-        <div className="grid grid-cols-3 gap-3 border-t border-[#272d3a] pt-4 text-center">
-          {["Power", "Speed", "Coverage"].map((label) => <div key={label}><p className="text-lg font-semibold text-[#697386]">—</p><p className="mt-1 text-[10px] uppercase tracking-wider text-[#697386]">{label}</p></div>)}
-        </div>
-      </div>
-    </Panel>
-  );
-}
+const statCards = ["Health", "Damage", "Skill Damage"];
+export function CalculatorResults({ monster }: { monster: Monster | null }) { return <Panel eyebrow="Analysis" title="Calculator Results" action={monster && <span className="text-xs font-medium text-[#79e3ae]">{monster.name}</span>}><div className="flex flex-1 flex-col p-5">{!monster ? <div className="flex flex-1 flex-col items-center justify-center px-6 text-center"><div className="mb-5 grid size-16 place-items-center rounded-2xl border border-[#303848] bg-[#171b25] text-2xl text-[#79e3ae]">✦</div><p className="text-base font-semibold text-[#e8ebf0]">Select a monster to start</p><p className="mt-2 max-w-sm text-sm leading-6 text-[#99a2b3]">Choose a monster from the browser to see its calculator placeholders and configure a build.</p></div> : <div className="flex flex-1 flex-col gap-4 overflow-auto"><div className="grid gap-3 sm:grid-cols-3">{statCards.map((label) => <div key={label} className="rounded-lg border border-[#303848] bg-[#171b25] p-4"><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">{label}</p><p className="mt-3 text-xl font-semibold text-[#697386]">—</p><p className="mt-1 text-xs text-[#697386]">Placeholder</p></div>)}</div><div className="rounded-lg border border-[#79e3ae]/30 bg-[#173126]/40 p-4"><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#79e3ae]">Total Multiplier</p><p className="mt-2 text-2xl font-semibold text-[#d8dee9]">—</p><p className="mt-1 text-xs text-[#99a2b3]">Formula pending</p></div><div className="rounded-lg border border-dashed border-[#303848] bg-[#0d1017]/45 p-4"><h3 className="text-sm font-semibold text-[#e8ebf0]">Formula Breakdown</h3><p className="mt-2 text-sm text-[#788295]">Formula details will appear here.</p></div><div className="flex min-h-36 flex-1 flex-col rounded-lg border border-dashed border-[#303848] bg-[#0d1017]/45 p-4"><h3 className="text-sm font-semibold text-[#e8ebf0]">Growth Graph</h3><div className="mt-4 flex flex-1 items-end gap-2 opacity-40">{[30, 50, 42, 70, 56, 85, 72].map((height) => <span key={height} className="flex-1 rounded-t bg-[#79e3ae]" style={{ height: `${height}%` }} />)}</div></div></div>}</div></Panel>; }
