@@ -1,3 +1,5 @@
+import type { Rank } from "./build";
+
 export type MonsterSkill = {
   id: string;
   name: string;
@@ -8,7 +10,7 @@ export type Monster = {
   name: string;
   element: string;
   island: string;
-  defaultRank: "SS" | "S" | "A" | "B" | "C" | "D" | "E";
+  defaultRank: Rank;
   artworkPath: string;
   evolved: boolean;
   evolutionMultiplier: number;
