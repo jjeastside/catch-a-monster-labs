@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import { monsters, type Monster } from "../data/monsters";
+import { monsters } from "../data/monsters";
+import type { Monster } from "../types/monster";
 import { BuildEditor } from "./build-editor";
 import { CalculatorResults } from "./calculator-results";
 import { MonsterBrowser } from "./monster-browser";
