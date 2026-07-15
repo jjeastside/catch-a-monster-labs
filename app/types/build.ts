@@ -19,20 +19,28 @@ export type Build = {
   };
 };
 
-type BuildMonster = Pick<Build, "monsterId" | "rank" | "evolutionMultiplier">;
+type BuildDefaults = Partial<
+    Pick<Build, "monsterId" | "evolutionMultiplier">
+>;
 
-export function createDefaultBuild(monster: BuildMonster | null = null): Build {
+export function createDefaultBuild(
+    defaults: BuildDefaults | null = null,
+): Build {
   return {
-    monsterId: monster?.monsterId ?? null,
+    monsterId: defaults?.monsterId ?? null,
     level: 1,
-    rank: monster?.rank ?? null,
+    rank: defaults?.monsterId ? "E" : null,
     enhancement: 0,
     geneticPotential: 0,
-    evolutionMultiplier: monster?.evolutionMultiplier ?? 1,
+    evolutionMultiplier: defaults?.evolutionMultiplier ?? 1,
     mutations: [],
     selectedSkillId: null,
     pawId: null,
     ringId: null,
-    accountMultipliers: { indexMania: false, petQuestAchievement: false, pathOfProgress: false },
+    accountMultipliers: {
+      indexMania: false,
+      petQuestAchievement: false,
+      pathOfProgress: false,
+    },
   };
 }
