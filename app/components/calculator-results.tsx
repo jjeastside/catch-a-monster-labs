@@ -67,7 +67,7 @@ function FormulaBreakdown({ stats }: FormulaBreakdownProps) {
             </h3>
 
             <p className="mt-1 text-xs text-[#79e3ae]">
-                Includes level, rank, enhancement, Genetic Potential, and Evolution calculations.
+                Includes level, rank, enhancement, Genetic Potential, Evolution, and Mutation calculations.
             </p>
 
             <div className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
@@ -117,11 +117,51 @@ function FormulaBreakdown({ stats }: FormulaBreakdownProps) {
 
                 <div>
                     <p className="text-[#788295]">
+                        Critical chance
+                    </p>
+
+                    <p className="text-[#d8dee9]">
+                        {formatNumber(stats.critChance)}%
+                    </p>
+                </div>
+
+                <div>
+                    <p className="text-[#788295]">
+                        Critical damage multiplier
+                    </p>
+
+                    <p className="text-[#d8dee9]">
+                        ×{formatNumber(stats.critMultiplier)}
+                    </p>
+                </div>
+
+                <div>
+                    <p className="text-[#788295]">
                         Evolution multiplier
                     </p>
 
                     <p className="text-[#d8dee9]">
                         ×{formatNumber(stats.evolutionMultiplier)}
+                    </p>
+                </div>
+
+                <div>
+                    <p className="text-[#788295]">
+                        Mutation health multiplier
+                    </p>
+
+                    <p className="text-[#d8dee9]">
+                        ×{formatNumber(stats.mutationHealthMultiplier)}
+                    </p>
+                </div>
+
+                <div>
+                    <p className="text-[#788295]">
+                        Mutation damage multiplier
+                    </p>
+
+                    <p className="text-[#d8dee9]">
+                        ×{formatNumber(stats.mutationDamageMultiplier)}
                     </p>
                 </div>
 
@@ -151,6 +191,8 @@ function FormulaBreakdown({ stats }: FormulaBreakdownProps) {
                         Health {formatNumber(stats.health)}
                         {" · "}
                         Damage {formatNumber(stats.damage)}
+                        {" · "}
+                        Crit Damage {formatNumber(stats.criticalDamage)}
                     </p>
                 </div>
             </div>
@@ -168,7 +210,7 @@ function GrowthGraphPlaceholder({
     return (
         <section
             className="flex min-h-36 flex-col rounded-lg border border-dashed border-[#303848] bg-[#0d1017]/45 p-4">
-            <h3 className="text-sm font-semibold text-[#e8ebf0]">
+        <h3 className="text-sm font-semibold text-[#e8ebf0]">
                 Growth Graph
             </h3>
 
@@ -302,7 +344,7 @@ export function CalculatorResults({
                             selectedSkillName={selectedSkill?.name}
                         />
 
-                        <div className="grid gap-3 sm:grid-cols-3">
+                        <div className="grid gap-3 sm:grid-cols-5">
                             <StatCard
                                 label="Health"
                                 value={
@@ -317,6 +359,24 @@ export function CalculatorResults({
                                 value={
                                     stats
                                         ? formatNumber(stats.damage)
+                                        : "Data pending"
+                                }
+                            />
+
+                            <StatCard
+                                label="Crit Chance"
+                                value={
+                                    stats
+                                        ? `${formatNumber(stats.critChance)}%`
+                                        : "Data pending"
+                                }
+                            />
+
+                            <StatCard
+                                label="Crit Damage"
+                                value={
+                                    stats
+                                        ? formatNumber(stats.criticalDamage)
                                         : "Data pending"
                                 }
                             />
@@ -340,7 +400,7 @@ export function CalculatorResults({
                                 </p>
 
                                 <p className="mt-1 text-xs text-[#99a2b3]">
-                                    Rank × enhancement × Health GP × evolution
+                                    Rank × enhancement × Health GP × evolution × mutation
                                 </p>
                             </div>
 
@@ -356,7 +416,7 @@ export function CalculatorResults({
                                 </p>
 
                                 <p className="mt-1 text-xs text-[#99a2b3]">
-                                    Rank × enhancement × Damage GP × evolution
+                                    Rank × enhancement × Damage GP × evolution × mutation
                                 </p>
                             </div>
                         </div>

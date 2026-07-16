@@ -16,12 +16,19 @@ export type CalculatedStats = {
     health: number;
     damage: number;
 
+    critChance: number;
+    critMultiplier: number;
+    criticalDamage: number;
+
     rankMultiplier: number;
     enhancementMultiplier: number;
 
     healthGeneticMultiplier: number;
     damageGeneticMultiplier: number;
     evolutionMultiplier: number;
+
+    mutationHealthMultiplier: number;
+    mutationDamageMultiplier: number;
 
     healthTotalMultiplier: number;
     damageTotalMultiplier: number;
@@ -44,6 +51,7 @@ type StatsBuild = Pick<
     | "healthGeneticPotential"
     | "damageGeneticPotential"
     | "evolutionPercent"
+    | "mutations"
 >;
 
 function validateLevel(level: number): void {
@@ -67,33 +75,56 @@ function createCalculatedStats(
     const rankedDamage =
         eRankDamage * multipliers.rank;
 
+    const health =
+        eRankHealth *
+        multipliers.healthTotal;
+
+    const damage =
+        eRankDamage *
+        multipliers.damageTotal;
+
+    const criticalDamage =
+        damage *
+        multipliers.critMultiplier;
+
     return {
-        health:
-            eRankHealth *
-            multipliers.healthTotal,
+        health,
+        damage,
 
-        damage:
-            eRankDamage *
-            multipliers.damageTotal,
+        critChance:
+            multipliers.critChance,
 
-        rankMultiplier: multipliers.rank,
+        critMultiplier:
+            multipliers.critMultiplier,
+
+        criticalDamage,
+
+        rankMultiplier:
+            multipliers.rank,
+
         enhancementMultiplier:
-        multipliers.enhancement,
+            multipliers.enhancement,
 
         healthGeneticMultiplier:
-        multipliers.healthGenetic,
+            multipliers.healthGenetic,
 
         damageGeneticMultiplier:
-        multipliers.damageGenetic,
+            multipliers.damageGenetic,
 
         evolutionMultiplier:
-        multipliers.evolution,
+            multipliers.evolution,
+
+        mutationHealthMultiplier:
+            multipliers.mutationHealth,
+
+        mutationDamageMultiplier:
+            multipliers.mutationDamage,
 
         healthTotalMultiplier:
-        multipliers.healthTotal,
+            multipliers.healthTotal,
 
         damageTotalMultiplier:
-        multipliers.damageTotal,
+            multipliers.damageTotal,
 
         growthValue,
         growthLabel,
@@ -133,7 +164,8 @@ function calculateStandardStats(
     level: number,
     multipliers: StatMultipliers,
 ): CalculatedStats {
-    const growthValue = standardGrowth(level);
+    const growthValue =
+        standardGrowth(level);
 
     const eRankHealth =
         statData.baseHealthELevel1 *

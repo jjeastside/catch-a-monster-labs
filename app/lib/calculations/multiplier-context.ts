@@ -4,6 +4,7 @@ import { getEnhancementMultiplier } from "./enhancements";
 import { getEvolutionMultiplier } from "./evolution";
 import { getGeneticPotentialMultiplier } from "./genetic-potential";
 import { getRankMultiplier } from "./ranks";
+import { calculateMutationEffects } from "./mutations";
 
 export type StatMultipliers = {
     rank: number;
@@ -12,6 +13,12 @@ export type StatMultipliers = {
     healthGenetic: number;
     damageGenetic: number;
     evolution: number;
+
+    mutationHealth: number;
+    mutationDamage: number;
+
+    critChance: number;
+    critMultiplier: number;
 
     healthTotal: number;
     damageTotal: number;
@@ -24,6 +31,7 @@ type MultiplierBuild = Pick<
     | "healthGeneticPotential"
     | "damageGeneticPotential"
     | "evolutionPercent"
+    | "mutations"
 >;
 
 export function createStatMultipliers(
@@ -52,6 +60,9 @@ export function createStatMultipliers(
             build.evolutionPercent,
         );
 
+    const mutationEffects =
+        calculateMutationEffects(build.mutations);
+
     return {
         rank,
         enhancement,
@@ -59,16 +70,30 @@ export function createStatMultipliers(
         damageGenetic,
         evolution,
 
+        mutationHealth:
+            mutationEffects.healthMultiplier,
+
+        mutationDamage:
+            mutationEffects.damageMultiplier,
+
+        critChance:
+            mutationEffects.critChance,
+
+        critMultiplier:
+            mutationEffects.critMultiplier,
+
         healthTotal:
             rank *
             enhancement *
             healthGenetic *
-            evolution,
+            evolution *
+            mutationEffects.healthMultiplier,
 
         damageTotal:
             rank *
             enhancement *
             damageGenetic *
-            evolution,
+            evolution *
+            mutationEffects.damageMultiplier,
     };
 }

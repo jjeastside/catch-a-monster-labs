@@ -23,6 +23,12 @@ export const monsterStats: MonsterStatData[] = [
         baseHealthELevel1: 163.1,
         baseDamageELevel1: 15.24,
     },
+    {
+        monsterId: "flaragflora",
+        growthType: "standard",
+        baseHealthELevel1: 117500,
+        baseDamageELevel1: 15800,
+    },
 ];
 
 export function getMonsterStatData(
