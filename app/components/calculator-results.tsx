@@ -1,5 +1,6 @@
 import { getMonsterStatData } from "../data/monster-stats";
 import { getRankMultiplier } from "../lib/calculations/ranks";
+
 import {
     calculateStats,
     type CalculatedStats,
@@ -8,6 +9,7 @@ import {
 import type { Build } from "../types/build";
 import type { Monster } from "../types/monster";
 
+import { MonsterOverviewCard } from "./monster-overview-card";
 import { Panel } from "./panel";
 
 function formatNumber(value: number): string {
@@ -120,46 +122,6 @@ function GrowthGraphPlaceholder({
     );
 }
 
-type MonsterSummaryProps = {
-    monster: Monster;
-};
-
-function MonsterSummary({ monster }: MonsterSummaryProps) {
-    return (
-        <div className="flex items-center gap-4 rounded-lg border border-[#303848] bg-[#171b25] p-4">
-            <div className="grid size-16 shrink-0 place-items-center overflow-hidden rounded-xl bg-[#202632]">
-                {monster.image ? (
-                    <img
-                        src={monster.image}
-                        alt={monster.name}
-                        className="h-full w-full object-contain"
-                    />
-                ) : (
-                    <span className="text-sm font-black text-[#79e3ae]">
-            {monster.name.slice(0, 2).toUpperCase()}
-          </span>
-                )}
-            </div>
-
-            <div className="min-w-0">
-                <h3 className="truncate text-lg font-semibold text-[#f2f4f8]">
-                    {monster.name}
-                </h3>
-
-                <p className="mt-1 text-sm text-[#99a2b3]">
-                    {monster.element} · {monster.island}
-                </p>
-
-                <p className="mt-1 text-xs text-[#788295]">
-                    {monster.hasEvolution
-                        ? "Evolution available"
-                        : "No evolution available"}
-                </p>
-            </div>
-        </div>
-    );
-}
-
 type ActiveBuildSummaryProps = {
     build: Build;
     selectedSkillName?: string;
@@ -226,11 +188,15 @@ function EmptyCalculatorState() {
 type CalculatorResultsProps = {
     monster: Monster | null;
     build: Build;
+    isFavorite: boolean;
+    onToggleFavorite: () => void;
 };
 
 export function CalculatorResults({
                                       monster,
                                       build,
+                                      isFavorite,
+                                      onToggleFavorite,
                                   }: CalculatorResultsProps) {
     const selectedSkill = monster?.skills.find(
         (skill) => skill.id === build.selectedSkillId,
@@ -270,7 +236,12 @@ export function CalculatorResults({
                     <EmptyCalculatorState />
                 ) : (
                     <div className="flex flex-1 flex-col gap-4 overflow-auto">
-                        <MonsterSummary monster={monster} />
+                        <MonsterOverviewCard
+                            monster={monster}
+                            rank={build.rank}
+                            isFavorite={isFavorite}
+                            onToggleFavorite={onToggleFavorite}
+                        />
 
                         <ActiveBuildSummary
                             build={build}

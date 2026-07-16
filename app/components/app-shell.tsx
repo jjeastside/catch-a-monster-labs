@@ -13,6 +13,7 @@ import { TopNavigation } from "./top-navigation";
 
 export function AppShell() {
   const [build, setBuild] = useState<Build>(() => createDefaultBuild());
+  const [favoriteMonsterIds, setFavoriteMonsterIds] = useState<string[]>([]);
 
   const selectedMonster =
       monsters.find((monster) => monster.id === build.monsterId) ?? null;
@@ -36,6 +37,18 @@ export function AppShell() {
         ),
     );
   }
+
+    function toggleSelectedMonsterFavorite() {
+        if (!selectedMonster) {
+            return;
+        }
+
+        setFavoriteMonsterIds((currentIds) =>
+            currentIds.includes(selectedMonster.id)
+                ? currentIds.filter((id) => id !== selectedMonster.id)
+                : [...currentIds, selectedMonster.id],
+        );
+    }
 
   return (
       <div className="min-h-screen bg-[#090b10] text-[#f2f4f8]">
@@ -61,10 +74,16 @@ export function AppShell() {
               onSelect={selectMonster}
           />
 
-          <CalculatorResults
-              monster={selectedMonster}
-              build={build}
-          />
+            <CalculatorResults
+                monster={selectedMonster}
+                build={build}
+                isFavorite={
+                    selectedMonster
+                        ? favoriteMonsterIds.includes(selectedMonster.id)
+                        : false
+                }
+                onToggleFavorite={toggleSelectedMonsterFavorite}
+            />
 
           <BuildEditor
               monster={selectedMonster}
