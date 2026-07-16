@@ -8,7 +8,7 @@ export type Build = {
   enhancement: number;
   healthGeneticPotential: number;
   damageGeneticPotential: number;
-  evolutionMultiplier: number;
+  evolutionPercent: number;
   mutations: Mutation[];
   selectedSkillId: string | null;
   pawId: string | null;
@@ -21,7 +21,7 @@ export type Build = {
 };
 
 type BuildDefaults = Partial<
-    Pick<Build, "monsterId" | "evolutionMultiplier">
+    Pick<Build, "monsterId" | "evolutionPercent">
 >;
 
 export function createDefaultBuild(
@@ -34,7 +34,7 @@ export function createDefaultBuild(
     enhancement: 0,
     healthGeneticPotential: 0,
     damageGeneticPotential: 0,
-    evolutionMultiplier: defaults?.evolutionMultiplier ?? 1,
+    evolutionPercent: defaults?.evolutionPercent ?? 100,
     mutations: [],
     selectedSkillId: null,
     pawId: null,

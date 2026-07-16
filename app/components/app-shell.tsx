@@ -85,12 +85,12 @@ export function AppShell() {
                 onToggleFavorite={toggleSelectedMonsterFavorite}
             />
 
-          <BuildEditor
-              monster={selectedMonster}
-              build={build}
-              onBuildChange={setBuild}
-              onReset={resetBuild}
-          />
+            <BuildEditor
+                monster={selectedMonster}
+                build={build}
+                onBuildChangeAction={setBuild}
+                onResetAction={resetBuild}
+            />
         </main>
       </div>
   );

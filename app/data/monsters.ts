@@ -15,8 +15,8 @@ export const monsters: Monster[] = [
     hasEvolution: false,
   },
   {
-    id: "leaflet",
-    name: "Leaflet",
+    id: "leafet",
+    name: "Leafet",
     image: "/monster-artwork/leaflet.png",
     element: "Grass",
     island: "Starter Island",
@@ -59,6 +59,16 @@ export const monsters: Monster[] = [
     skills: temporarySkills,
     hasEvolution: true,
   },
+  {
+    id: "flaragflora",
+    name: "Flaragflora",
+    image: "/monster-artwork/flaragflora.png",
+    element: "Fire",
+    island: "Volcano",
+    skills: temporarySkills,
+    hasEvolution: false,
+    isEvolved: true,
+  }
 ];
 
 export const filterLabels = ["Island", "Element", "Rank", "Evolution"];

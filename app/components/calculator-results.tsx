@@ -67,7 +67,7 @@ function FormulaBreakdown({ stats }: FormulaBreakdownProps) {
             </h3>
 
             <p className="mt-1 text-xs text-[#79e3ae]">
-                Includes level, rank, enhancement, and Genetic Potential calculations.
+                Includes level, rank, enhancement, Genetic Potential, and Evolution calculations.
             </p>
 
             <div className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
@@ -112,6 +112,16 @@ function FormulaBreakdown({ stats }: FormulaBreakdownProps) {
 
                     <p className="text-[#d8dee9]">
                         ×{formatNumber(stats.damageGeneticMultiplier)}
+                    </p>
+                </div>
+
+                <div>
+                    <p className="text-[#788295]">
+                        Evolution multiplier
+                    </p>
+
+                    <p className="text-[#d8dee9]">
+                        ×{formatNumber(stats.evolutionMultiplier)}
                     </p>
                 </div>
 
@@ -204,7 +214,7 @@ function ActiveBuildSummary({
             </p>
 
             <p className="mt-1 text-xs text-[#99a2b3]">
-                Evolution ×{build.evolutionMultiplier}
+                Evolution ×{(build.evolutionPercent / 100).toFixed(4)}
                 {" · "}
                 {mutationText}
                 {" · "}
@@ -330,7 +340,7 @@ export function CalculatorResults({
                                 </p>
 
                                 <p className="mt-1 text-xs text-[#99a2b3]">
-                                    Rank × enhancement × Health GP
+                                    Rank × enhancement × Health GP × evolution
                                 </p>
                             </div>
 
@@ -346,7 +356,7 @@ export function CalculatorResults({
                                 </p>
 
                                 <p className="mt-1 text-xs text-[#99a2b3]">
-                                    Rank × enhancement × Damage GP
+                                    Rank × enhancement × Damage GP × evolution
                                 </p>
                             </div>
                         </div>

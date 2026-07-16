@@ -1,14 +1,16 @@
 import type { Build } from "../../types/build";
 import type { MonsterStatData } from "../../types/monster-stats";
 
-import { getEnhancementMultiplier } from "./enhancements";
-import { getGeneticPotentialMultiplier } from "./genetic-potential";
 import {
     dummeeDamageAtLevel,
     dummeeHealthAtLevel,
     standardGrowth,
 } from "./growth";
-import { getRankMultiplier } from "./ranks";
+
+import {
+    createStatMultipliers,
+    type StatMultipliers,
+} from "./multiplier-context";
 
 export type CalculatedStats = {
     health: number;
@@ -19,6 +21,7 @@ export type CalculatedStats = {
 
     healthGeneticMultiplier: number;
     damageGeneticMultiplier: number;
+    evolutionMultiplier: number;
 
     healthTotalMultiplier: number;
     damageTotalMultiplier: number;
@@ -33,6 +36,16 @@ export type CalculatedStats = {
     rankedDamage: number;
 };
 
+type StatsBuild = Pick<
+    Build,
+    | "level"
+    | "rank"
+    | "enhancement"
+    | "healthGeneticPotential"
+    | "damageGeneticPotential"
+    | "evolutionPercent"
+>;
+
 function validateLevel(level: number): void {
     if (!Number.isInteger(level) || level < 1 || level > 100) {
         throw new RangeError(
@@ -41,50 +54,49 @@ function validateLevel(level: number): void {
     }
 }
 
-function calculateDummeeStats(
-    level: number,
-    rankMultiplier: number,
-    enhancementMultiplier: number,
-    healthGeneticMultiplier: number,
-    damageGeneticMultiplier: number,
+function createCalculatedStats(
+    eRankHealth: number,
+    eRankDamage: number,
+    growthValue: number,
+    growthLabel: CalculatedStats["growthLabel"],
+    multipliers: StatMultipliers,
 ): CalculatedStats {
-    const eRankHealth = dummeeHealthAtLevel(level);
-    const eRankDamage = dummeeDamageAtLevel(eRankHealth);
+    const rankedHealth =
+        eRankHealth * multipliers.rank;
 
-    const rankedHealth = eRankHealth * rankMultiplier;
-    const rankedDamage = eRankDamage * rankMultiplier;
-
-    const healthTotalMultiplier =
-        rankMultiplier *
-        enhancementMultiplier *
-        healthGeneticMultiplier;
-
-    const damageTotalMultiplier =
-        rankMultiplier *
-        enhancementMultiplier *
-        damageGeneticMultiplier;
+    const rankedDamage =
+        eRankDamage * multipliers.rank;
 
     return {
         health:
-            rankedHealth *
-            enhancementMultiplier *
-            healthGeneticMultiplier,
+            eRankHealth *
+            multipliers.healthTotal,
 
         damage:
-            rankedDamage *
-            enhancementMultiplier *
-            damageGeneticMultiplier,
+            eRankDamage *
+            multipliers.damageTotal,
 
-        rankMultiplier,
-        enhancementMultiplier,
-        healthGeneticMultiplier,
-        damageGeneticMultiplier,
+        rankMultiplier: multipliers.rank,
+        enhancementMultiplier:
+        multipliers.enhancement,
 
-        healthTotalMultiplier,
-        damageTotalMultiplier,
+        healthGeneticMultiplier:
+        multipliers.healthGenetic,
 
-        growthValue: eRankHealth,
-        growthLabel: "result",
+        damageGeneticMultiplier:
+        multipliers.damageGenetic,
+
+        evolutionMultiplier:
+        multipliers.evolution,
+
+        healthTotalMultiplier:
+        multipliers.healthTotal,
+
+        damageTotalMultiplier:
+        multipliers.damageTotal,
+
+        growthValue,
+        growthLabel,
 
         eRankHealth,
         eRankDamage,
@@ -92,6 +104,25 @@ function calculateDummeeStats(
         rankedHealth,
         rankedDamage,
     };
+}
+
+function calculateDummeeStats(
+    level: number,
+    multipliers: StatMultipliers,
+): CalculatedStats {
+    const eRankHealth =
+        dummeeHealthAtLevel(level);
+
+    const eRankDamage =
+        dummeeDamageAtLevel(eRankHealth);
+
+    return createCalculatedStats(
+        eRankHealth,
+        eRankDamage,
+        eRankHealth,
+        "result",
+        multipliers,
+    );
 }
 
 function calculateStandardStats(
@@ -100,110 +131,54 @@ function calculateStandardStats(
         { growthType: "standard" }
     >,
     level: number,
-    rankMultiplier: number,
-    enhancementMultiplier: number,
-    healthGeneticMultiplier: number,
-    damageGeneticMultiplier: number,
+    multipliers: StatMultipliers,
 ): CalculatedStats {
     const growthValue = standardGrowth(level);
 
     const eRankHealth =
-        statData.baseHealthELevel1 * growthValue;
+        statData.baseHealthELevel1 *
+        growthValue;
 
     const eRankDamage =
-        statData.baseDamageELevel1 * growthValue;
+        statData.baseDamageELevel1 *
+        growthValue;
 
-    const rankedHealth = eRankHealth * rankMultiplier;
-    const rankedDamage = eRankDamage * rankMultiplier;
-
-    const healthTotalMultiplier =
-        rankMultiplier *
-        enhancementMultiplier *
-        healthGeneticMultiplier;
-
-    const damageTotalMultiplier =
-        rankMultiplier *
-        enhancementMultiplier *
-        damageGeneticMultiplier;
-
-    return {
-        health:
-            rankedHealth *
-            enhancementMultiplier *
-            healthGeneticMultiplier,
-
-        damage:
-            rankedDamage *
-            enhancementMultiplier *
-            damageGeneticMultiplier,
-
-        rankMultiplier,
-        enhancementMultiplier,
-        healthGeneticMultiplier,
-        damageGeneticMultiplier,
-
-        healthTotalMultiplier,
-        damageTotalMultiplier,
-
-        growthValue,
-        growthLabel: "multiplier",
-
+    return createCalculatedStats(
         eRankHealth,
         eRankDamage,
-
-        rankedHealth,
-        rankedDamage,
-    };
+        growthValue,
+        "multiplier",
+        multipliers,
+    );
 }
 
 export function calculateStats(
     statData: MonsterStatData | null,
-    build: Pick<
-        Build,
-        | "level"
-        | "rank"
-        | "enhancement"
-        | "healthGeneticPotential"
-        | "damageGeneticPotential"
-    >,
+    build: StatsBuild,
 ): CalculatedStats | null {
     validateLevel(build.level);
 
-    if (!statData || !build.rank) {
+    if (!statData) {
         return null;
     }
 
-    const rankMultiplier = getRankMultiplier(build.rank);
+    const multipliers =
+        createStatMultipliers(build);
 
-    const enhancementMultiplier =
-        getEnhancementMultiplier(build.enhancement);
-
-    const healthGeneticMultiplier =
-        getGeneticPotentialMultiplier(
-            build.healthGeneticPotential,
-        );
-
-    const damageGeneticMultiplier =
-        getGeneticPotentialMultiplier(
-            build.damageGeneticPotential,
-        );
+    if (!multipliers) {
+        return null;
+    }
 
     if (statData.growthType === "dummee") {
         return calculateDummeeStats(
             build.level,
-            rankMultiplier,
-            enhancementMultiplier,
-            healthGeneticMultiplier,
-            damageGeneticMultiplier,
+            multipliers,
         );
     }
 
     return calculateStandardStats(
         statData,
         build.level,
-        rankMultiplier,
-        enhancementMultiplier,
-        healthGeneticMultiplier,
-        damageGeneticMultiplier,
+        multipliers,
     );
 }

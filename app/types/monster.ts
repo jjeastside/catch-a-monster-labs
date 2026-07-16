@@ -18,6 +18,7 @@ export type Monster = {
   // Gameplay
   skills: MonsterSkill[];
   hasEvolution: boolean;
+  isEvolved?: boolean;
 
   // Optional metadata
   obtainMethod?: string;
