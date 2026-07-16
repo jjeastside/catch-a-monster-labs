@@ -6,7 +6,8 @@ export type Build = {
   level: number;
   rank: Rank | null;
   enhancement: number;
-  geneticPotential: number;
+  healthGeneticPotential: number;
+  damageGeneticPotential: number;
   evolutionMultiplier: number;
   mutations: Mutation[];
   selectedSkillId: string | null;
@@ -31,7 +32,8 @@ export function createDefaultBuild(
     level: 1,
     rank: defaults?.monsterId ? "E" : null,
     enhancement: 0,
-    geneticPotential: 0,
+    healthGeneticPotential: 0,
+    damageGeneticPotential: 0,
     evolutionMultiplier: defaults?.evolutionMultiplier ?? 1,
     mutations: [],
     selectedSkillId: null,

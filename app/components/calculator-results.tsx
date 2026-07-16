@@ -1,5 +1,4 @@
 import { getMonsterStatData } from "../data/monster-stats";
-import { getRankMultiplier } from "../lib/calculations/ranks";
 
 import {
     calculateStats,
@@ -68,7 +67,7 @@ function FormulaBreakdown({ stats }: FormulaBreakdownProps) {
             </h3>
 
             <p className="mt-1 text-xs text-[#79e3ae]">
-                Currently includes level and rank calculations.
+                Includes level, rank, enhancement, and Genetic Potential calculations.
             </p>
 
             <div className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
@@ -83,6 +82,56 @@ function FormulaBreakdown({ stats }: FormulaBreakdownProps) {
                     <p className="text-[#788295]">Rank multiplier</p>
                     <p className="text-[#d8dee9]">
                         ×{formatNumber(stats.rankMultiplier)}
+                    </p>
+                </div>
+
+                <div>
+                    <p className="text-[#788295]">
+                        Enhancement multiplier
+                    </p>
+
+                    <p className="text-[#d8dee9]">
+                        ×{formatNumber(stats.enhancementMultiplier)}
+                    </p>
+                </div>
+
+                <div>
+                    <p className="text-[#788295]">
+                        Health GP multiplier
+                    </p>
+
+                    <p className="text-[#d8dee9]">
+                        ×{formatNumber(stats.healthGeneticMultiplier)}
+                    </p>
+                </div>
+
+                <div>
+                    <p className="text-[#788295]">
+                        Damage GP multiplier
+                    </p>
+
+                    <p className="text-[#d8dee9]">
+                        ×{formatNumber(stats.damageGeneticMultiplier)}
+                    </p>
+                </div>
+
+                <div>
+                    <p className="text-[#788295]">
+                        Health combined multiplier
+                    </p>
+
+                    <p className="text-[#d8dee9]">
+                        ×{formatNumber(stats.healthTotalMultiplier)}
+                    </p>
+                </div>
+
+                <div>
+                    <p className="text-[#788295]">
+                        Damage combined multiplier
+                    </p>
+
+                    <p className="text-[#d8dee9]">
+                        ×{formatNumber(stats.damageTotalMultiplier)}
                     </p>
                 </div>
 
@@ -107,7 +156,8 @@ function GrowthGraphPlaceholder({
                                     build,
                                 }: GrowthGraphPlaceholderProps) {
     return (
-        <section className="flex min-h-36 flex-col rounded-lg border border-dashed border-[#303848] bg-[#0d1017]/45 p-4">
+        <section
+            className="flex min-h-36 flex-col rounded-lg border border-dashed border-[#303848] bg-[#0d1017]/45 p-4">
             <h3 className="text-sm font-semibold text-[#e8ebf0]">
                 Growth Graph
             </h3>
@@ -148,7 +198,9 @@ function ActiveBuildSummary({
                 {" · "}
                 +{build.enhancement}
                 {" · "}
-                Genetic Potential {build.geneticPotential}%
+                Health GP {build.healthGeneticPotential}%
+                {" · "}
+                Damage GP {build.damageGeneticPotential}%
             </p>
 
             <p className="mt-1 text-xs text-[#99a2b3]">
@@ -208,16 +260,8 @@ export function CalculatorResults({
 
     const stats =
         build.rank && monsterStatData
-            ? calculateStats(
-                monsterStatData,
-                build.level,
-                build.rank,
-            )
+            ? calculateStats(monsterStatData, build)
             : null;
-
-    const rankMultiplier = build.rank
-        ? getRankMultiplier(build.rank)
-        : null;
 
     return (
         <Panel
@@ -273,25 +317,43 @@ export function CalculatorResults({
                             />
                         </div>
 
-                        <div className="rounded-lg border border-[#79e3ae]/30 bg-[#173126]/40 p-4">
-                            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#79e3ae]">
-                                Total Multiplier
-                            </p>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                            <div className="rounded-lg border border-[#79e3ae]/30 bg-[#173126]/40 p-4">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#79e3ae]">
+                                    Health Multiplier
+                                </p>
 
-                            <p className="mt-2 text-2xl font-semibold text-[#d8dee9]">
-                                {rankMultiplier !== null
-                                    ? `×${formatNumber(rankMultiplier)}`
-                                    : "—"}
-                            </p>
+                                <p className="mt-2 text-2xl font-semibold text-[#d8dee9]">
+                                    {stats
+                                        ? `×${formatNumber(stats.healthTotalMultiplier)}`
+                                        : "—"}
+                                </p>
 
-                            <p className="mt-1 text-xs text-[#99a2b3]">
-                                Rank multiplier only
-                            </p>
+                                <p className="mt-1 text-xs text-[#99a2b3]">
+                                    Rank × enhancement × Health GP
+                                </p>
+                            </div>
+
+                            <div className="rounded-lg border border-[#79e3ae]/30 bg-[#173126]/40 p-4">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#79e3ae]">
+                                    Damage Multiplier
+                                </p>
+
+                                <p className="mt-2 text-2xl font-semibold text-[#d8dee9]">
+                                    {stats
+                                        ? `×${formatNumber(stats.damageTotalMultiplier)}`
+                                        : "—"}
+                                </p>
+
+                                <p className="mt-1 text-xs text-[#99a2b3]">
+                                    Rank × enhancement × Damage GP
+                                </p>
+                            </div>
                         </div>
 
-                        <FormulaBreakdown stats={stats} />
+                        <FormulaBreakdown stats={stats}/>
 
-                        <GrowthGraphPlaceholder build={build} />
+                        <GrowthGraphPlaceholder build={build}/>
                     </div>
                 )}
             </div>
