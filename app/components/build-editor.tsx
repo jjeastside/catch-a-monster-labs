@@ -16,11 +16,47 @@ import type { Monster } from "../types/monster";
 import { CollapsibleSection } from "./collapsible-section";
 import { Panel } from "./panel";
 
-const mutations: { id: Mutation; label: string }[] = [
-    { id: "huge", label: "Huge" },
-    { id: "shiny", label: "Shiny" },
-    { id: "bloodlit", label: "Bloodlit" },
-    { id: "fairy", label: "Fairy" },
+const mutations: {
+    id: Mutation;
+    label: string;
+    icon: string;
+    effects: string[];
+}[] = [
+    {
+        id: "huge",
+        label: "Huge",
+        icon: "/icons/Huge.png",
+        effects: [
+            "+40% Health",
+            "+40% Damage",
+        ],
+    },
+    {
+        id: "shiny",
+        label: "Shiny",
+        icon: "/icons/Shiny.png",
+        effects: [
+            "+10% Damage",
+            "+30% Crit Chance",
+        ],
+    },
+    {
+        id: "bloodlit",
+        label: "Bloodlit",
+        icon: "/icons/Bloodlit.png",
+        effects: [
+            "+10% Crit Chance",
+            "+100% Crit Damage",
+        ],
+    },
+    {
+        id: "fairy",
+        label: "Fairy",
+        icon: "/icons/Fairy.png",
+        effects: [
+            "Effects coming soon",
+        ],
+    },
 ];
 
 const ranks: Rank[] = ["SS", "S", "A", "B", "C", "D", "E"];
@@ -447,7 +483,7 @@ export function BuildEditor({
                 </CollapsibleSection>
 
                 <CollapsibleSection title="Mutations">
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="flex flex-wrap gap-2">
                         {mutations.map((mutation) => {
                             const isSelected =
                                 build.mutations.includes(mutation.id);
@@ -460,16 +496,76 @@ export function BuildEditor({
                                         toggleMutation(mutation.id)
                                     }
                                     aria-pressed={isSelected}
-                                    className={`rounded-md border px-3 py-2 text-sm ${
+                                    title={mutation.label}
+                                    className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-md border transition ${
                                         isSelected
-                                            ? "border-[#79e3ae] bg-[#173126] text-white"
-                                            : "border-[#303848] bg-[#171b25] text-[#99a2b3]"
+                                            ? "border-[#79e3ae] bg-[#173126] shadow-[0_0_12px_rgba(121,227,174,0.18)]"
+                                            : "border-[#303848] bg-[#171b25] hover:border-[#4a5568] hover:bg-[#1b202b]"
                                     }`}
                                 >
-                                    {mutation.label}
+                                    <img
+                                        src={mutation.icon}
+                                        alt={mutation.label}
+                                        className="size-11 object-contain"
+                                    />
+
+                                    {isSelected && (
+                                        <span
+                                            className="absolute right-1 top-1 flex size-4 items-center justify-center rounded-full bg-[#79e3ae] text-[9px] font-black text-[#0b1510]">
+                            ✓
+                        </span>
+                                    )}
                                 </button>
                             );
                         })}
+                    </div>
+
+                    <div className="mt-4 border-t border-[#252c38] pt-3">
+                        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
+                            Selected Effects
+                        </p>
+
+                        {build.mutations.length === 0 ? (
+                            <p className="text-xs text-[#788295]">
+                                No mutations selected.
+                            </p>
+                        ) : (
+                            <div className="space-y-2">
+                                {mutations
+                                    .filter((mutation) =>
+                                        build.mutations.includes(mutation.id),
+                                    )
+                                    .map((mutation) => (
+                                        <div
+                                            key={mutation.id}
+                                            className="flex items-start gap-2 rounded-md border border-[#252c38] bg-[#11141c] p-2"
+                                        >
+                                            <img
+                                                src={mutation.icon}
+                                                alt=""
+                                                className="size-8 shrink-0 object-contain"
+                                            />
+
+                                            <div className="min-w-0">
+                                                <p className="text-xs font-semibold text-[#e8ebf0]">
+                                                    {mutation.label}
+                                                </p>
+
+                                                <div className="mt-1 space-y-0.5">
+                                                    {mutation.effects.map((effect) => (
+                                                        <p
+                                                            key={effect}
+                                                            className="text-[10px] leading-4 text-[#788295]"
+                                                        >
+                                                            • {effect}
+                                                        </p>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                            </div>
+                        )}
                     </div>
                 </CollapsibleSection>
 

@@ -9,9 +9,9 @@
 import { describe, expect, it } from "vitest";
 
 
-import { monsters } from "../../data/monsters";
+import { monster-artwork } from "../../data/monster-artwork";
 import { calculateStats } from "./stats";
-const monster = (id: string) => monsters.find((entry) => entry.id === id)!;
+const monster = (id: string) => monster-artwork.find((entry) => entry.id === id)!;
 const expectApprox = (actual: number | undefined, expected: number) => expect(Math.abs((actual ?? Number.NaN) - expected)).toBeLessThan(0.1);
 describe("verified stat calculations", () => {
   it("calculates Leaflet E-rank values", () => { expectApprox(calculateStats(monster("leaflet"), 1, "E")?.health, 43.5); expectApprox(calculateStats(monster("leaflet"), 1, "E")?.damage, 7.25); expectApprox(calculateStats(monster("leaflet"), 10, "E")?.health, 94.45); expectApprox(calculateStats(monster("leaflet"), 10, "E")?.damage, 15.74); expectApprox(calculateStats(monster("leaflet"), 20, "E")?.health, 170.65); expectApprox(calculateStats(monster("leaflet"), 20, "E")?.damage, 28.44); });
