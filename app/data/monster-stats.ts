@@ -4,6 +4,8 @@ export const monsterStats: MonsterStatData[] = [
     {
         monsterId: "dummee",
         growthType: "dummee",
+        baseHealthELevel1: 53,
+        baseDamageELevel1: 8,
     },
     {
         monsterId: "Leafet",

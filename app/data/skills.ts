@@ -7,9 +7,9 @@ export const SKILLS = {
         id: "air-bullet",
         name: "Air Bullet",
         element: "Common",
-        damageInstances: [{ multiplier: 1.1875, hits: 1 }],
+        damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1.1875,
+        listedTotalMultiplier: 1.2,
     },
 
     "bale-breath": {

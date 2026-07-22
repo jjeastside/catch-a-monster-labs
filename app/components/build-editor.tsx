@@ -409,6 +409,7 @@ export function BuildEditor({
                                 id: rank,
                                 label: rank,
                             }))}
+                            emptyLabel=""
                         />
 
                         <SelectField
@@ -459,7 +460,7 @@ export function BuildEditor({
                                     )
                                 }
                                 options={geneticPotentialOptions}
-                                emptyLabel="None"
+                                emptyLabel=""
                             />
 
                             <SelectField
@@ -474,7 +475,7 @@ export function BuildEditor({
                                     )
                                 }
                                 options={geneticPotentialOptions}
-                                emptyLabel="None"
+                                emptyLabel=""
                             />
                         </div>
                     </div>

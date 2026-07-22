@@ -35,7 +35,7 @@ export const monsters: Monster[] = [
     element: "Grass",
     island: "Starter Island",
     skillIds: ["seed-grenade"],
-    hasEvolution: true,
+    hasEvolution: false,
   },
   {
     id: "flamix",
@@ -44,7 +44,7 @@ export const monsters: Monster[] = [
     element: "Fire",
     island: "Starter Island",
     skillIds: ["fireball", "air-bullet"],
-    hasEvolution: true,
+    hasEvolution: false,
   },
   {
     id: "puffu",
@@ -53,7 +53,7 @@ export const monsters: Monster[] = [
     element: "Common",
     island: "Starter Island",
     skillIds: ["water-jet", "wind-disc"],
-    hasEvolution: true,
+    hasEvolution: false,
   },
   {
     id: "flaragflora",

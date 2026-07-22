@@ -160,14 +160,25 @@ function createCalculatedStats(
 }
 
 function calculateDummeeStats(
+    statData: Extract<
+        MonsterStatData,
+        { growthType: "dummee" }
+    >,
     level: number,
     multipliers: StatMultipliers,
 ): CalculatedStats {
     const eRankHealth =
-        dummeeHealthAtLevel(level);
+        dummeeHealthAtLevel(
+            level,
+            statData.baseHealthELevel1,
+        );
 
     const eRankDamage =
-        dummeeDamageAtLevel(eRankHealth);
+        dummeeDamageAtLevel(
+            eRankHealth,
+            statData.baseHealthELevel1,
+            statData.baseDamageELevel1,
+        );
 
     return createCalculatedStats(
         eRankHealth,
@@ -225,6 +236,7 @@ export function calculateStats(
 
     if (statData.growthType === "dummee") {
         return calculateDummeeStats(
+            statData,
             build.level,
             multipliers,
         );
