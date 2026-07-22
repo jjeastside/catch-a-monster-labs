@@ -9,7 +9,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1.2,
     },
 
     "bale-breath": {
@@ -18,7 +17,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 0.4, hits: 4 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.6,
     },
 
     barrier: {
@@ -27,7 +25,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [],
         cooldown: 6,
-        listedTotalMultiplier: 0,
         notes: "Non-damaging barrier skill.",
     },
 
@@ -37,7 +34,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 1.5, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.5,
     },
 
     "bloodthirsty-aura": {
@@ -46,7 +42,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [],
         cooldown: 8,
-        listedTotalMultiplier: 0,
         notes: "Non-damaging aura skill.",
     },
 
@@ -56,7 +51,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "charming-wind": {
@@ -65,7 +59,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "claw-attack": {
@@ -74,7 +67,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.6, hits: 2 }],
         cooldown: 3,
-        listedTotalMultiplier: 1.2,
     },
 
     "crimson-burst": {
@@ -83,7 +75,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.2, hits: 11 }],
         cooldown: 8,
-        listedTotalMultiplier: 2.2,
     },
 
     "dark-singularity": {
@@ -92,9 +83,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.2, hits: 2 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
-        notes:
-            "Data conflict: 1.2 × 2 calculates to 2.4, but the supplied total is 1.2.",
     },
 
     dash: {
@@ -103,7 +91,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.2,
     },
 
     "deadly-sonic-wave": {
@@ -112,7 +99,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.2, hits: 2 }],
         cooldown: 8,
-        listedTotalMultiplier: 2.4,
     },
 
     "demonic-lullaby": {
@@ -121,7 +107,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.2, hits: 5 }],
         cooldown: 6,
-        listedTotalMultiplier: 1,
     },
 
     "divine-energy-blast": {
@@ -130,7 +115,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 3.5, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 3.5,
     },
 
     "dragons-breath": {
@@ -139,7 +123,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 0.4, hits: 3 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "dragons-breath-ghost": {
@@ -148,7 +131,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 0.4, hits: 3 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "earth-smash": {
@@ -157,7 +139,6 @@ export const SKILLS = {
         element: "Ground",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.2,
     },
 
     "egg-blast": {
@@ -166,7 +147,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.5, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1.5,
     },
 
     "electric-beam": {
@@ -175,7 +155,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.25, hits: 5 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.25,
     },
 
     "electro-nova": {
@@ -184,7 +163,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "emergency-thorn-shield": {
@@ -193,7 +171,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [],
         cooldown: 0,
-        listedTotalMultiplier: 0,
         notes: "Non-damaging emergency shield.",
     },
 
@@ -203,7 +180,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.3, hits: 4 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "ex-candy-bomb": {
@@ -212,7 +188,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.3, hits: 4 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "ex-fireball": {
@@ -221,7 +196,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 0.3, hits: 4 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "ex-gift-delivery": {
@@ -230,7 +204,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.7, hits: 3 }],
         cooldown: 8,
-        listedTotalMultiplier: 2.1,
     },
 
     "ex-ice-surge": {
@@ -239,7 +212,6 @@ export const SKILLS = {
         element: "Ice",
         damageInstances: [{ multiplier: 0.2, hits: 5 }],
         cooldown: 6,
-        listedTotalMultiplier: 1,
     },
 
     "ex-iceball": {
@@ -248,7 +220,6 @@ export const SKILLS = {
         element: "Ice",
         damageInstances: [{ multiplier: 0.3, hits: 4 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "ex-rock-toss": {
@@ -257,7 +228,6 @@ export const SKILLS = {
         element: "Ground",
         damageInstances: [{ multiplier: 0.5, hits: 4 }],
         cooldown: 6,
-        listedTotalMultiplier: 2,
     },
 
     "ex-seed-grenade": {
@@ -266,7 +236,6 @@ export const SKILLS = {
         element: "Grass",
         damageInstances: [{ multiplier: 1.2, hits: 3 }],
         cooldown: 3,
-        listedTotalMultiplier: 3.6,
     },
 
     "ex-water-jet": {
@@ -275,7 +244,6 @@ export const SKILLS = {
         element: "Water",
         damageInstances: [{ multiplier: 0.4, hits: 4 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.6,
     },
 
     "ex-water-shuriken": {
@@ -284,7 +252,6 @@ export const SKILLS = {
         element: "Water",
         damageInstances: [{ multiplier: 0.3, hits: 4 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "fear-taunt": {
@@ -293,7 +260,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.5, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 0.5,
     },
 
     "fire-dash": {
@@ -302,7 +268,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.2,
     },
 
     "fire-dragon-flame-blast": {
@@ -311,7 +276,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 2.5, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 2.5,
     },
 
     "fire-tornado": {
@@ -320,7 +284,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 1.8, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.8,
     },
 
     fireball: {
@@ -329,7 +292,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1.2,
     },
 
     "fireball-ghost": {
@@ -338,7 +300,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1.2,
     },
 
     "firecracker-pop": {
@@ -347,7 +308,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 0.3, hits: 4 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "flame-breath": {
@@ -356,7 +316,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 0.4, hits: 5 }],
         cooldown: 8,
-        listedTotalMultiplier: 2,
     },
 
     "flame-jet": {
@@ -365,7 +324,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 0.4, hits: 5 }],
         cooldown: 8,
-        listedTotalMultiplier: 2,
     },
 
     "frost-beam": {
@@ -374,7 +332,6 @@ export const SKILLS = {
         element: "Ice",
         damageInstances: [{ multiplier: 0.4, hits: 5 }],
         cooldown: 8,
-        listedTotalMultiplier: 2,
     },
 
     "frost-breath": {
@@ -383,7 +340,6 @@ export const SKILLS = {
         element: "Ice",
         damageInstances: [{ multiplier: 0.4, hits: 5 }],
         cooldown: 8,
-        listedTotalMultiplier: 2,
     },
 
     "frosty-dart": {
@@ -392,7 +348,6 @@ export const SKILLS = {
         element: "Ice",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1.2,
     },
 
     "frozen-nova": {
@@ -401,7 +356,6 @@ export const SKILLS = {
         element: "Ice",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.2,
     },
 
     galecut: {
@@ -410,7 +364,6 @@ export const SKILLS = {
         element: "Grass",
         damageInstances: [{ multiplier: 1, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1,
     },
 
     "galemoon-blade": {
@@ -419,7 +372,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.4, hits: 4 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.6,
     },
 
     "ghost-fireball": {
@@ -428,7 +380,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 0.3, hits: 4 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "ghost-impact": {
@@ -437,9 +388,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.2, hits: 4 }],
         cooldown: 6,
-        listedTotalMultiplier: 0.9,
-        notes:
-            "Data conflict: 0.2 × 4 calculates to 0.8, but the supplied total is 0.9.",
     },
 
     "gift-delivery": {
@@ -448,7 +396,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1,
     },
 
     "glacial-smash": {
@@ -457,7 +404,6 @@ export const SKILLS = {
         element: "Ice",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.2,
     },
 
     "glacial-wall": {
@@ -466,7 +412,6 @@ export const SKILLS = {
         element: "Ice",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.2,
     },
 
     "grass-tornado": {
@@ -475,7 +420,6 @@ export const SKILLS = {
         element: "Grass",
         damageInstances: [{ multiplier: 1.8, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.8,
     },
 
     "gravel-scatter-shot": {
@@ -484,7 +428,6 @@ export const SKILLS = {
         element: "Ground",
         damageInstances: [{ multiplier: 1, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1,
     },
 
     "gravel-whirlwind": {
@@ -493,7 +436,6 @@ export const SKILLS = {
         element: "Ground",
         damageInstances: [{ multiplier: 1, hits: 2 }],
         cooldown: 8,
-        listedTotalMultiplier: 2,
     },
 
     "healing-pulse": {
@@ -502,7 +444,6 @@ export const SKILLS = {
         element: "Grass",
         damageInstances: [],
         cooldown: 6,
-        listedTotalMultiplier: 0,
         notes: "Healing skill. Healing calculation will be handled separately.",
     },
 
@@ -512,7 +453,6 @@ export const SKILLS = {
         element: "Water",
         damageInstances: [{ multiplier: 1, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1,
         notes: "May include healing behavior in addition to damage.",
     },
 
@@ -522,7 +462,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [],
         cooldown: 8,
-        listedTotalMultiplier: 0,
         notes: "Non-damaging aura.",
     },
 
@@ -532,7 +471,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [],
         cooldown: 8,
-        listedTotalMultiplier: 0,
         notes: "Non-damaging aura.",
     },
 
@@ -542,7 +480,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [],
         cooldown: 8,
-        listedTotalMultiplier: 0,
         notes: "Non-damaging aura.",
     },
 
@@ -552,7 +489,6 @@ export const SKILLS = {
         element: "Water",
         damageInstances: [{ multiplier: 0.5, hits: 4 }],
         cooldown: 8,
-        listedTotalMultiplier: 2,
         notes: "Enemy has 15% increased damage for 10 seconds"
     },
 
@@ -562,7 +498,6 @@ export const SKILLS = {
         element: "Ice",
         damageInstances: [{ multiplier: 1.5, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.5,
     },
 
     "ice-surge": {
@@ -571,7 +506,6 @@ export const SKILLS = {
         element: "Ice",
         damageInstances: [{ multiplier: 0.2, hits: 5 }],
         cooldown: 6,
-        listedTotalMultiplier: 1,
     },
 
     iceball: {
@@ -580,7 +514,6 @@ export const SKILLS = {
         element: "Ice",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1.2,
     },
 
     "icicle-prison": {
@@ -589,7 +522,6 @@ export const SKILLS = {
         element: "Ice",
         damageInstances: [{ multiplier: 2, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 2,
     },
 
     "inferno-blast": {
@@ -598,7 +530,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.5, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.5,
     },
 
     "inferno-maelstrom": {
@@ -607,7 +538,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "inferno-smash": {
@@ -616,7 +546,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.2,
     },
 
     "ion-blast": {
@@ -625,7 +554,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1,
     },
 
     "jokers-trick": {
@@ -634,7 +562,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1.2,
     },
 
     "leaf-blade": {
@@ -643,7 +570,6 @@ export const SKILLS = {
         element: "Grass",
         damageInstances: [{ multiplier: 1, hits: 2 }],
         cooldown: 3,
-        listedTotalMultiplier: 2,
     },
 
     "leaf-surge": {
@@ -652,7 +578,6 @@ export const SKILLS = {
         element: "Grass",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "lightning-storm-blue": {
@@ -661,7 +586,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.28, hits: 11 }],
         cooldown: 8,
-        listedTotalMultiplier: 3.08,
     },
 
     "lightning-storm-purple": {
@@ -670,7 +594,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.2, hits: 11 }],
         cooldown: 8,
-        listedTotalMultiplier: 2.2,
     },
 
     "lightning-thrust": {
@@ -679,7 +602,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.5, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.5,
     },
 
     "lunar-heal": {
@@ -688,7 +610,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [],
         cooldown: 8,
-        listedTotalMultiplier: 0,
         notes: "Healing skill. Healing calculation will be handled separately.",
     },
 
@@ -698,7 +619,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.75, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 0.75,
     },
 
     "mighty-rock-toss": {
@@ -712,7 +632,6 @@ export const SKILLS = {
             { multiplier: 2, hits: 1 },
         ],
         cooldown: 6,
-        listedTotalMultiplier: 5,
         notes: "Damage increases per hit",
     },
 
@@ -725,9 +644,6 @@ export const SKILLS = {
             { multiplier: 0.3, hits: 4 },
         ],
         cooldown: 8,
-        listedTotalMultiplier: 2.2,
-        notes:
-            "Data conflict: the supplied stages calculate to 3.2 total, but the supplied total is 2.2.",
     },
 
     "nether-fireball": {
@@ -736,7 +652,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 0.3, hits: 4 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "oblivion-beam": {
@@ -745,7 +660,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.4, hits: 5 }],
         cooldown: 6,
-        listedTotalMultiplier: 2,
     },
 
     "overvolt-tempest-blue": {
@@ -754,7 +668,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.2, hits: 11 }],
         cooldown: 6,
-        listedTotalMultiplier: 2.2,
     },
 
     "overvolt-tempest-overload": {
@@ -763,7 +676,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.4, hits: 11 }],
         cooldown: 6,
-        listedTotalMultiplier: 4.4,
     },
 
     "petal-dance": {
@@ -772,7 +684,6 @@ export const SKILLS = {
         element: "Grass",
         damageInstances: [{ multiplier: 0.3, hits: 3 }],
         cooldown: 6,
-        listedTotalMultiplier: 0.9,
     },
 
     "rallying-war-cry-3-second-50": {
@@ -781,7 +692,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [],
         cooldown: 3,
-        listedTotalMultiplier: 0,
         notes: "Non-damaging buff skill.",
     },
 
@@ -791,7 +701,6 @@ export const SKILLS = {
         element: "Ground",
         damageInstances: [],
         cooldown: 6,
-        listedTotalMultiplier: 0,
         notes: "Non-damaging buff skill.",
     },
 
@@ -801,7 +710,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [],
         cooldown: 6,
-        listedTotalMultiplier: 0,
         notes: "Non-damaging buff skill.",
     },
 
@@ -811,7 +719,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.3, hits: 4 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "ripple-guard": {
@@ -820,7 +727,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [],
         cooldown: 6,
-        listedTotalMultiplier: 0,
         notes: "Non-damaging guard skill.",
     },
 
@@ -830,7 +736,6 @@ export const SKILLS = {
         element: "Ground",
         damageInstances: [{ multiplier: 3, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 3,
     },
 
     "rock-toss": {
@@ -839,7 +744,6 @@ export const SKILLS = {
         element: "Ground",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1.2,
     },
 
     "root-slam": {
@@ -848,7 +752,6 @@ export const SKILLS = {
         element: "Grass",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.2,
     },
 
     "root-spike": {
@@ -857,7 +760,6 @@ export const SKILLS = {
         element: "Grass",
         damageInstances: [{ multiplier: 3, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 3,
     },
 
     "scorching-fireball": {
@@ -866,7 +768,6 @@ export const SKILLS = {
         element: "Fire",
         damageInstances: [{ multiplier: 0.3, hits: 3 }],
         cooldown: 6,
-        listedTotalMultiplier: 0.9,
     },
 
     "seed-grenade": {
@@ -875,7 +776,6 @@ export const SKILLS = {
         element: "Grass",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1.2,
     },
 
     "solar-beam": {
@@ -884,7 +784,6 @@ export const SKILLS = {
         element: "Grass",
         damageInstances: [{ multiplier: 2, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 2,
     },
 
     "solar-breath": {
@@ -893,7 +792,6 @@ export const SKILLS = {
         element: "Grass",
         damageInstances: [{ multiplier: 0.4, hits: 5 }],
         cooldown: 8,
-        listedTotalMultiplier: 2,
     },
 
     "soul-reap-chain": {
@@ -902,7 +800,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.5, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.5,
     },
 
     "soul-slash": {
@@ -911,7 +808,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.2, hits: 11 }],
         cooldown: 8,
-        listedTotalMultiplier: 2.2,
     },
 
     "sunder-taunt": {
@@ -920,7 +816,6 @@ export const SKILLS = {
         element: "Ground",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.2,
     },
 
     taunt: {
@@ -929,7 +824,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.5, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 0.5,
     },
 
     "the-ring": {
@@ -938,7 +832,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 0.3, hits: 3 }],
         cooldown: 6,
-        listedTotalMultiplier: 0.9,
     },
 
     "thorn-shield": {
@@ -947,7 +840,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [],
         cooldown: 8,
-        listedTotalMultiplier: 0,
         notes: "Non-damaging shield skill.",
     },
 
@@ -957,7 +849,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1,
     },
 
     "tidal-conch": {
@@ -966,7 +857,6 @@ export const SKILLS = {
         element: "Water",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1.2,
     },
 
     "titan-slam": {
@@ -975,7 +865,6 @@ export const SKILLS = {
         element: "Ground",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 8,
-        listedTotalMultiplier: 1.2,
     },
 
     "toxic-grenade": {
@@ -984,7 +873,6 @@ export const SKILLS = {
         element: "Grass",
         damageInstances: [{ multiplier: 1, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1,
     },
 
     tsunami: {
@@ -993,7 +881,6 @@ export const SKILLS = {
         element: "Water",
         damageInstances: [{ multiplier: 1, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1,
     },
 
     "urgent-aid": {
@@ -1002,7 +889,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [],
         cooldown: 6,
-        listedTotalMultiplier: 0,
         notes: "Non-damaging support skill.",
     },
 
@@ -1015,7 +901,6 @@ export const SKILLS = {
             { multiplier: 2, hits: 1 },
         ],
         cooldown: 8,
-        listedTotalMultiplier: 2.2,
     },
 
     "void-collapse": {
@@ -1024,7 +909,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.2, hits: 2 }],
         cooldown: 6,
-        listedTotalMultiplier: 2.4,
     },
 
     "void-orb-grey": {
@@ -1033,7 +917,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.25, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.25,
     },
 
     "void-orb-red": {
@@ -1042,7 +925,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1.25, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.25,
     },
 
     "vortex-nova": {
@@ -1054,7 +936,6 @@ export const SKILLS = {
             { multiplier: 0.5, hits: 1 },
         ],
         cooldown: 6,
-        listedTotalMultiplier: 1.3,
     },
 
     "water-breath": {
@@ -1063,7 +944,6 @@ export const SKILLS = {
         element: "Water",
         damageInstances: [{ multiplier: 0.4, hits: 5 }],
         cooldown: 8,
-        listedTotalMultiplier: 2,
     },
 
     "water-cannon": {
@@ -1072,7 +952,6 @@ export const SKILLS = {
         element: "Water",
         damageInstances: [{ multiplier: 0.4, hits: 5 }],
         cooldown: 8,
-        listedTotalMultiplier: 2,
     },
 
     "water-jet": {
@@ -1081,7 +960,6 @@ export const SKILLS = {
         element: "Water",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1.2,
     },
 
     "water-pillar-blast": {
@@ -1090,7 +968,6 @@ export const SKILLS = {
         element: "Water",
         damageInstances: [{ multiplier: 1.8, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.8,
     },
 
     "water-shuriken": {
@@ -1099,7 +976,6 @@ export const SKILLS = {
         element: "Water",
         damageInstances: [{ multiplier: 1.2, hits: 1 }],
         cooldown: 6,
-        listedTotalMultiplier: 1.2,
     },
 
     "wind-blast": {
@@ -1108,7 +984,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1, hits: 6 }],
         cooldown: 6,
-        listedTotalMultiplier: 6,
     },
 
     "wind-disc": {
@@ -1117,7 +992,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1,
     },
 
     "wind-disc-purple": {
@@ -1126,7 +1000,6 @@ export const SKILLS = {
         element: "Common",
         damageInstances: [{ multiplier: 1, hits: 1 }],
         cooldown: 3,
-        listedTotalMultiplier: 1,
     },
 } as const satisfies Record<string, Skill>;
 

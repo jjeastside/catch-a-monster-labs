@@ -20,13 +20,6 @@ export type Skill = {
     cooldown: number | null;
 
     /**
-     * Optional total recorded from testing or the source spreadsheet.
-     * This lets us detect data inconsistencies without changing the
-     * actual damage calculation.
-     */
-    listedTotalMultiplier?: number;
-
-    /**
      * Notes for missing values, unusual behavior, buffs, healing,
      * shields, taunts, or other special mechanics.
      */

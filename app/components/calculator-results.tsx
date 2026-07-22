@@ -1,5 +1,9 @@
 import { getMonsterStatData } from "../data/monster-stats";
-import {getSkill} from "../data/skills";
+import {
+    getSkill,
+    getSkillTotalHits,
+    getSkillTotalMultiplier,
+} from "../data/skills";
 
 import {
     calculateStats,
@@ -34,6 +38,174 @@ function StatCard({ label, value }: StatCardProps) {
                 {value}
             </p>
         </div>
+    );
+}
+
+type SkillDamagePanelProps = {
+    skill: NonNullable<ReturnType<typeof getSkill>>;
+    stats: CalculatedStats;
+};
+
+function SkillDamagePanel({
+                              skill,
+                              stats,
+                          }: SkillDamagePanelProps) {
+    const totalHits = getSkillTotalHits(skill);
+    const totalMultiplier =
+        getSkillTotalMultiplier(skill);
+
+    const isDamagingSkill =
+        skill.damageInstances.length > 0;
+
+    return (
+        <section className="rounded-lg border border-[#303848] bg-[#171b25] p-4">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
+                        Selected Skill
+                    </p>
+
+                    <h3 className="mt-1 text-lg font-semibold text-[#e8ebf0]">
+                        {skill.name}
+                    </h3>
+                </div>
+
+                <div className="flex flex-wrap gap-2 text-xs text-[#99a2b3]">
+                    <span className="rounded-md border border-[#303848] bg-[#11141c] px-2 py-1">
+                        {skill.cooldown !== null
+                            ? `${skill.cooldown}s Cooldown`
+                            : "Cooldown unknown"}
+                    </span>
+
+                    {isDamagingSkill && (
+                        <>
+                            <span className="rounded-md border border-[#303848] bg-[#11141c] px-2 py-1">
+                                {totalHits}{" "}
+                                {totalHits === 1 ? "Hit" : "Hits"}
+                            </span>
+
+                            <span className="rounded-md border border-[#303848] bg-[#11141c] px-2 py-1">
+                                ×{formatNumber(totalMultiplier)} Total
+                            </span>
+                        </>
+                    )}
+                </div>
+            </div>
+
+            {!isDamagingSkill ? (
+                <div className="mt-4 rounded-md border border-dashed border-[#303848] bg-[#0d1017]/45 p-3">
+                    <p className="text-sm text-[#99a2b3]">
+                        {skill.notes ?? "This skill does not deal damage."}
+                    </p>
+                </div>
+            ) : (
+                <>
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                        <div className="rounded-lg border border-[#79e3ae]/30 bg-[#173126]/40 p-4">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#79e3ae]">
+                                Normal Skill Damage
+                            </p>
+
+                            <p className="mt-2 text-2xl font-semibold text-[#d8dee9]">
+                                {formatNumber(stats.skillDamage)}
+                            </p>
+                        </div>
+
+                        <div className="rounded-lg border border-[#f4bd6a]/30 bg-[#342612]/40 p-4">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#f4bd6a]">
+                                Full Critical Damage
+                            </p>
+
+                            <p className="mt-2 text-2xl font-semibold text-[#d8dee9]">
+                                {formatNumber(
+                                    stats.skillDamage *
+                                    stats.critMultiplier,
+                                )}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="mt-4">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
+                            Damage Instances
+                        </p>
+
+                        <div className="mt-2 space-y-2">
+                            {skill.damageInstances.map(
+                                (instance, index) => {
+                                    const damagePerHit =
+                                        stats.damage *
+                                        instance.multiplier;
+
+                                    const criticalDamagePerHit =
+                                        damagePerHit *
+                                        stats.critMultiplier;
+
+                                    const instanceTotalDamage =
+                                        damagePerHit *
+                                        instance.hits;
+
+                                    return (
+                                        <div
+                                            key={`${instance.multiplier}-${instance.hits}-${index}`}
+                                            className="grid gap-3 rounded-lg border border-[#303848] bg-[#11141c] p-3 sm:grid-cols-[1fr_1fr_1fr]"
+                                        >
+                                            <div>
+                                                <p className="text-xs text-[#788295]">
+                                                    Instance {index + 1}
+                                                </p>
+
+                                                <p className="mt-1 text-sm font-semibold text-[#d8dee9]">
+                                                    {instance.hits}{" "}
+                                                    {instance.hits === 1
+                                                        ? "hit"
+                                                        : "hits"}{" "}
+                                                    ×{" "}
+                                                    {formatNumber(
+                                                        instance.multiplier,
+                                                    )}
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <p className="text-xs text-[#788295]">
+                                                    Damage Per Hit
+                                                </p>
+
+                                                <p className="mt-1 text-sm font-semibold text-[#d8dee9]">
+                                                    {formatNumber(
+                                                        damagePerHit,
+                                                    )}
+                                                </p>
+
+                                                <p className="mt-1 text-xs text-[#99a2b3]">
+                                                    Crit{" "}
+                                                    {formatNumber(
+                                                        criticalDamagePerHit,
+                                                    )}
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <p className="text-xs text-[#788295]">
+                                                    Instance Total
+                                                </p>
+
+                                                <p className="mt-1 text-sm font-semibold text-[#d8dee9]">
+                                                    {formatNumber(
+                                                        instanceTotalDamage,
+                                                    )}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    );
+                                },
+                            )}
+                        </div>
+                    </div>
+                </>
+            )}
+        </section>
     );
 }
 
@@ -343,7 +515,7 @@ export function CalculatorResults({
                             selectedSkillName={selectedSkill?.name}
                         />
 
-                        <div className="grid gap-3 sm:grid-cols-5">
+                        <div className="grid gap-3 sm:grid-cols-4">
                             <StatCard
                                 label="Health"
                                 value={
@@ -379,16 +551,14 @@ export function CalculatorResults({
                                         : "Data pending"
                                 }
                             />
-
-                            <StatCard
-                                label="Skill Damage"
-                                value={
-                                    stats && selectedSkill
-                                        ? formatNumber(stats.skillDamage)
-                                        : "Select a skill"
-                                }
-                            />
                         </div>
+
+                        {stats && selectedSkill && (
+                            <SkillDamagePanel
+                                skill={selectedSkill}
+                                stats={stats}
+                            />
+                        )}
 
                         <div className="grid gap-3 sm:grid-cols-2">
                             <div className="rounded-lg border border-[#79e3ae]/30 bg-[#173126]/40 p-4">
