@@ -12,31 +12,45 @@ import { MonsterBrowser } from "./monster-browser";
 import { TopNavigation } from "./top-navigation";
 
 export function AppShell() {
-  const [build, setBuild] = useState<Build>(() => createDefaultBuild());
-  const [favoriteMonsterIds, setFavoriteMonsterIds] = useState<string[]>([]);
+    const [build, setBuild] = useState<Build>(() => {
+        const defaultMonster = monsters[0];
 
+        return {
+            ...createDefaultBuild({
+                monsterId: defaultMonster?.id ?? null,
+            }),
+            selectedSkillId:
+                defaultMonster?.skillIds[0] ?? null,
+        };
+    });
+
+    const [favoriteMonsterIds, setFavoriteMonsterIds] = useState<string[]>([]);
   const selectedMonster =
       monsters.find((monster) => monster.id === build.monsterId) ?? null;
 
-  function selectMonster(monster: Monster) {
-    setBuild(
-        createDefaultBuild({
-          monsterId: monster.id,
-        }),
-    );
-  }
+    function selectMonster(monster: Monster) {
+        setBuild({
+            ...createDefaultBuild({
+                monsterId: monster.id,
+            }),
+            selectedSkillId: monster.skillIds[0] ?? null,
+        });
+    }
 
-  function resetBuild() {
-    setBuild(
-        createDefaultBuild(
-            selectedMonster
-                ? {
-                  monsterId: selectedMonster.id,
-                }
-                : null,
-        ),
-    );
-  }
+    function resetBuild() {
+        if (!selectedMonster) {
+            setBuild(createDefaultBuild());
+            return;
+        }
+
+        setBuild({
+            ...createDefaultBuild({
+                monsterId: selectedMonster.id,
+            }),
+            selectedSkillId:
+                selectedMonster.skillIds[0] ?? null,
+        });
+    }
 
     function toggleSelectedMonsterFavorite() {
         if (!selectedMonster) {

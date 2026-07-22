@@ -12,6 +12,10 @@ import {
 } from "../lib/calculations/evolution";
 import type { Build, Mutation, Rank } from "../types/build";
 import type { Monster } from "../types/monster";
+import {
+    getSkill,
+    getSkillTotalMultiplier,
+} from "../data/skills";
 
 import { CollapsibleSection } from "./collapsible-section";
 import { Panel } from "./panel";
@@ -113,7 +117,9 @@ function SelectField({
                 }
                 className="w-full rounded-md border border-[#303848] bg-[#171b25] px-3 py-2 text-sm text-[#d8dee9] outline-none focus:border-[#79e3ae]"
             >
-                <option value="">{emptyLabel}</option>
+                {emptyLabel && (
+                    <option value="">{emptyLabel}</option>
+                )}
 
                 {options.map((option) => (
                     <option key={option.id} value={option.id}>
@@ -123,6 +129,10 @@ function SelectField({
             </select>
         </label>
     );
+}
+
+function formatSkillMultiplier(value: number): string {
+    return Number(value.toFixed(4)).toString();
 }
 
 type EvolutionMultiplierEditorProps = {
@@ -320,9 +330,7 @@ export function BuildEditor({
         }));
     };
 
-    const selectedSkill = monster?.skills.find(
-        (skill) => skill.id === build.selectedSkillId,
-    );
+    const selectedSkill = getSkill(build.selectedSkillId);
 
     const updateLevel = (value: string) => {
         const level = Number(value);
@@ -574,14 +582,24 @@ export function BuildEditor({
                         label="Skill"
                         value={build.selectedSkillId}
                         onChange={(value) =>
-                            update("selectedSkillId", value)
+                            update(
+                                "selectedSkillId",
+                                value as Build["selectedSkillId"],
+                            )
                         }
                         options={
-                            monster?.skills.map((skill) => ({
-                                id: skill.id,
-                                label: skill.name,
-                            })) ?? []
+                            monster?.skillIds
+                                .map(getSkill)
+                                .filter(
+                                    (skill): skill is NonNullable<typeof skill> =>
+                                        skill !== null,
+                                )
+                                .map((skill) => ({
+                                    id: skill.id,
+                                    label: skill.name,
+                                })) ?? []
                         }
+                        emptyLabel=""
                     />
 
                     <label className="mt-3 block">
@@ -593,7 +611,9 @@ export function BuildEditor({
                             readOnly
                             value={
                                 selectedSkill
-                                    ? "Placeholder"
+                                    ? `${formatSkillMultiplier(
+                                        getSkillTotalMultiplier(selectedSkill),
+                                    )}×`
                                     : "Select a skill"
                             }
                             className="w-full rounded-md border border-[#303848] bg-[#171b25] px-3 py-2 text-sm text-[#788295]"

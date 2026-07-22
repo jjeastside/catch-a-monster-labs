@@ -7,6 +7,8 @@ import { getRankMultiplier } from "./ranks";
 import { calculateMutationEffects } from "./mutations";
 
 export type StatMultipliers = {
+    build: MultiplierBuild;
+
     rank: number;
     enhancement: number;
 
@@ -32,6 +34,7 @@ type MultiplierBuild = Pick<
     | "damageGeneticPotential"
     | "evolutionPercent"
     | "mutations"
+    | "selectedSkillId"
 >;
 
 export function createStatMultipliers(
@@ -64,6 +67,8 @@ export function createStatMultipliers(
         calculateMutationEffects(build.mutations);
 
     return {
+        build,
+
         rank,
         enhancement,
         healthGenetic,

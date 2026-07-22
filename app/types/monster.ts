@@ -1,7 +1,4 @@
-export type MonsterSkill = {
-  id: string;
-  name: string;
-};
+import type { SkillId } from "../data/skills";
 
 export type Monster = {
   // Identity
@@ -16,7 +13,7 @@ export type Monster = {
   island: Island;
 
   // Gameplay
-  skills: MonsterSkill[];
+  skillIds: SkillId[];
   hasEvolution: boolean;
   isEvolved?: boolean;
 
@@ -31,7 +28,7 @@ export type Element =
     | "Fire"
     | "Grass"
     | "Ice"
-    | "Ground"
+    | "Ground";
 
 export type Island =
     | "Starter Island"

@@ -1,5 +1,6 @@
 import type { Rank } from "../types/build";
 import type { Monster } from "../types/monster";
+import { getSkill } from "../data/skills";
 
 type MonsterOverviewCardProps = {
     monster: Monster;
@@ -13,7 +14,9 @@ function createDescription(monster: Monster): string {
         return monster.description;
     }
 
-    const firstSkill = monster.skills[0];
+    const firstSkill = getSkill(
+        monster.skillIds[0] ?? null,
+    );
 
     const skillText = firstSkill
         ? ` It can use ${firstSkill.name}.`

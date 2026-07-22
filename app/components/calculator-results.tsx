@@ -1,4 +1,5 @@
 import { getMonsterStatData } from "../data/monster-stats";
+import {getSkill} from "../data/skills";
 
 import {
     calculateStats,
@@ -302,9 +303,7 @@ export function CalculatorResults({
                                       isFavorite,
                                       onToggleFavorite,
                                   }: CalculatorResultsProps) {
-    const selectedSkill = monster?.skills.find(
-        (skill) => skill.id === build.selectedSkillId,
-    );
+    const selectedSkill = getSkill(build.selectedSkillId);
 
     const monsterStatData = monster
         ? getMonsterStatData(monster.id)
@@ -383,7 +382,11 @@ export function CalculatorResults({
 
                             <StatCard
                                 label="Skill Damage"
-                                value="Not calculated yet"
+                                value={
+                                    stats && selectedSkill
+                                        ? formatNumber(stats.skillDamage)
+                                        : "Select a skill"
+                                }
                             />
                         </div>
 

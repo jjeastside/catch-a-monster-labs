@@ -1,8 +1,4 @@
-import type { Monster, MonsterSkill } from "../types/monster";
-
-const temporarySkills: MonsterSkill[] = [
-  { id: "skill-1", name: "Skill 1" },
-];
+import type { Monster } from "../types/monster";
 
 export const monsters: Monster[] = [
   {
@@ -11,7 +7,7 @@ export const monsters: Monster[] = [
     image: "/monster-artwork/dummee.png",
     element: "Common",
     island: "Starter Island",
-    skills: temporarySkills,
+    skillIds: ["air-bullet"],
     hasEvolution: false,
   },
   {
@@ -20,7 +16,7 @@ export const monsters: Monster[] = [
     image: "/monster-artwork/leafet.png",
     element: "Grass",
     island: "Starter Island",
-    skills: temporarySkills,
+    skillIds: ["seed-grenade"],
     hasEvolution: false,
   },
   {
@@ -29,7 +25,7 @@ export const monsters: Monster[] = [
     image: "/monster-artwork/wattoad.png",
     element: "Water",
     island: "Starter Island",
-    skills: temporarySkills,
+    skillIds: ["water-jet"],
     hasEvolution: false,
   },
   {
@@ -38,7 +34,7 @@ export const monsters: Monster[] = [
     image: "/monster-artwork/treemo.png",
     element: "Grass",
     island: "Starter Island",
-    skills: temporarySkills,
+    skillIds: ["seed-grenade"],
     hasEvolution: true,
   },
   {
@@ -47,7 +43,7 @@ export const monsters: Monster[] = [
     image: "/monster-artwork/flamix.png",
     element: "Fire",
     island: "Starter Island",
-    skills: temporarySkills,
+    skillIds: ["fireball", "air-bullet"],
     hasEvolution: true,
   },
   {
@@ -56,7 +52,7 @@ export const monsters: Monster[] = [
     image: "/monster-artwork/puffu.png",
     element: "Common",
     island: "Starter Island",
-    skills: temporarySkills,
+    skillIds: ["water-jet", "wind-disc"],
     hasEvolution: true,
   },
   {
@@ -65,10 +61,15 @@ export const monsters: Monster[] = [
     image: "/monster-artwork/flaragflora.png",
     element: "Grass",
     island: "Volcano",
-    skills: temporarySkills,
+    skillIds: ["grass-tornado", "solar-beam"],
     hasEvolution: false,
     isEvolved: true,
-  }
+  },
 ];
 
-export const filterLabels = ["Island", "Element", "Rank", "Evolution"];
+export const filterLabels = [
+  "Island",
+  "Element",
+  "Rank",
+  "Evolution",
+];

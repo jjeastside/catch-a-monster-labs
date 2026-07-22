@@ -1,5 +1,9 @@
 import type { Build } from "../../types/build";
 import type { MonsterStatData } from "../../types/monster-stats";
+import {
+    getSkill,
+    getSkillTotalMultiplier,
+} from "../../data/skills";
 
 import {
     dummeeDamageAtLevel,
@@ -19,6 +23,9 @@ export type CalculatedStats = {
     critChance: number;
     critMultiplier: number;
     criticalDamage: number;
+
+    skillMultiplier: number;
+    skillDamage: number;
 
     rankMultiplier: number;
     enhancementMultiplier: number;
@@ -52,6 +59,7 @@ type StatsBuild = Pick<
     | "damageGeneticPotential"
     | "evolutionPercent"
     | "mutations"
+    | "selectedSkillId"
 >;
 
 function validateLevel(level: number): void {
@@ -87,6 +95,17 @@ function createCalculatedStats(
         damage *
         multipliers.critMultiplier;
 
+    const skill =
+        getSkill(multipliers.build.selectedSkillId);
+
+    const skillMultiplier =
+        skill
+            ? getSkillTotalMultiplier(skill)
+            : 1;
+
+    const skillDamage =
+        damage * skillMultiplier;
+
     return {
         health,
         damage,
@@ -98,6 +117,9 @@ function createCalculatedStats(
             multipliers.critMultiplier,
 
         criticalDamage,
+
+        skillMultiplier,
+        skillDamage,
 
         rankMultiplier:
             multipliers.rank,
