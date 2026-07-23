@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { getMonsterStatData } from "../data/monster-stats";
 import {
     getSkill,
@@ -9,6 +11,7 @@ import {
     calculateStats,
     type CalculatedStats,
 } from "../lib/calculations/stats";
+
 
 import type { Build } from "../types/build";
 import type { Monster } from "../types/monster";
@@ -22,19 +25,35 @@ function formatNumber(value: number): string {
     }).format(value);
 }
 
-type StatCardProps = {
+type BuildStatProps = {
+    icon: string;
     label: string;
     value: string;
+    accentClassName: string;
 };
 
-function StatCard({ label, value }: StatCardProps) {
+function BuildStat({
+                       icon,
+                       label,
+                       value,
+                       accentClassName,
+                   }: BuildStatProps) {
     return (
-        <div className="rounded-lg border border-[#303848] bg-[#171b25] p-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
-                {label}
-            </p>
+        <div className="rounded-lg border border-[#303848] bg-[#11141c] p-4">
+            <div className="flex items-center gap-2">
+                <span
+                    aria-hidden="true"
+                    className={`text-lg ${accentClassName}`}
+                >
+                    {icon}
+                </span>
 
-            <p className="mt-3 text-xl font-semibold text-[#d8dee9]">
+                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
+                    {label}
+                </p>
+            </div>
+
+            <p className="mt-3 text-2xl font-semibold text-[#e8ebf0]">
                 {value}
             </p>
         </div>
@@ -62,16 +81,16 @@ function SkillDamagePanel({
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
-                        Selected Skill
+                        Skill Analysis
                     </p>
 
-                    <h3 className="mt-1 text-lg font-semibold text-[#e8ebf0]">
+                    <h3 className="mt-1 text-xl font-semibold text-[#e8ebf0]">
                         {skill.name}
                     </h3>
                 </div>
 
-                <div className="flex flex-wrap gap-2 text-xs text-[#99a2b3]">
-                    <span className="rounded-md border border-[#303848] bg-[#11141c] px-2 py-1">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-[#99a2b3]">
+                    <span className="rounded border border-[#303848] px-2 py-0.5 text-xs text-[#99a2b3]">
                         {skill.cooldown !== null
                             ? `${skill.cooldown}s Cooldown`
                             : "Cooldown unknown"}
@@ -79,12 +98,12 @@ function SkillDamagePanel({
 
                     {isDamagingSkill && (
                         <>
-                            <span className="rounded-md border border-[#303848] bg-[#11141c] px-2 py-1">
+                            <span className="rounded border border-[#303848] px-2 py-0.5 text-xs text-[#99a2b3]">
                                 {totalHits}{" "}
                                 {totalHits === 1 ? "Hit" : "Hits"}
                             </span>
 
-                            <span className="rounded-md border border-[#303848] bg-[#11141c] px-2 py-1">
+                            <span className="rounded border border-[#303848] px-2 py-0.5 text-xs text-[#99a2b3]">
                                 ×{formatNumber(totalMultiplier)} Total
                             </span>
                         </>
@@ -103,7 +122,7 @@ function SkillDamagePanel({
                     <div className="mt-4 grid gap-3 sm:grid-cols-2">
                         <div className="rounded-lg border border-[#79e3ae]/30 bg-[#173126]/40 p-4">
                             <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#79e3ae]">
-                                Normal Skill Damage
+                                Normal Damage
                             </p>
 
                             <p className="mt-2 text-2xl font-semibold text-[#d8dee9]">
@@ -113,7 +132,7 @@ function SkillDamagePanel({
 
                         <div className="rounded-lg border border-[#f4bd6a]/30 bg-[#342612]/40 p-4">
                             <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#f4bd6a]">
-                                Full Critical Damage
+                                Critical Damage
                             </p>
 
                             <p className="mt-2 text-2xl font-semibold text-[#d8dee9]">
@@ -127,7 +146,7 @@ function SkillDamagePanel({
 
                     <div className="mt-4">
                         <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
-                            Damage Instances
+                            Damage Breakdown
                         </p>
 
                         <div className="mt-2 space-y-2">
@@ -148,28 +167,24 @@ function SkillDamagePanel({
                                     return (
                                         <div
                                             key={`${instance.multiplier}-${instance.hits}-${index}`}
-                                            className="grid gap-3 rounded-lg border border-[#303848] bg-[#11141c] p-3 sm:grid-cols-[1fr_1fr_1fr]"
+                                            className="grid gap-4 border-t border-[#303848] py-3 first:border-t-0 sm:grid-cols-[0.8fr_1fr_1fr]"
                                         >
                                             <div>
-                                                <p className="text-xs text-[#788295]">
+                                                <p className="text-xs uppercase tracking-wide text-[#788295]">
                                                     Instance {index + 1}
                                                 </p>
 
-                                                <p className="mt-1 text-sm font-semibold text-[#d8dee9]">
+                                                <p className="mt-1 font-medium text-[#d8dee9]">
                                                     {instance.hits}{" "}
-                                                    {instance.hits === 1
-                                                        ? "hit"
-                                                        : "hits"}{" "}
-                                                    ×{" "}
-                                                    {formatNumber(
-                                                        instance.multiplier,
-                                                    )}
+                                                    {instance.hits === 1 ? "hit" : "hits"}
+                                                    {" • "}
+                                                    ×{formatNumber(instance.multiplier)}
                                                 </p>
                                             </div>
 
                                             <div>
-                                                <p className="text-xs text-[#788295]">
-                                                    Damage Per Hit
+                                                <p className="text-[11px] uppercase tracking-wide text-[#788295]">
+                                                    Damage / Hit
                                                 </p>
 
                                                 <p className="mt-1 text-sm font-semibold text-[#d8dee9]">
@@ -187,8 +202,8 @@ function SkillDamagePanel({
                                             </div>
 
                                             <div>
-                                                <p className="text-xs text-[#788295]">
-                                                    Instance Total
+                                                <p className="text-[11px] uppercase tracking-wide text-[#788295]">
+                                                    Total Damage
                                                 </p>
 
                                                 <p className="mt-1 text-sm font-semibold text-[#d8dee9]">
@@ -204,6 +219,86 @@ function SkillDamagePanel({
                         </div>
                     </div>
                 </>
+            )}
+        </section>
+    );
+}
+
+type AdvancedCalculationsProps = {
+    stats: CalculatedStats | null;
+    build: Build;
+};
+
+function AdvancedCalculations({
+                                  stats,
+                                  build,
+                              }: AdvancedCalculationsProps) {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <section className="overflow-hidden rounded-lg border border-[#303848] bg-[#171b25]">
+            <button
+                type="button"
+                onClick={() => setIsOpen((current) => !current)}
+                className="flex w-full items-center justify-between px-4 py-3 text-left"
+            >
+                <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#79e3ae]">
+                        Advanced Calculations
+                    </p>
+
+                    <p className="mt-1 text-xs text-[#788295]">
+                        Multipliers, formulas, and growth details
+                    </p>
+                </div>
+
+                <span className="text-sm text-[#99a2b3]">
+                    {isOpen ? "▲" : "▼"}
+                </span>
+            </button>
+
+            {isOpen && (
+                <div className="space-y-3 border-t border-[#303848] p-3">
+                    <div className="grid gap-3 sm:grid-cols-2">
+                        <div className="rounded-lg border border-[#79e3ae]/30 bg-[#173126]/40 p-3">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#79e3ae]">
+                                Health Multiplier
+                            </p>
+
+                            <p className="mt-2 text-2xl font-semibold text-[#d8dee9]">
+                                {stats
+                                    ? `×${formatNumber(stats.healthTotalMultiplier)}`
+                                    : "—"}
+                            </p>
+
+                            <p className="mt-1 text-xs text-[#99a2b3]">
+                                Rank × enhancement × Health GP × evolution × mutation
+                            </p>
+                        </div>
+
+                        <div className="rounded-lg border border-[#79e3ae]/30 bg-[#173126]/40 p-3">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#79e3ae]">
+                                Damage Multiplier
+                            </p>
+
+                            <p className="mt-2 text-2xl font-semibold text-[#d8dee9]">
+                                {stats
+                                    ? `×${formatNumber(stats.damageTotalMultiplier)}`
+                                    : "—"}
+                            </p>
+
+                            <p className="mt-1 text-xs text-[#99a2b3]">
+                                Rank × enhancement × Damage GP × evolution × mutation
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="max-h-72 overflow-y-auto rounded-lg">
+                        <FormulaBreakdown stats={stats}/>
+                    </div>
+
+                    <GrowthGraphPlaceholder build={build}/>
+                </div>
             )}
         </section>
     );
@@ -382,7 +477,7 @@ function GrowthGraphPlaceholder({
                                 }: GrowthGraphPlaceholderProps) {
     return (
         <section
-            className="flex min-h-36 flex-col rounded-lg border border-dashed border-[#303848] bg-[#0d1017]/45 p-4">
+            className="flex min-h-48 flex-col rounded-lg border border-dashed border-[#303848] bg-[#0d1017]/45 p-4">
         <h3 className="text-sm font-semibold text-[#e8ebf0]">
                 Growth Graph
             </h3>
@@ -397,49 +492,149 @@ function GrowthGraphPlaceholder({
     );
 }
 
-type ActiveBuildSummaryProps = {
+type BuildResultsPanelProps = {
     build: Build;
+    stats: CalculatedStats | null;
     selectedSkillName?: string;
 };
 
-function ActiveBuildSummary({
-                                build,
-                                selectedSkillName,
-                            }: ActiveBuildSummaryProps) {
+function BuildResultsPanel({
+                               build,
+                               stats,
+                               selectedSkillName,
+                           }: BuildResultsPanelProps) {
     const mutationText = build.mutations.length
         ? build.mutations.join(", ")
-        : "No mutations";
+        : "No mutation";
 
     return (
-        <div className="rounded-lg border border-[#303848] bg-[#0d1017]/45 p-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
-                Active Build
-            </p>
+        <section className="overflow-hidden rounded-lg border border-[#303848] bg-[#171b25]">
+            <div className="border-b border-[#303848] px-4 py-3">
+                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#79e3ae]">
+                    Combat Stats
+                </p>
 
-            <p className="mt-2 text-sm text-[#d8dee9]">
-                Level {build.level}
-                {" · "}
-                Rank {build.rank ?? "—"}
-                {" · "}
-                +{build.enhancement}
-                {" · "}
-                Health GP {build.healthGeneticPotential}%
-                {" · "}
-                Damage GP {build.damageGeneticPotential}%
-            </p>
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-xs text-[#99a2b3]">
+                    <span>
+                        Level{" "}
+                        <strong className="font-semibold text-[#d8dee9]">
+                            {build.level}
+                        </strong>
+                    </span>
 
-            <p className="mt-1 text-xs text-[#99a2b3]">
-                Evolution ×{(build.evolutionPercent / 100).toFixed(4)}
-                {" · "}
-                {mutationText}
-                {" · "}
-                {selectedSkillName ?? "No skill"}
-                {" · "}
-                {build.pawId ?? "No paw"}
-                {" · "}
-                {build.ringId ?? "No ring"}
-            </p>
-        </div>
+                    <span>
+                        Rank{" "}
+                        <strong className="font-semibold text-[#d8dee9]">
+                            {build.rank ?? "—"}
+                        </strong>
+                    </span>
+
+                    <span>
+                        Enhancement{" "}
+                        <strong className="font-semibold text-[#d8dee9]">
+                            +{build.enhancement}
+                        </strong>
+                    </span>
+
+                    <span>
+                        Health GP{" "}
+                        <strong className="font-semibold text-[#d8dee9]">
+                            {build.healthGeneticPotential}%
+                        </strong>
+                    </span>
+
+                    <span>
+                        Damage GP{" "}
+                        <strong className="font-semibold text-[#d8dee9]">
+                            {build.damageGeneticPotential}%
+                        </strong>
+                    </span>
+                </div>
+            </div>
+
+            <div className="grid gap-3 p-4 sm:grid-cols-2 xl:grid-cols-4">
+                <BuildStat
+                    icon="♥"
+                    label="Health"
+                    value={
+                        stats
+                            ? formatNumber(stats.health)
+                            : "Data pending"
+                    }
+                    accentClassName="text-[#79e3ae]"
+                />
+
+                <BuildStat
+                    icon="⚔"
+                    label="Damage"
+                    value={
+                        stats
+                            ? formatNumber(stats.damage)
+                            : "Data pending"
+                    }
+                    accentClassName="text-[#6eb5ff]"
+                />
+
+                <BuildStat
+                    icon="◎"
+                    label="Crit Chance"
+                    value={
+                        stats
+                            ? `${formatNumber(stats.critChance)}%`
+                            : "Data pending"
+                    }
+                    accentClassName="text-[#c28cff]"
+                />
+
+                <BuildStat
+                    icon="✦"
+                    label="Crit Damage"
+                    value={
+                        stats
+                            ? formatNumber(stats.criticalDamage)
+                            : "Data pending"
+                    }
+                    accentClassName="text-[#f4bd6a]"
+                />
+            </div>
+
+            <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-[#303848] bg-[#11141c] px-4 py-3 text-xs text-[#99a2b3]">
+                <span>
+                    Evolution{" "}
+                    <strong className="font-medium text-[#d8dee9]">
+                        ×{(build.evolutionPercent / 100).toFixed(4)}
+                    </strong>
+                </span>
+
+                <span>
+                    Mutation{" "}
+                    <strong className="font-medium text-[#d8dee9]">
+                        {mutationText}
+                    </strong>
+                </span>
+
+                <span>
+                    Skill{" "}
+                    <strong className="font-medium text-[#d8dee9]">
+                        {selectedSkillName ?? "No skill"}
+                    </strong>
+                </span>
+
+                <span>
+                    Paw{" "}
+                    <strong className="font-medium text-[#d8dee9]">
+                        {build.pawId ?? "None"}
+                    </strong>
+                </span>
+
+                <span>
+                    Ring{" "}
+                    <strong className="font-medium text-[#d8dee9]">
+                        {build.ringId ?? "None"}
+                    </strong>
+                </span>
+            </div>
+        </section>
     );
 }
 
@@ -498,61 +693,22 @@ export function CalculatorResults({
                 ) : null
             }
         >
-            <div className="flex flex-1 flex-col p-5">
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden p-5">
                 {!monster ? (
-                    <EmptyCalculatorState />
+                    <EmptyCalculatorState/>
                 ) : (
-                    <div className="flex flex-1 flex-col gap-4 overflow-auto">
+                    <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain pr-2 pb-5">
                         <MonsterOverviewCard
                             monster={monster}
                             rank={build.rank}
                             isFavorite={isFavorite}
                             onToggleFavorite={onToggleFavorite}
                         />
-
-                        <ActiveBuildSummary
+                        <BuildResultsPanel
                             build={build}
+                            stats={stats}
                             selectedSkillName={selectedSkill?.name}
                         />
-
-                        <div className="grid gap-3 sm:grid-cols-4">
-                            <StatCard
-                                label="Health"
-                                value={
-                                    stats
-                                        ? formatNumber(stats.health)
-                                        : "Data pending"
-                                }
-                            />
-
-                            <StatCard
-                                label="Damage"
-                                value={
-                                    stats
-                                        ? formatNumber(stats.damage)
-                                        : "Data pending"
-                                }
-                            />
-
-                            <StatCard
-                                label="Crit Chance"
-                                value={
-                                    stats
-                                        ? `${formatNumber(stats.critChance)}%`
-                                        : "Data pending"
-                                }
-                            />
-
-                            <StatCard
-                                label="Crit Damage"
-                                value={
-                                    stats
-                                        ? formatNumber(stats.criticalDamage)
-                                        : "Data pending"
-                                }
-                            />
-                        </div>
-
                         {stats && selectedSkill && (
                             <SkillDamagePanel
                                 skill={selectedSkill}
@@ -560,43 +716,10 @@ export function CalculatorResults({
                             />
                         )}
 
-                        <div className="grid gap-3 sm:grid-cols-2">
-                            <div className="rounded-lg border border-[#79e3ae]/30 bg-[#173126]/40 p-4">
-                                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#79e3ae]">
-                                    Health Multiplier
-                                </p>
-
-                                <p className="mt-2 text-2xl font-semibold text-[#d8dee9]">
-                                    {stats
-                                        ? `×${formatNumber(stats.healthTotalMultiplier)}`
-                                        : "—"}
-                                </p>
-
-                                <p className="mt-1 text-xs text-[#99a2b3]">
-                                    Rank × enhancement × Health GP × evolution × mutation
-                                </p>
-                            </div>
-
-                            <div className="rounded-lg border border-[#79e3ae]/30 bg-[#173126]/40 p-4">
-                                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#79e3ae]">
-                                    Damage Multiplier
-                                </p>
-
-                                <p className="mt-2 text-2xl font-semibold text-[#d8dee9]">
-                                    {stats
-                                        ? `×${formatNumber(stats.damageTotalMultiplier)}`
-                                        : "—"}
-                                </p>
-
-                                <p className="mt-1 text-xs text-[#99a2b3]">
-                                    Rank × enhancement × Damage GP × evolution × mutation
-                                </p>
-                            </div>
-                        </div>
-
-                        <FormulaBreakdown stats={stats}/>
-
-                        <GrowthGraphPlaceholder build={build}/>
+                        <AdvancedCalculations
+                            stats={stats}
+                            build={build}
+                        />
                     </div>
                 )}
             </div>

@@ -6,7 +6,17 @@ export const monsters: Monster[] = [
     name: "Dummee",
     image: "/monster-artwork/dummee.png",
     element: "Common",
-    island: "Starter Island",
+    rarity: "Common",
+    sources: [
+      {
+        type: "Starter Pet",
+        name: "First-Time Player Reward",
+      },
+      {
+        type: "Egg",
+        name: "Swap Egg",
+      },
+    ],
     skillIds: ["air-bullet"],
     hasEvolution: false,
   },
@@ -15,7 +25,13 @@ export const monsters: Monster[] = [
     name: "Leafet",
     image: "/monster-artwork/leafet.png",
     element: "Grass",
-    island: "Starter Island",
+    rarity: "Common",
+    sources: [
+      {
+        type: "Island",
+        name: "Starter Island",
+      },
+    ],
     skillIds: ["seed-grenade"],
     hasEvolution: false,
   },
@@ -24,7 +40,13 @@ export const monsters: Monster[] = [
     name: "Wattoad",
     image: "/monster-artwork/wattoad.png",
     element: "Water",
-    island: "Starter Island",
+    rarity: "Uncommon",
+    sources: [
+      {
+        type: "Island",
+        name: "Starter Island",
+      },
+    ],
     skillIds: ["water-jet"],
     hasEvolution: false,
   },
@@ -33,7 +55,13 @@ export const monsters: Monster[] = [
     name: "Treemo",
     image: "/monster-artwork/treemo.png",
     element: "Grass",
-    island: "Starter Island",
+    rarity: "Uncommon",
+    sources: [
+      {
+        type: "Island",
+        name: "Starter Island",
+      },
+    ],
     skillIds: ["seed-grenade"],
     hasEvolution: false,
   },
@@ -42,7 +70,13 @@ export const monsters: Monster[] = [
     name: "Flamix",
     image: "/monster-artwork/flamix.png",
     element: "Fire",
-    island: "Starter Island",
+    rarity: "Uncommon",
+    sources: [
+      {
+        type: "Island",
+        name: "Starter Island",
+      },
+    ],
     skillIds: ["fireball", "air-bullet"],
     hasEvolution: false,
   },
@@ -51,7 +85,28 @@ export const monsters: Monster[] = [
     name: "Puffu",
     image: "/monster-artwork/puffu.png",
     element: "Common",
-    island: "Starter Island",
+    rarity: "Rare",
+    sources: [
+      {
+        type: "Island",
+        name: "Starter Island",
+      },
+    ],
+    skillIds: ["water-jet", "wind-disc"],
+    hasEvolution: false,
+  },
+  {
+    id: "candlechick",
+    name: "Candlechick",
+    image: "/monster-artwork/candlechick.png",
+    element: "Fire",
+    rarity: "Rare",
+    sources: [
+      {
+        type: "Event",
+        name: "Christmas Event",
+      },
+    ],
     skillIds: ["water-jet", "wind-disc"],
     hasEvolution: false,
   },
@@ -60,7 +115,13 @@ export const monsters: Monster[] = [
     name: "Flaragflora",
     image: "/monster-artwork/flaragflora.png",
     element: "Grass",
-    island: "Volcano",
+    rarity: "Mythical",
+    sources: [
+      {
+        type: "Island",
+        name: "Volcano",
+      },
+    ],
     skillIds: ["grass-tornado", "solar-beam"],
     hasEvolution: false,
     isEvolved: true,
@@ -68,7 +129,8 @@ export const monsters: Monster[] = [
 ];
 
 export const filterLabels = [
-  "Island",
+  "Source",
+  "Rarity",
   "Element",
   "Rank",
   "Evolution",

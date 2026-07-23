@@ -10,7 +10,8 @@ export type Monster = {
 
   // Classification
   element: Element;
-  island: Island;
+  rarity: Rarity;
+  sources: MonsterSource[];
 
   // Gameplay
   skillIds: SkillId[];
@@ -30,17 +31,27 @@ export type Element =
     | "Ice"
     | "Ground";
 
-export type Island =
-    | "Starter Island"
-    | "Skyheart Isle"
-    | "Volcano"
-    | "Frost Isle"
-    | "Duneveil Isle"
-    | "Neverland"
-    | "Tideland"
-    | "Spirit Grove"
-    | "Dragon's Breath"
-    | "Blossom Haven"
-    | "Mobius Circus"
-    | "Specter Shallows"
-    | "Nova Coast";
+export type Rarity =
+    | "Common"
+    | "Uncommon"
+    | "Rare"
+    | "Epic"
+    | "Legendary"
+    | "Mythical"
+    | "Secret"
+    | "Void";
+
+export type SourceType =
+    | "Island"
+    | "Event"
+    | "Egg"
+    | "Starter Pet"
+    | "Dungeon"
+    | "Trial"
+    | "Raid"
+    | "Other";
+
+export type MonsterSource = {
+  type: SourceType;
+  name: string;
+};

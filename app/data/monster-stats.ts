@@ -26,6 +26,24 @@ export const monsterStats: MonsterStatData[] = [
         baseDamageELevel1: 15.24,
     },
     {
+        monsterId: "flamix",
+        growthType: "standard",
+        baseHealthELevel1: 236.5,
+        baseDamageELevel1: 22.1,
+    },
+    {
+        monsterId: "puffu",
+        growthType: "standard",
+        baseHealthELevel1: 342.9,
+        baseDamageELevel1: 32,
+    },
+    {
+        monsterId: "candlechick",
+        growthType: "standard",
+        baseHealthELevel1: 342.9,
+        baseDamageELevel1: 32,
+    },
+    {
         monsterId: "flaragflora",
         growthType: "standard",
         baseHealthELevel1: 117500,
