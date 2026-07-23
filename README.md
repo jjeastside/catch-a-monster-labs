@@ -1,36 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Catch a Monster Labs
+
+A modern build planner and stat calculator for **Catch a Monster**, built with **React**, **Next.js**, **TypeScript**, and **Tailwind CSS**.
+
+The goal of this project is to provide players with an accurate calculator for monster stats, skill damage, growth scaling, mutations, enhancements, and other gameplay mechanics while offering a clean, responsive interface inspired by tools like Path of Building and PCPartPicker.
+
+---
+
+## Features
+
+- Monster browser with search and filtering
+- Live stat calculator
+- Health, Damage, and Skill Damage calculations
+- Growth formula implementation
+- Rank and enhancement scaling
+- Mutation support
+- Skill multiplier calculations
+- Critical damage preview
+- Responsive three-panel interface
+- Modular React component architecture
+
+---
+
+## Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| React | Component-based UI |
+| Next.js | Application framework |
+| TypeScript | Type safety and calculation logic |
+| Tailwind CSS | Styling |
+| Git & GitHub | Version control |
+
+---
+
+## How It Works
+
+The application follows a centralized calculation pipeline.
+
+```text
+User Input
+    │
+    ▼
+Build State (React)
+    │
+    ▼
+Calculation Engine (TypeScript)
+    │
+    ▼
+Calculated Stats
+    │
+    ▼
+React Components
+```
+
+1. The user edits a monster build.
+2. React updates the current build state.
+3. TypeScript calculation functions apply growth formulas, rank multipliers, enhancements, mutations, and skill multipliers.
+4. The resulting stats are passed to presentation components.
+5. React automatically re-renders the updated values.
+
+This separation keeps the calculation logic independent from the UI and makes the project easier to maintain and extend.
+
+---
+
+## Project Structure
+
+```
+app/
+├── components/
+├── data/
+├── lib/
+├── types/
+├── page.tsx
+└── layout.tsx
+```
+
+- **components/** – Reusable UI components
+- **data/** – Monster and skill definitions
+- **lib/** – Calculation helpers and utility functions
+- **types/** – Shared TypeScript interfaces and types
+
+---
 
 ## Getting Started
 
-First, run the development server:
+Clone the repository.
+
+```bash
+git clone https://github.com/jjeastside/catch-a-monster-labs.git
+```
+
+Install dependencies.
+
+```bash
+npm install
+```
+
+Start the development server.
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Roadmap
 
-To learn more about Next.js, take a look at the following resources:
+- [x] Growth formula implementation
+- [x] Skill multiplier calculations
+- [x] Critical damage support
+- [x] Monster browser
+- [x] Responsive calculator layout
+- [ ] Save and load builds
+- [ ] Equipment optimization
+- [ ] DPS comparison tools
+- [ ] Account synchronization
+- [ ] Formula breakdown visualizations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Why I Built This
 
-## Deploy on Vercel
+I wanted to create a tool that accurately models the game's stat formulas while practicing modern frontend development. The project emphasizes clean architecture, reusable React components, and a centralized calculation engine to keep the UI and business logic separated.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+This project is intended for educational and portfolio purposes.
