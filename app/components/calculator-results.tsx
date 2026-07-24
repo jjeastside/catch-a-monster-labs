@@ -30,6 +30,7 @@ type BuildStatProps = {
     label: string;
     value: string;
     accentClassName: string;
+    note?: string;
 };
 
 function BuildStat({
@@ -37,6 +38,7 @@ function BuildStat({
                        label,
                        value,
                        accentClassName,
+                       note,
                    }: BuildStatProps) {
     return (
         <div className="rounded-lg border border-[#303848] bg-[#11141c] p-4">
@@ -56,6 +58,11 @@ function BuildStat({
             <p className="mt-3 text-2xl font-semibold text-[#e8ebf0]">
                 {value}
             </p>
+            {note && (
+                <p className="mt-1 text-xs font-medium text-[#c28cff]">
+                    {note}
+                </p>
+            )}
         </div>
     );
 }
@@ -63,11 +70,13 @@ function BuildStat({
 type SkillDamagePanelProps = {
     skill: NonNullable<ReturnType<typeof getSkill>>;
     stats: CalculatedStats;
+    build: Build;
 };
 
 function SkillDamagePanel({
                               skill,
                               stats,
+                              build,
                           }: SkillDamagePanelProps) {
     const totalHits = getSkillTotalHits(skill);
     const totalMultiplier =
@@ -75,6 +84,15 @@ function SkillDamagePanel({
 
     const isDamagingSkill =
         skill.damageInstances.length > 0;
+
+    const hasFairy = build.mutations.includes("fairy");
+
+    const displayedCooldown =
+        skill.cooldown === null
+            ? null
+            : hasFairy
+                ? skill.cooldown * 0.8
+                : skill.cooldown;
 
     return (
         <section className="rounded-lg border border-[#303848] bg-[#171b25] p-4">
@@ -91,11 +109,12 @@ function SkillDamagePanel({
 
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-[#99a2b3]">
                     <span className="rounded border border-[#303848] px-2 py-0.5 text-xs text-[#99a2b3]">
-                        {skill.cooldown !== null
-                            ? `${skill.cooldown}s Cooldown`
+                        {displayedCooldown !== null
+                            ? hasFairy
+                                ? `${formatNumber(displayedCooldown)}s Cooldown · Fairy`
+                                : `${formatNumber(displayedCooldown)}s Cooldown`
                             : "Cooldown unknown"}
                     </span>
-
                     {isDamagingSkill && (
                         <>
                             <span className="rounded border border-[#303848] px-2 py-0.5 text-xs text-[#99a2b3]">
@@ -507,6 +526,8 @@ function BuildResultsPanel({
         ? build.mutations.join(", ")
         : "No mutation";
 
+    const hasFairy = build.mutations.includes("fairy");
+
     return (
         <section className="overflow-hidden rounded-lg border border-[#303848] bg-[#171b25]">
             <div className="border-b border-[#303848] px-4 py-3">
@@ -560,6 +581,11 @@ function BuildResultsPanel({
                         stats
                             ? formatNumber(stats.health)
                             : "Data pending"
+                    }
+                    note={
+                        hasFairy
+                            ? "Fairy: -25% incoming damage"
+                            : undefined
                     }
                     accentClassName="text-[#79e3ae]"
                 />
@@ -700,7 +726,6 @@ export function CalculatorResults({
                     <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain pr-2 pb-5">
                         <MonsterOverviewCard
                             monster={monster}
-                            rank={build.rank}
                             isFavorite={isFavorite}
                             onToggleFavorite={onToggleFavorite}
                         />
@@ -713,6 +738,7 @@ export function CalculatorResults({
                             <SkillDamagePanel
                                 skill={selectedSkill}
                                 stats={stats}
+                                build={build}
                             />
                         )}
 

@@ -9,12 +9,12 @@ export const monsters: Monster[] = [
     rarity: "Common",
     sources: [
       {
-        type: "Starter Pet",
+        type: "Starter Island",
         name: "First-Time Player Reward",
       },
       {
-        type: "Egg",
-        name: "Swap Egg",
+        type: "Starter Island",
+        name: "Swamp Egg",
       },
     ],
     skillIds: ["air-bullet"],
@@ -28,8 +28,8 @@ export const monsters: Monster[] = [
     rarity: "Common",
     sources: [
       {
-        type: "Island",
-        name: "Starter Island",
+        type: "Starter Island",
+        name: "Roaming",
       },
     ],
     skillIds: ["seed-grenade"],
@@ -43,8 +43,8 @@ export const monsters: Monster[] = [
     rarity: "Uncommon",
     sources: [
       {
-        type: "Island",
-        name: "Starter Island",
+        type: "Starter Island",
+        name: "Roaming",
       },
     ],
     skillIds: ["water-jet"],
@@ -58,8 +58,8 @@ export const monsters: Monster[] = [
     rarity: "Uncommon",
     sources: [
       {
-        type: "Island",
-        name: "Starter Island",
+        type: "Starter Island",
+        name: "Roaming",
       },
     ],
     skillIds: ["seed-grenade"],
@@ -73,8 +73,8 @@ export const monsters: Monster[] = [
     rarity: "Uncommon",
     sources: [
       {
-        type: "Island",
-        name: "Starter Island",
+        type: "Starter Island",
+        name: "Roaming",
       },
     ],
     skillIds: ["fireball", "air-bullet"],
@@ -88,8 +88,8 @@ export const monsters: Monster[] = [
     rarity: "Rare",
     sources: [
       {
-        type: "Island",
-        name: "Starter Island",
+        type: "Starter Island",
+        name: "Roaming",
       },
     ],
     skillIds: ["water-jet", "wind-disc"],
@@ -104,7 +104,7 @@ export const monsters: Monster[] = [
     sources: [
       {
         type: "Event",
-        name: "Christmas Event",
+        name: "Thanksgiving Event 2025",
       },
     ],
     skillIds: ["water-jet", "wind-disc"],
@@ -118,8 +118,8 @@ export const monsters: Monster[] = [
     rarity: "Mythical",
     sources: [
       {
-        type: "Island",
-        name: "Volcano",
+        type: "Evolution",
+        name: "Flaragon",
       },
     ],
     skillIds: ["grass-tornado", "solar-beam"],

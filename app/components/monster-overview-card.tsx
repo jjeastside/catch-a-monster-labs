@@ -46,36 +46,59 @@ function createDescription(monster: Monster): string {
         return monster.description;
     }
 
-    const firstSkill = getSkill(
-        monster.skillIds[0] ?? null,
-    );
+    const firstSkill = getSkill(monster.skillIds[0] ?? null);
 
     const skillText = firstSkill
         ? ` It can use ${firstSkill.name}.`
         : "";
 
+    const monsterClassification =
+        `${monster.element}-type ${monster.rarity} monster`;
+
     const sourceText = monster.sources
         .map((source) => {
             switch (source.type) {
-                case "Island":
-                    return `found on ${source.name}`;
-
-                case "Egg":
-                    return `hatched from the ${source.name}`;
-
-                case "Starter Pet":
-                    return `received as a ${source.name}`;
-
                 case "Event":
-                    return `available during the ${source.name}`;
+                    return `during the ${source.name}`;
 
-                default:
-                    return `obtained from ${source.name}`;
+                case "Battle Pass":
+                    return `from the ${source.name} Battle Pass`;
+
+                case "Evolution":
+                    return `by evolving ${source.name}`;
+
+                default: {
+                    const timeText = source.time
+                        ? ` at ${source.time.toLowerCase()}`
+                        : "";
+
+                    const weatherText = source.weather?.length
+                        ? ` during ${source.weather.join(" or ")} weather`
+                        : "";
+
+                    if (source.name === "Roaming") {
+                        return `by defeating and catching roaming monsters on ${source.type}${timeText}${weatherText}`;
+                    }
+
+                    if (source.name === "First-Time Player Reward") {
+                        return "as a First-Time Player Reward";
+                    }
+
+                    if (source.name.endsWith("Egg")) {
+                        return `from the ${source.name} on ${source.type}`;
+                    }
+
+                    if (source.name.startsWith("Rift")) {
+                        return `from ${source.name} on ${source.type}`;
+                    }
+
+                    return `from ${source.name} on ${source.type}${timeText}${weatherText}`;
+                }
             }
         })
-        .join(", ");
+        .join(" or ");
 
-    return `A ${monster.rarity} ${monster.element}-type monster ${sourceText}.${skillText}`;
+    return `A ${monsterClassification} obtainable ${sourceText}.${skillText}`;
 }
 
 export function MonsterOverviewCard({
@@ -145,14 +168,21 @@ export function MonsterOverviewCard({
     {monster.rarity}
 </span>
 
-                    {monster.sources.map((source) => (
-                        <span
-                            key={`${source.type}-${source.name}`}
-                            className="rounded-md border border-[#303848] bg-[#11141c] px-2.5 py-1 text-xs text-[#d8dee9]"
-                        >
-        {source.name}
-    </span>
-                    ))}
+                    {monster.sources.map((source) => {
+                        const sourceLabel =
+                            source.type === "Evolution"
+                                ? `${source.name} Evolution`
+                                : source.name;
+
+                        return (
+                            <span
+                                key={`${source.type}-${source.name}`}
+                                className="rounded-md border border-[#303848] bg-[#11141c] px-2.5 py-1 text-xs text-[#d8dee9]"
+                            >
+            {sourceLabel}
+        </span>
+                        );
+                    })}
 
                     {monster.hasEvolution && (
                         <span

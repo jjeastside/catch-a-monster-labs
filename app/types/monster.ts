@@ -41,17 +41,39 @@ export type Rarity =
     | "Secret"
     | "Void";
 
+export type Island =
+    | "Starter Island"
+    | "Volcano"
+    | "Frost Isle"
+    | "Neverland"
+    | "Duneveil Isle"
+    | "Tideland"
+    | "Spirit Grove"
+    | "Dragon's Breath"
+    | "Blossom Haven"
+    | "Mobius Circus"
+    | "Specter Shallows"
+    | "Nova Coast";
+
 export type SourceType =
-    | "Island"
+    | Island
     | "Event"
-    | "Egg"
-    | "Starter Pet"
-    | "Dungeon"
-    | "Trial"
-    | "Raid"
-    | "Other";
+    | "Battle Pass"
+    | "Evolution";
+
+export type SpawnTime =
+    | "Day"
+    | "Night";
+
+export type Weather =
+    | "Aurora"
+    | "Rain"
+    | "Snow"
+    | "Storm";
 
 export type MonsterSource = {
   type: SourceType;
   name: string;
+  time?: SpawnTime;
+  weather?: Weather[];
 };
