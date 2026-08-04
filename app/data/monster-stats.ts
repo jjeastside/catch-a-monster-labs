@@ -49,6 +49,12 @@ export const monsterStats: MonsterStatData[] = [
         baseHealthELevel1: 117500,
         baseDamageELevel1: 15800,
     },
+    {
+        monsterId: "crabblaze",
+        growthType: "standard",
+        baseHealthELevel1: 69855000,
+        baseDamageELevel1: 6528000,
+    },
 ];
 
 export function getMonsterStatData(

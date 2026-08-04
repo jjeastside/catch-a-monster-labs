@@ -2,6 +2,53 @@ import type { SkillId } from "../data/skills";
 
 export type Rank = "SS" | "S" | "A" | "B" | "C" | "D" | "E";
 export type Mutation = "huge" | "shiny" | "bloodlit" | "fairy";
+export type Passive =
+    | "vitalSurge"
+    | "criticalChance"
+    | "criticalDamage"
+    | "hardCarapace"
+    | "sacredBeetle"
+    | "fortuneSpirit"
+    | "mentorSpirit"
+    | "captureBoon"
+    | "bossSlayer"
+    | "bossResistance"
+    | "spireDominance"
+    | "spireGuard"
+    | "riftDominance"
+    | "riftGuard"
+    | "trialPower"
+    | "dungeonGuard"
+    | "lastBlessing";
+
+export type PassiveEffectStat =
+    | "damage"
+    | "incomingDamage"
+    | "critChance"
+    | "critDamage"
+    | "bossDamage"
+    | "bossIncomingDamage"
+    | "spireDamage"
+    | "spireIncomingDamage"
+    | "riftDamage"
+    | "riftIncomingDamage"
+    | "dungeonDamage"
+    | "dungeonIncomingDamage"
+    | "coinGain"
+    | "xpGain"
+    | "rankLuck"
+    | "healthRestore"
+    | "stunImmunity";
+
+export type PassiveEffect = {
+  stat: PassiveEffectStat;
+  value: number | boolean;
+};
+
+export type MonsterPassive = {
+  id: Passive;
+  effects: PassiveEffect[];
+};
 
 export type Build = {
   monsterId: string | null;
@@ -12,6 +59,7 @@ export type Build = {
   damageGeneticPotential: number;
   evolutionPercent: number;
   mutations: Mutation[];
+
 
   selectedSkillId: SkillId | null;
 

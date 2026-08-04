@@ -126,6 +126,41 @@ export const monsters: Monster[] = [
     hasEvolution: false,
     isEvolved: true,
   },
+  {
+    id: "crabblaze",
+    name: "Crabblaze",
+    element: "Fire",
+    rarity: "Mythical",
+    sources: [
+      {
+        type: "Nova Coast",
+        name: "Rift 2",
+      },
+      {
+        type: "Nova Coast",
+        name: "Special Spawn",
+      },
+    ],
+    skillIds: ["fire-dragon-flame-blast", "inferno-maelstrom"],
+
+    passives: [
+      {
+        id: "hardCarapace",
+        effects: [
+          {
+            stat: "damage",
+            value: 30,
+          },
+          {
+            stat: "incomingDamage",
+            value: -30,
+          },
+        ],
+      },
+    ],
+
+    hasEvolution: false,
+  }
 ];
 
 export const filterLabels = [

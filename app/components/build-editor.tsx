@@ -58,7 +58,8 @@ const mutations: {
         label: "Fairy",
         icon: "/icons/Fairy.png",
         effects: [
-            "Effects coming soon",
+            "-25% Incoming Damage",
+            "-20% Cooldown",
         ],
     },
 ];

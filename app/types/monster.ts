@@ -1,4 +1,5 @@
 import type { SkillId } from "../data/skills";
+import type { MonsterPassive } from "./build";
 
 export type Monster = {
   // Identity
@@ -15,6 +16,7 @@ export type Monster = {
 
   // Gameplay
   skillIds: SkillId[];
+  passives?: MonsterPassive[];
   hasEvolution: boolean;
   isEvolved?: boolean;
 

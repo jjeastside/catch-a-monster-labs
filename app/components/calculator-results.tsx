@@ -2,6 +2,9 @@ import { useState } from "react";
 
 import { getMonsterStatData } from "../data/monster-stats";
 import {
+    PASSIVE_DEFINITIONS,
+} from "../data/passives";
+import {
     getSkill,
     getSkillTotalHits,
     getSkillTotalMultiplier,
@@ -12,6 +15,9 @@ import {
     type CalculatedStats,
 } from "../lib/calculations/stats";
 
+import {
+    calculateCombatDamage,
+} from "../lib/calculations/combat";
 
 import type { Build } from "../types/build";
 import type { Monster } from "../types/monster";
@@ -58,22 +64,27 @@ function BuildStat({
             <p className="mt-3 text-2xl font-semibold text-[#e8ebf0]">
                 {value}
             </p>
-            {note && (
-                <p className="mt-1 text-xs font-medium text-[#c28cff]">
-                    {note}
+            {note?.split("\n").map((line) => (
+                <p
+                    key={line}
+                    className="mt-1 text-xs font-medium text-[#c28cff]"
+                >
+                    {line}
                 </p>
-            )}
+            ))}
         </div>
     );
 }
 
 type SkillDamagePanelProps = {
+    monster: Monster;
     skill: NonNullable<ReturnType<typeof getSkill>>;
     stats: CalculatedStats;
     build: Build;
 };
 
 function SkillDamagePanel({
+                              monster,
                               skill,
                               stats,
                               build,
@@ -86,6 +97,29 @@ function SkillDamagePanel({
         skill.damageInstances.length > 0;
 
     const hasFairy = build.mutations.includes("fairy");
+
+    const combatDamage = calculateCombatDamage({
+        monster,
+        baseDamage: stats.skillDamage,
+        critMultiplier: stats.critMultiplier,
+    });
+
+    const damagePassiveDetails =
+        monster.passives
+            ?.flatMap((passive) =>
+                passive.effects
+                    .filter(
+                        (effect) =>
+                            effect.stat === "damage" &&
+                            typeof effect.value === "number" &&
+                            effect.value !== 0,
+                    )
+                    .map((effect) => ({
+                        name:
+                        PASSIVE_DEFINITIONS[passive.id].name,
+                        value: effect.value as number,
+                    })),
+            ) ?? [];
 
     const displayedCooldown =
         skill.cooldown === null
@@ -145,7 +179,7 @@ function SkillDamagePanel({
                             </p>
 
                             <p className="mt-2 text-2xl font-semibold text-[#d8dee9]">
-                                {formatNumber(stats.skillDamage)}
+                                {formatNumber(combatDamage.normalDamage)}
                             </p>
                         </div>
 
@@ -155,29 +189,78 @@ function SkillDamagePanel({
                             </p>
 
                             <p className="mt-2 text-2xl font-semibold text-[#d8dee9]">
-                                {formatNumber(
-                                    stats.skillDamage *
-                                    stats.critMultiplier,
-                                )}
+                                {formatNumber(combatDamage.criticalDamage)}
                             </p>
                         </div>
                     </div>
 
+                    <div className="mt-3">
+                        <p className="text-xs text-[#99a2b3]">
+                            {formatNumber(stats.damage)}
+                            {" × "}
+                            {formatNumber(totalMultiplier)}
+
+                            {combatDamage.passiveDamageMultiplier !== 1 && (
+                                <>
+                                    {" × "}
+                                    {formatNumber(
+                                        combatDamage.passiveDamageMultiplier,
+                                    )}
+                                </>
+                            )}
+
+                            {" = "}
+
+                            <strong className="font-semibold text-[#79e3ae]">
+                                {formatNumber(combatDamage.normalDamage)}
+                            </strong>
+                        </p>
+
+                        {damagePassiveDetails.length > 0 && (
+                            <div className="mt-1">
+                                {damagePassiveDetails.map(
+                                    (passive, index) => (
+                                        <p
+                                            key={`${passive.name}-${index}`}
+                                            className="text-xs text-[#788295]"
+                                        >
+                                            <span className="font-medium text-[#d8dee9]">
+                                                Passive:
+                                             </span>{" "}
+                                            {passive.name} (
+                                            {passive.value >= 0 ? "+" : ""}
+                                            {formatNumber(passive.value)}% Combat Damage)
+                                        </p>
+                                    ),
+                                )}
+                            </div>
+                        )}
+                    </div>
+
                     <div className="mt-4">
                         <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
-                            Damage Breakdown
+                        Damage Breakdown
                         </p>
 
                         <div className="mt-2 space-y-2">
                             {skill.damageInstances.map(
                                 (instance, index) => {
-                                    const damagePerHit =
+                                    const baseDamagePerHit =
                                         stats.damage *
                                         instance.multiplier;
 
+                                    const combatDamagePerHit =
+                                        calculateCombatDamage({
+                                            monster,
+                                            baseDamage: baseDamagePerHit,
+                                            critMultiplier: stats.critMultiplier,
+                                        });
+
+                                    const damagePerHit =
+                                        combatDamagePerHit.normalDamage;
+
                                     const criticalDamagePerHit =
-                                        damagePerHit *
-                                        stats.critMultiplier;
+                                        combatDamagePerHit.criticalDamage;
 
                                     const instanceTotalDamage =
                                         damagePerHit *
@@ -512,12 +595,14 @@ function GrowthGraphPlaceholder({
 }
 
 type BuildResultsPanelProps = {
+    monster: Monster | null;
     build: Build;
     stats: CalculatedStats | null;
     selectedSkillName?: string;
 };
 
 function BuildResultsPanel({
+                               monster,
                                build,
                                stats,
                                selectedSkillName,
@@ -527,6 +612,36 @@ function BuildResultsPanel({
         : "No mutation";
 
     const hasFairy = build.mutations.includes("fairy");
+
+    const healthNotes: string[] = [];
+
+    if (hasFairy) {
+        healthNotes.push(
+            "Fairy: -25% Incoming Damage",
+        );
+    }
+
+    const incomingDamagePassives =
+        monster?.passives
+            ?.flatMap((passive) =>
+                passive.effects
+                    .filter(
+                        (effect) =>
+                            effect.stat === "incomingDamage" &&
+                            typeof effect.value === "number",
+                    )
+                    .map((effect) => ({
+                        name:
+                        PASSIVE_DEFINITIONS[passive.id].name,
+                        value: effect.value,
+                    })),
+            ) ?? [];
+
+    for (const passive of incomingDamagePassives) {
+        healthNotes.push(
+            `${passive.name}: ${passive.value}% Incoming Damage`,
+        );
+    }
 
     return (
         <section className="overflow-hidden rounded-lg border border-[#303848] bg-[#171b25]">
@@ -583,8 +698,8 @@ function BuildResultsPanel({
                             : "Data pending"
                     }
                     note={
-                        hasFairy
-                            ? "Fairy: -25% incoming damage"
+                        healthNotes.length
+                            ? healthNotes.join("\n")
                             : undefined
                     }
                     accentClassName="text-[#79e3ae]"
@@ -704,7 +819,10 @@ export function CalculatorResults({
 
     const stats =
         build.rank && monsterStatData
-            ? calculateStats(monsterStatData, build)
+            ? calculateStats(
+                monsterStatData,
+                build,
+            )
             : null;
 
     return (
@@ -730,12 +848,14 @@ export function CalculatorResults({
                             onToggleFavorite={onToggleFavorite}
                         />
                         <BuildResultsPanel
+                            monster={monster}
                             build={build}
                             stats={stats}
                             selectedSkillName={selectedSkill?.name}
                         />
                         {stats && selectedSkill && (
                             <SkillDamagePanel
+                                monster={monster}
                                 skill={selectedSkill}
                                 stats={stats}
                                 build={build}
