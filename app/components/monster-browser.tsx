@@ -1,3 +1,7 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
 import { filterLabels } from "../data/monsters";
 import type { Monster } from "../types/monster";
 import { Panel } from "./panel";
@@ -22,6 +26,23 @@ export function MonsterBrowser({
                                    selectedMonster,
                                    onSelect,
                                }: MonsterBrowserProps) {
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const filteredMonsters = useMemo(() => {
+        const normalizedQuery = searchQuery.trim().toLowerCase();
+
+        if (!normalizedQuery) {
+            return monsters;
+        }
+
+        return monsters.filter((monster) =>
+            monster.name.toLowerCase().includes(normalizedQuery) ||
+            monster.id.toLowerCase().includes(normalizedQuery) ||
+            monster.element.toLowerCase().includes(normalizedQuery) ||
+            monster.rarity.toLowerCase().includes(normalizedQuery),
+        );
+    }, [monsters, searchQuery]);
+
     return (
         <Panel
             eyebrow="Step 1"
@@ -32,7 +53,7 @@ export function MonsterBrowser({
         </span>
             }
         >
-            <div className="flex flex-1 flex-col gap-4 p-5">
+            <div className="flex min-h-0 flex-1 flex-col gap-4 p-5">
                 <label className="relative block">
                     <span className="sr-only">Search monsters</span>
                     <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#788295]">
@@ -40,6 +61,8 @@ export function MonsterBrowser({
           </span>
                     <input
                         type="search"
+                        value={searchQuery}
+                        onChange={(event) => setSearchQuery(event.target.value)}
                         placeholder="Search monsters"
                         className="w-full rounded-lg border border-[#303848] bg-[#0d1017] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#697386] focus:border-[#79e3ae]"
                     />
@@ -58,8 +81,8 @@ export function MonsterBrowser({
                     ))}
                 </div>
 
-                <div className="flex flex-1 flex-col gap-2 overflow-auto pr-1">
-                    {monsters.map((monster) => {
+                <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-1">
+                    {filteredMonsters.map((monster) => {
                         const selected = selectedMonster?.id === monster.id;
                         const color = elementColors[monster.element] ?? "#788295";
                         const sourceNames = monster.sources
@@ -105,6 +128,12 @@ export function MonsterBrowser({
                             </button>
                         );
                     })}
+
+                    {filteredMonsters.length === 0 && (
+                        <p className="py-8 text-center text-sm text-[#788295]">
+                            No monsters found for “{searchQuery}”.
+                        </p>
+                    )}
                 </div>
             </div>
         </Panel>

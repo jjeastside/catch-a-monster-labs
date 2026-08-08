@@ -1,0 +1,224 @@
+monster_id,name,damage,health,crit_chance,growth_type,element,rarity,evolution_source,index_position
+dummee,Dummee,8,53,0,A,Common,Common,,1
+leafet,Leafet,7.25,43.5,0,B,Grass,Common,,2
+wattoad,Wattoad,10.5,63.1,0,B,Water,Uncommon,,3
+treemo,Treemo,15.2,163.1,0,B,Grass,Rare,,4
+flamix,Flamix,22.1,236.5,0,B,Fire,Rare,,5
+puffu,Puffu,32,342.9,0,B,Water,Rare,,6
+candlechick,Candlechick,38.6,412.7,0,B,Fire,Rare,,7
+santadumi,SantaDumi,97.7,1040,0,B,Common,Rare,,8
+santacub,Santacub,205,2197.8,0,B,Common,Rare,,9
+pricko,Pricko,1915,29518,10,B,Grass,Rare,,10
+aquron,Aquron,46.5,497.2,0,B,Water,Epic,,11
+skedeer,Skedeer,67.4,721,0,B,Common,Epic,,12
+woodliz,Woodliz,97.7,1040,0,B,Grass,Epic,,13
+candlehawk,Candlehawk,170.59,1823,0,B,Fire,Epic,,14
+zybit,Zybit,120,1260,0,B,Common,Epic,,15
+flarecub,Flarecub,141.67,1510,0,B,Fire,Epic,,16
+blazelord,Blazelord,205.42,2190,0,B,Fire,Epic,,17
+icevolf,Icevolf,431.9,4620,0,B,Ice,Epic,,18
+frostoise,Frostoise,626.25,6700,0,B,Water,Epic,,19
+fluffairy,Fluffairy,908.07,9710,0,B,Common,Epic,,20
+santafairy,Santafairy,626.2,6693,0,B,Common,Epic,,21
+dreamtane,Dreamtane,2768,29620,0,B,Common,Epic,,22
+dollfey,Dollfey,4010,42950,0,B,Common,Epic,,23
+stonebara,Stonebara,12230,130940,0,B,Ground,Epic,,24
+pangard,Pangard,17740,189860,0,B,Fire,Epic,,25
+pandleaf,Pandleaf,7032,108360,10,B,Grass,Epic,,26
+ringduck,RingDuck,54090,578830,0,B,Water,Epic,,27
+shorefur,Shorefur,78440,839300,0,B,Water,Epic,,28
+sproutfox,Sproutfox,136950,1465000,0,B,Grass,Epic,,29
+terralion,Terralion,164920,1764000,0,B,Ground,Epic,,30
+noxicrow,Noxicrow,239130,2558000,0,B,Fire,Epic,,31
+verdysaur,Verdysaur,287950,3080000,0,B,Grass,Epic,,32
+bunshroom,Bunshroom,417530,4460000,0,B,Ground,Epic,,33
+bunleaf,Bunleaf,502780,5380000,0,B,Grass,Epic,,34
+leafmage,LeafMage,785270,8402200,0,B,Grass,Epic,,35
+boinglick,Boinglick,1018500,10898000,0,B,Water,Epic,,36
+wickloom,Wickloom,1651000,17666000,0,B,Fire,Epic,,37
+glowraith,Glowraith,2222450,23780000,0,B,Ice,Epic,,38
+spiralin,Spiralin,3471000,37141000,0,B,Water,Epic,,39
+snoozeble,Snoozeble,4180000,44726000,0,B,Water,Epic,,40
+bubbloo,Bubbloo,5420000,58011000,0,B,Water,Epic,,41
+terratort,Terratort,5840000,62486000,0,B,Ground,Epic,,42
+santavolf,Santavolf,2800,29600,0,B,Ice,Legendary,,43
+pyrowulf,Pyrowulf,298,3187,0,B,Fire,Legendary,,44
+noctane,Noctane,359,3838,0,B,Common,Legendary,,45
+ywendihoofs,YWendihoofs,1316,14088,0,B,Ice,Legendary,,46
+starshade,Starshade,2300,25600,0,B,Ice,Legendary,,47
+sproutusk,Sproutusk,1909,20426,0,B,Grass,Legendary,,48
+nightclaw,Nightclaw,5821,62278,0,B,Common,Legendary,,49
+floradelle,Floradelle,14684,109115,10,B,Grass,Legendary,,50
+hydribbit,Hydribbit,10162,108740,0,B,Water,Legendary,,51
+knockroo,Knockroo,25727,275296,0,B,Fire,Legendary,,52
+volcamel,Volcamel,53900,400600,0,B,Fire,Legendary,,53
+mistvolf,Mistvolf,14777,227835,0,B,Water,Legendary,icevolf,54
+flamevolf,Flamevolf,21292,158220,0,B,Fire,Legendary,icevolf,55
+floravolf,Floravolf,17740,189860,0,B,Grass,Legendary,icevolf,56
+aurobull,Aurobull,37306,399190,0,B,Common,Legendary,,57
+king-penguin,King Penguin,626,6700,0,B,Water,Legendary,,58
+fanglo,Fanglo,21438,330370,0,B,Fire,Legendary,,59
+weaslpash,Weaslpash,113736,1216900,0,B,Water,Legendary,,60
+walrusk,Walrusk,136955,1465400,0,B,Water,Legendary,,61
+deerleaf,Deerleaf,198590,2124900,0,B,Grass,Legendary,,62
+mintwolf,Mintwolf,287955,3081100,10,B,Grass,Legendary,,63
+nivisgon,Nivisgon,346740,3710100,0,B,Water,Legendary,,64
+tricerasteel,Tricerasteel,335184,8069450,0,B,Ground,Legendary,,65
+cloveria,Cloveria,605420,6477600,0,B,Grass,Legendary,,66
+shadecloak,Shadecloak,816460,6500500,0,B,Common,Legendary,,67
+emberwolf,Emberwolf,482750,3587200,0,B,Fire,Legendary,mintwolf,68
+jackpotron,Jackpotron,1273000,13620000,0,B,Common,Legendary,,69
+sleetwolf,Sleetwolf,521350,7310100,0,B,Water,Legendary,mintwolf,70
+rexie,Rexie,1651000,17666000,0,B,Ground,Legendary,,71
+stumpfox,Stumpfox,2063300,22077000,0,B,Grass,Legendary,,72
+strum-bones,Strum Bones,2882750,30845000,0,B,Common,Legendary,,73
+bone-guard,Bone Guard,3222700,34482400,0,B,Common,Legendary,,74
+meowl,Meowl,4338000,46418000,0,B,Common,Legendary,,75
+snoozepink,Snoozepink,5033040,53856700,0,B,Water,Legendary,,76
+froxy,Froxy,6286000,67305000,0,B,Ice,Legendary,,77
+flaragon,Flaragon,754,8068,0,B,Fire,Mythical,,78
+glazadon,Glazadon,4013,42951,0,B,Ice,Mythical,,79
+mountusk,Mountusk,4027,62063,0,B,Grass,Mythical,,80
+frostbun,Frostbun,333720,3970000,0,B,Ice,Mythical,,81
+flarecrest,Flarecrest,4817,35792,10,B,Fire,Mythical,,82
+aquilune,Aquilune,5217,28481,0,B,Ice,Mythical,,83
+frost-floradelle,Frost Floradelle,44770,332660,10,B,Grass,Mythical,,84
+puffmora,Puffmora,14787,227840,20,B,Grass,Mythical,,85
+pinecarol,Pinecarol,25730,275300,0,B,Grass,Mythical,,86
+gingerjoy,Gingerjoy,21290,159200,0,B,Common,Mythical,,87
+rudolphin,Rudolphin,9822,236510,0,B,Ice,Mythical,,88
+shadeknight,ShadeKnight,21360,228620,0,B,Water,Mythical,,89
+gildron,Gildron,78440,839300,0,B,Ground,Mythical,,90
+flamespike,FlameSpike,2284,17024,10,B,Fire,Mythical,,91
+dustwing,DustWing,87686,938240,10,B,Ground,Mythical,,92
+mistwing,Mistwing,191300,2047400,0,B,Water,Mythical,dustwing,93
+emberwing,Emberwing,267880,1462400,0,B,Fire,Mythical,dustwing,94
+fernwing,Fernwing,229600,1706200,0,B,Grass,Mythical,dustwing,95
+snowwing,Snowwing,159400,2400000,0,B,Ice,Mythical,dustwing,96
+iceplate,Iceplate,75790,1168500,0,B,Ice,Mythical,,97
+voltagator,Voltagator,91300,2200000,10,B,Common,Mythical,,98
+undine,Undine,286960,2132300,10,B,Water,Mythical,,99
+tidevex,TideVex,267300,2860400,10,B,Water,Mythical,,100
+woolhorn,Woolhorn,185000,2850400,10,B,Common,Mythical,,101
+mechavolt,Mechavolt,467700,2553400,0,B,Ice,Mythical,,102
+cobaltwing,Cobaltwing,542660,2962600,10,B,Ice,Mythical,,103
+frostwyrm,Frostwyrm,466770,4994400,0,B,Ice,Mythical,,104
+liodan,Liodan,320780,2383700,0,B,Fire,Mythical,,105
+kitsunine,Kitsunine,335240,5165500,10,B,Fire,Mythical,,106
+thunderjet,Thunderjet,278400,4289700,0,B,Common,Mythical,,107
+psyber,Psyber,502700,5379400,10,B,Common,Mythical,,108
+dracospike,Dracospike,291670,12480000,0,B,Ground,Mythical,,109
+ignisraptor,Ignisraptor,912900,4984000,10,B,Fire,Mythical,,110
+mintgloom,Mintgloom,467000,4994100,0,B,Fire,Mythical,,111
+netherdemon,Netherdemon,451200,10862000,0,B,Common,Mythical,,112
+toucan-birdman,Toucan BirdMan,679160,10464000,10,B,Common,Mythical,,113
+primothorn,Primothorn,418900,6455200,10,B,Common,Mythical,,114
+abyssaldrake,AbyssalDrake,1323800,7226900,10,B,Common,Mythical,,115
+berrybun,Berrybun,1140000,12188000,10,B,Common,Mythical,,116
+bladetooth,Bladetooth,704700,16965000,10,B,Ground,Mythical,,117
+thunderclaw,Thunderclaw,1782000,9728600,0,B,Ground,Mythical,,118
+burrowbun,Burrowbun,981300,10500000,0,B,Ground,Mythical,,119
+aetherpanther,Aetherpanther,2452200,10250300,10,B,Common,Mythical,,120
+crystalfae,Crystalfae,1707500,12688000,10,B,Water,Mythical,,121
+magma-tortoise,Magma Tortoise,1101000,26499000,10,B,Fire,Mythical,,122
+stellar-sentinel,Stellar Sentinel,2569600,19095000,10,B,Water,Mythical,,123
+lampyr,Lampyr,1600000,38423000,0,B,Water,Mythical,,124
+umbra-reaver,Umbra Reaver,3750000,20450000,0,B,Common,Mythical,,125
+lumen-knight,Lumen Knight,1500000,64023000,10,B,Common,Mythical,,126
+jokaire,Jokaire,3105100,33220000,0,B,Common,Mythical,,127
+bull-lord,Bull Lord,3880400,41523000,10,B,Common,Mythical,,128
+scareaper,Scareaper,3615000,55702000,0,B,Common,Mythical,,129
+magmorus,Magmorus,3482300,83841000,10,B,Fire,Mythical,,130
+gravion,Gravion,2813200,12041000,10,B,Common,Mythical,,131
+runegolem,Runegolem,7007700,52071000,15,B,Ground,Mythical,,132
+crabblaze,Crabblaze,6528000,69855000,10,B,Fire,Mythical,,133
+capshark,Capshark,9140000,49900000,10,B,Water,Mythical,,134
+beatopus,Beatopus,9140000,49900000,10,B,Water,Mythical,,135
+stormhorn,Stormhorn,2700000,261900000,0,B,Common,Mythical,,136
+solgryph,Solgryph,11400000,62300000,10,B,Common,Mythical,,137
+violetaegis,Violetaegis,14061000,58772000,15,B,Common,Mythical,,138
+venofrog,Venofrog,9824000,105120000,0,B,Water,Mythical,,139
+rainimp,Rainimp,12698000,94362000,0,B,Water,Mythical,,140
+vorturion,Vorturion,11830000,126580000,10,B,Common,Mythical,,141
+sylvaris,Sylvaris,16562000,90416300,10,B,Common,Mythical,,142
+dragon-cannelloni,Dragon Cannelloni,40,500,0,B,Fire,Mythical,,143
+flaragflora,Flaragflora,15817,117530,0,B,Grass,Mythical,flaragon,144
+flaragfrost,Flaragfrost,10980,169250,0,B,Ice,Mythical,flaragon,145
+flaragaqua,Flaragaqua,13179,141042,0,B,Water,Mythical,flaragon,146
+glazadonbloom,Glazadonbloom,13180,141040,0,B,Grass,Mythical,glazadon,147
+glazadonwave,GlazadonWave,12280,189210,0,B,Water,Mythical,glazadon,148
+glazadonflare,Glazadonflare,15820,117530,0,B,Fire,Mythical,glazadon,149
+frostvolf,Frostvolf,41706,446200,0,B,Ice,Mythical,,150
+frostusk,Frostusk,21370,228630,0,B,Ice,Mythical,mountusk,151
+volctusk,Volctusk,25600,190500,0,B,Fire,Mythical,mountusk,152
+terratops,Terratops,17800,274300,0,B,Ground,Mythical,mountusk,153
+frostbound-knight,Frostbound Knight,111300,842200,0,B,Ice,Mythical,shadeknight,154
+flame-knight,Flame Knight,132200,721900,0,B,Fire,Mythical,shadeknight,155
+verdant-knight,Verdant Knight,94451,1010000,0,B,Grass,Mythical,shadeknight,156
+stoneward-knight,Stoneward Knight,78700,1212700,0,B,Ground,Mythical,shadeknight,157
+leafane,Leafane,136480,1014100,0,B,Grass,Mythical,noctane,158
+glacane,Glacane,94800,1460000,0,B,Ice,Mythical,noctane,159
+folirabbit,Folirabbit,205400,1526200,0,B,Grass,Mythical,hydribbit,160
+mudbit,Mudbit,142600,2200000,0,B,Ground,Mythical,hydribbit,161
+inferron,Inferron,158960,1700200,0,B,Fire,Mythical,gildron,162
+mossron,Mossron,190680,1416900,0,B,Grass,Mythical,gildron,163
+glaciron,Glaciron,222460,1214500,0,B,Ice,Mythical,gildron,164
+blazevex,BlazeVex,309100,2299000,0,B,Fire,Mythical,tidevex,165
+bramblevex,BrambleVex,214650,3307100,0,B,Grass,Mythical,tidevex,166
+geogator,Geogator,418400,2280000,0,B,Ground,Mythical,voltagator,167
+glacigator,Glacigator,298850,3200000,0,B,Ice,Mythical,voltagator,168
+blazewyrm,Blazewyrm,521800,5583000,0,B,Fire,Mythical,frostwyrm,169
+spinewyrm,Spinewyrm,730500,3987800,0,B,Grass,Mythical,frostwyrm,170
+marigon,Marigon,1373900,7500500,15,B,Water,Mythical,nivisgon,171
+cinderine,Cinderine,1303900,5450200,0,B,Fire,Mythical,undine,172
+tellurine,Tellurine,407400,17441000,0,B,Ground,Mythical,undine,173
+dracovine,Dracovine,1060000,12368000,0,B,Grass,Mythical,dracospike,174
+dracosleet,Dracosleet,1480000,9589000,0,B,Ice,Mythical,dracospike,175
+nightveil,Nightveil,2490000,13590000,15,B,Common,Mythical,shadecloak,176
+diabvok,Diabvok,2145900,11715000,0,B,Fire,Mythical,mechavolt,177
+terravok,Terravok,1532800,16401000,0,B,Ground,Mythical,mechavolt,178
+rubywing,Rubywing,2670000,19810000,0,B,Fire,Mythical,cobaltwing,179
+lazuliwing,Lazuliwing,1851000,28537000,0,B,Water,Mythical,cobaltwing,180
+hornrexie,Hornrexie,4511500,24630000,0,B,Ground,Mythical,rexie,181
+glacierclaw,Glacierclaw,2676000,28635000,0,B,Ground,Mythical,thunderclaw,182
+mossclaw,Mossclaw,3211000,23860000,0,B,Ground,Mythical,thunderclaw,183
+ignilampyr,Ignilampyr,4013000,29820000,0,B,Fire,Mythical,lampyr,184
+terrampyr,Terrampyr,3330000,35770000,0,B,Ground,Mythical,lampyr,185
+dumplorer,Dumplorer,4562000,48176000,10,B,Common,Mythical,dummee,186
+psyflora,Psyflora,4480000,33340000,0,B,Grass,Mythical,psyber,187
+glaciber,Glaciber,3115000,48009000,0,B,Ice,Mythical,psyber,188
+flaragblaze,Flaragblaze,25600,190500,15,B,Fire,Secret,flaragon,189
+glazadonfroz,GlazadonFroz,21360,228630,15,B,Ice,Secret,glazadon,190
+fire-dragon-cannelloni,Fire Dragon Cannelloni,18450,100740,0,B,Fire,Secret,dragon-cannelloni,191
+necro-dragon-cannelloni,Necro Dragon Cannelloni,28810,157400,15,B,Fire,Secret,dragon-cannelloni,192
+titanusk,Titanusk,46600,498800,15,B,Grass,Secret,mountusk,193
+eclipse-knight,Eclipse Knight,142140,1520000,15,B,Common,Secret,shadeknight,194
+lunavox,Lunavox,85581,3662000,0,B,Common,Secret,noctane,195
+hydrolope,Hydrolope,309100,2300000,15,B,Water,Secret,hydribbit,196
+solron,Solron,239100,2558600,15,B,Ground,Secret,gildron,197
+scythewing,Scythewing,298800,3200000,15,B,Ground,Secret,dustwing,198
+celestide,Celestide,542600,2962000,15,B,Water,Secret,tidevex,199
+doomgator,Doomgator,629610,3437300,15,B,Common,Secret,voltagator,200
+frostiel,Frostiel,660500,28270000,20,B,Common,Secret,,201
+steamforge,Steamforge,1920000,20500000,10,B,Fire,Secret,,202
+mentawolf,Mentawolf,403300,9716800,15,B,Grass,Secret,mintwolf,203
+avalanchewyrm,Avalanchewyrm,1256000,5251400,15,B,Ice,Secret,frostwyrm,204
+poseidine,Poseidine,1418000,10537000,15,B,Water,Secret,undine,205
+armored-dracospike,Armored Dracospike,1060000,32700000,15,B,Ground,Secret,dracospike,206
+soulguard,Soulguard,5040000,27530000,15,B,Fire,Secret,,207
+motovok,Motovok,3827000,16010000,15,B,Common,Secret,mechavolt,208
+crystalwing,Crystalwing,859500,82780000,10,B,Ice,Secret,cobaltwing,209
+divineclaw,Divineclaw,5351300,22367000,15,B,Ground,Secret,thunderclaw,210
+djinn-lampyr,Djinn Lampyr,5020000,37270000,15,B,Common,Secret,lampyr,211
+necro-hydra-tortelloni,Necro hydra Tortelloni,10064800,42066000,15,B,Fire,Void,necro-dragon-cannelloni,212
+psyberion-x,Psyberion X,1677800,161560000,10,B,Common,Secret,psyber,213
+void-noctane,Void Noctane,2227000,12158000,0,B,Common,Void,,214
+void-dustwing,Void Dustwing,1778000,19029000,0,B,Ground,Void,,215
+void-lunavox,Void Lunavox,687740,66232000,0,B,Common,Void,,216
+void-iceplate,Void Iceplate,1482000,35672000,0,B,Ice,Void,,217
+void-scythewing,Void Scythewing,2484000,26585000,0,B,Ground,Void,,218
+void-shadecloak,Void Shadecloak,1057070,11311000,0,B,Common,Void,,219
+void-strum-bones,Void Strum Bones,2000000,89400000,10,B,Common,Void,,220
+void-nightveil,Void Nightveil,3350000,18300000,15,B,Common,Void,void-shadecloak,221
+void-scareaper,Void Scareaper,1700000,167600000,0,B,Common,Void,,222
+icearia,Icearia,840000,13500000,20,B,Ice,Mythical,,223

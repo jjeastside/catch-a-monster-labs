@@ -111,10 +111,10 @@ function createCalculatedStats(
         damage,
 
         critChance:
-            multipliers.critChance,
+        multipliers.critChance,
 
         critMultiplier:
-            multipliers.critMultiplier,
+        multipliers.critMultiplier,
 
         criticalDamage,
 
@@ -122,31 +122,31 @@ function createCalculatedStats(
         skillDamage,
 
         rankMultiplier:
-            multipliers.rank,
+        multipliers.rank,
 
         enhancementMultiplier:
-            multipliers.enhancement,
+        multipliers.enhancement,
 
         healthGeneticMultiplier:
-            multipliers.healthGenetic,
+        multipliers.healthGenetic,
 
         damageGeneticMultiplier:
-            multipliers.damageGenetic,
+        multipliers.damageGenetic,
 
         evolutionMultiplier:
-            multipliers.evolution,
+        multipliers.evolution,
 
         mutationHealthMultiplier:
-            multipliers.mutationHealth,
+        multipliers.mutationHealth,
 
         mutationDamageMultiplier:
-            multipliers.mutationDamage,
+        multipliers.mutationDamage,
 
         healthTotalMultiplier:
-            multipliers.healthTotal,
+        multipliers.healthTotal,
 
         damageTotalMultiplier:
-            multipliers.damageTotal,
+        multipliers.damageTotal,
 
         growthValue,
         growthLabel,
@@ -228,7 +228,7 @@ export function calculateStats(
     }
 
     const multipliers =
-        createStatMultipliers(build);
+        createStatMultipliers(build, statData.baseCritChance);
 
     if (!multipliers) {
         return null;

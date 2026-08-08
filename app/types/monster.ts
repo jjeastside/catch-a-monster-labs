@@ -23,6 +23,15 @@ export type Monster = {
   // Optional metadata
   obtainMethod?: string;
   description?: string;
+  evolutionSource?: string;
+};
+
+export type GeneratedMonster = Monster & {
+  baseDamageELevel1: number;
+  baseHealthELevel1: number;
+  baseCritChance: number;
+  growthType: "dummee" | "standard";
+  indexPosition: number;
 };
 
 export type Element =
@@ -55,13 +64,25 @@ export type Island =
     | "Blossom Haven"
     | "Mobius Circus"
     | "Specter Shallows"
-    | "Nova Coast";
+    | "Nova Coast"
+    | "Splash Isle";
 
 export type SourceType =
-    | Island
+    | "First-Time Reward"
+    | "Egg"
+    | "Island Spawn"
+    | "Island Special Spawn"
+    | "Rift"
     | "Event"
-    | "Battle Pass"
-    | "Evolution";
+    | "Evolution"
+    | "Chest"
+    | "Shop"
+    | "Contest";
+
+export type SourceStatus =
+    | "Current"
+    | "Legacy"
+    | "Unavailable";
 
 export type SpawnTime =
     | "Day"
@@ -76,6 +97,10 @@ export type Weather =
 export type MonsterSource = {
   type: SourceType;
   name: string;
+  location?: string;
+  condition?: string;
+  status: SourceStatus;
+  notes?: string;
   time?: SpawnTime;
   weather?: Weather[];
 };

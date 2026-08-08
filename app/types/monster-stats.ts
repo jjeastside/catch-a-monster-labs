@@ -4,6 +4,7 @@ export type DummeeStatData = {
 
     baseHealthELevel1: number;
     baseDamageELevel1: number;
+    baseCritChance: number;
 };
 
 export type StandardMonsterStatData = {
@@ -12,6 +13,7 @@ export type StandardMonsterStatData = {
 
     baseHealthELevel1: number;
     baseDamageELevel1: number;
+    baseCritChance: number;
 };
 
 export type MonsterStatData =

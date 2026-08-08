@@ -90,4 +90,21 @@ export const PASSIVE_DEFINITIONS: Record<Passive, PassiveDefinition> = {
         id: "lastBlessing",
         name: "Last Blessing",
     },
+    marigonFortuneSpirit: {
+        id: "marigonFortuneSpirit",
+        name: "Fortune Spirit",
+    },
+    potentialSeeker: {
+        id: "potentialSeeker",
+        name: "Potential Seeker",
+    },
+    dragonsCurse: {
+        id: "dragonsCurse",
+        name: "Dragon's Curse",
+    },
+
+    mutationCatalyst: {
+        id: "mutationCatalyst",
+        name: "Mutation Catalyst",
+    },
 };

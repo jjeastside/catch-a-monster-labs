@@ -19,7 +19,11 @@ export type Passive =
     | "riftGuard"
     | "trialPower"
     | "dungeonGuard"
-    | "lastBlessing";
+    | "lastBlessing"
+    | "marigonFortuneSpirit"
+    | "potentialSeeker"
+    | "dragonsCurse"
+    | "mutationCatalyst";
 
 export type PassiveEffectStat =
     | "damage"
@@ -38,6 +42,7 @@ export type PassiveEffectStat =
     | "xpGain"
     | "rankLuck"
     | "healthRestore"
+    | "mutationRate"
     | "stunImmunity";
 
 export type PassiveEffect = {
@@ -48,6 +53,8 @@ export type PassiveEffect = {
 export type MonsterPassive = {
   id: Passive;
   effects: PassiveEffect[];
+  values?: number[];
+  condition?: number | string;
 };
 
 export type Build = {

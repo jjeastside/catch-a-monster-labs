@@ -1,0 +1,326 @@
+monster_id,source_type,source_name,location,condition,status,notes
+dummee,First-Time Reward,First-Time Player Reward,Starter Island,,Current,
+dummee,Egg,Swamp Egg,Starter Island,,Current,
+leafet,Island Spawn,Natural Spawn,Starter Island,,Current,
+wattoad,Island Spawn,Natural Spawn,Starter Island,,Current,
+treemo,Island Spawn,Natural Spawn,Starter Island,,Current,
+flamix,Island Spawn,Natural Spawn,Starter Island,,Current,
+puffu,Island Spawn,Natural Spawn,Starter Island,,Current,
+candlechick,Event,Turkey Egg,Thanksgiving Event 2025,,Legacy,
+candlechick,Chest,Memory Chest 1,Abyss Shop,,Current,
+santadumi,Event,Christmas Event Summon,Christmas Event 2025,,Unavailable,
+santadumi,Chest,Memory Chest 1,Abyss Shop,,Current,
+santacub,Event,Christmas Event Summon,Christmas Event 2025,,Unavailable,
+santacub,Chest,Memory Chest 1,Abyss Shop,,Current,
+pricko,Rift,Volcano Rift 1,Volcano,,Current,
+pricko,Rift,Frost Isle Rift 1,Frost Isle,,Current,
+pricko,Rift,Duneveil Isle Rift 1,Duneveil Isle,,Current,
+pricko,Rift,Neverland Rift 1,Neverland,,Current,
+pricko,Rift,Volcano Rift 2,Volcano,,Current,
+pricko,Rift,Frost Isle Rift 2,Frost Isle,,Current,
+pricko,Rift,Duneveil Isle Rift 2,Duneveil Isle,,Current,
+pricko,Rift,Neverland Rift 2,Neverland,,Current,
+aquron,Island Spawn,Natural Spawn,Starter Island,,Current,
+skedeer,Island Spawn,Natural Spawn,Volcano,,Current,
+woodliz,Island Spawn,Natural Spawn,Volcano,,Current,
+candlehawk,Event,Turkey Egg,Thanksgiving Event 2025,,Legacy,
+candlehawk,Chest,Memory Chest,Abyss Shop,,Current,
+zybit,Event,Abuse Egg,Abuse Event 2025,,Legacy,
+zybit,Chest,Memory Chest 2,Abyss Shop,,Current,
+flarecub,Island Spawn,Natural Spawn,Volcano,,Current,
+blazelord,Island Spawn,Natural Spawn,Volcano,,Current,
+icevolf,Island Spawn,Natural Spawn,Frost Isle,,Current,
+frostoise,Island Spawn,Natural Spawn,Frost Isle,,Current,
+fluffairy,Island Spawn,Natural Spawn,Frost Isle,,Current,
+santafairy,Chest,Memory Chest 1,Abyss Shop,,Current,
+santafairy,Chest,Christmas Event Summon,Christmas Event 2025,,Unavailable,
+dreamtane,Island Spawn,Natural Spawn,Neverland,,Current,
+dollfey,Island Spawn,Natural Spawn,Neverland,,Current,
+stonebara,Island Spawn,Natural Spawn,Duneveil Isle,,Current,
+pangard,Island Spawn,Natural Spawn,Duneveil Isle,,Current,
+pandleaf,Rift,Volcano Rift 1,Volcano,,Current,
+pandleaf,Rift,Frost Isle Rift 1,Frost Isle,,Current,
+pandleaf,Rift,Duneveil Isle Rift 1,Duneveil Isle,,Current,
+pandleaf,Rift,Neverland Rift 1,Neverland,,Current,
+pandleaf,Rift,Volcano Rift 2,Volcano,,Current,
+pandleaf,Rift,Frost Isle Rift 2,Frost Isle,,Current,
+pandleaf,Rift,Duneveil Isle Rift 2,Duneveil Isle,,Current,
+pandleaf,Rift,Neverland Rift 2,Neverland,,Current,
+ringduck,Island Spawn,Natural Spawn,Tideland,,Current,
+shorefur,Island Spawn,Natural Spawn,Tideland,,Current,
+sproutfox,Island Spawn,Natural Spawn,Spirit Grove,,Current,
+terralion,Island Spawn,Natural Spawn,Spirit Grove,,Current,
+noxicrow,Island Spawn,Natural Spawn,Dragon's Breath,,Current,
+verdysaur,Island Spawn,Natural Spawn,Dragon's Breath,,Current,
+bunshroom,Island Spawn,Natural Spawn,Blossom Haven,,Current,
+bunleaf,Island Spawn,Natural Spawn,Blossom Haven,,Current,
+leafmage,Island Spawn,Natural Spawn,Mobius Circus,,Current,
+boinglick,Island Spawn,Natural Spawn,Mobius Circus,,Current,
+wickloom,Island Spawn,Natural Spawn,Specter Shallows,,Current,
+glowraith,Island Spawn,Natural Spawn,Specter Shallows,,Current,
+spiralin,Island Spawn,Natural Spawn,Nova Coast,,Current,
+snoozeble,Island Spawn,Natural Spawn,Nova Coast,,Current,
+bubbloo,Island Spawn,Natural Spawn,Splash Isle,,Current,
+terratort,Island Spawn,Natural Spawn,Splash Isle,,Current,
+santavolf,Event,Christmas Event Summon,Christmas Event 2025,,Unavailable,
+santavolf,Chest,Memory Chest 1,Abyss Shop,,Current,
+pyrowulf,Island Spawn,Natural Spawn,Volcano,,Current,
+noctane,Egg,Fire Egg,Volcano,,Current,
+ywendihoofs,Island Spawn,Natural Spawn,Frost Isle,,Current,
+starshade,Island Spawn,Natural Spawn,Frost Isle,,Current,
+sproutusk,Island Spawn,Natural Spawn,Frost Isle,,Current,
+nightclaw,Island Spawn,Natural Spawn,Neverland,,Current,
+floradelle,Egg,Blossom Egg,Neverland,,Current,
+floradelle,Egg,Rosette Egg,Neverland,,Current,
+hydribbit,Island Special Spawn,Special Spawn,Neverland,,Current,
+knockroo,Island Spawn,Natural Spawn,Duneveil Isle,,Current,
+volcamel,Egg,Sand Egg,Duneveil Isle,,Current,
+mistvolf,Evolution,Icevolf Evolution,,,Current,Evolves from Icevolf.
+flamevolf,Evolution,Icevolf Evolution,,,Current,Evolves from Icevolf.
+floravolf,Evolution,Icevolf Evolution,,,Current,Evolves from Icevolf.
+aurobull,Island Spawn,Natural Spawn,Duneveil Isle,,Current,
+king-penguin,Island Special Spawn,Special Spawn,Starter Island,,Current,
+fanglo,Rift,Volcano Rift 1,Volcano,,Current,
+fanglo,Rift,Frost Isle Rift 1,Frost Isle,,Current,
+fanglo,Rift,Duneveil Isle Rift 1,Duneveil Isle,,Current,
+fanglo,Rift,Neverland Rift 1,Neverland,,Current,
+fanglo,Rift,Volcano Rift 2,Volcano,,Current,
+fanglo,Rift,Frost Isle Rift 2,Frost Isle,,Current,
+fanglo,Rift,Duneveil Isle Rift 2,Duneveil Isle,,Current,
+fanglo,Rift,Neverland Rift 2,Neverland,,Current,
+weaslpash,Island Spawn,Natural Spawn,Tideland,,Current,
+walrusk,Island Special Spawn,Special Spawn,Tideland,,Current,
+walrusk,Rift,Tideland Rift 1,Tideland,,Current,
+deerleaf,Island Spawn,Natural Spawn,Spirit Grove,,Current,
+mintwolf,Egg,Giant Tree Egg,Spirit Grove,,Current,
+mintwolf,Rift,Spirit Grove Rift 1,Spirit Grove,,Current,
+nivisgon,Island Spawn,Natural Spawn,Dragon's Breath,,Current,
+tricerasteel,Island Special Spawn,Special Spawn,Dragon's Breath,,Current,
+tricerasteel,Egg,Ancient Egg,Dragon's Breath,,Current,
+tricerasteel,Rift,Dragon's Breath Rift 1,Dragon's Breath,,Current,
+cloveria,Island Spawn,Natural Spawn,Blossom Haven,,Current,
+shadecloak,Egg,Void Purple Egg,Blossom Haven,,Current,
+emberwolf,Evolution,Mintwolf Evolution,,,Current,Evolves from Mintwolf.
+jackpotron,Island Spawn,Natural Spawn,Mobius Circus,,Current,
+sleetwolf,Evolution,Mintwolf Evolution,,,Current,Evolves from Mintwolf.
+rexie,Egg,Rexie's Egg,Mobius Circus,,Current,
+stumpfox,Rift,Mobius Rift 1,Mobius Circus,,Current,
+stumpfox,Rift,Mobius Rift 2,Mobius Circus,,Current,
+strum-bones,Island Spawn,Natural Spawn,Specter Shallows,,Current,
+bone-guard,Island Spawn,Natural Spawn,Specter Shallows,,Current,
+meowl,Rift,Specter Shallows Rift 1,Specter Shallows,,Current,
+meowl,Rift,Specter Shallows Rift 2,Specter Shallows,,Current,
+snoozepink,Island Spawn,Natural Spawn,Nova Coast,,Current,
+froxy,Island Spawn,Natural Spawn,Splash Isle,,Current,
+flaragon,Egg,Pyroclasm Egg,Volcano,,Current,
+flaragon,Rift,Volcano Rift 2,Volcano,,Current,
+glazadon,Egg,Glacier Egg,Frost Isle,,Current,
+mountusk,Egg,Sprout Egg,Frost Isle,,Current,
+frostbun,Island Special Spawn,Special Spawn,Frost Isle,,Current,
+flarecrest,Event,Turkey Egg,Thanksgiving Event 2025,,Legacy,
+flarecrest,Event,Xmas Egg,Christmas Event 2025,,Current,
+flarecrest,Chest,Memory Chest 2,Abyss Shop,,Current,
+aquilune,Shop,Tower Spire Shop,Skyheart Isle,,Current,
+aquilune,Chest,Mythical Chest,Limited Events,,Current,
+frost-floradelle,Island Spawn,Natural Spawn,Neverland,Night and Aurora,Current,
+frost-floradelle,Chest,Memory Chest 1,Abyss Shop,,Unavailable,
+puffmora,Event,Event Battlepass,Christmas Event 2025,,Current,
+puffmora,Chest,Memory Chest 1,Abyss Shop,,Current,
+pinecarol,Event,Festive Gift Box,Christmas Event 2025,,Legacy,Small chance to be obtained when oppened
+pinecarol,Chest,Memory Chest 1,Abyss Shop,,Current,
+gingerjoy,Event,Christmas Event Summnon,Christmas Event 2025,,Legacy,
+gingerjoy,Chest,Memory Chest 1,Abyss Shop,,Current,
+rudolphin,Event,Christmas Event Shop,Christmas Event 2025,,Unavailable,Obtainable during the Christmas Event shop for 9000 candy canes
+rudolphin,Chest,Memory Chest 1,Abyss Shop,,Current,
+shadeknight,Egg,ShadeKnight's Egg,Neverland,,Current,
+gildron,Egg,Gildron's Egg,Duneveil Isle,,Current,
+gildron,Rift,Duneveil Isle Rift 1,Duneveil Isle,,Current,
+gildron,Rift,Duneveil Isle Rift 2,Duneveil Isle,,Current,
+flamespike,Island Special Spawn,Special Spawn,Volcano,,Current,
+dustwing,Island Special Spawn,Special Spawn,Duneveil Isle,,Current,
+dustwing,Rift,Duneveil Isle Rift 3,Duneveil Isle,,Current,
+mistwing,Evolution,DustWing Evolution,,,Current,Evolves from DustWing.
+emberwing,Evolution,DustWing Evolution,,,Current,Evolves from DustWing.
+fernwing,Evolution,DustWing Evolution,,,Current,Evolves from DustWing.
+snowwing,Evolution,DustWing Evolution,,,Current,Evolves from DustWing.
+iceplate,Rift,Volcano Rift 1,Volcano,,Current,
+iceplate,Rift,Frost Isle Rift 1,Frost Isle,,Current,
+iceplate,Rift,Duneveil Isle Rift 1,Duneveil Isle,,Current,
+iceplate,Rift,Neverland Rift 1,Neverland,,Current,
+iceplate,Rift,Volcano Rift 2,Volcano,,Current,
+iceplate,Rift,Frost Isle Rift 2,Frost Isle,,Current,
+iceplate,Rift,Duneveil Isle Rift 2,Duneveil Isle,,Current,
+iceplate,Rift,Neverland Rift 2,Neverland,,Current,
+voltagator,Rift,Volcano Rift 3,Volcano,,Current,
+voltagator,Rift,Frost Isle Rift 3,Frost Isle,,Current,
+voltagator,Rift,Duneveil Isle Rift 3,Duneveil Isle,,Current,
+voltagator,Rift,Neverland Rift 3,Neverland,,Current,
+undine,Island Special Spawn,Special Spawn,Tideland,,Current,
+undine,Rift,Tideland Rift 3,Tideland,,Current,
+tidevex,Egg,TideVex's Egg,Tideland,,Current,
+tidevex,Rift,Tideland Rift 1,Tideland,,Current,
+tidevex,Rift,Tideland Rift 2,Tideland,,Current,
+woolhorn,Rift,Tideland Rift 1,Tideland,,Current,
+woolhorn,Rift,Tideland Rift 2,Tideland,,Current,
+woolhorn,Rift,Spirit Grove Rift 1,Spirit Grove,,Current,
+mechavolt,Rift,Tideland Rift 3,Tideland,,Current,
+cobaltwing,Island Special Spawn,Special Spawn,Spirit Grove,,Current,
+cobaltwing,Rift,Spirit Grove Rift 3,Spirit Grove,,Current,
+frostwyrm,Egg,Frostwyrm's Egg,Spirit Grove,,Current,
+frostwyrm,Rift,Spirit Grove Rift 1,Spirit Grove,,Current,
+frostwyrm,Rift,Spirit Grove Rift 2,Spirit Grove,,Current,
+liodan,Event,Valentine's Egg,Valentine's Event 2026,,Legacy,
+liodan,Rift,Valentine's Rift,Valentine's Event 2026,,Legacy,
+kitsunine,Event,Valentine's Egg,Valentine's Event 2026,,Legacy,
+kitsunine,Rift,Valentine's Rift,Valentine's Event 2026,,Legacy,
+thunderjet,Rift,Spirit Grove Rift 3,Spirit Grove,,Current,
+psyber,Rift,Spirit Grove Rift 3,Spirit Grove,,Current,
+dracospike,Egg,Dracospike's Egg,Dragon's Breath,,Current,
+dracospike,Rift,Dragon's Breath Rift 1,Dragon's Breath,,Current,
+dracospike,Rift,Dragon's Breath Rift 2,Dragon's Breath,,Current,
+ignisraptor,Island Special Spawn,Special Spawn,Dragon's Breath,,Current,Area: Castle
+mintgloom,Rift,Dragon's Breath Rift 1,Dragon's Breath,,Current,
+mintgloom,Rift,Dragon's Breath Rift 2,Dragon's Breath,,Current,
+netherdemon,Rift,Dragon's Breath Rift 3,Dragon's Breath,,Current,
+toucan-birdman,Rift,Dragon's Breath Rift 3,Dragon's Breath,,Current,
+primothorn,Egg,Primothorn's Egg,Cinderclaw Castle,,Current,Normal Difficulty and Hard Difficulty
+abyssaldrake,Egg,Abyssal Drake's Egg,Cinderclaw Castle,,Current,Normal Difficulty
+berrybun,Chest,Memory Chest 1,Abyss Shop,,Current,
+berrybun,Egg,Berrybun's Egg,Easter Event 2026,,Unavailable,Was obtainable as a drop from Cinderclaw Castle Normal during the Easter 2026 event
+bladetooth,Island Special Spawn,Special Spawn,Blossom Haven,,Current,
+bladetooth,Rift,Blossom Haven Rift 1,Blossom Haven,,Current,
+thunderclaw,Egg,Thunderclaw's Egg,Blossom Haven,,Current,
+thunderclaw,Rift,Blossom Haven Rift 1,Blossom Haven,,Current,
+thunderclaw,Rift,Blossom Haven Rift 2,Blossom Haven,,Current,
+burrowbun,Rift,Blossom Haven Rift 1,Blossom Haven,,Current,
+burrowbun,Rift,Blossom Haven Rift 2,Blossom Haven,,Current,
+aetherpanther,Rift,Blossom Haven Rift 3,Blossom Haven,,Current,
+crystalfae,Egg,Crystalfae's Egg,Blossom Haven,,Current,Area: Maze
+magma-tortoise,Egg,Magma Tortoise's Egg,Cinderclaw Castle,,Current,Nightmare Difficulty
+stellar-sentinel,Island Special Spawn,Special Spawn,Mobius Circus,,Current,
+stellar-sentinel,Rift,Mobius Rift 1,Mobius Circus,,Current,
+lampyr,Egg,Lampyr's Egg,Mobius Circus,,Current,
+lampyr,Rift,Mobius Rift 1,Mobius Circus,,Current,
+lampyr,Rift,Mobius Rift 2,Mobius Circus,,Current,
+umbra-reaver,Rift,Mobius Rift 3,Mobius Circus,,Current,
+lumen-knight,Rift,Mobius Rift 3,Mobius Circus,,Current,
+jokaire,Egg,Jokaire's Egg,Mobius Circus,,Current,
+bull-lord,Island Special Spawn,Special Spawn,Specter Shallows,,Current,
+bull-lord,Rift,Specter Shallows Rift 1,Specter Shallows,,Current,
+bull-lord,Rift,Specter Shallows Rift 2,Specter Shallows,,Current,
+scareaper,Egg,Scareaper's Egg,Specter Shallows,,Current,
+scareaper,Rift,Specter Shallows Rift 1,Specter Shallows,,Current,
+scareaper,Rift,Specter Shallows Rift 2,Specter Shallows,,Current,
+magmorus,Rift,Specter Shallows Rift 3,Specter Shallows,,Current,
+gravion,Rift,Specter Shallows Rift 3,Specter Shallows,,Current,
+runegolem,Egg,Runegolem's Egg,Cinderclaw Castle,,Current,Inferno Difficulty
+crabblaze,Island Special Spawn,Special Spawn,Nova Coast,,Current,
+crabblaze,Rift,Nova Coast Rift 1,Nova Coast,,Current,
+crabblaze,Rift,Nova Coast Rift 2,Nova Coast,,Current,
+capshark,Island Special Spawn,Special Spawn,Nova Coast,,Current,
+capshark,Rift,Nova Coast Rift 1,Nova Coast,,Current,
+capshark,Rift,Nova Coast Rift 2,Nova Coast,,Current,
+beatopus,Island Special Spawn,Special Spawn,Nova Coast,,Current,
+beatopus,Rift,Nova Coast Rift 1,Nova Coast,,Current,
+beatopus,Rift,Nova Coast Rift 2,Nova Coast,,Current,
+stormhorn,Rift,Nova Coast Rift 3,Nova Coast,,Current,
+solgryph,Rift,Nova Coast Rift 3,Nova Coast,,Current,
+violetaegis,Egg,Violetaegis's Egg,Treasure Vault Cellar,,Current,Coins
+violetaegis,Egg,Violetaegis's Egg,Treasure Vault Cellar,,Current,Vault Mark
+violetaegis,Egg,Violetaegis's Egg,Treasure Vault Cellar,,Current,EXP
+violetaegis,Egg,Violetaegis's Egg,Treasure Vault Cellar,,Current,
+venofrog,Island Special Spawn,Special Spawn,Splash Isle,,Current,
+rainimp,Egg,Rainimp's Egg,Splash Isle,,Current,
+dragon-cannelloni,Shop,99 Robux Purachase,Skyheart Isle,,Legacy,
+flaragflora,Evolution,Flaragon Evolution,,,Current,Evolves from Flaragon.
+flaragfrost,Evolution,Flaragon Evolution,,,Current,Evolves from Flaragon.
+flaragaqua,Evolution,Flaragon Evolution,,,Current,Evolves from Flaragon.
+glazadonbloom,Evolution,Glazadon Evolution,,,Current,Evolves from Glazadon.
+glazadonwave,Evolution,Glazadon Evolution,,,Current,Evolves from Glazadon.
+glazadonflare,Evolution,Glazadon Evolution,,,Current,Evolves from Glazadon.
+frostvolf,Event,New Year Event Task,New Year Event 2025,,Legacy,Final reward for completing icevolf's mission.
+frostusk,Evolution,Mountusk Evolution,,,Current,Evolves from Mountusk.
+volctusk,Evolution,Mountusk Evolution,,,Current,Evolves from Mountusk.
+terratops,Evolution,Mountusk Evolution,,,Current,Evolves from Mountusk.
+frostbound-knight,Evolution,ShadeKnight Evolution,,,Current,Evolves from ShadeKnight.
+flame-knight,Evolution,ShadeKnight Evolution,,,Current,Evolves from ShadeKnight.
+verdant-knight,Evolution,ShadeKnight Evolution,,,Current,Evolves from ShadeKnight.
+stoneward-knight,Evolution,ShadeKnight Evolution,,,Current,Evolves from ShadeKnight.
+leafane,Evolution,Noctane Evolution,,,Current,Evolves from Noctane.
+glacane,Evolution,Noctane Evolution,,,Current,Evolves from Noctane.
+folirabbit,Evolution,Hydribbit Evolution,,,Current,Evolves from Hydribbit.
+mudbit,Evolution,Hydribbit Evolution,,,Current,Evolves from Hydribbit.
+inferron,Evolution,Gildron Evolution,,,Current,Evolves from Gildron.
+mossron,Evolution,Gildron Evolution,,,Current,Evolves from Gildron.
+glaciron,Evolution,Gildron Evolution,,,Current,Evolves from Gildron.
+blazevex,Evolution,TideVex Evolution,,,Current,Evolves from TideVex.
+bramblevex,Evolution,TideVex Evolution,,,Current,Evolves from TideVex.
+geogator,Evolution,Voltagator Evolution,,,Current,Evolves from Voltagator.
+glacigator,Evolution,Voltagator Evolution,,,Current,Evolves from Voltagator.
+blazewyrm,Evolution,Frostwyrm Evolution,,,Current,Evolves from Frostwyrm.
+spinewyrm,Evolution,Frostwyrm Evolution,,,Current,Evolves from Frostwyrm.
+marigon,Evolution,Nivisgon Evolution,,,Current,Evolves from Nivisgon.
+cinderine,Evolution,Undine Evolution,,,Current,Evolves from Undine.
+tellurine,Evolution,Undine Evolution,,,Current,Evolves from Undine.
+dracovine,Evolution,Dracospike Evolution,,,Current,Evolves from Dracospike.
+dracosleet,Evolution,Dracospike Evolution,,,Current,Evolves from Dracospike.
+nightveil,Evolution,Shadecloak Evolution,,,Current,Evolves from Shadecloak.
+diabvok,Evolution,Mechavolt Evolution,,,Current,Evolves from Mechavolt.
+terravok,Evolution,Mechavolt Evolution,,,Current,Evolves from Mechavolt.
+rubywing,Evolution,Cobaltwing Evolution,,,Current,Evolves from Cobaltwing.
+lazuliwing,Evolution,Cobaltwing Evolution,,,Current,Evolves from Cobaltwing.
+hornrexie,Evolution,Rexie Evolution,,,Current,Evolves from Rexie.
+glacierclaw,Evolution,Thunderclaw Evolution,,,Current,Evolves from Thunderclaw.
+mossclaw,Evolution,Thunderclaw Evolution,,,Current,Evolves from Thunderclaw.
+ignilampyr,Evolution,Lampyr Evolution,,,Current,Evolves from Lampyr.
+terrampyr,Evolution,Lampyr Evolution,,,Current,Evolves from Lampyr.
+dumplorer,Evolution,Dummee Evolution,,,Current,Evolves from Dummee.
+psyflora,Evolution,Psyber Evolution,,,Current,Evolves from Psyber.
+glaciber,Evolution,Psyber Evolution,,,Current,Evolves from Psyber.
+flaragblaze,Evolution,Flaragon Evolution,,,Current,Evolves from Flaragon.
+glazadonfroz,Evolution,Glazadon Evolution,,,Current,Evolves from Glazadon.
+fire-dragon-cannelloni,Evolution,Dragon Cannelloni Evolution,,,Current,Evolves from Dragon Cannelloni.
+necro-dragon-cannelloni,Evolution,Dragon Cannelloni Evolution,,,Current,Evolves from Dragon Cannelloni.
+titanusk,Evolution,Mountusk Evolution,,,Current,Evolves from Mountusk.
+eclipse-knight,Evolution,ShadeKnight Evolution,,,Current,Evolves from ShadeKnight.
+lunavox,Evolution,Noctane Evolution,,,Current,Evolves from Noctane.
+hydrolope,Evolution,Hydribbit Evolution,,,Current,Evolves from Hydribbit.
+solron,Evolution,Gildron Evolution,,,Current,Evolves from Gildron.
+scythewing,Evolution,DustWing Evolution,,,Current,Evolves from DustWing.
+celestide,Evolution,TideVex Evolution,,,Current,Evolves from TideVex.
+doomgator,Evolution,Voltagator Evolution,,,Current,Evolves from Voltagator.
+frostiel,Egg,Frostiel's Egg,Cinderclaw Castle,,Current,Normal and Hard Difficulty
+steamforge,Egg,Steamforge's Egg,Cinderclaw Castle,,Current,Nightmare Difficulty
+mentawolf,Evolution,Mintwolf Evolution,,,Current,Evolves from Mintwolf.
+avalanchewyrm,Evolution,Frostwyrm Evolution,,,Current,Evolves from Frostwyrm.
+poseidine,Evolution,Undine Evolution,,,Current,Evolves from Undine.
+armored-dracospike,Evolution,Dracospike Evolution,,,Current,Evolves from Dracospike.
+soulguard,Egg,Soulguard's Egg,Cinderclaw Castle,,Current,Nightmare Difficulty
+motovok,Evolution,Mechavolt Evolution,,,Current,Evolves from Mechavolt.
+crystalwing,Evolution,Cobaltwing Evolution,,,Current,Evolves from Cobaltwing.
+divineclaw,Evolution,Thunderclaw Evolution,,,Current,Evolves from Thunderclaw.
+djinn-lampyr,Evolution,Lampyr Evolution,,,Current,Evolves from Lampyr.
+necro-hydra-tortelloni,Evolution,Necro Dragon Cannelloni Evolution,,,Current,Evolves from Necro Dragon Cannelloni.
+psyberion-x,Evolution,Psyber Evolution,,,Current,Evolves from Psyber.
+void-noctane,Event,Void Jars,Void Event 2025,,Legacy,
+void-noctane,Chest,Memory Chest 2,Abyss Shop,,Legacy,
+void-dustwing,Event,Void Jars,Void Event 2025,,Legacy,
+void-dustwing,Chest,Memory Chest 2,Abyss Shop,,Legacy,
+void-lunavox,Event,Void Jars,Void Event 2025,,Legacy,
+void-lunavox,Chest,Memory Chest 2,Abyss Shop,,Legacy,
+void-iceplate,Event,Void Jars,Void Event 2025,,Legacy,
+void-iceplate,Chest,Memory Chest 2,Abyss Shop,,Legacy,
+void-scythewing,Event,Void Jars,Void Event 2025,,Legacy,
+void-scythewing,Chest,Memory Chest 2,Abyss Shop,,Legacy,
+void-shadecloak,Event,Void Jars,Void Event 2025,,Legacy,
+void-shadecloak,Chest,Memory Chest 2,Abyss Shop,,Current,
+void-strum-bones,Rift,Specter Shallows Rift 1,Specter Shallows,,Current,
+void-strum-bones,Chest,Memory Chest 2,Abyss Shop,,Current,
+void-nightveil,Evolution,Void Shadecloak Evolution,,,Current,Evolves from Void Shadecloak.
+void-scareaper,Egg,Scareaper's Egg,Specter Shallows,,Current,
+void-scareaper,Chest,Memory Chest 1,Abyss Shop,,Current,
+icearia,Contest,Art Contest,,,Unavailable,
+vorturion,Rift,Rift 3,Splash Isle,,Current,
+vorturion,Egg,Conduit Egg,Store,,Current,
+sylvaris,Rift,Rift 3,Splash Isle,,Current,
+sylvaris,Egg,Conduit Egg,Store,,Current,

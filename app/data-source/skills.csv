@@ -1,0 +1,355 @@
+id,name,element,damageInstances,cooldown,notes,validation_status
+air-bullet,Air Bullet,Common,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+bale-breath,Bale Breath,Fire,"[
+  { multiplier: 0.4, hits: 4 },
+]",8,Target: Enemy | Allies. Ally effects: 50% Team Damage for 4 secs,Ready
+barrier,Barrier,Common,[],6,Target: Allies. Ally effects: 25% of Max HP Team shield for 5 secs,Ready
+blaze-blast,Blaze Blast,Fire,"[
+  { multiplier: 1.5, hits: 1 },
+]",8,Target: Self. Ally effects: 15% of Max HP for Self shield,Ready
+bloodthirsty-aura,Bloodthirsty Aura,Common,[],8,Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs,Ready
+candy-bomb,Candy Bomb,Common,"[
+  { multiplier: 1.2, hits: 1 },
+]",6,Target: Enemy.,Ready
+charming-wind,Charming Wind,Common,"[
+  { multiplier: 1.2, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+claw-attack,Claw Attack,Common,"[
+  { multiplier: 0.6, hits: 2 },
+]",3,Target: Enemy.,Ready
+crimson-burst,Crimson Burst,Common,"[
+  { multiplier: 0.2, hits: 11 },
+]",8,Target: Enemy. Enemy effects: Stun 1.5 secs; Stagger,Ready
+dark-singularity,Dark Singularity,Common,"[
+  { multiplier: 1.2, hits: 2 },
+]",6,Target: Enemy. Enemy effects: -15% to -25% damage  for 10 s,Ready
+dash,Dash,Common,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy | Self. Enemy effects: 95% damage reduction + knockback,Ready
+deadly-sonic-wave,Deadly Sonic Wave,Common,"[
+  { multiplier: 1.2, hits: 2 },
+]",8,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+demonic-lullaby,Demonic Lullaby,Common,"[
+  { multiplier: 0.2, hits: 5 },
+]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+divine-energy-blast,Divine Energy Blast,Common,"[
+  { multiplier: 3.5, hits: 1 },
+]",6,Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 90% damage reduction self,Ready
+dragons-breath,Dragon's Breath,Fire,"[
+  { multiplier: 0.4, hits: 3 },
+]",6,Target: Enemy.,Ready
+dragons-breath-ghost,Dragon's Breath (Ghost),Fire,"[
+  { multiplier: 0.4, hits: 3 },
+]",6,Target: Enemy.,Ready
+dragons-rage,Dragon's Rage,Fire,"[
+  { multiplier: 5, hits: 1 },
+]",3,Target: Enemy | Self. Ally effects: Sacrifices 40% of Max HP each attack,Ready
+earth-smash,Earth Smash,Ground,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy.,Ready
+egg-blast,Egg Blast,Common,"[
+  { multiplier: 1.5, hits: 1 },
+]",3,Target: Enemy | Self. Ally effects: Chance for one of the following to activate:; 20% vulnerability on self for 3 secs; 100% self damage for 2 secs; 50% self damage for 2 secs; 25% self damage for 2 secs; 25% Max Hp self shield for 2 secs; 60% Damage reflection for 2 secs,Ready
+electric-beam,Electric Beam,Common,"[
+  { multiplier: 0.25, hits: 5 },
+]",8,Target: Enemy.,Ready
+electro-nova,Electro Nova,Common,"[
+  { multiplier: 1.2, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+emergency-thorn-shield,Emergency Thorn Shield,Common,[],0,Target: Ally | Self. Ally effects: 60% Damage reflection for 2 secs,Ready
+ex-air-bullet,Ex Air Bullet,Common,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy.,Ready
+ex-candy-bomb,Ex Candy Bomb,Common,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy.,Ready
+ex-fireball,Ex Fireball,Fire,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy | Self. Ally effects: 25% self Damage for 6 secs,Ready
+ex-gift-delivery,Ex Gift Delivery,Common,"[
+  { multiplier: 0.7, hits: 3 },
+]",8,Target: Enemy.,Ready
+ex-ice-surge,Ex Ice Surge,Ice,"[
+  { multiplier: 0.2, hits: 5 },
+]",6,Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs,Ready
+ex-iceball,Ex Iceball,Ice,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy.,Ready
+ex-rock-toss,Ex Rock Toss,Ground,"[
+  { multiplier: 0.5, hits: 4 },
+]",6,Target: Enemy.,Ready
+ex-seed-grenade,Ex Seed Grenade,Grass,"[
+  { multiplier: 1.2, hits: 3 },
+]",3,Target: Enemy.,Ready
+ex-water-jet,Ex Water Jet,Water,"[
+  { multiplier: 1.2, hits: 4 },
+]",6,Target: Enemy.,Ready
+ex-water-shuriken,Ex Water Shuriken,Water,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy.,Ready
+fear-taunt,Fear Taunt,Common,"[
+  { multiplier: 0.5, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Taunt 2 secs; -15% damage 10 secs,Ready
+fire-dash,Fire Dash,Fire,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy | Self. Enemy effects: 95% damage reduction + knockback,Ready
+fire-dragon-flame-blast,Fire Dragon Flame Blast,Fire,"[
+  { multiplier: 2.5, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback,Ready
+fire-tornado,Fire Tornado,Fire,"[
+  { multiplier: 1.8, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback,Ready
+fireball,Fireball,Fire,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+fireball-ghost,Fireball (Ghost),Fire,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+firecracker-pop,Firecracker Pop,Fire,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy.,Ready
+flame-breath,Flame Breath,Fire,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy. Enemy effects: Stagger,Ready
+flame-jet,Flame Jet,Fire,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy. Enemy effects: Stagger,Ready
+frost-beam,Frost Beam,Ice,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy. Enemy effects: Stagger,Ready
+frost-breath,Frost Breath,Ice,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy.,Ready
+frosty-dart,Frosty Dart,Ice,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+frozen-nova,Frozen Nova,Ice,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Stun 1 secs,Ready
+galecut,Galecut,Grass,"[
+  { multiplier: 1, hits: 1 },
+]",3,Target: Enemy.,Ready
+galemoon-blade,GaleMoon Blade,Common,"[
+  { multiplier: 0.4, hits: 4 },
+]",8,Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs; Stagger,Ready
+ghost-fireball,Ghost Fireball,Fire,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs,Ready
+ghost-impact,Ghost Impact,Common,"[
+  { multiplier: 0.2, hits: 4 },
+]",6,Target: Enemy | Allies. Ally effects: 50% Team Damage for 4 secs,Ready
+gift-delivery,Gift Delivery,Common,"[
+  { multiplier: 1, hits: 1 },
+]",6,Target: Enemy.,Ready
+glacial-smash,Glacial Smash,Ice,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy | Allies. Ally effects: 17.5% Team Shield for 6 secs,Ready
+glacial-wall,Glacial Wall,Ice,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy | Allies. Ally effects: 30% Team Shield for 6 secs (75% Chance); 60% Team Shield for 6 secs (25% chance),Ready
+grass-tornado,Grass Tornado,Grass,"[
+  { multiplier: 1.8, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Knockback,Ready
+gravel-scatter-shot,Gravel Scatter Shot,Ground,"[
+  { multiplier: 1, hits: 1 },
+]",3,Target: Enemy.,Ready
+gravel-whirlwind,Gravel Whirlwind,Ground,"[
+  { multiplier: 1, hits: 2 },
+]",8,Target: Enemy. Enemy effects: Knockback,Ready
+healing-pulse,Healing Pulse,Grass,[],6,Target: Allies. Ally effects: 80% of damage team heal,Ready
+healing-shuriken,Healing Shuriken,Water,"[
+  { multiplier: 0.2, hits: 4 },
+]",6,Target: Enemy | Self. Ally effects: 80% of damage self heal,Ready
+healing-water-ball,Healing Water Ball,Water,"[
+  { multiplier: 1, hits: 1 },
+]",6,Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 50% of damage self heal (Instant),Ready
+holy-aura-djinn-lampyr,Holy Aura (Djinn Lampyr),Common,[],8,Target: Allies. Ally effects: 25% Team Damage for 6 secs; 160% of damage + 5% of health team heal,Ready
+holy-aura-icevolf,Holy Aura (Icevolf),Common,[],8,Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs,Ready
+holy-aura-titan-tusk,Holy Aura (Titan Tusk),Common,[],8,Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs,Ready
+hydro-cannon,Hydro Cannon,Water,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy. Enemy effects: 15% decreased damage for 10 secs,Ready
+ice-road,Ice Road,Ice,"[
+  { multiplier: 1.5, hits: 1 },
+]",8,Target: Enemy.,Ready
+ice-surge,Ice Surge,Ice,"[
+  { multiplier: 0.2, hits: 5 },
+]",6,Target: Enemy.,Ready
+iceball,Iceball,Ice,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+icicle-prison,Icicle Prison,Ice,"[
+  { multiplier: 2, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Stun 1 secs,Ready
+inferno-blast,Inferno Blast,Common,"[
+  { multiplier: 1.5, hits: 1 },
+]",8,Target: Enemy.,Ready
+inferno-maelstrom,Inferno Maelstrom,Fire,"[
+  { multiplier: 1.2, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback Ally effects: 25% self damage for 6 secs,Ready
+inferno-smash,Inferno Smash,Fire,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Knockback Ally effects: 25% self damage for 6 secs,Ready
+ion-blast,Ion Blast,Common,"[
+  { multiplier: 1, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+jokers-trick,Joker's Trick,Common,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy | Self. Ally effects: Black Card:; -15% damage for 5 secs; Red Card:; 25% damage for 5 secs,Ready
+leaf-blade,Leaf blade,Grass,"[
+  { multiplier: 1, hits: 2 },
+]",3,Target: Enemy | Self. Enemy effects: Vulnerability (20%) incoming damage for 10 secs Ally effects: 13% of Max Health self heal,Ready
+leaf-surge,Leaf Surge,Grass,"[
+  { multiplier: 1.2, hits: 1 },
+]",6,Target: Enemy.,Ready
+lightning-storm-blue,Lightning Storm (Blue),Common,"[
+  { multiplier: 0.28, hits: 11 },
+]",8,Target: Enemy. Enemy effects: Stagger,Ready
+lightning-storm-purple,Lightning Storm (Purple),Common,"[
+  { multiplier: 0.2, hits: 11 },
+]",8,Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 25% self damage for 6 secs,Ready
+lightning-thrust,Lightning Thrust,Common,"[
+  { multiplier: 1.5, hits: 1 },
+]",8,Target: Enemy | Self. Ally effects: 95% damage reduction for 2 secs,Ready
+lightning-thrust-psyberion-x,Lightning Thrust (Psyberion X),Common,"[
+  { multiplier: 2, hits: 1 },
+]",8,Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for 2 secs,Ready
+lunar-heal,Lunar Heal,Common,[],8,Target: Allies. Ally effects: 20% of maximum health self heal,Ready
+lunar-taunt,Lunar Taunt,Common,"[
+  { multiplier: 0.75, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Taunt for 3 secs,Ready
+mighty-rock-toss,Mighty Rock Toss,Ground,"[
+  { multiplier: 0.5, hits: 1 },
+  { multiplier: 1, hits: 1 },
+  { multiplier: 1.5, hits: 1 },
+  { multiplier: 2, hits: 1 },
+]",6,Damage increases per hit Target: Enemy.,Ready
+mighty-water-shuriken,Mighty Water Shuriken,Water,"[
+  { multiplier: 2, hits: 1 },
+  { multiplier: 0.3, hits: 4 },
+]",8,Target: Enemy.,Ready
+nether-fireball,Nether Fireball,Fire,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy.,Ready
+oblivion-beam,Oblivion Beam,Common,"[
+  { multiplier: 0.4, hits: 5 },
+]",6,Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs,Ready
+overvolt-tempest,Overvolt Tempest,Common,"[
+  { multiplier: 0.2, hits: 11 },
+]",6,Target: Enemy. Enemy effects: Stagger Ally effects: 25% chance to trigger overvolt tempest overload deal 100% damage,Ready
+petal-dance,Petal Dance,Grass,"[
+  { multiplier: 0.3, hits: 3 },
+]",6,Target: Enemy. Enemy effects: Stagger,Ready
+poison-volley,Poison Volley,Fire,"[
+  { multiplier: 0.3, hits: 4 },
+]",,"Target: Enemy. Enemy effects: Cast four posion orbs at the enemy, orb applies a stack of posion. Each stack of Posion deals 0.4% of current hp per secs and reduces enemy attack by 4%.",Ready
+rallying-war-cry-3-sec-50,Rallying War Cry (3 sec 50%),Fire,[],3,Target: Allies. Ally effects: 50% team damage for 3 secs,Ready
+rallying-war-cry-6-sec-40-self-70,Rallying War Cry (6 sec 40% self 70%),Ground,[],6,Target: Allies | Self. Ally effects: 40% team damage for 6 secs; 70% self damage for 6 secs,Ready
+rallying-war-cry-6-sec-50,Rallying War Cry (6 sec 50%),Fire,[],6,Target: Allies. Ally effects: 50% team damage for 6 secs,Ready
+reapers-crescents,Reaper's Crescents,Common,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy.,Ready
+ripple-guard,Ripple Guard,Common,[],6,Target: Allies. Ally effects: 25% max hp shield,Ready
+rock-road,Rock Road,Ground,"[
+  { multiplier: 3, hits: 1 },
+]",8,Target: Enemy.,Ready
+rock-toss,Rock Toss,Ground,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+root-slam,Root Slam,Grass,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy | Self. Enemy effects: Knockback Ally effects: 100% of damage self heal,Ready
+root-spike,Root Spike,Grass,"[
+  { multiplier: 3, hits: 1 },
+]",8,Target: Enemy.,Ready
+scorching-fireball,Scorching Fireball,Fire,"[
+  { multiplier: 0.3, hits: 3 },
+]",6,Target: Enemy. Enemy effects: Burn 3 times; Burn deals .5% of targets Max HP for 8 secs,Ready
+seed-grenade,Seed Grenade,Grass,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+solar-beam,Solar Beam,Grass,"[
+  { multiplier: 2, hits: 1 },
+]",6,Target: Enemy.,Ready
+solar-breath,Solar Breath,Grass,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy. Enemy effects: Knockback,Ready
+soul-reap-chain,Soul Reap Chain,Common,"[
+  { multiplier: 1.5, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+soul-slash,Soul Slash,Common,"[
+  { multiplier: 0.2, hits: 11 },
+]",8,Target: Enemy. Enemy effects: Stagger,Ready
+sunder-taunt,Sunder Taunt,Ground,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Taunt for 2 secs Knockback,Ready
+taunt,Taunt,Common,"[
+  { multiplier: 0.5, hits: 1 },
+]",8,Target: Enemy | Self. Enemy effects: Taunt for 2 secs Ally effects: 35% damage reduction for 10 secs,Ready
+the-ring,The Ring,Common,"[
+  { multiplier: 0.3, hits: 3 },
+]",6,Target: Enemy. Enemy effects: 15% decreased damage for 10 secs,Ready
+thorn-shield,Thorn Shield,Common,[],8,Target: Self. Ally effects: 60% Damage reflection for 6 secs,Ready
+thunder-stun,Thunder Stun,Common,"[
+  { multiplier: 1, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+tidal-conch,Tidal Conch,Water,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+titan-slam,Titan Slam,Ground,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy | Allies. Ally effects: 25% team damage for 6 secs; 15% team shield for 6 secs,Ready
+toxic-grenade,Toxic Grenade,Grass,"[
+  { multiplier: 1, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+tsunami,Tsunami,Water,"[
+  { multiplier: 1, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback,Ready
+urgent-aid,Urgent Aid,Common,[],6,Target: Ally. Ally effects: Targets ally with lowest hp and restore 20% of ally's Max HP,Ready
+violet-core-burst,Violet Core Burst,Common,"[
+  { multiplier: 0.2, hits: 1 },
+  { multiplier: 2, hits: 1 },
+]",8,Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for self for 2 secs,Ready
+violet-core-burst-psyberion-x,Violet Core Burst (Psyberion X),Common,"[
+  { multiplier: 0.5, hits: 1 },
+  { multiplier: 2, hits: 1},
+]",8,Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for 2 secs; Taunt for 2 secs,Ready
+void-collapse,Void Collapse,Common,"[
+  { multiplier: 1.2, hits: 2 },
+]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+void-orb,Void Orb,Common,"[
+  { multiplier: 1.25, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback,Ready
+void-orb-red,Void Orb (Red),Common,"[
+  { multiplier: 1.25, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback,Ready
+vortex-nova,Vortex Nova,Water,"[
+  { multiplier: 0.2, hits: 4 },
+  { multiplier: 0.5, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback + Stagger + Lift,Ready
+water-breath,Water Breath,Water,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy.,Ready
+water-cannon,Water Cannon,Water,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy.,Ready
+water-jet,Water Jet,Water,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+water-pillar-blast,Water Pillar Blast,Water,"[
+  { multiplier: 1.8, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback + Stagger + Lift,Ready
+water-shuriken,Water Shuriken,Water,"[
+  { multiplier: 1.2, hits: 1 },
+]",6,Target: Enemy.,Ready
+wind-blast,Wind Blast,Common,"[
+  { multiplier: 1, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback + Stun for 1 Second,Ready
+wind-disc,Wind Disc,Common,"[
+  { multiplier: 1, hits: 1 },
+]",3,Target: Enemy.,Ready
+wind-disc-purple,Wind Disc (Purple),Common,"[
+  { multiplier: 1, hits: 1 },
+]",3,Target: Enemy.,Ready

@@ -52,11 +52,12 @@ export type CalculatedMutationEffects = {
 
 export function calculateMutationEffects(
     mutations: Mutation[],
+    baseCritChance = BASE_CRIT_CHANCE,
 ): CalculatedMutationEffects {
     let healthBonus = 0;
     let damageBonus = 0;
 
-    let critChance = BASE_CRIT_CHANCE;
+    let critChance = baseCritChance;
     let critMultiplier = BASE_CRIT_MULTIPLIER;
 
     for (const mutation of mutations) {

@@ -24,4 +24,5 @@ export type Skill = {
      * shields, taunts, or other special mechanics.
      */
     notes?: string;
+    validationStatus?: string;
 };

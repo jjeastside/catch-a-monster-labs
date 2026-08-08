@@ -20,6 +20,7 @@ export type PassiveEffectTotals = {
     xpGain: number;
     rankLuck: number;
     healthRestore: number;
+    mutationRate: number;
     stunImmunity: boolean;
 };
 
@@ -40,6 +41,7 @@ export const DEFAULT_PASSIVE_EFFECT_TOTALS: PassiveEffectTotals = {
     xpGain: 0,
     rankLuck: 0,
     healthRestore: 0,
+    mutationRate: 0,
     stunImmunity: false,
 };
 

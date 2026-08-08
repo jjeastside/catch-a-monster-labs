@@ -76,7 +76,7 @@ function createDescription(monster: Monster): string {
                         ? ` during ${source.weather.join(" or ")} weather`
                         : "";
 
-                    if (source.name === "Roaming") {
+                    if (source.name === "Island Spawn") {
                         return `by defeating and catching roaming monsters on ${source.type}${timeText}${weatherText}`;
                     }
 

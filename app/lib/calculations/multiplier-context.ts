@@ -39,6 +39,7 @@ type MultiplierBuild = Pick<
 
 export function createStatMultipliers(
     build: MultiplierBuild,
+    baseCritChance = 0,
 ): StatMultipliers | null {
     if (!build.rank) {
         return null;
@@ -64,7 +65,7 @@ export function createStatMultipliers(
         );
 
     const mutationEffects =
-        calculateMutationEffects(build.mutations);
+        calculateMutationEffects(build.mutations, baseCritChance);
 
     return {
         build,
@@ -76,16 +77,16 @@ export function createStatMultipliers(
         evolution,
 
         mutationHealth:
-            mutationEffects.healthMultiplier,
+        mutationEffects.healthMultiplier,
 
         mutationDamage:
-            mutationEffects.damageMultiplier,
+        mutationEffects.damageMultiplier,
 
         critChance:
-            mutationEffects.critChance,
+        mutationEffects.critChance,
 
         critMultiplier:
-            mutationEffects.critMultiplier,
+        mutationEffects.critMultiplier,
 
         healthTotal:
             rank *
