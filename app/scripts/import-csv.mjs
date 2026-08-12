@@ -85,6 +85,61 @@ function titleCase(value) {
         : value;
 }
 
+function slug(value) {
+    return String(value ?? "")
+        .trim()
+        .toLowerCase()
+        .replace(/['’]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+}
+
+function splitLines(value) {
+    return String(value ?? "")
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean);
+}
+
+function splitPipeLine(line, maximumFields, context) {
+    const fields = line
+        .split("|")
+        .map((field) => field.trim());
+
+    if (fields.length > maximumFields) {
+        throw new Error(
+            `${context} has ${fields.length} pipe fields; expected at most ${maximumFields}: ${line}`,
+        );
+    }
+
+    return fields;
+}
+
+const passiveIdsByName = {
+    "Vital Surge": "vitalSurge",
+    "Critical Chance": "criticalChance",
+    "Critical Damage": "criticalDamage",
+    "Hard Carapace": "hardCarapace",
+    "Sacred Beetle": "sacredBeetle",
+    "Fortune Spirit": "fortuneSpirit",
+    "Marigon Fortune Spirit": "marigonFortuneSpirit",
+    "Mentor Spirit": "mentorSpirit",
+    "Capturer's Boon": "captureBoon",
+    "Capture's Boon": "captureBoon",
+    "Boss Slayer": "bossSlayer",
+    "Boss Resistance": "bossResistance",
+    "Spire Dominance": "spireDominance",
+    "Spire Guard": "spireGuard",
+    "Rift Dominance": "riftDominance",
+    "Rift Guard": "riftGuard",
+    "Trial Power": "trialPower",
+    "Dungeon Guard": "dungeonGuard",
+    "Last Blessing": "lastBlessing",
+    "Potential Seeker": "potentialSeeker",
+    "Dragon's Curse": "dragonsCurse",
+    "Mutation Catalyst": "mutationCatalyst",
+};
+
 function parseDamageInstances(value, skillId) {
     const instances = [
         ...value.matchAll(
@@ -194,14 +249,131 @@ const passiveEffects = {
     ],
 };
 
-const monsters = parseCsv("monsters.csv");
+const monsterRows = parseCsv("monsters.csv");
 const skills = parseCsv("skills.csv");
-const monsterSkills = parseCsv("monster-skills.csv");
-const monsterPassives = parseCsv(
-    "monster-passives.csv",
+
+const monsters = monsterRows.map((monster, index) => {
+    const name = monster.Monster.trim();
+
+    if (!name) {
+        throw new Error(
+            `Monster row ${index + 2} is missing Monster`,
+        );
+    }
+
+    const growthType = monster["Growth Type"]
+        .trim()
+        .toLowerCase();
+
+    return {
+        monster_id: slug(name),
+        name,
+        damage: monster.Damage,
+        health: monster.Health,
+        crit_chance: monster["Crit Chance"],
+        growth_type:
+            growthType === "dummee" ||
+            growthType === "a"
+                ? "A"
+                : "B",
+        element: monster.Element,
+        rarity: monster.Rarity,
+        evolution_source: slug(
+            monster["Evolution Source"],
+        ),
+        index_position: monster["Index (Position)"],
+    };
+});
+
+const monsterSkills = monsterRows.flatMap(
+    (monster) =>
+        ["Skill 1", "Skill 2", "Skill 3"].flatMap(
+            (column, index) => {
+                const skillName =
+                    monster[column].trim();
+
+                return skillName
+                    ? [
+                        {
+                            monster_id: slug(
+                                monster.Monster,
+                            ),
+                            skill_id: slug(skillName),
+                            skill_slot: String(
+                                index + 1,
+                            ),
+                        },
+                    ]
+                    : [];
+            },
+        ),
 );
-const monsterSources = parseCsv(
-    "monster-sources.csv",
+
+const monsterPassives = monsterRows.flatMap(
+    (monster) =>
+        splitLines(monster.Passives).map((line) => {
+            const [
+                name,
+                value1 = "",
+                value2 = "",
+                condition = "",
+            ] = splitPipeLine(
+                line,
+                4,
+                `${monster.Monster} passive`,
+            );
+
+            const passiveId =
+                passiveIdsByName[name];
+
+            if (!passiveId) {
+                throw new Error(
+                    `${monster.Monster}: unknown passive "${name}"`,
+                );
+            }
+
+            return {
+                monster_id: slug(monster.Monster),
+                passive_id: passiveId,
+                value_1: value1,
+                value_2: value2,
+                condition_1: condition,
+            };
+        }),
+);
+
+const monsterSources = monsterRows.flatMap(
+    (monster) =>
+        splitLines(monster.Sources).map((line) => {
+            const [
+                type,
+                name,
+                location = "",
+                status = "",
+                condition = "",
+                notes = "",
+            ] = splitPipeLine(
+                line,
+                6,
+                `${monster.Monster} source`,
+            );
+
+            if (!type || !name) {
+                throw new Error(
+                    `${monster.Monster}: each source requires Type and Name: ${line}`,
+                );
+            }
+
+            return {
+                monster_id: slug(monster.Monster),
+                source_type: type,
+                source_name: name,
+                location,
+                status,
+                condition,
+                notes,
+            };
+        }),
 );
 
 const skillIds = new Set(

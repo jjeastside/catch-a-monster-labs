@@ -271,19 +271,19 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       },
       {
         "type": "Rift",
-        "name": "Frost Isle Rift 1",
+        "name": "Volcano Rift 1",
         "location": "Frost Isle",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Duneveil Isle Rift 1",
+        "name": "Volcano Rift 1",
         "location": "Duneveil Isle",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Neverland Rift 1",
+        "name": "Volcano Rift 1",
         "location": "Neverland",
         "status": "Current"
       },
@@ -295,19 +295,19 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       },
       {
         "type": "Rift",
-        "name": "Frost Isle Rift 2",
+        "name": "Volcano Rift 2",
         "location": "Frost Isle",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Duneveil Isle Rift 2",
+        "name": "Volcano Rift 2",
         "location": "Duneveil Isle",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Neverland Rift 2",
+        "name": "Volcano Rift 2",
         "location": "Neverland",
         "status": "Current"
       }
@@ -754,7 +754,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "sources": [
       {
         "type": "Rift",
-        "name": "Volcano Rift 1",
+        "name": "Frost Isle Rift 1",
         "location": "Volcano",
         "status": "Current"
       },
@@ -766,19 +766,19 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       },
       {
         "type": "Rift",
-        "name": "Duneveil Isle Rift 1",
+        "name": "Frost Isle Rift 1",
         "location": "Duneveil Isle",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Neverland Rift 1",
+        "name": "Frost Isle Rift 1",
         "location": "Neverland",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Volcano Rift 2",
+        "name": "Frost Isle Rift 2",
         "location": "Volcano",
         "status": "Current"
       },
@@ -790,13 +790,13 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       },
       {
         "type": "Rift",
-        "name": "Duneveil Isle Rift 2",
+        "name": "Frost Isle Rift 2",
         "location": "Duneveil Isle",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Neverland Rift 2",
+        "name": "Frost Isle Rift 2",
         "location": "Neverland",
         "status": "Current"
       }
@@ -1685,19 +1685,19 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "sources": [
       {
         "type": "Rift",
-        "name": "Volcano Rift 1",
+        "name": "Neverland Rift 1",
         "location": "Volcano",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Frost Isle Rift 1",
+        "name": "Neverland Rift 1",
         "location": "Frost Isle",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Duneveil Isle Rift 1",
+        "name": "Neverland Rift 1",
         "location": "Duneveil Isle",
         "status": "Current"
       },
@@ -1709,19 +1709,19 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       },
       {
         "type": "Rift",
-        "name": "Volcano Rift 2",
+        "name": "Neverland Rift 2",
         "location": "Volcano",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Frost Isle Rift 2",
+        "name": "Neverland Rift 2",
         "location": "Frost Isle",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Duneveil Isle Rift 2",
+        "name": "Neverland Rift 2",
         "location": "Duneveil Isle",
         "status": "Current"
       },
@@ -1758,9 +1758,9 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "indexPosition": 59
   },
   {
-    "id": "weaslpash",
-    "name": "Weaslpash",
-    "image": "/monster-artwork/weaslpash.png",
+    "id": "weasplash",
+    "name": "weasplash",
+    "image": "/monster-artwork/weasplash.png",
     "element": "Water",
     "rarity": "Legendary",
     "sources": [
@@ -2889,13 +2889,13 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "sources": [
       {
         "type": "Rift",
-        "name": "Volcano Rift 1",
+        "name": "Duneveil Isle Rift 1",
         "location": "Volcano",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Frost Isle Rift 1",
+        "name": "Duneveil Isle Rift 1",
         "location": "Frost Isle",
         "status": "Current"
       },
@@ -2907,19 +2907,19 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       },
       {
         "type": "Rift",
-        "name": "Neverland Rift 1",
+        "name": "Duneveil Isle Rift 1",
         "location": "Neverland",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Volcano Rift 2",
+        "name": "Duneveil Isle Rift 2",
         "location": "Volcano",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Frost Isle Rift 2",
+        "name": "Duneveil Isle Rift 2",
         "location": "Frost Isle",
         "status": "Current"
       },
@@ -2931,7 +2931,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       },
       {
         "type": "Rift",
-        "name": "Neverland Rift 2",
+        "name": "Duneveil Isle Rift 2",
         "location": "Neverland",
         "status": "Current"
       }
@@ -2962,34 +2962,34 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "indexPosition": 97
   },
   {
-    "id": "voltagator",
-    "name": "Voltagator",
-    "image": "/monster-artwork/voltagator.png",
+    "id": "voltgator",
+    "name": "voltgator",
+    "image": "/monster-artwork/voltgator.png",
     "element": "Common",
     "rarity": "Mythical",
     "sources": [
       {
         "type": "Rift",
-        "name": "Volcano Rift 3",
+        "name": "Duneveil Isle Rift 3",
         "location": "Volcano",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Frost Isle Rift 3",
+        "name": "Duneveil Isle Rift 3",
         "location": "Frost Isle",
         "status": "Current"
       },
       {
         "type": "Rift",
         "name": "Duneveil Isle Rift 3",
-        "location": "Duneveil Isle",
+        "location": "Neverland",
         "status": "Current"
       },
       {
         "type": "Rift",
-        "name": "Neverland Rift 3",
-        "location": "Neverland",
+        "name": "Duneveil Isle Rift 3",
+        "location": "Duneveil Isle",
         "status": "Current"
       }
     ],
@@ -5387,7 +5387,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
   },
   {
     "id": "bramblevex",
-    "name": "BrambleVex",
+    "name": "Bramblevex",
     "image": "/monster-artwork/bramblevex.png",
     "element": "Grass",
     "rarity": "Mythical",
@@ -5422,9 +5422,9 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "sources": [
       {
         "type": "Evolution",
-        "name": "Voltagator Evolution",
+        "name": "voltgator Evolution",
         "status": "Current",
-        "notes": "Evolves from Voltagator."
+        "notes": "Evolves from voltgator."
       }
     ],
     "skillIds": [
@@ -5434,7 +5434,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "passives": [],
     "hasEvolution": false,
     "isEvolved": true,
-    "evolutionSource": "voltagator",
+    "evolutionSource": "voltgator",
     "baseDamageELevel1": 418400,
     "baseHealthELevel1": 2280000,
     "baseCritChance": 0,
@@ -5450,9 +5450,9 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "sources": [
       {
         "type": "Evolution",
-        "name": "Voltagator Evolution",
+        "name": "voltgator Evolution",
         "status": "Current",
-        "notes": "Evolves from Voltagator."
+        "notes": "Evolves from voltgator."
       }
     ],
     "skillIds": [
@@ -5475,7 +5475,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "hasEvolution": false,
     "isEvolved": true,
-    "evolutionSource": "voltagator",
+    "evolutionSource": "voltgator",
     "baseDamageELevel1": 298850,
     "baseHealthELevel1": 3200000,
     "baseCritChance": 0,
@@ -6466,9 +6466,9 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "sources": [
       {
         "type": "Evolution",
-        "name": "Voltagator Evolution",
+        "name": "voltgator Evolution",
         "status": "Current",
-        "notes": "Evolves from Voltagator."
+        "notes": "Evolves from voltgator."
       }
     ],
     "skillIds": [
@@ -6491,7 +6491,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "hasEvolution": false,
     "isEvolved": true,
-    "evolutionSource": "voltagator",
+    "evolutionSource": "voltgator",
     "baseDamageELevel1": 629610,
     "baseHealthELevel1": 3437300,
     "baseCritChance": 15,

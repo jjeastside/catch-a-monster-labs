@@ -74,6 +74,7 @@ export type SourceType =
     | "Island Special Spawn"
     | "Rift"
     | "Event"
+    | "Battle Pass"
     | "Evolution"
     | "Chest"
     | "Shop"

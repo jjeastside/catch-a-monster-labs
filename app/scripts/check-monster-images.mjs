@@ -31,35 +31,100 @@ if (!fs.existsSync(artworkDirectory)) {
     );
 }
 
+function parseCsv(input) {
+    const rows = [];
+    let row = [];
+    let field = "";
+    let quoted = false;
+
+    for (let index = 0; index < input.length; index += 1) {
+        const character = input[index];
+
+        if (quoted) {
+            if (
+                character === '"' &&
+                input[index + 1] === '"'
+            ) {
+                field += '"';
+                index += 1;
+            } else if (character === '"') {
+                quoted = false;
+            } else {
+                field += character;
+            }
+        } else if (character === '"') {
+            quoted = true;
+        } else if (character === ",") {
+            row.push(field);
+            field = "";
+        } else if (character === "\n") {
+            row.push(field.replace(/\r$/, ""));
+            rows.push(row);
+            row = [];
+            field = "";
+        } else {
+            field += character;
+        }
+    }
+
+    if (field || row.length) {
+        row.push(field.replace(/\r$/, ""));
+        rows.push(row);
+    }
+
+    return rows.filter((values) =>
+        values.some((value) => value.trim()),
+    );
+}
+
+function slug(value) {
+    return String(value ?? "")
+        .trim()
+        .toLowerCase()
+        .replace(/['’]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+}
+
 const csvText = fs
     .readFileSync(monstersCsvPath, "utf8")
     .replace(/^\uFEFF/, "");
 
-const lines = csvText
-    .split(/\r?\n/)
-    .filter((line) => line.trim());
+const rows = parseCsv(csvText);
 
-const headers = lines[0]
-    .split(",")
-    .map((header) => header.trim());
+const headers =
+    rows.shift()?.map((header) => header.trim()) ?? [];
 
 const monsterIdColumn =
     headers.indexOf("monster_id");
 
-if (monsterIdColumn === -1) {
+const monsterNameColumn =
+    headers.findIndex((header) =>
+        ["monster", "name"].includes(
+            header.toLowerCase(),
+        ),
+    );
+
+if (
+    monsterIdColumn === -1 &&
+    monsterNameColumn === -1
+) {
     throw new Error(
-        'The CSV is missing the "monster_id" column.',
+        'The CSV must contain a "monster_id", "Monster", or "name" column.',
     );
 }
 
-const monsterIds = lines
-    .slice(1)
-    .map((line) => {
-        const columns = line.split(",");
+const monsterIds = rows
+    .map((columns) => {
+        if (monsterIdColumn !== -1) {
+            return columns[
+                monsterIdColumn
+                ]?.trim();
+        }
 
-        return columns[
-            monsterIdColumn
-            ]?.trim();
+        return slug(
+            columns[monsterNameColumn],
+        );
     })
     .filter(Boolean);
 
@@ -88,12 +153,15 @@ const existingImages =
 console.log("");
 console.log("Monster Artwork Report");
 console.log("======================");
+
 console.log(
     `Total monsters:   ${monsterIds.length}`,
 );
+
 console.log(
     `Images found:     ${existingImages}`,
 );
+
 console.log(
     `Images missing:   ${missingImages.length}`,
 );
@@ -125,6 +193,7 @@ if (missingImages.length > 0) {
     );
 
     console.log("");
+
     console.log(
         `Saved missing-image list to:\n${reportPath}`,
     );

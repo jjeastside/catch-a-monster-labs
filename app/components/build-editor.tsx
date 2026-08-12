@@ -122,8 +122,8 @@ function SelectField({
                     <option value="">{emptyLabel}</option>
                 )}
 
-                {options.map((option) => (
-                    <option key={option.id} value={option.id}>
+                {options.map((option, index) => (
+                    <option key={`${option.id}-${index}`} value={option.id}>
                         {option.label}
                     </option>
                 ))}
