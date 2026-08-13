@@ -62,8 +62,8 @@ type StatsBuild = Pick<
     | "evolutionPercent"
     | "mutations"
     | "selectedSkillId"
-    | "pawId"
-    | "ringId"
+    | "weaponId"
+    | "armorId"
 >;
 
 function validateLevel(level: number): void {

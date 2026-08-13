@@ -1,4 +1,4 @@
-export type EquipmentType = "paw" | "ring";
+export type EquipmentType = "weapon" | "armor";
 
 export type EquipmentRarity =
     | "Rare"

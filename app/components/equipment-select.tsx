@@ -76,7 +76,7 @@ export function EquipmentSelect({
                                 {selectedItem.name}
                             </span>
                             <span className={`block text-[10px] ${rarityTextClasses[selectedItem.rarity]}`}>
-                                +{selectedItem.percentage}% {selectedItem.type === "paw" ? "Damage" : "Health"}
+                                +{selectedItem.percentage}% {selectedItem.type === "weapon" ? "Damage" : "Health"}
                             </span>
                         </span>
                     </>
@@ -130,7 +130,7 @@ export function EquipmentSelect({
                                         {item.name}
                                     </span>
                                     <span className={`mt-0.5 block text-xs ${rarityTextClasses[item.rarity]}`}>
-                                        {item.rarity} · +{item.percentage}% {item.type === "paw" ? "Damage" : "Health"}
+                                        {item.rarity} · +{item.percentage}% {item.type === "weapon" ? "Damage" : "Health"}
                                     </span>
                                 </span>
                                 {selected && <span className="text-[#79e3ae]">✓</span>}

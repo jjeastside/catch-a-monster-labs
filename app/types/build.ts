@@ -78,8 +78,8 @@ export type Build = {
 
   selectedSkillId: SkillId | null;
 
-  pawId: string | null;
-  ringId: string | null;
+  weaponId: string | null;
+  armorId: string | null;
 
   accountMultipliers: {
     indexMania: boolean;
@@ -105,8 +105,8 @@ export function createDefaultBuild(
     evolutionPercent: defaults?.evolutionPercent ?? 100,
     mutations: [],
     selectedSkillId: null,
-    pawId: null,
-    ringId: null,
+    weaponId: null,
+    armorId: null,
     accountMultipliers: {
       indexMania: false,
       petQuestAchievement: false,

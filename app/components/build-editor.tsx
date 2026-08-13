@@ -16,7 +16,7 @@ import {
     getSkill,
     getSkillTotalMultiplier,
 } from "../data/skills";
-import { PAWS, RINGS } from "../data/equipments";
+import { ARMORS, WEAPONS } from "../data/equipments";
 
 import { CollapsibleSection } from "./collapsible-section";
 import { EquipmentSelect } from "./equipment-select";
@@ -653,26 +653,26 @@ export function BuildEditor({
                 <CollapsibleSection title="Equipment">
                     <div className="grid grid-cols-2 gap-3">
                         <EquipmentSelect
-                            label="Paw"
-                            value={build.pawId}
+                            label="Weapon"
+                            value={build.weaponId}
                             onChange={(value) =>
-                                update("pawId", value)
+                                update("weaponId", value)
                             }
-                            items={PAWS}
+                            items={WEAPONS}
                         />
 
                         <EquipmentSelect
-                            label="Ring"
-                            value={build.ringId}
+                            label="Armor"
+                            value={build.armorId}
                             onChange={(value) =>
-                                update("ringId", value)
+                                update("armorId", value)
                             }
-                            items={RINGS}
+                            items={ARMORS}
                         />
                     </div>
 
                     <div className="mt-3 rounded-md border border-dashed border-[#303848] p-3 text-xs text-[#788295]">
-                        Paw increases Damage. Ring increases Health. Gear attributes will be added next.
+                        Weapon increases Damage. Armor increases Health. Gear attributes will be added next.
                     </div>
                 </CollapsibleSection>
 

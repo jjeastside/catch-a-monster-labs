@@ -379,7 +379,7 @@ function AdvancedCalculations({
                             </p>
 
                             <p className="mt-1 text-xs text-[#99a2b3]">
-                                Rank × enhancement × Health GP × evolution × mutation × ring
+                                Rank × enhancement × Health GP × evolution × mutation × armor
                             </p>
                         </div>
 
@@ -395,7 +395,7 @@ function AdvancedCalculations({
                             </p>
 
                             <p className="mt-1 text-xs text-[#99a2b3]">
-                                Rank × enhancement × Damage GP × evolution × mutation × paw
+                                Rank × enhancement × Damage GP × evolution × mutation × weapon
                             </p>
                         </div>
                     </div>
@@ -541,14 +541,14 @@ function FormulaBreakdown({ stats }: FormulaBreakdownProps) {
                 </div>
 
                 <div>
-                    <p className="text-[#788295]">Ring health multiplier</p>
+                    <p className="text-[#788295]">Armor health multiplier</p>
                     <p className="text-[#d8dee9]">
                         ×{formatNumber(stats.equipmentHealthMultiplier)}
                     </p>
                 </div>
 
                 <div>
-                    <p className="text-[#788295]">Paw damage multiplier</p>
+                    <p className="text-[#788295]">Weapon damage multiplier</p>
                     <p className="text-[#d8dee9]">
                         ×{formatNumber(stats.equipmentDamageMultiplier)}
                     </p>
@@ -633,8 +633,8 @@ function BuildResultsPanel({
             ).join(" "),
         ).join(", ")
         : "No mutation";
-    const selectedPaw = getEquipment(build.pawId);
-    const selectedRing = getEquipment(build.ringId);
+    const selectedWeapon = getEquipment(build.weaponId);
+    const selectedArmor = getEquipment(build.armorId);
 
     const incomingDamageReduction =
         getMutationIncomingDamageReduction(build.mutations);
@@ -788,16 +788,16 @@ function BuildResultsPanel({
                 </span>
 
                 <span>
-                    Paw{" "}
+                    Weapon{" "}
                     <strong className="font-medium text-[#d8dee9]">
-                        {selectedPaw ? `${selectedPaw.name} (+${selectedPaw.percentage}% Damage)` : "None"}
+                        {selectedWeapon ? `${selectedWeapon.name} (+${selectedWeapon.percentage}% Damage)` : "None"}
                     </strong>
                 </span>
 
                 <span>
-                    Ring{" "}
+                    Armor{" "}
                     <strong className="font-medium text-[#d8dee9]">
-                        {selectedRing ? `${selectedRing.name} (+${selectedRing.percentage}% Health)` : "None"}
+                        {selectedArmor ? `${selectedArmor.name} (+${selectedArmor.percentage}% Health)` : "None"}
                     </strong>
                 </span>
             </div>
