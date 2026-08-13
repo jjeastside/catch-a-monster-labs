@@ -9,6 +9,7 @@ import {
     getSkillTotalHits,
     getSkillTotalMultiplier,
 } from "../data/skills";
+import { getEquipment } from "../data/equipments";
 
 import {
     calculateStats,
@@ -378,7 +379,7 @@ function AdvancedCalculations({
                             </p>
 
                             <p className="mt-1 text-xs text-[#99a2b3]">
-                                Rank × enhancement × Health GP × evolution × mutation
+                                Rank × enhancement × Health GP × evolution × mutation × ring
                             </p>
                         </div>
 
@@ -394,7 +395,7 @@ function AdvancedCalculations({
                             </p>
 
                             <p className="mt-1 text-xs text-[#99a2b3]">
-                                Rank × enhancement × Damage GP × evolution × mutation
+                                Rank × enhancement × Damage GP × evolution × mutation × paw
                             </p>
                         </div>
                     </div>
@@ -441,7 +442,7 @@ function FormulaBreakdown({ stats }: FormulaBreakdownProps) {
             </h3>
 
             <p className="mt-1 text-xs text-[#79e3ae]">
-                Includes level, rank, enhancement, Genetic Potential, Evolution, and Mutation calculations.
+                Includes level, rank, enhancement, Genetic Potential, Evolution, Mutation, and Equipment calculations.
             </p>
 
             <div className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
@@ -540,6 +541,20 @@ function FormulaBreakdown({ stats }: FormulaBreakdownProps) {
                 </div>
 
                 <div>
+                    <p className="text-[#788295]">Ring health multiplier</p>
+                    <p className="text-[#d8dee9]">
+                        ×{formatNumber(stats.equipmentHealthMultiplier)}
+                    </p>
+                </div>
+
+                <div>
+                    <p className="text-[#788295]">Paw damage multiplier</p>
+                    <p className="text-[#d8dee9]">
+                        ×{formatNumber(stats.equipmentDamageMultiplier)}
+                    </p>
+                </div>
+
+                <div>
                     <p className="text-[#788295]">
                         Health combined multiplier
                     </p>
@@ -618,6 +633,8 @@ function BuildResultsPanel({
             ).join(" "),
         ).join(", ")
         : "No mutation";
+    const selectedPaw = getEquipment(build.pawId);
+    const selectedRing = getEquipment(build.ringId);
 
     const incomingDamageReduction =
         getMutationIncomingDamageReduction(build.mutations);
@@ -773,14 +790,14 @@ function BuildResultsPanel({
                 <span>
                     Paw{" "}
                     <strong className="font-medium text-[#d8dee9]">
-                        {build.pawId ?? "None"}
+                        {selectedPaw ? `${selectedPaw.name} (+${selectedPaw.percentage}% Damage)` : "None"}
                     </strong>
                 </span>
 
                 <span>
                     Ring{" "}
                     <strong className="font-medium text-[#d8dee9]">
-                        {build.ringId ?? "None"}
+                        {selectedRing ? `${selectedRing.name} (+${selectedRing.percentage}% Health)` : "None"}
                     </strong>
                 </span>
             </div>

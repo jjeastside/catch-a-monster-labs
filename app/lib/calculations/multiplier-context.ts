@@ -5,6 +5,7 @@ import { getEvolutionMultiplier } from "./evolution";
 import { getGeneticPotentialMultiplier } from "./genetic-potential";
 import { getRankMultiplier } from "./ranks";
 import { calculateMutationEffects } from "./mutations";
+import { getPawDamageMultiplier, getRingHealthMultiplier } from "./equipment";
 
 export type StatMultipliers = {
     build: MultiplierBuild;
@@ -18,6 +19,8 @@ export type StatMultipliers = {
 
     mutationHealth: number;
     mutationDamage: number;
+    equipmentHealth: number;
+    equipmentDamage: number;
 
     critChance: number;
     critMultiplier: number;
@@ -35,6 +38,8 @@ type MultiplierBuild = Pick<
     | "evolutionPercent"
     | "mutations"
     | "selectedSkillId"
+    | "pawId"
+    | "ringId"
 >;
 
 export function createStatMultipliers(
@@ -66,6 +71,8 @@ export function createStatMultipliers(
 
     const mutationEffects =
         calculateMutationEffects(build.mutations, baseCritChance);
+    const equipmentHealth = getRingHealthMultiplier(build.ringId);
+    const equipmentDamage = getPawDamageMultiplier(build.pawId);
 
     return {
         build,
@@ -82,6 +89,9 @@ export function createStatMultipliers(
         mutationDamage:
         mutationEffects.damageMultiplier,
 
+        equipmentHealth,
+        equipmentDamage,
+
         critChance:
         mutationEffects.critChance,
 
@@ -93,13 +103,15 @@ export function createStatMultipliers(
             enhancement *
             healthGenetic *
             evolution *
-            mutationEffects.healthMultiplier,
+            mutationEffects.healthMultiplier *
+            equipmentHealth,
 
         damageTotal:
             rank *
             enhancement *
             damageGenetic *
             evolution *
-            mutationEffects.damageMultiplier,
+            mutationEffects.damageMultiplier *
+            equipmentDamage,
     };
 }

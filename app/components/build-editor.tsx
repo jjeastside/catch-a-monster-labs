@@ -16,8 +16,10 @@ import {
     getSkill,
     getSkillTotalMultiplier,
 } from "../data/skills";
+import { PAWS, RINGS } from "../data/equipments";
 
 import { CollapsibleSection } from "./collapsible-section";
+import { EquipmentSelect } from "./equipment-select";
 import { Panel } from "./panel";
 
 const mutations: {
@@ -650,35 +652,27 @@ export function BuildEditor({
 
                 <CollapsibleSection title="Equipment">
                     <div className="grid grid-cols-2 gap-3">
-                        <SelectField
+                        <EquipmentSelect
                             label="Paw"
                             value={build.pawId}
                             onChange={(value) =>
                                 update("pawId", value)
                             }
-                            options={[
-                                { id: "paw-1", label: "Paw 1" },
-                                { id: "paw-2", label: "Paw 2" },
-                            ]}
-                            emptyLabel="None"
+                            items={PAWS}
                         />
 
-                        <SelectField
+                        <EquipmentSelect
                             label="Ring"
                             value={build.ringId}
                             onChange={(value) =>
                                 update("ringId", value)
                             }
-                            options={[
-                                { id: "ring-1", label: "Ring 1" },
-                                { id: "ring-2", label: "Ring 2" },
-                            ]}
-                            emptyLabel="None"
+                            items={RINGS}
                         />
                     </div>
 
                     <div className="mt-3 rounded-md border border-dashed border-[#303848] p-3 text-xs text-[#788295]">
-                        Gear Attributes placeholder
+                        Paw increases Damage. Ring increases Health. Gear attributes will be added next.
                     </div>
                 </CollapsibleSection>
 

@@ -36,6 +36,8 @@ export type CalculatedStats = {
 
     mutationHealthMultiplier: number;
     mutationDamageMultiplier: number;
+    equipmentHealthMultiplier: number;
+    equipmentDamageMultiplier: number;
 
     healthTotalMultiplier: number;
     damageTotalMultiplier: number;
@@ -60,6 +62,8 @@ type StatsBuild = Pick<
     | "evolutionPercent"
     | "mutations"
     | "selectedSkillId"
+    | "pawId"
+    | "ringId"
 >;
 
 function validateLevel(level: number): void {
@@ -141,6 +145,12 @@ function createCalculatedStats(
 
         mutationDamageMultiplier:
         multipliers.mutationDamage,
+
+        equipmentHealthMultiplier:
+        multipliers.equipmentHealth,
+
+        equipmentDamageMultiplier:
+        multipliers.equipmentDamage,
 
         healthTotalMultiplier:
         multipliers.healthTotal,
