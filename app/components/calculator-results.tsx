@@ -18,6 +18,10 @@ import {
 import {
     calculateCombatDamage,
 } from "../lib/calculations/combat";
+import {
+    getMutationCooldownMultiplier,
+    getMutationIncomingDamageReduction,
+} from "../lib/calculations/mutations";
 
 import type { Build } from "../types/build";
 import type { Monster } from "../types/monster";
@@ -96,7 +100,9 @@ function SkillDamagePanel({
     const isDamagingSkill =
         skill.damageInstances.length > 0;
 
-    const hasFairy = build.mutations.includes("fairy");
+    const cooldownMultiplier = getMutationCooldownMultiplier(build.mutations);
+    const hasFairy = cooldownMultiplier < 1;
+    const fairyLabel = build.mutations.includes("fairy-x") ? "Fairy X" : "Fairy";
 
     const combatDamage = calculateCombatDamage({
         monster,
@@ -124,9 +130,7 @@ function SkillDamagePanel({
     const displayedCooldown =
         skill.cooldown === null
             ? null
-            : hasFairy
-                ? skill.cooldown * 0.8
-                : skill.cooldown;
+            : skill.cooldown * cooldownMultiplier;
 
     return (
         <section className="rounded-lg border border-[#303848] bg-[#171b25] p-4">
@@ -145,7 +149,7 @@ function SkillDamagePanel({
                     <span className="rounded border border-[#303848] px-2 py-0.5 text-xs text-[#99a2b3]">
                         {displayedCooldown !== null
                             ? hasFairy
-                                ? `${formatNumber(displayedCooldown)}s Cooldown · Fairy`
+                                ? `${formatNumber(displayedCooldown)}s Cooldown · ${fairyLabel}`
                                 : `${formatNumber(displayedCooldown)}s Cooldown`
                             : "Cooldown unknown"}
                     </span>
@@ -239,7 +243,7 @@ function SkillDamagePanel({
 
                     <div className="mt-4">
                         <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
-                        Damage Breakdown
+                            Damage Breakdown
                         </p>
 
                         <div className="mt-2 space-y-2">
@@ -580,7 +584,7 @@ function GrowthGraphPlaceholder({
     return (
         <section
             className="flex min-h-48 flex-col rounded-lg border border-dashed border-[#303848] bg-[#0d1017]/45 p-4">
-        <h3 className="text-sm font-semibold text-[#e8ebf0]">
+            <h3 className="text-sm font-semibold text-[#e8ebf0]">
                 Growth Graph
             </h3>
 
@@ -608,16 +612,21 @@ function BuildResultsPanel({
                                selectedSkillName,
                            }: BuildResultsPanelProps) {
     const mutationText = build.mutations.length
-        ? build.mutations.join(", ")
+        ? build.mutations.map((mutation) =>
+            mutation.split("-").map((part) =>
+                part.charAt(0).toUpperCase() + part.slice(1),
+            ).join(" "),
+        ).join(", ")
         : "No mutation";
 
-    const hasFairy = build.mutations.includes("fairy");
+    const incomingDamageReduction =
+        getMutationIncomingDamageReduction(build.mutations);
 
     const healthNotes: string[] = [];
 
-    if (hasFairy) {
+    if (incomingDamageReduction > 0) {
         healthNotes.push(
-            "Fairy: -25% Incoming Damage",
+            `${build.mutations.includes("fairy-x") ? "Fairy X" : "Fairy"}: -${incomingDamageReduction}% Incoming Damage`,
         );
     }
 

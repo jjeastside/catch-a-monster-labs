@@ -22,45 +22,60 @@ import { Panel } from "./panel";
 
 const mutations: {
     id: Mutation;
+    xId: Mutation;
     label: string;
     icon: string;
     effects: string[];
+    xIcon: string;
+    xEffects: string[];
 }[] = [
     {
         id: "huge",
+        xId: "huge-x",
         label: "Huge",
         icon: "/icons/Huge.png",
         effects: [
             "+40% Health",
             "+40% Damage",
         ],
+        xIcon: "/icons/huge-x.png",
+        xEffects: ["+60% Health", "+60% Damage"],
     },
     {
         id: "shiny",
+        xId: "shiny-x",
         label: "Shiny",
         icon: "/icons/Shiny.png",
         effects: [
             "+10% Damage",
             "+30% Crit Chance",
         ],
+        xIcon: "/icons/shiny-x.png",
+        xEffects: ["+25% Damage", "+35% Crit Chance"],
     },
     {
         id: "bloodlit",
+        xId: "bloodlit-x",
         label: "Bloodlit",
         icon: "/icons/Bloodlit.png",
         effects: [
             "+10% Crit Chance",
             "+100% Crit Damage",
         ],
+        xIcon: "/icons/bloodlit-x.png",
+        xEffects: ["+15% Crit Chance", "+145% Crit Damage"],
     },
     {
         id: "fairy",
+        xId: "fairy-x",
         label: "Fairy",
         icon: "/icons/Fairy.png",
         effects: [
             "-25% Incoming Damage",
             "-20% Cooldown",
         ],
+        xIcon: "/icons/fairy-x.png",
+        xEffects: ["-35% Incoming Damage", "-25% Cooldown"],
     },
 ];
 
@@ -307,15 +322,18 @@ export function BuildEditor({
         }));
     };
 
-    const toggleMutation = (mutation: Mutation) => {
-        update(
-            "mutations",
-            build.mutations.includes(mutation)
-                ? build.mutations.filter(
-                    (value) => value !== mutation,
-                )
-                : [...build.mutations, mutation],
+    const cycleMutation = (mutation: (typeof mutations)[number]) => {
+        const withoutMutation = build.mutations.filter(
+            (value) => value !== mutation.id && value !== mutation.xId,
         );
+
+        if (build.mutations.includes(mutation.xId)) {
+            update("mutations", withoutMutation);
+        } else if (build.mutations.includes(mutation.id)) {
+            update("mutations", [...withoutMutation, mutation.xId]);
+        } else {
+            update("mutations", [...withoutMutation, mutation.id]);
+        }
     };
 
     const updateAccount = (
@@ -495,18 +513,18 @@ export function BuildEditor({
                 <CollapsibleSection title="Mutations">
                     <div className="flex flex-wrap gap-2">
                         {mutations.map((mutation) => {
-                            const isSelected =
-                                build.mutations.includes(mutation.id);
+                            const isX = build.mutations.includes(mutation.xId);
+                            const isSelected = isX || build.mutations.includes(mutation.id);
+                            const label = isX ? `${mutation.label} X` : mutation.label;
 
                             return (
                                 <button
                                     key={mutation.id}
                                     type="button"
-                                    onClick={() =>
-                                        toggleMutation(mutation.id)
-                                    }
+                                    onClick={() => cycleMutation(mutation)}
                                     aria-pressed={isSelected}
-                                    title={mutation.label}
+                                    aria-label={`${label}. Click to ${isX ? "remove" : isSelected ? `upgrade to ${mutation.label} X` : "select"}.`}
+                                    title={`${label} · Click to ${isX ? "remove" : isSelected ? "upgrade" : "select"}`}
                                     className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-md border transition ${
                                         isSelected
                                             ? "border-[#79e3ae] bg-[#173126] shadow-[0_0_12px_rgba(121,227,174,0.18)]"
@@ -514,8 +532,8 @@ export function BuildEditor({
                                     }`}
                                 >
                                     <img
-                                        src={mutation.icon}
-                                        alt={mutation.label}
+                                        src={isX ? mutation.xIcon : mutation.icon}
+                                        alt={label}
                                         className="size-11 object-contain"
                                     />
 
@@ -543,37 +561,44 @@ export function BuildEditor({
                             <div className="space-y-2">
                                 {mutations
                                     .filter((mutation) =>
-                                        build.mutations.includes(mutation.id),
+                                        build.mutations.includes(mutation.id) ||
+                                        build.mutations.includes(mutation.xId),
                                     )
-                                    .map((mutation) => (
-                                        <div
-                                            key={mutation.id}
-                                            className="flex items-start gap-2 rounded-md border border-[#252c38] bg-[#11141c] p-2"
-                                        >
-                                            <img
-                                                src={mutation.icon}
-                                                alt=""
-                                                className="size-8 shrink-0 object-contain"
-                                            />
+                                    .map((mutation) => {
+                                        const isX = build.mutations.includes(mutation.xId);
+                                        const label = isX ? `${mutation.label} X` : mutation.label;
+                                        const icon = isX ? mutation.xIcon : mutation.icon;
+                                        const effects = isX ? mutation.xEffects : mutation.effects;
+                                        return (
+                                            <div
+                                                key={mutation.id}
+                                                className="flex items-start gap-2 rounded-md border border-[#252c38] bg-[#11141c] p-2"
+                                            >
+                                                <img
+                                                    src={icon}
+                                                    alt=""
+                                                    className="size-8 shrink-0 object-contain"
+                                                />
 
-                                            <div className="min-w-0">
-                                                <p className="text-xs font-semibold text-[#e8ebf0]">
-                                                    {mutation.label}
-                                                </p>
+                                                <div className="min-w-0">
+                                                    <p className="text-xs font-semibold text-[#e8ebf0]">
+                                                        {label}
+                                                    </p>
 
-                                                <div className="mt-1 space-y-0.5">
-                                                    {mutation.effects.map((effect) => (
-                                                        <p
-                                                            key={effect}
-                                                            className="text-[10px] leading-4 text-[#788295]"
-                                                        >
-                                                            • {effect}
-                                                        </p>
-                                                    ))}
+                                                    <div className="mt-1 space-y-0.5">
+                                                        {effects.map((effect) => (
+                                                            <p
+                                                                key={effect}
+                                                                className="text-[10px] leading-4 text-[#788295]"
+                                                            >
+                                                                • {effect}
+                                                            </p>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                             </div>
                         )}
                     </div>

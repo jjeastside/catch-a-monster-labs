@@ -72,7 +72,7 @@ Sproutusk,Legendary,Grass,1909,20426,1909,20426,0,,Standard,Ex Seed Grenade,Ex A
 Nightclaw,Legendary,Common,5821,62278,5821,62278,0,,Standard,Toxic Grenade,Ex Air Bullet,,,Island Spawn | Natural Spawn | Neverland | Current,49
 Floradelle,Legendary,Grass,14684,109115,14684,109115,10,,Standard,Solar Beam,Petal Dance,,,"Egg | Blossom Egg | Neverland | Current
 Egg | Rosette Egg | Neverland | Current",50
-Hydribbit,Legendary,Water,10162,108740,10162,108740,0,,Standard,Water Shuriken,Water Jet,,,Island Special Spawn | Special Spawn | Neverland | Current,51
+Hydribbit,Legendary,Water,10162,108740,10162,108740,0,,Standard,Water Shuriken,Water Jet,,,Island Spawn | Special Spawn | Neverland | Current,51
 Knockroo,Legendary,Fire,25727,275296,25727,275296,0,,Standard,Fire Dash,Fireball,,,Island Spawn | Natural Spawn | Duneveil Isle | Current,52
 Volcamel,Legendary,Fire,53900,400600,53900,400600,0,,Standard,Fireball,Rallying War Cry (3 sec 50%),,,Egg | Sand Egg | Duneveil Isle | Current,53
 Mistvolf,Legendary,Water,14777,227835,32509.4,501237,0,Icevolf,Standard,Water Jet,Ripple Guard,,,Evolution | Icevolf Evolution |  | Current |  | Evolves from Icevolf.,54
@@ -157,7 +157,7 @@ voltgator,Mythical,Common,91300,2200000,91300,2200000,10,,Standard,Electric Beam
 Rift | Duneveil Isle Rift 3 | Frost Isle | Current
 Rift | Duneveil Isle Rift 3 | Neverland | Current
 Rift | Duneveil Isle Rift 3 | Duneveil Isle | Current",98
-Undine,Mythical,Water,286960,2132300,286960,2132300,10,,Standard,Healing Water Ball,Tsunami,,,"Island Special Spawn | Special Spawn | Tideland | Current
+Undine,Mythical,Water,286960,2132300,286960,2132300,10,,Standard,Healing Water Ball,Tsunami,,,Island Special Spawn | Special Spawn | Tideland | Current
 Rift | Tideland Rift 3 | Tideland | Current",99
 TideVex,Mythical,Water,267300,2860400,267300,2860400,10,,Standard,Ex Water Shuriken,Ice Road,,,"Egg | TideVex's Egg | Tideland | Current
 Rift | Tideland Rift 1 | Tideland | Current

@@ -1,7 +1,15 @@
 import type { SkillId } from "../data/skills";
 
 export type Rank = "SS" | "S" | "A" | "B" | "C" | "D" | "E";
-export type Mutation = "huge" | "shiny" | "bloodlit" | "fairy";
+export type Mutation =
+    | "huge"
+    | "huge-x"
+    | "shiny"
+    | "shiny-x"
+    | "bloodlit"
+    | "bloodlit-x"
+    | "fairy"
+    | "fairy-x";
 export type Passive =
     | "vitalSurge"
     | "criticalChance"

@@ -121,10 +121,15 @@ function createSourceText(monster: Monster): string {
                 const weatherText = source.weather?.length
                     ? ` during ${source.weather.join(" or ")} weather`
                     : "";
+                const conditionText = source.condition
+                    ? source.condition.toLowerCase() === "night and aurora"
+                        ? " only at night during Aurora weather"
+                        : ` when ${source.condition}`
+                    : "";
 
                 if (source.type === "Island Spawn") {
                     descriptions.push(
-                        `by defeating and catching roaming monsters on ${source.location || source.name}${timeText}${weatherText}`,
+                        `by defeating and catching roaming monsters on ${source.location || source.name}${timeText}${weatherText}${conditionText}`,
                     );
                 } else if (
                     source.name === "First-Time Player Reward"
@@ -138,7 +143,7 @@ function createSourceText(monster: Monster): string {
                     );
                 } else {
                     descriptions.push(
-                        `from ${source.name}${locationText}${timeText}${weatherText}`,
+                        `from ${source.name}${locationText}${timeText}${weatherText}${conditionText}`,
                     );
                 }
             }

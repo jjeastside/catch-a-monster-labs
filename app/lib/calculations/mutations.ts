@@ -21,6 +21,13 @@ export const MUTATION_EFFECTS: Record<
         critMultiplier: 2,
     },
 
+    "shiny-x": {
+        healthMultiplier: 1,
+        damageMultiplier: 1.25,
+        critChanceBonus: 35,
+        critMultiplier: 2,
+    },
+
     bloodlit: {
         healthMultiplier: 1,
         damageMultiplier: 1,
@@ -28,9 +35,23 @@ export const MUTATION_EFFECTS: Record<
         critMultiplier: 3,
     },
 
+    "bloodlit-x": {
+        healthMultiplier: 1,
+        damageMultiplier: 1,
+        critChanceBonus: 15,
+        critMultiplier: 3.45,
+    },
+
     huge: {
         healthMultiplier: 1.4,
         damageMultiplier: 1.4,
+        critChanceBonus: 0,
+        critMultiplier: 2,
+    },
+
+    "huge-x": {
+        healthMultiplier: 1.6,
+        damageMultiplier: 1.6,
         critChanceBonus: 0,
         critMultiplier: 2,
     },
@@ -41,7 +62,26 @@ export const MUTATION_EFFECTS: Record<
         critChanceBonus: 0,
         critMultiplier: null,
     },
+
+    "fairy-x": {
+        healthMultiplier: 1,
+        damageMultiplier: 1,
+        critChanceBonus: 0,
+        critMultiplier: null,
+    },
 };
+
+export function getMutationCooldownMultiplier(mutations: Mutation[]): number {
+    if (mutations.includes("fairy-x")) return 0.75;
+    if (mutations.includes("fairy")) return 0.8;
+    return 1;
+}
+
+export function getMutationIncomingDamageReduction(mutations: Mutation[]): number {
+    if (mutations.includes("fairy-x")) return 35;
+    if (mutations.includes("fairy")) return 25;
+    return 0;
+}
 
 export type CalculatedMutationEffects = {
     healthMultiplier: number;
