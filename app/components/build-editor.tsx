@@ -18,7 +18,7 @@ import {
 } from "../data/skills";
 import { ARMORS, WEAPONS, getEquipment } from "../data/equipments";
 import { getAttribute, getAttributesForGear } from "../data/attributes";
-import { getAttributeSlotCount, getFixedAttributeIds } from "../lib/calculations/attributes";
+import { getActiveAttributeIds, getAttributeSlotCount, getFixedAttributeIds } from "../lib/calculations/attributes";
 
 import { CollapsibleSection } from "./collapsible-section";
 import { EquipmentSelect } from "./equipment-select";
@@ -357,6 +357,9 @@ export function BuildEditor({
     const selectedSkill = getSkill(build.selectedSkillId);
     const selectedWeapon = getEquipment(build.weaponId);
     const selectedArmor = getEquipment(build.armorId);
+    const hasHpConditionalAttribute = getActiveAttributeIds(build)
+        .map(getAttribute)
+        .some((attribute) => Boolean(attribute?.hpCondition));
 
     const updateAttribute = (
         key: "weaponAttributeIds" | "armorAttributeIds",
@@ -666,7 +669,30 @@ export function BuildEditor({
                     </label>
                 </CollapsibleSection>
 
-                <CollapsibleSection title="Equipment">
+                <CollapsibleSection
+                    title={
+                        <span className="flex items-center gap-2">
+                            <span>Equipment</span>
+                            <span className="group/help relative" onClick={(event) => event.stopPropagation()}>
+                                <span
+                                    tabIndex={0}
+                                    role="button"
+                                    aria-label="How equipment and attributes work"
+                                    className="grid size-5 place-items-center rounded-full border border-[#4b566a] bg-[#171b25] text-[11px] font-black text-[#99a2b3] outline-none transition hover:border-[#79e3ae] hover:text-[#79e3ae] focus:border-[#79e3ae] focus:text-[#79e3ae]"
+                                >
+                                    ?
+                                </span>
+                                <span
+                                    role="tooltip"
+                                    className="pointer-events-none absolute bottom-full left-1/2 z-[70] mb-2 w-64 -translate-x-1/2 translate-y-1 rounded-lg border border-[#303848] bg-[#11141c] p-3 text-left text-xs font-normal leading-5 text-[#b8c0ce] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100"
+                                >
+                                    <strong className="block font-semibold text-[#e8ebf0]">Equipment &amp; Attributes</strong>
+                                    <span className="mt-1 block">Weapons increase Damage. Armor increases Health. Attributes affect skills and combat outcomes rather than base stats.</span>
+                                </span>
+                            </span>
+                        </span>
+                    }
+                >
                     <div className="grid grid-cols-2 gap-3">
                         <EquipmentSelect
                             label="Weapon"
@@ -700,9 +726,9 @@ export function BuildEditor({
                                     {fixedIds.map((id) => {
                                         const attribute = getAttribute(id);
                                         return attribute ? (
-                                            <div key={id} className="flex items-center gap-2 rounded-md border border-[#ff9f43]/40 bg-[#2a1a0d]/40 p-1.5">
-                                                <img src={`/attributes/${id}.png`} alt="" className="size-8 rounded object-contain" />
-                                                <span className="min-w-0 text-[10px] text-[#ffb866]"><strong className="block truncate">{attribute.name}</strong>Fixed Secret attribute</span>
+                                            <div key={id} className="relative grid h-20 place-items-center overflow-hidden rounded-md border border-[#ff9f43]/50 bg-[#0d1017] p-1.5">
+                                                <img src={`/attributes/${id}.png`} alt={attribute.name} className="h-full w-full object-contain" />
+                                                <span className="absolute right-1.5 top-1.5 rounded bg-[#2a1a0d]/90 px-1.5 py-0.5 text-[9px] font-semibold text-[#ffb866]">FIXED</span>
                                             </div>
                                         ) : null;
                                     })}
@@ -723,17 +749,16 @@ export function BuildEditor({
                         })}
                     </div>
 
-                    <label className="mt-3 block">
-                        <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Current HP for conditional attributes</span>
-                        <div className="flex items-center gap-3">
-                            <input type="range" min="0" max="100" value={build.currentHpPercent} onChange={(event) => update("currentHpPercent", Number(event.target.value))} className="min-w-0 flex-1 accent-[#79e3ae]" />
-                            <span className="w-12 text-right text-sm font-semibold text-[#d8dee9]">{build.currentHpPercent}%</span>
-                        </div>
-                    </label>
+                    {hasHpConditionalAttribute && (
+                        <label className="mt-3 block">
+                            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Current HP for conditional attributes</span>
+                            <div className="flex items-center gap-3">
+                                <input type="range" min="0" max="100" value={build.currentHpPercent} onChange={(event) => update("currentHpPercent", Number(event.target.value))} className="min-w-0 flex-1 accent-[#79e3ae]" />
+                                <span className="w-12 text-right text-sm font-semibold text-[#d8dee9]">{build.currentHpPercent}%</span>
+                            </div>
+                        </label>
+                    )}
 
-                    <div className="mt-3 rounded-md border border-dashed border-[#303848] p-3 text-xs text-[#788295]">
-                        Weapon increases Damage. Armor increases Health. Attribute effects apply to skills and combat outcomes.
-                    </div>
                 </CollapsibleSection>
 
                 <CollapsibleSection
