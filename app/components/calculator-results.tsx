@@ -10,6 +10,7 @@ import {
     getSkillTotalMultiplier,
 } from "../data/skills";
 import { getEquipment } from "../data/equipments";
+import { calculateSkillAttributeEffects } from "../lib/calculations/attributes";
 
 import {
     calculateStats,
@@ -100,6 +101,7 @@ function SkillDamagePanel({
 
     const isDamagingSkill =
         skill.damageInstances.length > 0;
+    const attributeEffects = calculateSkillAttributeEffects(build, skill.element);
 
     const cooldownMultiplier = getMutationCooldownMultiplier(build.mutations);
     const hasFairy = cooldownMultiplier < 1;
@@ -107,7 +109,7 @@ function SkillDamagePanel({
 
     const combatDamage = calculateCombatDamage({
         monster,
-        baseDamage: stats.skillDamage,
+        baseDamage: stats.skillDamage * attributeEffects.skillDamageMultiplier,
         critMultiplier: stats.critMultiplier,
     });
 
@@ -214,6 +216,13 @@ function SkillDamagePanel({
                                 </>
                             )}
 
+                            {attributeEffects.skillDamageMultiplier !== 1 && (
+                                <>
+                                    {" × "}
+                                    {formatNumber(attributeEffects.skillDamageMultiplier)}
+                                </>
+                            )}
+
                             {" = "}
 
                             <strong className="font-semibold text-[#79e3ae]">
@@ -240,7 +249,32 @@ function SkillDamagePanel({
                                 )}
                             </div>
                         )}
+
+                        {attributeEffects.applicable
+                            .filter((attribute) => attribute.effectType === "skill_damage")
+                            .map((attribute) => (
+                                <p key={attribute.id} className="text-xs text-[#788295]">
+                                    <span className="font-medium text-[#d8dee9]">Attribute:</span>{" "}
+                                    {attribute.name} (+{attribute.value}% Skill Damage)
+                                </p>
+                            ))}
                     </div>
+
+                    {attributeEffects.active.length > 0 && (
+                        <div className="mt-4 rounded-md border border-[#303848] bg-[#11141c] p-3">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Attribute Effects</p>
+                            <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                                {attributeEffects.lifeSteal > 0 && <span className="rounded bg-[#173126] px-2 py-1 text-[#79e3ae]">Heal {attributeEffects.lifeSteal}% of damage dealt</span>}
+                                {attributeEffects.cooldownSkipChance > 0 && <span className="rounded bg-[#201b35] px-2 py-1 text-[#c28cff]">{attributeEffects.cooldownSkipChance}% cooldown-skip chance</span>}
+                                {attributeEffects.healEffectiveness > 0 && <span className="rounded bg-[#173126] px-2 py-1 text-[#79e3ae]">+{attributeEffects.healEffectiveness}% healing</span>}
+                                {attributeEffects.shieldEffectiveness > 0 && <span className="rounded bg-[#17283a] px-2 py-1 text-[#70b7ff]">+{attributeEffects.shieldEffectiveness}% shield gain</span>}
+                                {attributeEffects.shieldDamage > 0 && <span className="rounded bg-[#342612] px-2 py-1 text-[#f4bd6a]">+{attributeEffects.shieldDamage}% damage to shields</span>}
+                                {attributeEffects.skillResistance > 0 && <span className="rounded bg-[#17283a] px-2 py-1 text-[#70b7ff]">-{attributeEffects.skillResistance}% incoming {skill.element} skill damage</span>}
+                                {attributeEffects.damageRedirect > 0 && <span className="rounded bg-[#17283a] px-2 py-1 text-[#70b7ff]">{attributeEffects.damageRedirect}% damage redirect</span>}
+                                {attributeEffects.damageImmunitySeconds > 0 && <span className="rounded bg-[#342612] px-2 py-1 text-[#f4bd6a]">{attributeEffects.damageImmunitySeconds}s damage immunity</span>}
+                            </div>
+                        </div>
+                    )}
 
                     <div className="mt-4">
                         <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">

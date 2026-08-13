@@ -80,6 +80,9 @@ export type Build = {
 
   weaponId: string | null;
   armorId: string | null;
+  weaponAttributeIds: string[];
+  armorAttributeIds: string[];
+  currentHpPercent: number;
 
   accountMultipliers: {
     indexMania: boolean;
@@ -107,6 +110,9 @@ export function createDefaultBuild(
     selectedSkillId: null,
     weaponId: null,
     armorId: null,
+    weaponAttributeIds: [],
+    armorAttributeIds: [],
+    currentHpPercent: 100,
     accountMultipliers: {
       indexMania: false,
       petQuestAchievement: false,

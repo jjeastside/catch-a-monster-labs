@@ -16,10 +16,13 @@ import {
     getSkill,
     getSkillTotalMultiplier,
 } from "../data/skills";
-import { ARMORS, WEAPONS } from "../data/equipments";
+import { ARMORS, WEAPONS, getEquipment } from "../data/equipments";
+import { getAttribute, getAttributesForGear } from "../data/attributes";
+import { getAttributeSlotCount, getFixedAttributeIds } from "../lib/calculations/attributes";
 
 import { CollapsibleSection } from "./collapsible-section";
 import { EquipmentSelect } from "./equipment-select";
+import { AttributeSelect } from "./attribute-select";
 import { Panel } from "./panel";
 
 const mutations: {
@@ -352,6 +355,19 @@ export function BuildEditor({
     };
 
     const selectedSkill = getSkill(build.selectedSkillId);
+    const selectedWeapon = getEquipment(build.weaponId);
+    const selectedArmor = getEquipment(build.armorId);
+
+    const updateAttribute = (
+        key: "weaponAttributeIds" | "armorAttributeIds",
+        index: number,
+        value: string | null,
+    ) => {
+        const next = [...build[key]];
+        if (value) next[index] = value;
+        else next.splice(index, 1);
+        update(key, next.filter(Boolean));
+    };
 
     const updateLevel = (value: string) => {
         const level = Number(value);
@@ -655,24 +671,68 @@ export function BuildEditor({
                         <EquipmentSelect
                             label="Weapon"
                             value={build.weaponId}
-                            onChange={(value) =>
-                                update("weaponId", value)
-                            }
+                            onChange={(value) => {
+                                update("weaponId", value);
+                                update("weaponAttributeIds", []);
+                            }}
                             items={WEAPONS}
                         />
 
                         <EquipmentSelect
                             label="Armor"
                             value={build.armorId}
-                            onChange={(value) =>
-                                update("armorId", value)
-                            }
+                            onChange={(value) => {
+                                update("armorId", value);
+                                update("armorAttributeIds", []);
+                            }}
                             items={ARMORS}
                         />
                     </div>
 
+                    <div className="mt-4 grid grid-cols-2 gap-3">
+                        {[{ equipment: selectedWeapon, type: "weapon" as const, key: "weaponAttributeIds" as const }, { equipment: selectedArmor, type: "armor" as const, key: "armorAttributeIds" as const }].map(({ equipment, type, key }) => {
+                            const slots = getAttributeSlotCount(equipment?.rarity);
+                            const fixedIds = getFixedAttributeIds(equipment?.id ?? null);
+                            const selectedIds = build[key];
+                            return (
+                                <div key={type} className="space-y-2 rounded-md border border-[#252c38] bg-[#11141c] p-2">
+                                    <p className="text-xs font-semibold text-[#e8ebf0]">{type === "weapon" ? "Weapon" : "Armor"} Attributes</p>
+                                    {fixedIds.map((id) => {
+                                        const attribute = getAttribute(id);
+                                        return attribute ? (
+                                            <div key={id} className="flex items-center gap-2 rounded-md border border-[#ff9f43]/40 bg-[#2a1a0d]/40 p-1.5">
+                                                <img src={`/attributes/${id}.png`} alt="" className="size-8 rounded object-contain" />
+                                                <span className="min-w-0 text-[10px] text-[#ffb866]"><strong className="block truncate">{attribute.name}</strong>Fixed Secret attribute</span>
+                                            </div>
+                                        ) : null;
+                                    })}
+                                    {Array.from({ length: slots }, (_, index) => (
+                                        <AttributeSelect
+                                            key={index}
+                                            label={`Slot ${index + 1}`}
+                                            options={getAttributesForGear(type)}
+                                            value={selectedIds[index] ?? null}
+                                            usedIds={selectedIds}
+                                            onChange={(value) => updateAttribute(key, index, value)}
+                                        />
+                                    ))}
+                                    {!equipment && <p className="text-[10px] text-[#788295]">Select gear first.</p>}
+                                    {equipment && slots === 0 && fixedIds.length === 0 && <p className="text-[10px] text-[#788295]">Attributes require Legendary gear or higher.</p>}
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    <label className="mt-3 block">
+                        <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Current HP for conditional attributes</span>
+                        <div className="flex items-center gap-3">
+                            <input type="range" min="0" max="100" value={build.currentHpPercent} onChange={(event) => update("currentHpPercent", Number(event.target.value))} className="min-w-0 flex-1 accent-[#79e3ae]" />
+                            <span className="w-12 text-right text-sm font-semibold text-[#d8dee9]">{build.currentHpPercent}%</span>
+                        </div>
+                    </label>
+
                     <div className="mt-3 rounded-md border border-dashed border-[#303848] p-3 text-xs text-[#788295]">
-                        Weapon increases Damage. Armor increases Health. Gear attributes will be added next.
+                        Weapon increases Damage. Armor increases Health. Attribute effects apply to skills and combat outcomes.
                     </div>
                 </CollapsibleSection>
 
