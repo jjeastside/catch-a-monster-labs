@@ -24,6 +24,7 @@ export const ATTRIBUTES: GearAttribute[] = [
     { id: "dual-cast", rarity: "Secret", name: "Dual Cast", gearType: "weapon", tier: null, effectType: "cooldown_skip", value: 15, skillElement: null, hpCondition: null },
     { id: "damage-redirect", rarity: "Secret", name: "Damage Redirect", gearType: "armor", tier: null, effectType: "damage_redirect", value: 15, skillElement: null, hpCondition: null },
     { id: "moment-of-serenity", rarity: "Secret", name: "Moment of Serenity", gearType: "armor", tier: null, effectType: "damage_immunity", value: 2, skillElement: null, hpCondition: null },
+    { id: "healing-pulse", rarity: "Secret", name: "Healing Pulse", gearType: "armor", tier: null, effectType: "max_hp_regen", value: 1.5, skillElement: null, hpCondition: null },
 ];
 
 function title(value: string): string { return value[0].toUpperCase() + value.slice(1); }

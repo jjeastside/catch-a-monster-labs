@@ -62,5 +62,6 @@ export function calculateSkillAttributeEffects(
         cooldownSkipChance: total("cooldown_skip"),
         damageRedirect: total("damage_redirect"),
         damageImmunitySeconds: total("damage_immunity"),
+        maxHpRegenPerSecond: total("max_hp_regen"),
     };
 }

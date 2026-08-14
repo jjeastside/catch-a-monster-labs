@@ -19,6 +19,7 @@ export const EQUIPMENT: Equipment[] = [
     { id: "radish-lance", rarity: "Mythical", name: "Radish Lance", type: "weapon", percentage: 26, attributes: ["all-damage-2", "dominance"] },
     { id: "inferno-dragon-ring", rarity: "Secret", name: "Inferno Dragon Ring", type: "armor", percentage: 30, attributes: ["damage-redirect", "random", "random"] },
     { id: "stellar-wing-amulet", rarity: "Secret", name: "Stellar Wing Amulet", type: "armor", percentage: 30, attributes: ["moment-of-serenity", "random", "random"] },
+    { id: "nectar-heart", rarity: "Secret", name: "Nectar Heart", type: "armor", percentage: 32, attributes: ["healing-pulse", "random", "random"] },
     { id: "dragon-remains-staff", rarity: "Secret", name: "Dragon Remains Staff", type: "weapon", percentage: 30, attributes: ["life-siphon", "random", "random"] },
     { id: "solar-stellar-chronometer", rarity: "Secret", name: "Solar-Stellar Chronometer", type: "weapon", percentage: 30, attributes: ["dual-cast", "random", "random"] },
 ];

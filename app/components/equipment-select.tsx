@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Equipment } from "../types/equipment";
 
 const rarityTextClasses: Record<Equipment["rarity"], string> = {
@@ -25,8 +25,50 @@ export function EquipmentSelect({
                                     onChange,
                                 }: EquipmentSelectProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const [opensUpward, setOpensUpward] = useState(false);
+    const [alignsRight, setAlignsRight] = useState(false);
+    const [menuMaxHeight, setMenuMaxHeight] = useState(288);
     const containerRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
     const selectedItem = items.find((item) => item.id === value) ?? null;
+
+    const updateMenuPosition = useCallback(() => {
+        const button = buttonRef.current;
+        const container = containerRef.current;
+
+        if (!button || !container) {
+            return;
+        }
+
+        let scrollBoundary: HTMLElement | null = container.parentElement;
+
+        while (scrollBoundary) {
+            const overflowY = window.getComputedStyle(scrollBoundary).overflowY;
+
+            if (["auto", "scroll", "hidden", "clip"].includes(overflowY)) {
+                break;
+            }
+
+            scrollBoundary = scrollBoundary.parentElement;
+        }
+
+        const buttonRect = button.getBoundingClientRect();
+        const menuWidth = Math.min(352, window.innerWidth - 48);
+        const boundaryRect = scrollBoundary?.getBoundingClientRect();
+        const boundaryTop = Math.max(8, boundaryRect?.top ?? 8);
+        const boundaryBottom = Math.min(
+            window.innerHeight - 8,
+            boundaryRect?.bottom ?? window.innerHeight - 8,
+        );
+        const spaceAbove = Math.max(0, buttonRect.top - boundaryTop - 6);
+        const spaceBelow = Math.max(0, boundaryBottom - buttonRect.bottom - 6);
+        const shouldOpenUpward = spaceBelow < 240 && spaceAbove > spaceBelow;
+        const availableSpace = shouldOpenUpward ? spaceAbove : spaceBelow;
+
+        setOpensUpward(shouldOpenUpward);
+        setAlignsRight(buttonRect.left + menuWidth > window.innerWidth - 8);
+        setMenuMaxHeight(Math.max(64, Math.min(288, availableSpace)));
+    }, []);
 
     useEffect(() => {
         const closeOnOutsideClick = (event: MouseEvent) => {
@@ -46,6 +88,22 @@ export function EquipmentSelect({
         };
     }, []);
 
+    useEffect(() => {
+        if (!isOpen) {
+            return;
+        }
+
+        updateMenuPosition();
+
+        window.addEventListener("resize", updateMenuPosition);
+        window.addEventListener("scroll", updateMenuPosition, true);
+
+        return () => {
+            window.removeEventListener("resize", updateMenuPosition);
+            window.removeEventListener("scroll", updateMenuPosition, true);
+        };
+    }, [isOpen, updateMenuPosition]);
+
     const selectItem = (id: string | null) => {
         onChange(id);
         setIsOpen(false);
@@ -58,8 +116,15 @@ export function EquipmentSelect({
             </span>
 
             <button
+                ref={buttonRef}
                 type="button"
-                onClick={() => setIsOpen((current) => !current)}
+                onClick={() => {
+                    if (!isOpen) {
+                        updateMenuPosition();
+                    }
+
+                    setIsOpen((current) => !current);
+                }}
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
                 className="flex min-h-14 w-full items-center gap-2 rounded-md border border-[#303848] bg-[#171b25] px-2 py-1.5 text-left outline-none hover:border-[#4a5568] focus:border-[#79e3ae]"
@@ -92,7 +157,12 @@ export function EquipmentSelect({
                 <div
                     role="listbox"
                     aria-label={label}
-                    className="absolute z-50 mt-1 max-h-72 w-[min(22rem,calc(100vw-3rem))] overflow-y-auto rounded-lg border border-[#303848] bg-[#11141c] p-1 shadow-2xl"
+                    style={{ maxHeight: `${menuMaxHeight}px` }}
+                    className={`absolute z-50 w-[min(22rem,calc(100vw-3rem))] overflow-y-auto rounded-lg border border-[#303848] bg-[#11141c] p-1 shadow-2xl ${
+                        opensUpward
+                            ? "bottom-full mb-1"
+                            : "top-full mt-1"
+                    } ${alignsRight ? "right-0" : "left-0"}`}
                 >
                     <button
                         type="button"

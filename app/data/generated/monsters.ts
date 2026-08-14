@@ -262,56 +262,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/pricko.png",
     "element": "Grass",
     "rarity": "Rare",
-    "sources": [
-      {
-        "type": "Rift",
-        "name": "Volcano Rift 1",
-        "location": "Volcano",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Volcano Rift 1",
-        "location": "Frost Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Volcano Rift 1",
-        "location": "Duneveil Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Volcano Rift 1",
-        "location": "Neverland",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Volcano Rift 2",
-        "location": "Volcano",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Volcano Rift 2",
-        "location": "Frost Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Volcano Rift 2",
-        "location": "Duneveil Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Volcano Rift 2",
-        "location": "Neverland",
-        "status": "Current"
-      }
-    ],
+    "sources": [],
     "skillIds": [
       "petal-dance",
       "root-spike"
@@ -751,56 +702,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/pandleaf.png",
     "element": "Grass",
     "rarity": "Epic",
-    "sources": [
-      {
-        "type": "Rift",
-        "name": "Frost Isle Rift 1",
-        "location": "Volcano",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Frost Isle Rift 1",
-        "location": "Frost Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Frost Isle Rift 1",
-        "location": "Duneveil Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Frost Isle Rift 1",
-        "location": "Neverland",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Frost Isle Rift 2",
-        "location": "Volcano",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Frost Isle Rift 2",
-        "location": "Frost Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Frost Isle Rift 2",
-        "location": "Duneveil Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Frost Isle Rift 2",
-        "location": "Neverland",
-        "status": "Current"
-      }
-    ],
+    "sources": [],
     "skillIds": [
       "grass-tornado",
       "galecut"
@@ -1470,7 +1372,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "rarity": "Legendary",
     "sources": [
       {
-        "type": "Island Special Spawn",
+        "type": "Island Spawn",
         "name": "Special Spawn",
         "location": "Neverland",
         "status": "Current"
@@ -1682,56 +1584,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/fanglo.png",
     "element": "Fire",
     "rarity": "Legendary",
-    "sources": [
-      {
-        "type": "Rift",
-        "name": "Neverland Rift 1",
-        "location": "Volcano",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Neverland Rift 1",
-        "location": "Frost Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Neverland Rift 1",
-        "location": "Duneveil Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Neverland Rift 1",
-        "location": "Neverland",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Neverland Rift 2",
-        "location": "Volcano",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Neverland Rift 2",
-        "location": "Frost Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Neverland Rift 2",
-        "location": "Duneveil Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Neverland Rift 2",
-        "location": "Neverland",
-        "status": "Current"
-      }
-    ],
+    "sources": [],
     "skillIds": [
       "dash",
       "fire-tornado"
@@ -1759,7 +1612,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
   },
   {
     "id": "weasplash",
-    "name": "weasplash",
+    "name": "Weasplash",
     "image": "/monster-artwork/weasplash.png",
     "element": "Water",
     "rarity": "Legendary",
@@ -2103,20 +1956,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/stumpfox.png",
     "element": "Grass",
     "rarity": "Legendary",
-    "sources": [
-      {
-        "type": "Rift",
-        "name": "Mobius Rift 1",
-        "location": "Mobius Circus",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Mobius Rift 2",
-        "location": "Mobius Circus",
-        "status": "Current"
-      }
-    ],
+    "sources": [],
     "skillIds": [
       "grass-tornado",
       "galecut"
@@ -2187,20 +2027,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/meowl.png",
     "element": "Common",
     "rarity": "Legendary",
-    "sources": [
-      {
-        "type": "Rift",
-        "name": "Specter Shallows Rift 1",
-        "location": "Specter Shallows",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Specter Shallows Rift 2",
-        "location": "Specter Shallows",
-        "status": "Current"
-      }
-    ],
+    "sources": [],
     "skillIds": [
       "ex-air-bullet"
     ],
@@ -2307,20 +2134,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/flaragon.png",
     "element": "Fire",
     "rarity": "Mythical",
-    "sources": [
-      {
-        "type": "Egg",
-        "name": "Pyroclasm Egg",
-        "location": "Volcano",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Volcano Rift 2",
-        "location": "Volcano",
-        "status": "Current"
-      }
-    ],
+    "sources": [],
     "skillIds": [
       "claw-attack",
       "ex-fireball"
@@ -2684,18 +2498,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Gildron's Egg",
         "location": "Duneveil Isle",
         "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Duneveil Isle Rift 1",
-        "location": "Duneveil Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Duneveil Isle Rift 2",
-        "location": "Duneveil Isle",
-        "status": "Current"
       }
     ],
     "skillIds": [
@@ -2886,56 +2688,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/iceplate.png",
     "element": "Ice",
     "rarity": "Mythical",
-    "sources": [
-      {
-        "type": "Rift",
-        "name": "Duneveil Isle Rift 1",
-        "location": "Volcano",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Duneveil Isle Rift 1",
-        "location": "Frost Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Duneveil Isle Rift 1",
-        "location": "Duneveil Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Duneveil Isle Rift 1",
-        "location": "Neverland",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Duneveil Isle Rift 2",
-        "location": "Volcano",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Duneveil Isle Rift 2",
-        "location": "Frost Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Duneveil Isle Rift 2",
-        "location": "Duneveil Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Duneveil Isle Rift 2",
-        "location": "Neverland",
-        "status": "Current"
-      }
-    ],
+    "sources": [],
     "skillIds": [
       "ice-road",
       "ex-iceball"
@@ -2963,7 +2716,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
   },
   {
     "id": "voltgator",
-    "name": "voltgator",
+    "name": "Voltgator",
     "image": "/monster-artwork/voltgator.png",
     "element": "Common",
     "rarity": "Mythical",
@@ -3062,18 +2815,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "TideVex's Egg",
         "location": "Tideland",
         "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Tideland Rift 1",
-        "location": "Tideland",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Tideland Rift 2",
-        "location": "Tideland",
-        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3094,26 +2835,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/woolhorn.png",
     "element": "Common",
     "rarity": "Mythical",
-    "sources": [
-      {
-        "type": "Rift",
-        "name": "Tideland Rift 1",
-        "location": "Tideland",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Tideland Rift 2",
-        "location": "Tideland",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Spirit Grove Rift 1",
-        "location": "Spirit Grove",
-        "status": "Current"
-      }
-    ],
+    "sources": [],
     "skillIds": [
       "wind-blast",
       "dash"
@@ -3220,18 +2942,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       {
         "type": "Egg",
         "name": "Frostwyrm's Egg",
-        "location": "Spirit Grove",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Spirit Grove Rift 1",
-        "location": "Spirit Grove",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Spirit Grove Rift 2",
         "location": "Spirit Grove",
         "status": "Current"
       }
@@ -3402,18 +3112,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Dracospike's Egg",
         "location": "Dragon's Breath",
         "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Dragon's Breath Rift 1",
-        "location": "Dragon's Breath",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Dragon's Breath Rift 2",
-        "location": "Dragon's Breath",
-        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3461,20 +3159,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/mintgloom.png",
     "element": "Fire",
     "rarity": "Mythical",
-    "sources": [
-      {
-        "type": "Rift",
-        "name": "Dragon's Breath Rift 1",
-        "location": "Dragon's Breath",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Dragon's Breath Rift 2",
-        "location": "Dragon's Breath",
-        "status": "Current"
-      }
-    ],
+    "sources": [],
     "skillIds": [
       "nether-fireball",
       "rallying-war-cry-3-sec-50"
@@ -3746,18 +3431,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Thunderclaw's Egg",
         "location": "Blossom Haven",
         "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Blossom Haven Rift 1",
-        "location": "Blossom Haven",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Blossom Haven Rift 2",
-        "location": "Blossom Haven",
-        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3778,20 +3451,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/burrowbun.png",
     "element": "Ground",
     "rarity": "Mythical",
-    "sources": [
-      {
-        "type": "Rift",
-        "name": "Blossom Haven Rift 1",
-        "location": "Blossom Haven",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Blossom Haven Rift 2",
-        "location": "Blossom Haven",
-        "status": "Current"
-      }
-    ],
+    "sources": [],
     "skillIds": [
       "gravel-whirlwind",
       "rock-road"
@@ -3980,18 +3640,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Lampyr's Egg",
         "location": "Mobius Circus",
         "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Mobius Rift 1",
-        "location": "Mobius Circus",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Mobius Rift 2",
-        "location": "Mobius Circus",
-        "status": "Current"
       }
     ],
     "skillIds": [
@@ -4135,18 +3783,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Special Spawn",
         "location": "Specter Shallows",
         "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Specter Shallows Rift 1",
-        "location": "Specter Shallows",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Specter Shallows Rift 2",
-        "location": "Specter Shallows",
-        "status": "Current"
       }
     ],
     "skillIds": [
@@ -4173,18 +3809,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Scareaper's Egg",
         "location": "Specter Shallows",
         "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Specter Shallows Rift 1",
-        "location": "Specter Shallows",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Specter Shallows Rift 2",
-        "location": "Specter Shallows",
-        "status": "Current"
       }
     ],
     "skillIds": [
@@ -4192,7 +3816,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       "soul-reap-chain"
     ],
     "passives": [],
-    "hasEvolution": false,
+    "hasEvolution": true,
     "baseDamageELevel1": 3615000,
     "baseHealthELevel1": 55702000,
     "baseCritChance": 0,
@@ -4329,18 +3953,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Special Spawn",
         "location": "Nova Coast",
         "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Nova Coast Rift 1",
-        "location": "Nova Coast",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Nova Coast Rift 2",
-        "location": "Nova Coast",
-        "status": "Current"
       }
     ],
     "skillIds": [
@@ -4385,18 +3997,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Special Spawn",
         "location": "Nova Coast",
         "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Nova Coast Rift 1",
-        "location": "Nova Coast",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Nova Coast Rift 2",
-        "location": "Nova Coast",
-        "status": "Current"
       }
     ],
     "skillIds": [
@@ -4434,18 +4034,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       {
         "type": "Island Special Spawn",
         "name": "Special Spawn",
-        "location": "Nova Coast",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Nova Coast Rift 1",
-        "location": "Nova Coast",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Nova Coast Rift 2",
         "location": "Nova Coast",
         "status": "Current"
       }
@@ -4953,7 +4541,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "skillIds": [
-      "holy-aura-icevolf",
+      "holy-aura-frostvolf",
       "ice-road",
       "ex-iceball"
     ],
@@ -6107,6 +5695,62 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "indexPosition": 188
   },
   {
+    "id": "scarevine",
+    "name": "Scarevine",
+    "image": "/monster-artwork/scarevine.png",
+    "element": "Grass",
+    "rarity": "Mythical",
+    "sources": [
+      {
+        "type": "Evolution",
+        "name": "Scareaper Evolution",
+        "status": "Current",
+        "notes": "Evolves from Scareaper."
+      }
+    ],
+    "skillIds": [
+      "leaf-blade",
+      "grass-tornado"
+    ],
+    "passives": [],
+    "hasEvolution": false,
+    "isEvolved": true,
+    "evolutionSource": "scareaper",
+    "baseDamageELevel1": 3114000,
+    "baseHealthELevel1": 75000000,
+    "baseCritChance": 0,
+    "growthType": "standard",
+    "indexPosition": 189
+  },
+  {
+    "id": "scarewraith",
+    "name": "Scarewraith",
+    "image": "/monster-artwork/scarewraith.png",
+    "element": "Ice",
+    "rarity": "Mythical",
+    "sources": [
+      {
+        "type": "Evolution",
+        "name": "Scareaper Evolution",
+        "status": "Current",
+        "notes": "Evolves from Scareaper."
+      }
+    ],
+    "skillIds": [
+      "ice-road",
+      "wind-blast"
+    ],
+    "passives": [],
+    "hasEvolution": false,
+    "isEvolved": true,
+    "evolutionSource": "scareaper",
+    "baseDamageELevel1": 4565000,
+    "baseHealthELevel1": 48856300,
+    "baseCritChance": 0,
+    "growthType": "standard",
+    "indexPosition": 190
+  },
+  {
     "id": "flaragblaze",
     "name": "Flaragblaze",
     "image": "/monster-artwork/flaragblaze.png",
@@ -6132,7 +5776,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 190500,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 189
+    "indexPosition": 191
   },
   {
     "id": "glazadonfroz",
@@ -6161,7 +5805,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 228630,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 190
+    "indexPosition": 192
   },
   {
     "id": "fire-dragon-cannelloni",
@@ -6189,7 +5833,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 100740,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 191
+    "indexPosition": 193
   },
   {
     "id": "necro-dragon-cannelloni",
@@ -6217,7 +5861,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 157400,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 192
+    "indexPosition": 194
   },
   {
     "id": "titanusk",
@@ -6246,7 +5890,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 498800,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 193
+    "indexPosition": 195
   },
   {
     "id": "eclipse-knight",
@@ -6275,7 +5919,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 1520000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 194
+    "indexPosition": 196
   },
   {
     "id": "lunavox",
@@ -6304,7 +5948,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 3662000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 195
+    "indexPosition": 197
   },
   {
     "id": "hydrolope",
@@ -6345,7 +5989,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 2300000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 196
+    "indexPosition": 198
   },
   {
     "id": "solron",
@@ -6386,7 +6030,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 2558600,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 197
+    "indexPosition": 199
   },
   {
     "id": "scythewing",
@@ -6414,7 +6058,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 3200000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 198
+    "indexPosition": 200
   },
   {
     "id": "celestide",
@@ -6455,7 +6099,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 2962000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 199
+    "indexPosition": 201
   },
   {
     "id": "doomgator",
@@ -6496,7 +6140,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 3437300,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 200
+    "indexPosition": 202
   },
   {
     "id": "frostiel",
@@ -6536,7 +6180,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 28270000,
     "baseCritChance": 20,
     "growthType": "standard",
-    "indexPosition": 201
+    "indexPosition": 203
   },
   {
     "id": "steamforge",
@@ -6576,7 +6220,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 20500000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 202
+    "indexPosition": 204
   },
   {
     "id": "mentawolf",
@@ -6617,7 +6261,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 9716800,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 203
+    "indexPosition": 205
   },
   {
     "id": "avalanchewyrm",
@@ -6658,7 +6302,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 5251400,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 204
+    "indexPosition": 206
   },
   {
     "id": "poseidine",
@@ -6699,7 +6343,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 10537000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 205
+    "indexPosition": 207
   },
   {
     "id": "armored-dracospike",
@@ -6740,7 +6384,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 32700000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 206
+    "indexPosition": 208
   },
   {
     "id": "soulguard",
@@ -6780,7 +6424,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 27530000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 207
+    "indexPosition": 209
   },
   {
     "id": "motovok",
@@ -6821,7 +6465,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 16010000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 208
+    "indexPosition": 210
   },
   {
     "id": "crystalwing",
@@ -6862,7 +6506,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 82780000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 209
+    "indexPosition": 211
   },
   {
     "id": "divineclaw",
@@ -6903,7 +6547,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 22367000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 210
+    "indexPosition": 212
   },
   {
     "id": "djinn-lampyr",
@@ -6944,14 +6588,14 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 37270000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 211
+    "indexPosition": 213
   },
   {
     "id": "necro-hydra-tortelloni",
-    "name": "Necro hydra Tortelloni",
+    "name": "Necro Hydra Tortelloni",
     "image": "/monster-artwork/necro-hydra-tortelloni.png",
     "element": "Fire",
-    "rarity": "Void",
+    "rarity": "Secret",
     "sources": [
       {
         "type": "Evolution",
@@ -6991,7 +6635,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 42066000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 212
+    "indexPosition": 214
   },
   {
     "id": "psyberion-x",
@@ -7032,7 +6676,88 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 161560000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 213
+    "indexPosition": 215
+  },
+  {
+    "id": "celestian",
+    "name": "Celestian",
+    "image": "/monster-artwork/celestian.png",
+    "element": "Ground",
+    "rarity": "Secret",
+    "sources": [
+      {
+        "type": "Egg",
+        "name": "Celestian's Egg",
+        "location": "Cinderclaw Castle",
+        "status": "Current",
+        "notes": "Cataclysm Difficulty"
+      }
+    ],
+    "skillIds": [
+      "soul-slash",
+      "holy-aura-frostvolf"
+    ],
+    "passives": [
+      {
+        "id": "criticalDamage",
+        "effects": [
+          {
+            "stat": "critDamage",
+            "value": 60
+          }
+        ],
+        "values": [
+          60
+        ]
+      }
+    ],
+    "hasEvolution": false,
+    "baseDamageELevel1": 13225000,
+    "baseHealthELevel1": 141510000,
+    "baseCritChance": 15,
+    "growthType": "standard",
+    "indexPosition": 216
+  },
+  {
+    "id": "scareharvest",
+    "name": "Scareharvest",
+    "image": "/monster-artwork/scareharvest.png",
+    "element": "Common",
+    "rarity": "Secret",
+    "sources": [
+      {
+        "type": "Evolution",
+        "name": "Scareaper Evolution",
+        "status": "Current",
+        "notes": "Evolves from Scareaper."
+      }
+    ],
+    "skillIds": [
+      "reapers-crescents-scareharvest",
+      "soul-reap-chain-scareharvest"
+    ],
+    "passives": [
+      {
+        "id": "criticalChance",
+        "effects": [
+          {
+            "stat": "critChance",
+            "value": 30
+          }
+        ],
+        "values": [
+          30
+        ]
+      }
+    ],
+    "hasEvolution": false,
+    "isEvolved": true,
+    "evolutionSource": "scareaper",
+    "baseDamageELevel1": 9139800,
+    "baseHealthELevel1": 49896000,
+    "baseCritChance": 0,
+    "growthType": "standard",
+    "indexPosition": 217
   },
   {
     "id": "void-noctane",
@@ -7077,7 +6802,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 12158000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 214
+    "indexPosition": 218
   },
   {
     "id": "void-dustwing",
@@ -7122,7 +6847,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 19029000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 215
+    "indexPosition": 219
   },
   {
     "id": "void-lunavox",
@@ -7155,7 +6880,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 66232000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 216
+    "indexPosition": 220
   },
   {
     "id": "void-iceplate",
@@ -7200,7 +6925,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 35672000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 217
+    "indexPosition": 221
   },
   {
     "id": "void-scythewing",
@@ -7233,7 +6958,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 26585000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 218
+    "indexPosition": 222
   },
   {
     "id": "void-shadecloak",
@@ -7265,7 +6990,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 11311000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 219
+    "indexPosition": 223
   },
   {
     "id": "void-strum-bones",
@@ -7322,7 +7047,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 89400000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 220
+    "indexPosition": 224
   },
   {
     "id": "void-nightveil",
@@ -7363,7 +7088,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 18300000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 221
+    "indexPosition": 225
   },
   {
     "id": "void-scareaper",
@@ -7408,7 +7133,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 167600000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 222
+    "indexPosition": 226
   },
   {
     "id": "icearia",
@@ -7433,6 +7158,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "baseHealthELevel1": 13500000,
     "baseCritChance": 20,
     "growthType": "standard",
-    "indexPosition": 223
+    "indexPosition": 227
   }
 ];

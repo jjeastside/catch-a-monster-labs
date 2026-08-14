@@ -341,19 +341,6 @@ export function BuildEditor({
         }
     };
 
-    const updateAccount = (
-        key: keyof Build["accountMultipliers"],
-        value: boolean,
-    ) => {
-        onBuildChangeAction((current) => ({
-            ...current,
-            accountMultipliers: {
-                ...current.accountMultipliers,
-                [key]: value,
-            },
-        }));
-    };
-
     const selectedSkill = getSkill(build.selectedSkillId);
     const selectedWeapon = getEquipment(build.weaponId);
     const selectedArmor = getEquipment(build.armorId);
@@ -406,7 +393,7 @@ export function BuildEditor({
                 </button>
             }
         >
-            <div className="flex flex-1 flex-col gap-3 overflow-auto p-5">
+            <div className="flex flex-1 flex-col gap-2 overflow-auto p-3">
                 {!monster && (
                     <div className="rounded-lg border border-dashed border-[#303848] bg-[#0d1017]/45 p-4 text-center">
                         <p className="text-sm font-medium text-[#d8dee9]">
@@ -421,7 +408,7 @@ export function BuildEditor({
                 )}
 
                 <CollapsibleSection title="Pet">
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-2">
                         <label>
               <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
                 Level
@@ -468,7 +455,7 @@ export function BuildEditor({
                         />
                     </div>
 
-                    <div className="mt-4 rounded-lg border border-[#303848] bg-[#11141c] p-3">
+                    <div className="mt-3 rounded-lg border border-[#303848] bg-[#11141c] p-3">
                         <div className="mb-3 flex items-center gap-3">
                             <img
                                 src="/icons/genetic-potential.png"
@@ -487,7 +474,7 @@ export function BuildEditor({
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-2 gap-2">
                             <SelectField
                                 label="Health GP"
                                 value={String(
@@ -546,7 +533,7 @@ export function BuildEditor({
                                     aria-pressed={isSelected}
                                     aria-label={`${label}. Click to ${isX ? "remove" : isSelected ? `upgrade to ${mutation.label} X` : "select"}.`}
                                     title={`${label} · Click to ${isX ? "remove" : isSelected ? "upgrade" : "select"}`}
-                                    className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-md border transition ${
+                                    className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-md border transition ${
                                         isSelected
                                             ? "border-[#79e3ae] bg-[#173126] shadow-[0_0_12px_rgba(121,227,174,0.18)]"
                                             : "border-[#303848] bg-[#171b25] hover:border-[#4a5568] hover:bg-[#1b202b]"
@@ -555,7 +542,7 @@ export function BuildEditor({
                                     <img
                                         src={isX ? mutation.xIcon : mutation.icon}
                                         alt={label}
-                                        className="size-11 object-contain"
+                                        className="size-10 object-contain"
                                     />
 
                                     {isSelected && (
@@ -569,7 +556,7 @@ export function BuildEditor({
                         })}
                     </div>
 
-                    <div className="mt-4 border-t border-[#252c38] pt-3">
+                    <div className="mt-3 border-t border-[#252c38] pt-2">
                         <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
                             Selected Effects
                         </p>
@@ -579,7 +566,7 @@ export function BuildEditor({
                                 No mutations selected.
                             </p>
                         ) : (
-                            <div className="space-y-2">
+                            <div className="grid grid-cols-2 gap-1.5">
                                 {mutations
                                     .filter((mutation) =>
                                         build.mutations.includes(mutation.id) ||
@@ -593,12 +580,12 @@ export function BuildEditor({
                                         return (
                                             <div
                                                 key={mutation.id}
-                                                className="flex items-start gap-2 rounded-md border border-[#252c38] bg-[#11141c] p-2"
+                                                className="flex min-w-0 items-center gap-2 rounded-md border border-[#252c38] bg-[#11141c] p-2"
                                             >
                                                 <img
                                                     src={icon}
                                                     alt=""
-                                                    className="size-8 shrink-0 object-contain"
+                                                    className="size-7 shrink-0 object-contain"
                                                 />
 
                                                 <div className="min-w-0">
@@ -606,16 +593,9 @@ export function BuildEditor({
                                                         {label}
                                                     </p>
 
-                                                    <div className="mt-1 space-y-0.5">
-                                                        {effects.map((effect) => (
-                                                            <p
-                                                                key={effect}
-                                                                className="text-[10px] leading-4 text-[#788295]"
-                                                            >
-                                                                • {effect}
-                                                            </p>
-                                                        ))}
-                                                    </div>
+                                                    <p className="mt-0.5 truncate text-[9px] text-[#788295]" title={effects.join(" · ")}>
+                                                        {effects.join(" · ")}
+                                                    </p>
                                                 </div>
                                             </div>
                                         );
@@ -626,47 +606,48 @@ export function BuildEditor({
                 </CollapsibleSection>
 
                 <CollapsibleSection title="Skill">
-                    <SelectField
-                        label="Skill"
-                        value={build.selectedSkillId}
-                        onChange={(value) =>
-                            update(
-                                "selectedSkillId",
-                                value as Build["selectedSkillId"],
-                            )
-                        }
-                        options={
-                            monster?.skillIds
-                                .map(getSkill)
-                                .filter(
-                                    (skill): skill is NonNullable<typeof skill> =>
-                                        skill !== null,
+                    <div className="grid grid-cols-[minmax(0,1fr)_6rem] gap-2">
+                        <SelectField
+                            label="Skill"
+                            value={build.selectedSkillId}
+                            onChange={(value) =>
+                                update(
+                                    "selectedSkillId",
+                                    value as Build["selectedSkillId"],
                                 )
-                                .map((skill) => ({
-                                    id: skill.id,
-                                    label: skill.name,
-                                })) ?? []
-                        }
-                        emptyLabel=""
-                    />
-
-                    <label className="mt-3 block">
-            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
-              Multiplier Preview
-            </span>
-
-                        <input
-                            readOnly
-                            value={
-                                selectedSkill
-                                    ? `${formatSkillMultiplier(
-                                        getSkillTotalMultiplier(selectedSkill),
-                                    )}×`
-                                    : "Select a skill"
                             }
-                            className="w-full rounded-md border border-[#303848] bg-[#171b25] px-3 py-2 text-sm text-[#788295]"
+                            options={
+                                monster?.skillIds
+                                    .map(getSkill)
+                                    .filter(
+                                        (skill): skill is NonNullable<typeof skill> =>
+                                            skill !== null,
+                                    )
+                                    .map((skill) => ({
+                                        id: skill.id,
+                                        label: skill.name,
+                                    })) ?? []
+                            }
+                            emptyLabel=""
                         />
-                    </label>
+
+                        <label className="block">
+                            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
+                                Multiplier
+                            </span>
+                            <input
+                                readOnly
+                                value={
+                                    selectedSkill
+                                        ? `${formatSkillMultiplier(
+                                            getSkillTotalMultiplier(selectedSkill),
+                                        )}×`
+                                        : "—"
+                                }
+                                className="w-full rounded-md border border-[#303848] bg-[#171b25] px-3 py-2 text-sm text-[#788295]"
+                            />
+                        </label>
+                    </div>
                 </CollapsibleSection>
 
                 <CollapsibleSection
@@ -693,7 +674,7 @@ export function BuildEditor({
                         </span>
                     }
                 >
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-2">
                         <EquipmentSelect
                             label="Weapon"
                             value={build.weaponId}
@@ -715,24 +696,37 @@ export function BuildEditor({
                         />
                     </div>
 
-                    <div className="mt-4 grid grid-cols-2 gap-3">
-                        {[{ equipment: selectedWeapon, type: "weapon" as const, key: "weaponAttributeIds" as const }, { equipment: selectedArmor, type: "armor" as const, key: "armorAttributeIds" as const }].map(({ equipment, type, key }) => {
+                    <div
+                        className="mt-3 grid items-start gap-2 [grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))]">
+                        {[{
+                            equipment: selectedWeapon,
+                            type: "weapon" as const,
+                            key: "weaponAttributeIds" as const
+                        }, {
+                            equipment: selectedArmor,
+                            type: "armor" as const,
+                            key: "armorAttributeIds" as const
+                        }].map(({equipment, type, key}) => {
                             const slots = getAttributeSlotCount(equipment?.rarity);
                             const fixedIds = getFixedAttributeIds(equipment?.id ?? null);
                             const selectedIds = build[key];
                             return (
-                                <div key={type} className="space-y-2 rounded-md border border-[#252c38] bg-[#11141c] p-2">
+                                <div key={type}
+                                     className="self-start space-y-2 rounded-md border border-[#252c38] bg-[#11141c] p-2">
                                     <p className="text-xs font-semibold text-[#e8ebf0]">{type === "weapon" ? "Weapon" : "Armor"} Attributes</p>
                                     {fixedIds.map((id) => {
                                         const attribute = getAttribute(id);
                                         return attribute ? (
-                                            <div key={id} className="relative grid h-20 place-items-center overflow-hidden rounded-md border border-[#ff9f43]/50 bg-[#0d1017] p-1.5">
-                                                <img src={`/attributes/${id}.png`} alt={attribute.name} className="h-full w-full object-contain" />
-                                                <span className="absolute right-1.5 top-1.5 rounded bg-[#2a1a0d]/90 px-1.5 py-0.5 text-[9px] font-semibold text-[#ffb866]">FIXED</span>
+                                            <div key={id}
+                                                 className="relative grid min-h-[72px] w-full place-items-center overflow-hidden rounded-md border border-[#ff9f43]/50 bg-[#0d1017] p-1">
+                                                <img src={`/attributes/${id}.png`} alt={attribute.name}
+                                                     className="block h-auto w-full"/>
+                                                <span
+                                                    className="absolute right-1.5 top-1.5 rounded bg-[#2a1a0d]/90 px-1.5 py-0.5 text-[9px] font-semibold text-[#ffb866]">FIXED</span>
                                             </div>
                                         ) : null;
                                     })}
-                                    {Array.from({ length: slots }, (_, index) => (
+                                    {Array.from({length: slots}, (_, index) => (
                                         <AttributeSelect
                                             key={index}
                                             label={`Slot ${index + 1}`}
@@ -743,7 +737,9 @@ export function BuildEditor({
                                         />
                                     ))}
                                     {!equipment && <p className="text-[10px] text-[#788295]">Select gear first.</p>}
-                                    {equipment && slots === 0 && fixedIds.length === 0 && <p className="text-[10px] text-[#788295]">Attributes require Legendary gear or higher.</p>}
+                                    {equipment && slots === 0 && fixedIds.length === 0 &&
+                                        <p className="text-[10px] text-[#788295]">Attributes require Legendary gear or
+                                            higher.</p>}
                                 </div>
                             );
                         })}
@@ -751,7 +747,7 @@ export function BuildEditor({
 
                     {hasHpConditionalAttribute && (
                         <label className="mt-3 block">
-                            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Current HP for conditional attributes</span>
+                        <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Current HP for conditional attributes</span>
                             <div className="flex items-center gap-3">
                                 <input type="range" min="0" max="100" value={build.currentHpPercent} onChange={(event) => update("currentHpPercent", Number(event.target.value))} className="min-w-0 flex-1 accent-[#79e3ae]" />
                                 <span className="w-12 text-right text-sm font-semibold text-[#d8dee9]">{build.currentHpPercent}%</span>
@@ -761,55 +757,7 @@ export function BuildEditor({
 
                 </CollapsibleSection>
 
-                <CollapsibleSection
-                    title="Account Multipliers"
-                    description="Settings saved across all pets"
-                >
-                    <div className="space-y-2">
-                        {[
-                            {
-                                id: "indexMania",
-                                label: "Index Mania",
-                            },
-                            {
-                                id: "petQuestAchievement",
-                                label: "Pet Quest Achievement",
-                            },
-                            {
-                                id: "pathOfProgress",
-                                label: "Path of Progress",
-                            },
-                        ].map((account) => {
-                            const accountId =
-                                account.id as keyof Build["accountMultipliers"];
-
-                            return (
-                                <label
-                                    key={account.id}
-                                    className="flex items-center justify-between rounded-md bg-[#171b25] px-3 py-2 text-sm text-[#d8dee9]"
-                                >
-                                    <span>{account.label}</span>
-
-                                    <input
-                                        type="checkbox"
-                                        checked={
-                                            build.accountMultipliers[accountId]
-                                        }
-                                        onChange={(event) =>
-                                            updateAccount(
-                                                accountId,
-                                                event.target.checked,
-                                            )
-                                        }
-                                        className="accent-[#79e3ae]"
-                                    />
-                                </label>
-                            );
-                        })}
-                    </div>
-                </CollapsibleSection>
-
-                <div className="mt-auto grid grid-cols-2 gap-2 pt-2">
+                <div className="grid grid-cols-2 gap-2 pt-1">
                     {[
                         "Save Build",
                         "Load Build",
@@ -818,7 +766,7 @@ export function BuildEditor({
                         <button
                             key={item}
                             type="button"
-                            className={`rounded-md px-3 py-2.5 text-sm font-semibold ${
+                            className={`rounded-md px-3 py-2 text-xs font-semibold ${
                                 index === 0
                                     ? "bg-[#79e3ae] font-bold text-[#0b1510]"
                                     : "border border-[#303848] bg-[#171b25] text-[#d8dee9]"
@@ -831,7 +779,7 @@ export function BuildEditor({
                     <button
                         type="button"
                         onClick={onResetAction}
-                        className="rounded-md border border-[#303848] bg-[#171b25] px-3 py-2.5 text-sm font-semibold text-[#d8dee9]"
+                        className="rounded-md border border-[#303848] bg-[#171b25] px-3 py-2 text-xs font-semibold text-[#d8dee9]"
                     >
                         Reset
                     </button>

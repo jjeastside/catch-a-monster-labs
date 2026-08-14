@@ -64,7 +64,7 @@ ex-air-bullet,Ex Air Bullet,Common,"[
 ]",6,Target: Enemy.,Ready
 ex-candy-bomb,Ex Candy Bomb,Common,"[
   { multiplier: 0.3, hits: 4 },
-]",6,Target: Enemy.,Ready
+]",6,Target: Enemy.,Review
 ex-fireball,Ex Fireball,Fire,"[
   { multiplier: 0.3, hits: 4 },
 ]",6,Target: Enemy | Self. Ally effects: 25% self Damage for 6 secs,Ready
@@ -166,7 +166,7 @@ healing-water-ball,Healing Water Ball,Water,"[
   { multiplier: 1, hits: 1 },
 ]",6,Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 50% of damage self heal (Instant),Ready
 holy-aura-djinn-lampyr,Holy Aura (Djinn Lampyr),Common,[],8,Target: Allies. Ally effects: 25% Team Damage for 6 secs; 160% of damage + 5% of health team heal,Ready
-holy-aura-icevolf,Holy Aura (Icevolf),Common,[],8,Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs,Ready
+holy-aura-frostvolf,Holy Aura (Frostvolf),Common,[],8,Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs,Ready
 holy-aura-titan-tusk,Holy Aura (Titan Tusk),Common,[],8,Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs,Ready
 hydro-cannon,Hydro Cannon,Water,"[
   { multiplier: 0.4, hits: 5 },
@@ -244,13 +244,19 @@ petal-dance,Petal Dance,Grass,"[
 ]",6,Target: Enemy. Enemy effects: Stagger,Ready
 poison-volley,Poison Volley,Fire,"[
   { multiplier: 0.3, hits: 4 },
-]",,"Target: Enemy. Enemy effects: Cast four posion orbs at the enemy, orb applies a stack of posion. Each stack of Posion deals 0.4% of current hp per secs and reduces enemy attack by 4%.",Ready
+]",,"Target: Enemy. Enemy effects: Cast four posion orbs at the enemy, orb applies a stack of posion. Each stack of Posion deals 0.4% of current hp per secs and reduces enemy attack by 4%.",Review
 rallying-war-cry-3-sec-50,Rallying War Cry (3 sec 50%),Fire,[],3,Target: Allies. Ally effects: 50% team damage for 3 secs,Ready
 rallying-war-cry-6-sec-40-self-70,Rallying War Cry (6 sec 40% self 70%),Ground,[],6,Target: Allies | Self. Ally effects: 40% team damage for 6 secs; 70% self damage for 6 secs,Ready
 rallying-war-cry-6-sec-50,Rallying War Cry (6 sec 50%),Fire,[],6,Target: Allies. Ally effects: 50% team damage for 6 secs,Ready
 reapers-crescents,Reaper's Crescents,Common,"[
   { multiplier: 0.3, hits: 4 },
 ]",6,Target: Enemy.,Ready
+reapers-crescents-scareharvest,Reaper's Crescents (Scareharvest),Common,"[
+  { multiplier: 0.5, hits: 1 },
+  { multiplier: 0.6, hits: 1 },
+  { multiplier: 0.7, hits: 1 },
+  { multiplier: 0.8, hits: 1 },
+]",6,Target: Enemy.,
 ripple-guard,Ripple Guard,Common,[],6,Target: Allies. Ally effects: 25% max hp shield,Ready
 rock-road,Rock Road,Ground,"[
   { multiplier: 3, hits: 1 },
@@ -279,6 +285,9 @@ solar-breath,Solar Breath,Grass,"[
 soul-reap-chain,Soul Reap Chain,Common,"[
   { multiplier: 1.5, hits: 1 },
 ]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+soul-reap-chain-scareharvest,Soul Reap Chain (Scareharvest),Common,"[
+  { multiplier: 2.5, hits: 1 },
+]",6,Target: Enemy. Enemy effects: 1 stack of Poison,Ready
 soul-slash,Soul Slash,Common,"[
   { multiplier: 0.2, hits: 11 },
 ]",8,Target: Enemy. Enemy effects: Stagger,Ready
@@ -313,9 +322,9 @@ violet-core-burst,Violet Core Burst,Common,"[
   { multiplier: 2, hits: 1 },
 ]",8,Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for self for 2 secs,Ready
 violet-core-burst-psyberion-x,Violet Core Burst (Psyberion X),Common,"[
-  { multiplier: 0.5, hits: 1 },
-  { multiplier: 2, hits: 1},
-]",8,Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for 2 secs; Taunt for 2 secs,Ready
+  { multiplier: 0.5, hits: 2 },
+  { multiplier: 2, hits: null },
+]",8,Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for 2 secs; Taunt for 2 secs,Review
 void-collapse,Void Collapse,Common,"[
   { multiplier: 1.2, hits: 2 },
 ]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready

@@ -321,7 +321,7 @@ export const GENERATED_SKILLS = {
     ],
     "cooldown": 6,
     "notes": "Target: Enemy.",
-    "validationStatus": "Ready"
+    "validationStatus": "Review"
   },
   "ex-fireball": {
     "id": "ex-fireball",
@@ -803,9 +803,9 @@ export const GENERATED_SKILLS = {
     "notes": "Target: Allies. Ally effects: 25% Team Damage for 6 secs; 160% of damage + 5% of health team heal",
     "validationStatus": "Ready"
   },
-  "holy-aura-icevolf": {
-    "id": "holy-aura-icevolf",
-    "name": "Holy Aura (Icevolf)",
+  "holy-aura-frostvolf": {
+    "id": "holy-aura-frostvolf",
+    "name": "Holy Aura (Frostvolf)",
     "element": "Common",
     "damageInstances": [],
     "cooldown": 8,
@@ -1180,7 +1180,7 @@ export const GENERATED_SKILLS = {
     ],
     "cooldown": null,
     "notes": "Target: Enemy. Enemy effects: Cast four posion orbs at the enemy, orb applies a stack of posion. Each stack of Posion deals 0.4% of current hp per secs and reduces enemy attack by 4%.",
-    "validationStatus": "Ready"
+    "validationStatus": "Review"
   },
   "rallying-war-cry-3-sec-50": {
     "id": "rallying-war-cry-3-sec-50",
@@ -1222,6 +1222,32 @@ export const GENERATED_SKILLS = {
     "cooldown": 6,
     "notes": "Target: Enemy.",
     "validationStatus": "Ready"
+  },
+  "reapers-crescents-scareharvest": {
+    "id": "reapers-crescents-scareharvest",
+    "name": "Reaper's Crescents (Scareharvest)",
+    "element": "Common",
+    "damageInstances": [
+      {
+        "multiplier": 0.5,
+        "hits": 1
+      },
+      {
+        "multiplier": 0.6,
+        "hits": 1
+      },
+      {
+        "multiplier": 0.7,
+        "hits": 1
+      },
+      {
+        "multiplier": 0.8,
+        "hits": 1
+      }
+    ],
+    "cooldown": 6,
+    "notes": "Target: Enemy.",
+    "validationStatus": ""
   },
   "ripple-guard": {
     "id": "ripple-guard",
@@ -1356,6 +1382,20 @@ export const GENERATED_SKILLS = {
     ],
     "cooldown": 6,
     "notes": "Target: Enemy. Enemy effects: Stun 2 secs",
+    "validationStatus": "Ready"
+  },
+  "soul-reap-chain-scareharvest": {
+    "id": "soul-reap-chain-scareharvest",
+    "name": "Soul Reap Chain (Scareharvest)",
+    "element": "Common",
+    "damageInstances": [
+      {
+        "multiplier": 2.5,
+        "hits": 1
+      }
+    ],
+    "cooldown": 6,
+    "notes": "Target: Enemy. Enemy effects: 1 stack of Poison",
     "validationStatus": "Ready"
   },
   "soul-slash": {
@@ -1527,16 +1567,12 @@ export const GENERATED_SKILLS = {
     "damageInstances": [
       {
         "multiplier": 0.5,
-        "hits": 1
-      },
-      {
-        "multiplier": 2,
-        "hits": 1
+        "hits": 2
       }
     ],
     "cooldown": 8,
     "notes": "Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for 2 secs; Taunt for 2 secs",
-    "validationStatus": "Ready"
+    "validationStatus": "Review"
   },
   "void-collapse": {
     "id": "void-collapse",

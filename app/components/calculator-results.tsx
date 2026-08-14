@@ -272,6 +272,7 @@ function SkillDamagePanel({
                                 {attributeEffects.skillResistance > 0 && <span className="rounded bg-[#17283a] px-2 py-1 text-[#70b7ff]">-{attributeEffects.skillResistance}% incoming {skill.element} skill damage</span>}
                                 {attributeEffects.damageRedirect > 0 && <span className="rounded bg-[#17283a] px-2 py-1 text-[#70b7ff]">{attributeEffects.damageRedirect}% damage redirect</span>}
                                 {attributeEffects.damageImmunitySeconds > 0 && <span className="rounded bg-[#342612] px-2 py-1 text-[#f4bd6a]">{attributeEffects.damageImmunitySeconds}s damage immunity</span>}
+                                {attributeEffects.maxHpRegenPerSecond > 0 && <span className="rounded bg-[#173126] px-2 py-1 text-[#79e3ae]">Healing Pulse: restore {attributeEffects.maxHpRegenPerSecond}% max HP every second ({formatNumber(stats.health * attributeEffects.maxHpRegenPerSecond / 100)} HP/s)</span>}
                             </div>
                         </div>
                     )}
