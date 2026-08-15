@@ -1,43 +1,95 @@
+import { achievements, getAchievementsByCategory } from "../../data/achievements";
+import type { AchievementCategory } from "../../types/achievement";
 import type { Build } from "../../types/build";
 
-export const ACCOUNT_MULTIPLIERS = {
-    indexMania: {
-        label: "Index Mania",
-        multiplier: 1.25,
-        description: "Apply the completed Index Mania achievement.",
-    },
-    petQuestAchievement: {
-        label: "Pet Quest Achievement",
-        multiplier: 1.15,
-        description: "Apply the completed Pet Quest achievement.",
-    },
-    pathOfProgress: {
+export const ACCOUNT_MULTIPLIER_CATEGORIES = [
+    "path-of-progress",
+    "index-mania",
+    "pet-quest",
+] as const satisfies readonly AchievementCategory[];
+
+export const ACCOUNT_MULTIPLIER_DETAILS = {
+    "path-of-progress": {
         label: "Path of Progress",
-        multiplier: 1.10,
-        description: "Apply the completed Path of Progress achievement.",
+        shortReward: "+2% HP each",
+        description: "Claimed island completion rewards. These may be selected in any order.",
+    },
+    "index-mania": {
+        label: "Index Mania",
+        shortReward: "+2% DMG each",
+        description: "Index Score milestones. Entering a total completes the first milestones in order.",
+    },
+    "pet-quest": {
+        label: "Pet Quests",
+        shortReward: "+8% alternating",
+        description: "Stat-granting Pet Quests must be completed in island order.",
     },
 } as const;
 
-export type AccountMultiplierId = keyof typeof ACCOUNT_MULTIPLIERS;
+export type AccountBonuses = {
+    healthPercent: number;
+    damagePercent: number;
+    healthMultiplier: number;
+    damageMultiplier: number;
+};
 
-export const ACCOUNT_MULTIPLIER_IDS = Object.keys(
-    ACCOUNT_MULTIPLIERS,
-) as AccountMultiplierId[];
-
-export function getAccountMultiplier(
+export function getAccountBonuses(
     selections: Build["accountMultipliers"],
-): number {
-    return ACCOUNT_MULTIPLIER_IDS.reduce(
-        (total, id) =>
-            selections[id]
-                ? total * ACCOUNT_MULTIPLIERS[id].multiplier
-                : total,
-        1,
-    );
+): AccountBonuses {
+    const completed = new Set(selections.completedAchievementIds);
+    let pathHealthPercent = 0;
+    let indexDamagePercent = 0;
+    let petHealthPercent = 0;
+    let petDamagePercent = 0;
+
+    for (const achievement of achievements) {
+        if (!completed.has(achievement.id)) continue;
+
+        if (achievement.category === "path-of-progress") {
+            pathHealthPercent += achievement.rewardPercent;
+        } else if (achievement.category === "index-mania") {
+            indexDamagePercent += achievement.rewardPercent;
+        } else if (achievement.rewardStat === "health") {
+            petHealthPercent += achievement.rewardPercent;
+        } else {
+            petDamagePercent += achievement.rewardPercent;
+        }
+    }
+
+    const healthMultiplier =
+        (1 + pathHealthPercent / 100) *
+        (1 + petHealthPercent / 100);
+
+    const damageMultiplier =
+        (1 + indexDamagePercent / 100) *
+        (1 + petDamagePercent / 100);
+
+    return {
+        healthPercent: Number(((healthMultiplier - 1) * 100).toFixed(4)),
+        damagePercent: Number(((damageMultiplier - 1) * 100).toFixed(4)),
+        healthMultiplier,
+        damageMultiplier,
+    };
 }
 
-export function getSelectedAccountMultiplierCount(
+export function getCategoryProgress(
     selections: Build["accountMultipliers"],
-): number {
-    return ACCOUNT_MULTIPLIER_IDS.filter((id) => selections[id]).length;
+    category: AchievementCategory,
+): { completed: number; total: number; healthPercent: number; damagePercent: number } {
+    const completedIds = new Set(selections.completedAchievementIds);
+    const categoryAchievements = getAchievementsByCategory(category);
+    const completedAchievements = categoryAchievements.filter((achievement) =>
+        completedIds.has(achievement.id),
+    );
+
+    return {
+        completed: completedAchievements.length,
+        total: categoryAchievements.length,
+        healthPercent: completedAchievements
+            .filter((achievement) => achievement.rewardStat === "health")
+            .reduce((total, achievement) => total + achievement.rewardPercent, 0),
+        damagePercent: completedAchievements
+            .filter((achievement) => achievement.rewardStat === "damage")
+            .reduce((total, achievement) => total + achievement.rewardPercent, 0),
+    };
 }

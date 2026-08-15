@@ -251,6 +251,7 @@ const passiveEffects = {
 
 const monsterRows = parseCsv("monsters.csv");
 const skills = parseCsv("skills.csv");
+const achievementRows = parseCsv("achievements.csv");
 
 const monsters = monsterRows.map((monster, index) => {
     const name = monster.Monster.trim();
@@ -625,10 +626,37 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = ${JSON.stringify(
 `,
 );
 
+const generatedAchievements = achievementRows.map((row) => ({
+    id: row.achievement_id,
+    category: row.category,
+    order: number(row.order, 0),
+    name: row.name,
+    island: row.island || null,
+    goalType: row.goal_type,
+    goalAmount: number(row.goal_amount),
+    rewardStat: row.reward_stat,
+    rewardPercent: number(row.reward_percent, 0),
+    requiresPrevious: row.requires_previous === "true",
+    description: row.description,
+}));
+
+fs.writeFileSync(
+    path.join(outputDir, "achievements.ts"),
+    `${banner}import type { Achievement } from "../../types/achievement";
+
+export const GENERATED_ACHIEVEMENTS: Achievement[] = ${JSON.stringify(
+        generatedAchievements,
+        null,
+        2,
+    )};
+`,
+);
+
 console.log(
     `Imported ${monsters.length} monsters, ` +
     `${skills.length} skills, ` +
     `${monsterSkills.length} monster-skill links, ` +
-    `${monsterPassives.length} passives, and ` +
-    `${monsterSources.length} source records.`,
+    `${monsterPassives.length} passives, ` +
+    `${monsterSources.length} source records, and ` +
+    `${achievementRows.length} achievements.`,
 );

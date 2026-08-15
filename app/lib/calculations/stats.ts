@@ -38,7 +38,8 @@ export type CalculatedStats = {
     mutationDamageMultiplier: number;
     equipmentHealthMultiplier: number;
     equipmentDamageMultiplier: number;
-    accountMultiplier: number;
+    accountHealthMultiplier: number;
+    accountDamageMultiplier: number;
 
     healthTotalMultiplier: number;
     damageTotalMultiplier: number;
@@ -154,8 +155,11 @@ function createCalculatedStats(
         equipmentDamageMultiplier:
         multipliers.equipmentDamage,
 
-        accountMultiplier:
-        multipliers.account,
+        accountHealthMultiplier:
+        multipliers.accountHealth,
+
+        accountDamageMultiplier:
+        multipliers.accountDamage,
 
         healthTotalMultiplier:
         multipliers.healthTotal,

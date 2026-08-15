@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { monsters } from "../data/monsters";
+import { achievementIds, getAchievementsByCategory } from "../data/achievements";
 import { createDefaultBuild, type Build } from "../types/build";
 import type { Monster } from "../types/monster";
 
@@ -31,13 +32,34 @@ export function AppShell() {
         if (!saved) return;
 
         try {
-            const parsed = JSON.parse(saved) as Partial<Build["accountMultipliers"]>;
+            const parsed = JSON.parse(saved) as Partial<Build["accountMultipliers"]> & {
+                indexMania?: boolean;
+                petQuestAchievement?: boolean;
+                pathOfProgress?: boolean;
+            };
+            const storedIds = Array.isArray(parsed.completedAchievementIds)
+                ? parsed.completedAchievementIds.filter(
+                    (id): id is string => typeof id === "string" && achievementIds.has(id),
+                )
+                : [];
+
+            // Migrate the original all-or-nothing switches without losing saved progress.
+            if (storedIds.length === 0) {
+                if (parsed.indexMania) {
+                    storedIds.push(...getAchievementsByCategory("index-mania").map(({ id }) => id));
+                }
+                if (parsed.pathOfProgress) {
+                    storedIds.push(...getAchievementsByCategory("path-of-progress").map(({ id }) => id));
+                }
+                if (parsed.petQuestAchievement) {
+                    storedIds.push(...getAchievementsByCategory("pet-quest").map(({ id }) => id));
+                }
+            }
+
             setBuild((current) => ({
                 ...current,
                 accountMultipliers: {
-                    indexMania: parsed.indexMania === true,
-                    petQuestAchievement: parsed.petQuestAchievement === true,
-                    pathOfProgress: parsed.pathOfProgress === true,
+                    completedAchievementIds: [...new Set(storedIds)],
                 },
             }));
         } catch {

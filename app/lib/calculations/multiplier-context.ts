@@ -6,7 +6,7 @@ import { getGeneticPotentialMultiplier } from "./genetic-potential";
 import { getRankMultiplier } from "./ranks";
 import { calculateMutationEffects } from "./mutations";
 import { getArmorHealthMultiplier, getWeaponDamageMultiplier } from "./equipment";
-import { getAccountMultiplier } from "./account-multipliers";
+import { getAccountBonuses } from "./account-multipliers";
 
 export type StatMultipliers = {
     build: MultiplierBuild;
@@ -22,7 +22,8 @@ export type StatMultipliers = {
     mutationDamage: number;
     equipmentHealth: number;
     equipmentDamage: number;
-    account: number;
+    accountHealth: number;
+    accountDamage: number;
 
     critChance: number;
     critMultiplier: number;
@@ -76,7 +77,7 @@ export function createStatMultipliers(
         calculateMutationEffects(build.mutations, baseCritChance);
     const equipmentHealth = getArmorHealthMultiplier(build.armorId);
     const equipmentDamage = getWeaponDamageMultiplier(build.weaponId);
-    const account = getAccountMultiplier(build.accountMultipliers);
+    const account = getAccountBonuses(build.accountMultipliers);
 
     return {
         build,
@@ -95,7 +96,8 @@ export function createStatMultipliers(
 
         equipmentHealth,
         equipmentDamage,
-        account,
+        accountHealth: account.healthMultiplier,
+        accountDamage: account.damageMultiplier,
 
         critChance:
         mutationEffects.critChance,
@@ -110,7 +112,7 @@ export function createStatMultipliers(
             evolution *
             mutationEffects.healthMultiplier *
             equipmentHealth *
-            account,
+            account.healthMultiplier,
 
         damageTotal:
             rank *
@@ -119,6 +121,6 @@ export function createStatMultipliers(
             evolution *
             mutationEffects.damageMultiplier *
             equipmentDamage *
-            account,
+            account.damageMultiplier,
     };
 }

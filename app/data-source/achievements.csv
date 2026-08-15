@@ -1,0 +1,68 @@
+achievement_id,category,order,name,island,goal_type,goal_amount,reward_stat,reward_percent,requires_previous,description
+keen-gatherer-1,index-mania,1,Keen Gatherer I,,Index Score,50,damage,2,false,Reach an Index Score of 50.
+keen-gatherer-2,index-mania,2,Keen Gatherer II,,Index Score,100,damage,2,false,Reach an Index Score of 100.
+keen-gatherer-3,index-mania,3,Keen Gatherer III,,Index Score,200,damage,2,false,Reach an Index Score of 200.
+dex-expert-1,index-mania,4,Dex Expert I,,Index Score,300,damage,2,false,Reach an Index Score of 300.
+dex-expert-2,index-mania,5,Dex Expert II,,Index Score,400,damage,2,false,Reach an Index Score of 400.
+dex-expert-3,index-mania,6,Dex Expert III,,Index Score,500,damage,2,false,Reach an Index Score of 500.
+master-collector-1,index-mania,7,Master Collector I,,Index Score,600,damage,2,false,Reach an Index Score of 600.
+master-collector-2,index-mania,8,Master Collector II,,Index Score,700,damage,2,false,Reach an Index Score of 700.
+master-collector-3,index-mania,9,Master Collector III,,Index Score,800,damage,2,false,Reach an Index Score of 800.
+grandmaster-collector-1,index-mania,10,Grandmaster Collector I,,Index Score,900,damage,2,false,Reach an Index Score of 900.
+grandmaster-collector-2,index-mania,11,Grandmaster Collector II,,Index Score,1000,damage,2,false,"Reach an Index Score of 1,000."
+grandmaster-collector-3,index-mania,12,Grandmaster Collector III,,Index Score,1100,damage,2,false,"Reach an Index Score of 1,100."
+legendary-collector-1,index-mania,13,Legendary Collector I,,Index Score,1200,damage,2,false,"Reach an Index Score of 1,200."
+legendary-collector-2,index-mania,14,Legendary Collector II,,Index Score,1300,damage,2,false,"Reach an Index Score of 1,300."
+legendary-collector-3,index-mania,15,Legendary Collector III,,Index Score,1400,damage,2,false,"Reach an Index Score of 1,400."
+legendary-collector-4,index-mania,16,Legendary Collector IV,,Index Score,1500,damage,2,false,"Reach an Index Score of 1,500."
+mythic-collector-1,index-mania,17,Mythic Collector I,,Index Score,1600,damage,2,false,"Reach an Index Score of 1,600."
+mythic-collector-2,index-mania,18,Mythic Collector II,,Index Score,1700,damage,2,false,"Reach an Index Score of 1,700."
+mythic-collector-3,index-mania,19,Mythic Collector III,,Index Score,1800,damage,2,false,"Reach an Index Score of 1,800."
+mythic-collector-4,index-mania,20,Mythic Collector IV,,Index Score,1900,damage,2,false,"Reach an Index Score of 1,900."
+mythic-collector-5,index-mania,21,Mythic Collector V,,Index Score,2000,damage,2,false,"Reach an Index Score of 2,000."
+mythic-collector-6,index-mania,22,Mythic Collector VI,,Index Score,2100,damage,2,false,"Reach an Index Score of 2,100."
+godly-collector-1,index-mania,23,Godly Collector I,,Index Score,2200,damage,2,false,"Reach an Index Score of 2,200."
+godly-collector-2,index-mania,24,Godly Collector II,,Index Score,2300,damage,2,false,"Reach an Index Score of 2,300."
+godly-collector-3,index-mania,25,Godly Collector III,,Index Score,2400,damage,2,false,"Reach an Index Score of 2,400."
+godly-collector-4,index-mania,26,Godly Collector IV,,Index Score,2500,damage,2,false,"Reach an Index Score of 2,500."
+godly-collector-5,index-mania,27,Godly Collector V,,Index Score,2600,damage,2,false,"Reach an Index Score of 2,600."
+celestial-collector-1,index-mania,28,Celestial Collector I,,Index Score,2700,damage,2,false,"Reach an Index Score of 2,700."
+celestial-collector-2,index-mania,29,Celestial Collector II,,Index Score,2800,damage,2,false,"Reach an Index Score of 2,800."
+celestial-collector-3,index-mania,30,Celestial Collector III,,Index Score,2900,damage,2,false,"Reach an Index Score of 2,900."
+celestial-collector-4,index-mania,31,Celestial Collector IV,,Index Score,3000,damage,2,false,"Reach an Index Score of 3,000."
+celestial-collector-5,index-mania,32,Celestial Collector V,,Index Score,3100,damage,2,false,"Reach an Index Score of 3,100."
+astral-collector-1,index-mania,33,Astral Collector I,,Index Score,3200,damage,2,false,"Reach an Index Score of 3,200."
+astral-collector-2,index-mania,34,Astral Collector II,,Index Score,3300,damage,2,false,"Reach an Index Score of 3,300."
+astral-collector-3,index-mania,35,Astral Collector III,,Index Score,3400,damage,2,false,"Reach an Index Score of 3,400."
+astral-collector-4,index-mania,36,Astral Collector IV,,Index Score,3500,damage,2,false,"Reach an Index Score of 3,500."
+astral-collector-5,index-mania,37,Astral Collector V,,Index Score,3600,damage,2,false,"Reach an Index Score of 3,600."
+eternal-collector-1,index-mania,38,Eternal Collector I,,Index Score,3700,damage,2,false,"Reach an Index Score of 3,700."
+eternal-collector-2,index-mania,39,Eternal Collector II,,Index Score,3800,damage,2,false,"Reach an Index Score of 3,800."
+eternal-collector-3,index-mania,40,Eternal Collector III,,Index Score,3900,damage,2,false,"Reach an Index Score of 3,900."
+eternal-collector-4,index-mania,41,Eternal Collector IV,,Index Score,4000,damage,2,false,"Reach an Index Score of 4,000."
+eternal-collector-5,index-mania,42,Eternal Collector V,,Index Score,4100,damage,2,false,"Reach an Index Score of 4,100."
+infinite-collector-1,index-mania,43,Infinite Collector I,,Index Score,4200,damage,2,false,"Reach an Index Score of 4,200."
+infinite-collector-2,index-mania,44,Infinite Collector II,,Index Score,4300,damage,2,false,"Reach an Index Score of 4,300."
+infinite-collector-3,index-mania,45,Infinite Collector III,,Index Score,4400,damage,2,false,"Reach an Index Score of 4,400."
+infinite-collector-4,index-mania,46,Infinite Collector IV,,Index Score,4500,damage,2,false,"Reach an Index Score of 4,500."
+infinite-collector-5,index-mania,47,Infinite Collector V,,Index Score,4600,damage,2,false,"Reach an Index Score of 4,600."
+omni-collector-1,index-mania,48,Omni Collector I,,Index Score,4700,damage,2,false,"Reach an Index Score of 4,700."
+omni-collector-2,index-mania,49,Omni Collector II,,Index Score,4800,damage,2,false,"Reach an Index Score of 4,800."
+omni-collector-3,index-mania,50,Omni Collector III,,Index Score,4900,damage,2,false,"Reach an Index Score of 4,900."
+omni-collector-4,index-mania,51,Omni Collector IV,,Index Score,5000,damage,2,false,"Reach an Index Score of 5,000."
+first-step,path-of-progress,1,First Step,Starter Island,Reward Claimed,,health,2,false,Complete Starter Island and claim its Path of Progress reward.
+frontier-of-flames,path-of-progress,2,Frontier of Flames,Volcano,Reward Claimed,,health,2,false,Complete Volcano and claim its Path of Progress reward.
+path-of-frozen-echoes,path-of-progress,3,Path of Frozen Echoes,Frost Isle,Reward Claimed,,health,2,false,Complete Frost Isle and claim its Path of Progress reward.
+beyond-the-dream,path-of-progress,4,Beyond the Dream,Neverland,Reward Claimed,,health,2,false,Complete Neverland and claim its Path of Progress reward.
+beyond-the-dunes,path-of-progress,5,Beyond the Dunes,Duneveil Isle,Reward Claimed,,health,2,false,Complete Duneveil Isle and claim its Path of Progress reward.
+trial-of-the-tidecaller,path-of-progress,6,Trial of the Tidecaller,Tideland,Reward Claimed,,health,2,false,Complete Tideland and claim its Path of Progress reward.
+dinosaur-paradise,path-of-progress,7,Dinosaur Paradise,Dragon's Breath,Reward Claimed,,health,2,false,Complete Dragon's Breath and claim its Path of Progress reward.
+chronicle-of-the-world-tree,path-of-progress,8,Chronicle of the World Tree,Spirit Grove,Reward Claimed,,health,2,false,Complete Spirit Grove and claim its Path of Progress reward.
+floral-haven,path-of-progress,9,Floral Haven,Blossom Haven,Reward Claimed,,health,2,false,Complete Blossom Haven and claim its Path of Progress reward.
+mobius-circus,path-of-progress,10,Mobius Circus,Mobius Circus,Reward Claimed,,health,2,false,Complete Mobius Circus and claim its Path of Progress reward.
+whispers-of-the-shallows,path-of-progress,11,Whispers of the Shallows,Specter Shallows,Reward Claimed,,health,2,false,Complete Specter Shallows and claim its Path of Progress reward.
+nova-coast,path-of-progress,12,Nova Coast,Nova Coast,Reward Claimed,,health,2,false,Complete Nova Coast and claim its Path of Progress reward.
+duneveil-isle-pet-quest,pet-quest,1,Duneveil Isle Pet Quest,Duneveil Isle,Reward Claimed,,health,8,false,Complete the Duneveil Isle Pet Quest.
+tideland-pet-quest,pet-quest,2,Tideland Pet Quest,Tideland,Reward Claimed,,damage,8,true,Complete the Tideland Pet Quest and all previous Pet Quests.
+mobius-circus-pet-quest,pet-quest,3,Mobius Circus Pet Quest,Mobius Circus,Reward Claimed,,health,8,true,Complete the Mobius Circus Pet Quest and all previous Pet Quests.
+specter-shallows-pet-quest,pet-quest,4,Specter Shallows Pet Quest,Specter Shallows,Reward Claimed,,damage,8,true,Complete the Specter Shallows Pet Quest and all previous Pet Quests.

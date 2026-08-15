@@ -85,9 +85,7 @@ export type Build = {
   currentHpPercent: number;
 
   accountMultipliers: {
-    indexMania: boolean;
-    petQuestAchievement: boolean;
-    pathOfProgress: boolean;
+    completedAchievementIds: string[];
   };
 };
 
@@ -114,9 +112,7 @@ export function createDefaultBuild(
     armorAttributeIds: [],
     currentHpPercent: 100,
     accountMultipliers: {
-      indexMania: false,
-      petQuestAchievement: false,
-      pathOfProgress: false,
+      completedAchievementIds: [],
     },
   };
 }
