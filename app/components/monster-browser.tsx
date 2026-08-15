@@ -9,6 +9,26 @@ const elementColors: Record<string, string> = {
     Fire: "#ff9d6c", Ice: "#9ee7ff", Ground: "#d6a66f",
 };
 
+const elementIconPaths: Record<Monster["element"], string> = {
+    Common: "/element-icons/common.png",
+    Grass: "/element-icons/grass.png",
+    Water: "/element-icons/water.png",
+    Fire: "/element-icons/fire.png",
+    Ice: "/element-icons/ice.png",
+    Ground: "/element-icons/ground.png",
+};
+
+const rarityPortraitClasses: Record<Monster["rarity"], string> = {
+    Common: "border-[#707070] from-[#353535] to-[#171717]",
+    Uncommon: "border-[#28a745] from-[#174d24] to-[#0c2512]",
+    Rare: "border-[#299ddd] from-[#17486a] to-[#0b2131]",
+    Epic: "border-[#bd45d8] from-[#5b1e64] to-[#27102d]",
+    Legendary: "border-[#ff9f43] from-[#6a3a12] to-[#291608]",
+    Mythical: "border-transparent bg-[conic-gradient(from_210deg,#ff3b3b,#ff9f1c,#ffe94a,#48f58a,#39d9ff,#637bff,#d65cff,#ff3b86,#ff3b3b)] shadow-[0_0_12px_rgba(124,107,255,0.38)]",
+    Secret: "border-[#ff7139] from-[#5d1714] to-[#21130b]",
+    Void: "border-[#35e9d0] from-[#123c43] to-[#101d2b]",
+};
+
 type MonsterBrowserProps = {
     monsters: Monster[];
     selectedMonster: Monster | null;
@@ -131,23 +151,48 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterB
                     {filteredMonsters.map((monster) => {
                         const selected = selectedMonster?.id === monster.id;
                         const color = elementColors[monster.element] ?? "#788295";
+                        const elementIcon = elementIconPaths[monster.element];
                         const sourceNames = monster.sources.map((source) => source.name).join(" · ");
                         return (
                             <button
                                 key={monster.id}
                                 type="button"
                                 onClick={() => onSelect(monster)}
-                                className={`flex items-center gap-3 rounded-lg border p-3 text-left ${selected ? "border-[#79e3ae] bg-[#173126]" : "border-[#303848] bg-[#171b25] hover:border-[#4b566a]"}`}
+                                className={`group flex min-h-[72px] w-full items-center gap-3 rounded-xl border px-3 py-2 text-left transition ${selected ? "border-[#79e3ae] bg-[#173126] shadow-[inset_3px_0_0_#79e3ae]" : "border-[#303848] bg-[#171b25] hover:border-[#4b566a] hover:bg-[#1b202b]"}`}
                             >
-                <span className="grid size-10 shrink-0 place-items-center rounded-lg text-xs font-black" style={{ backgroundColor: `${color}26`, color }}>
-                  {monster.name.slice(0, 2).toUpperCase()}
-                </span>
+                                <span className={`grid size-14 shrink-0 place-items-center overflow-hidden rounded-xl border bg-gradient-to-br p-[2px] ${rarityPortraitClasses[monster.rarity]}`}>
+                                    <span className={`grid h-full w-full place-items-center overflow-hidden rounded-[9px] ${monster.rarity === "Mythical" ? "bg-[conic-gradient(from_225deg_at_50%_55%,#16874a,#12a8a7,#365dcc,#743bb0,#b92c79,#bd3d35,#b87818,#16874a)]" : "bg-[#111722]/90"}`}>
+                                        {monster.image ? (
+                                            <img
+                                                src={monster.image}
+                                                alt=""
+                                                loading="lazy"
+                                                className="h-full w-full object-contain p-0.5 transition-transform duration-200 group-hover:scale-110"
+                                            />
+                                        ) : (
+                                            <span className="text-xs font-black" style={{ color }}>
+                                                {monster.name.slice(0, 2).toUpperCase()}
+                                            </span>
+                                        )}
+                                    </span>
+                                </span>
                                 <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-semibold text-[#e8ebf0]">{monster.name}</span>
-                  <span className="mt-0.5 block truncate text-xs text-[#99a2b3]">
-                    {monster.element} · {monster.rarity} · {sourceNames}
-                  </span>
-                </span>
+                                    <span className="block truncate text-sm font-semibold text-[#e8ebf0]">{monster.name}</span>
+                                    <span className="mt-1 flex min-w-0 items-center gap-1.5 text-xs text-[#99a2b3]">
+                                        <span className="flex shrink-0 items-center gap-1 font-medium" style={{ color }}>
+                                            <img
+                                                src={elementIcon}
+                                                alt=""
+                                                className="size-4 object-contain"
+                                            />
+                                            {monster.element}
+                                        </span>
+                                        <span aria-hidden="true">·</span>
+                                        <span className="shrink-0">{monster.rarity}</span>
+                                        <span aria-hidden="true">·</span>
+                                        <span className="truncate">{sourceNames}</span>
+                                    </span>
+                                </span>
                                 <span className="text-lg text-[#788295]" aria-label={`Favorite ${monster.name}`}>☆</span>
                             </button>
                         );

@@ -14,7 +14,7 @@ const rarityBadgeClasses: Record<Monster["rarity"], string> = {
     Epic: "border-[#bd45d8] bg-[#411546] text-[#eb7cff]",
     Legendary: "border-[#ff9f43] bg-[#4a2910] text-[#ffb866]",
     Mythical:
-        "border-transparent bg-[linear-gradient(90deg,#ff0000,#ff9900,#ffff00,#00ff66,#00ccff,#3366ff,#cc33ff)] text-white",
+        "border-[#bd8be0] bg-[linear-gradient(90deg,#963838,#a8742d,#478a54,#37838b,#4960a0,#86499a)] text-[#fffaff] shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]",
     Secret:
         "border-transparent bg-[linear-gradient(135deg,#5d0000,#ff1f1f,#ff7a00,#ffd400,#78ff00)] text-white",
 
@@ -34,11 +34,20 @@ const rarityImageClasses: Record<Monster["rarity"], string> = {
     Legendary:
         "border-[#ff9f43] bg-gradient-to-br from-[#6a3a12] to-[#291608]",
     Mythical:
-        "border-transparent bg-[conic-gradient(from_180deg,#ff0000,#ff9900,#ffff00,#00ff66,#00ccff,#3366ff,#cc33ff,#ff0000)]",
+        "border-transparent bg-[conic-gradient(from_210deg,#ff3030,#ff9418,#ffe83d,#42f57b,#2de2e6,#5271ff,#cf4dff,#ff3684,#ff3030)] shadow-[0_0_24px_rgba(111,91,255,0.42),0_12px_30px_rgba(0,0,0,0.34)]",
     Secret:
         "border-transparent bg-[linear-gradient(135deg,#5d0000,#ff1f1f,#ff7a00,#ffd400,#78ff00)]",
     Void:
         "border-transparent bg-[linear-gradient(135deg,#84ff00,#4cff8f,#00f2ff,#00b7ff,#0096c7)]",
+};
+
+const elementIconPaths: Record<Monster["element"], string> = {
+    Common: "/element-icons/common.png",
+    Grass: "/element-icons/grass.png",
+    Water: "/element-icons/water.png",
+    Fire: "/element-icons/fire.png",
+    Ice: "/element-icons/ice.png",
+    Ground: "/element-icons/ground.png",
 };
 
 function getSourceLabel(source: Monster["sources"][number]): string {
@@ -189,19 +198,22 @@ export function MonsterOverviewCard({
                                         isFavorite,
                                         onToggleFavorite,
                                     }: MonsterOverviewCardProps) {
+    const elementIcon = elementIconPaths[monster.element];
+
     return (
-        <section className="flex gap-5 rounded-xl border border-[#303848] bg-[#171b25] p-5">
+        <section className="relative flex gap-6 overflow-hidden rounded-xl border border-[#303848] bg-[#171b25] p-5 sm:p-6">
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-64 bg-[radial-gradient(circle_at_left,rgba(121,227,174,0.09),transparent_70%)]" />
             <div
-                className={`grid size-28 shrink-0 place-items-center overflow-hidden rounded-xl border-2 p-[2px] ${
+                className={`relative grid size-40 shrink-0 place-items-center overflow-hidden rounded-2xl border-2 p-[3px] shadow-[0_12px_30px_rgba(0,0,0,0.28)] xl:size-44 ${
                     rarityImageClasses[monster.rarity]
                 }`}
             >
-                <div className="grid h-full w-full place-items-center overflow-hidden rounded-[9px] bg-[#171b25]/80">
+                <div className={`grid h-full w-full place-items-center overflow-hidden rounded-[13px] ${monster.rarity === "Mythical" ? "bg-[conic-gradient(from_225deg_at_50%_55%,#16874a,#12a8a7,#365dcc,#743bb0,#b92c79,#bd3d35,#b87818,#16874a)]" : "bg-[#10141d]/85"}`}>
                     {monster.image ? (
                         <img
                             src={monster.image}
                             alt={monster.name}
-                            className="h-full w-full object-contain"
+                            className="h-full w-full object-contain p-1 drop-shadow-[0_10px_10px_rgba(0,0,0,0.38)]"
                         />
                     ) : (
                         <span className="text-xl font-black text-[#79e3ae]">
@@ -211,14 +223,14 @@ export function MonsterOverviewCard({
                 </div>
             </div>
 
-            <div className="min-w-0 flex-1">
+            <div className="relative min-w-0 flex-1 py-1">
                 <div className="flex items-start justify-between gap-4">
                     <div>
                         <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#79e3ae]">
                             Monster Overview
                         </p>
 
-                        <h2 className="mt-1 text-2xl font-semibold text-[#f2f4f8]">
+                        <h2 className="mt-1 text-3xl font-bold tracking-tight text-[#f2f4f8]">
                             {monster.name}
                         </h2>
                     </div>
@@ -239,9 +251,14 @@ export function MonsterOverviewCard({
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-          <span className="rounded-md border border-[#303848] bg-[#11141c] px-2.5 py-1 text-xs text-[#d8dee9]">
-            {monster.element}
-          </span>
+                    <span className="flex items-center gap-1.5 rounded-md border border-[#303848] bg-[#11141c] px-2.5 py-1 text-xs text-[#d8dee9]">
+                        <img
+                            src={elementIcon}
+                            alt=""
+                            className="size-4 object-contain"
+                        />
+                        {monster.element}
+                    </span>
 
                     <span
                         className={`rounded-md border px-2.5 py-1 text-xs font-semibold ${
@@ -270,7 +287,7 @@ export function MonsterOverviewCard({
                     )}
                 </div>
 
-                <p className="mt-4 max-w-2xl text-sm leading-6 text-[#99a2b3]">
+                <p className="mt-4 max-w-3xl text-sm leading-6 text-[#aab2c1]">
                     {createDescription(monster)}
                 </p>
             </div>
