@@ -250,7 +250,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "passives": [],
     "hasEvolution": false,
-    "baseDamageELevel1": 205,
+    "baseDamageELevel1": 205.39,
     "baseHealthELevel1": 2197.8,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -262,7 +262,14 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/pricko.png",
     "element": "Grass",
     "rarity": "Rare",
-    "sources": [],
+    "sources": [
+      {
+        "type": "Chest",
+        "name": "Rift Chest",
+        "location": "Abyss Shop",
+        "status": "Current"
+      }
+    ],
     "skillIds": [
       "petal-dance",
       "root-spike"
@@ -393,7 +400,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "passives": [],
     "hasEvolution": false,
     "baseDamageELevel1": 170.59,
-    "baseHealthELevel1": 1823,
+    "baseHealthELevel1": 1825,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 14
@@ -424,8 +431,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "passives": [],
     "hasEvolution": false,
-    "baseDamageELevel1": 120,
-    "baseHealthELevel1": 1260,
+    "baseDamageELevel1": 117.65,
+    "baseHealthELevel1": 1258.8,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 15
@@ -690,8 +697,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "passives": [],
     "hasEvolution": false,
-    "baseDamageELevel1": 17740,
-    "baseHealthELevel1": 189860,
+    "baseDamageELevel1": 17736,
+    "baseHealthELevel1": 189870,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 25
@@ -702,7 +709,14 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/pandleaf.png",
     "element": "Grass",
     "rarity": "Epic",
-    "sources": [],
+    "sources": [
+      {
+        "type": "Chest",
+        "name": "Rift Chest",
+        "location": "Abyss Shop",
+        "status": "Current"
+      }
+    ],
     "skillIds": [
       "grass-tornado",
       "galecut"
@@ -800,7 +814,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "passives": [],
     "hasEvolution": false,
-    "baseDamageELevel1": 136950,
+    "baseDamageELevel1": 136961,
     "baseHealthELevel1": 1465000,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -1170,8 +1184,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "passives": [],
     "hasEvolution": false,
-    "baseDamageELevel1": 2800,
-    "baseHealthELevel1": 29600,
+    "baseDamageELevel1": 2767,
+    "baseHealthELevel1": 29622,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 43
@@ -1196,7 +1210,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "passives": [],
     "hasEvolution": false,
-    "baseDamageELevel1": 298,
+    "baseDamageELevel1": 297.86,
     "baseHealthELevel1": 3187,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -1222,7 +1236,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "passives": [],
     "hasEvolution": true,
-    "baseDamageELevel1": 359,
+    "baseDamageELevel1": 358.66,
     "baseHealthELevel1": 3838,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -1274,8 +1288,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "passives": [],
     "hasEvolution": false,
-    "baseDamageELevel1": 2300,
-    "baseHealthELevel1": 25600,
+    "baseDamageELevel1": 2293.1,
+    "baseHealthELevel1": 24594,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 47
@@ -1411,7 +1425,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "passives": [],
     "hasEvolution": false,
     "baseDamageELevel1": 25727,
-    "baseHealthELevel1": 275296,
+    "baseHealthELevel1": 275300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 52
@@ -1436,8 +1450,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "passives": [],
     "hasEvolution": false,
-    "baseDamageELevel1": 53900,
-    "baseHealthELevel1": 400600,
+    "baseDamageELevel1": 53904,
+    "baseHealthELevel1": 400574,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 53
@@ -1520,8 +1534,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "icevolf",
-    "baseDamageELevel1": 17740,
-    "baseHealthELevel1": 189860,
+    "baseDamageELevel1": 17743,
+    "baseHealthELevel1": 189863,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 56
@@ -1584,7 +1598,14 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/fanglo.png",
     "element": "Fire",
     "rarity": "Legendary",
-    "sources": [],
+    "sources": [
+      {
+        "type": "Chest",
+        "name": "Rift Chest",
+        "location": "Abyss Shop",
+        "status": "Current"
+      }
+    ],
     "skillIds": [
       "dash",
       "fire-tornado"
@@ -1604,7 +1625,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "hasEvolution": false,
-    "baseDamageELevel1": 21438,
+    "baseDamageELevel1": 21441,
     "baseHealthELevel1": 330370,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -1662,7 +1683,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "passives": [],
     "hasEvolution": false,
-    "baseDamageELevel1": 136955,
+    "baseDamageELevel1": 138693,
     "baseHealthELevel1": 1465400,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -1836,7 +1857,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "passives": [],
     "hasEvolution": true,
-    "baseDamageELevel1": 816460,
+    "baseDamageELevel1": 874800,
     "baseHealthELevel1": 6500500,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -1864,7 +1885,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "mintwolf",
-    "baseDamageELevel1": 482750,
+    "baseDamageELevel1": 482759,
     "baseHealthELevel1": 3587200,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -1918,8 +1939,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "mintwolf",
-    "baseDamageELevel1": 521350,
-    "baseHealthELevel1": 7310100,
+    "baseDamageELevel1": 335253,
+    "baseHealthELevel1": 5165200,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 70
@@ -1956,7 +1977,14 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/stumpfox.png",
     "element": "Grass",
     "rarity": "Legendary",
-    "sources": [],
+    "sources": [
+      {
+        "type": "Chest",
+        "name": "Rift Chest",
+        "location": "Abyss Shop",
+        "status": "Current"
+      }
+    ],
     "skillIds": [
       "grass-tornado",
       "galecut"
@@ -2027,7 +2055,14 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/meowl.png",
     "element": "Common",
     "rarity": "Legendary",
-    "sources": [],
+    "sources": [
+      {
+        "type": "Chest",
+        "name": "Rift Chest",
+        "location": "Abyss Shop",
+        "status": "Current"
+      }
+    ],
     "skillIds": [
       "ex-air-bullet"
     ],
@@ -2422,7 +2457,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "passives": [],
     "hasEvolution": false,
     "baseDamageELevel1": 21290,
-    "baseHealthELevel1": 159200,
+    "baseHealthELevel1": 158200,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 87
@@ -2455,7 +2490,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "passives": [],
     "hasEvolution": false,
     "baseDamageELevel1": 9822,
-    "baseHealthELevel1": 236510,
+    "baseHealthELevel1": 236513,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 88
@@ -2592,7 +2627,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "dustwing",
-    "baseDamageELevel1": 191300,
+    "baseDamageELevel1": 191350,
     "baseHealthELevel1": 2047400,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -2620,7 +2655,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "dustwing",
-    "baseDamageELevel1": 267880,
+    "baseDamageELevel1": 267887,
     "baseHealthELevel1": 1462400,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -2676,8 +2711,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "dustwing",
-    "baseDamageELevel1": 159400,
-    "baseHealthELevel1": 2400000,
+    "baseDamageELevel1": 159450,
+    "baseHealthELevel1": 2454200,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 96
@@ -2688,7 +2723,14 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/iceplate.png",
     "element": "Ice",
     "rarity": "Mythical",
-    "sources": [],
+    "sources": [
+      {
+        "type": "Chest",
+        "name": "Rift Chest",
+        "location": "Abyss Shop",
+        "status": "Current"
+      }
+    ],
     "skillIds": [
       "ice-road",
       "ex-iceball"
@@ -2708,7 +2750,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "hasEvolution": false,
-    "baseDamageELevel1": 75790,
+    "baseDamageELevel1": 75835,
     "baseHealthELevel1": 1168500,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -2835,7 +2877,14 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/woolhorn.png",
     "element": "Common",
     "rarity": "Mythical",
-    "sources": [],
+    "sources": [
+      {
+        "type": "Chest",
+        "name": "Rift Chest",
+        "location": "Abyss Shop",
+        "status": "Current"
+      }
+    ],
     "skillIds": [
       "wind-blast",
       "dash"
@@ -2984,7 +3033,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "passives": [],
     "hasEvolution": false,
-    "baseDamageELevel1": 320780,
+    "baseDamageELevel1": 320800,
     "baseHealthELevel1": 2383700,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -3030,9 +3079,9 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "rarity": "Mythical",
     "sources": [
       {
-        "type": "Rift",
-        "name": "Spirit Grove Rift 3",
-        "location": "Spirit Grove",
+        "type": "Chest",
+        "name": "Rift Chest",
+        "location": "Abyss Shop",
         "status": "Current"
       }
     ],
@@ -3094,7 +3143,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "hasEvolution": true,
-    "baseDamageELevel1": 502700,
+    "baseDamageELevel1": 502780,
     "baseHealthELevel1": 5379400,
     "baseCritChance": 10,
     "growthType": "standard",
@@ -3159,7 +3208,14 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/mintgloom.png",
     "element": "Fire",
     "rarity": "Mythical",
-    "sources": [],
+    "sources": [
+      {
+        "type": "Chest",
+        "name": "Rift Chest",
+        "location": "Abyss Shop",
+        "status": "Current"
+      }
+    ],
     "skillIds": [
       "nether-fireball",
       "rallying-war-cry-3-sec-50"
@@ -3179,7 +3235,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "hasEvolution": false,
-    "baseDamageELevel1": 467000,
+    "baseDamageELevel1": 466769,
     "baseHealthELevel1": 4994100,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -3284,7 +3340,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "passives": [],
     "hasEvolution": false,
-    "baseDamageELevel1": 418900,
+    "baseDamageELevel1": 418977,
     "baseHealthELevel1": 6455200,
     "baseCritChance": 10,
     "growthType": "standard",
@@ -3451,7 +3507,14 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/burrowbun.png",
     "element": "Ground",
     "rarity": "Mythical",
-    "sources": [],
+    "sources": [
+      {
+        "type": "Chest",
+        "name": "Rift Chest",
+        "location": "Abyss Shop",
+        "status": "Current"
+      }
+    ],
     "skillIds": [
       "gravel-whirlwind",
       "rock-road"
@@ -3727,7 +3790,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "hasEvolution": false,
     "baseDamageELevel1": 1500000,
-    "baseHealthELevel1": 64023000,
+    "baseHealthELevel1": 64023300,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 126
@@ -4122,8 +4185,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "hasEvolution": false,
-    "baseDamageELevel1": 11400000,
-    "baseHealthELevel1": 62300000,
+    "baseDamageELevel1": 11422420,
+    "baseHealthELevel1": 62358000,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 137
@@ -4183,7 +4246,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "hasEvolution": false,
-    "baseDamageELevel1": 14061000,
+    "baseDamageELevel1": 14062000,
     "baseHealthELevel1": 58772000,
     "baseCritChance": 15,
     "growthType": "standard",
@@ -4631,8 +4694,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "mountusk",
-    "baseDamageELevel1": 17800,
-    "baseHealthELevel1": 274300,
+    "baseDamageELevel1": 17804,
+    "baseHealthELevel1": 274353,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 153
@@ -4659,7 +4722,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "shadeknight",
-    "baseDamageELevel1": 111300,
+    "baseDamageELevel1": 113344,
     "baseHealthELevel1": 842200,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -4687,7 +4750,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "shadeknight",
-    "baseDamageELevel1": 132200,
+    "baseDamageELevel1": 132230,
     "baseHealthELevel1": 721900,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -4827,7 +4890,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "hydribbit",
-    "baseDamageELevel1": 205400,
+    "baseDamageELevel1": 205393,
     "baseHealthELevel1": 1526200,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -4855,7 +4918,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "hydribbit",
-    "baseDamageELevel1": 142600,
+    "baseDamageELevel1": 142630,
     "baseHealthELevel1": 2200000,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -4883,7 +4946,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "gildron",
-    "baseDamageELevel1": 158960,
+    "baseDamageELevel1": 158900,
     "baseHealthELevel1": 1700200,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -4939,7 +5002,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "gildron",
-    "baseDamageELevel1": 222460,
+    "baseDamageELevel1": 222463,
     "baseHealthELevel1": 1214500,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -5166,7 +5229,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "nivisgon",
-    "baseDamageELevel1": 1373900,
+    "baseDamageELevel1": 1373930,
     "baseHealthELevel1": 7500500,
     "baseCritChance": 15,
     "growthType": "standard",
@@ -5222,7 +5285,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "undine",
-    "baseDamageELevel1": 407400,
+    "baseDamageELevel1": 407500,
     "baseHealthELevel1": 17441000,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -5404,7 +5467,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "isEvolved": true,
     "evolutionSource": "cobaltwing",
     "baseDamageELevel1": 2670000,
-    "baseHealthELevel1": 19810000,
+    "baseHealthELevel1": 19814000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 179
@@ -5557,7 +5620,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "isEvolved": true,
     "evolutionSource": "lampyr",
     "baseDamageELevel1": 4013000,
-    "baseHealthELevel1": 29820000,
+    "baseHealthELevel1": 29825000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 184
@@ -5632,8 +5695,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "dummee",
-    "baseDamageELevel1": 4562000,
-    "baseHealthELevel1": 48176000,
+    "baseDamageELevel1": 4502400,
+    "baseHealthELevel1": 48175610,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 186
@@ -5744,8 +5807,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "scareaper",
-    "baseDamageELevel1": 4565000,
-    "baseHealthELevel1": 48856300,
+    "baseDamageELevel1": 4672480,
+    "baseHealthELevel1": 49998500,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 190
@@ -5857,8 +5920,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "isEvolved": true,
     "evolutionSource": "dragon-cannelloni",
-    "baseDamageELevel1": 28810,
-    "baseHealthELevel1": 157400,
+    "baseDamageELevel1": 28826,
+    "baseHealthELevel1": 157390,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 194
@@ -5886,8 +5949,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "mountusk",
-    "baseDamageELevel1": 46600,
-    "baseHealthELevel1": 498800,
+    "baseDamageELevel1": 46610,
+    "baseHealthELevel1": 498820,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 195
@@ -6026,7 +6089,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "gildron",
-    "baseDamageELevel1": 239100,
+    "baseDamageELevel1": 239120,
     "baseHealthELevel1": 2558600,
     "baseCritChance": 15,
     "growthType": "standard",
@@ -6054,7 +6117,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "dustwing",
-    "baseDamageELevel1": 298800,
+    "baseDamageELevel1": 298820,
     "baseHealthELevel1": 3200000,
     "baseCritChance": 15,
     "growthType": "standard",
@@ -6257,7 +6320,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "mintwolf",
-    "baseDamageELevel1": 403300,
+    "baseDamageELevel1": 403610,
     "baseHealthELevel1": 9716800,
     "baseCritChance": 15,
     "growthType": "standard",
@@ -6421,7 +6484,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "hasEvolution": false,
     "baseDamageELevel1": 5040000,
-    "baseHealthELevel1": 27530000,
+    "baseHealthELevel1": 27531000,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 209
@@ -6502,7 +6565,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "cobaltwing",
-    "baseDamageELevel1": 859500,
+    "baseDamageELevel1": 862100,
     "baseHealthELevel1": 82780000,
     "baseCritChance": 10,
     "growthType": "standard",
@@ -6673,7 +6736,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "isEvolved": true,
     "evolutionSource": "psyber",
     "baseDamageELevel1": 1677800,
-    "baseHealthELevel1": 161560000,
+    "baseHealthELevel1": 161568500,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 215
@@ -6843,7 +6906,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "hasEvolution": false,
-    "baseDamageELevel1": 1778000,
+    "baseDamageELevel1": 1778100,
     "baseHealthELevel1": 19029000,
     "baseCritChance": 0,
     "growthType": "standard",
@@ -7043,8 +7106,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "hasEvolution": false,
-    "baseDamageELevel1": 2000000,
-    "baseHealthELevel1": 89400000,
+    "baseDamageELevel1": 2090000,
+    "baseHealthELevel1": 89450000,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 224
@@ -7129,8 +7192,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "hasEvolution": false,
-    "baseDamageELevel1": 1700000,
-    "baseHealthELevel1": 167600000,
+    "baseDamageELevel1": 1741000,
+    "baseHealthELevel1": 167690000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 226
