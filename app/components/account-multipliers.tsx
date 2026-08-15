@@ -4,8 +4,10 @@ import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateActio
 
 import { getAchievementsByCategory } from "../data/achievements";
 import {
+    ADDITIONAL_ACCOUNT_MULTIPLIER_CATEGORIES,
     ACCOUNT_MULTIPLIER_CATEGORIES,
     ACCOUNT_MULTIPLIER_DETAILS,
+    PRIMARY_ACCOUNT_MULTIPLIER_CATEGORIES,
     getAccountBonuses,
     getCategoryProgress,
 } from "../lib/calculations/account-multipliers";
@@ -18,9 +20,11 @@ type AccountMultipliersProps = {
 };
 
 const categoryStyles: Record<AchievementCategory, string> = {
-    "path-of-progress": "border-[#d99a2b] bg-[#3d2a12] text-[#ffd484]",
-    "index-mania": "border-[#8056b8] bg-[#382254] text-[#d8b7ff]",
-    "pet-quest": "border-[#5f9b50] bg-[#1e4523] text-[#a5ef8e]",
+    "path-of-progress": "border-[#20a84f] bg-[#0c411e] text-[#49ef72]",
+    "index-mania": "border-[#b87512] bg-[#4a2a08] text-[#ffc447]",
+    "pet-quest": "border-[#ae8610] bg-[#443304] text-[#ffe05b]",
+    "rift-challenger": "border-[#42a8ca] bg-[#0c3d53] text-[#8be8ff]",
+    "strive-for-perfection": "border-[#d6a61b] bg-[#4a3707] text-[#ffe05b]",
 };
 
 const achievementsByCategory = Object.fromEntries(
@@ -30,15 +34,8 @@ const achievementsByCategory = Object.fromEntries(
     ]),
 ) as Record<AchievementCategory, Achievement[]>;
 
-function rewardText(healthPercent: number, damagePercent: number): string {
-    const rewards = [];
-    if (healthPercent > 0) rewards.push(`+${healthPercent}% HP`);
-    if (damagePercent > 0) rewards.push(`+${damagePercent}% DMG`);
-    return rewards.length ? rewards.join(" · ") : "No bonus yet";
-}
-
-function formatMultiplier(value: number): string {
-    return `${Number(value.toFixed(4))}×`;
+function formatBonusPercent(percent: number): string {
+    return `+${Number(percent.toFixed(2))}%`;
 }
 
 function achievementGoal(achievement: Achievement): string {
@@ -75,6 +72,11 @@ export function AccountMultipliers({
     const pathProgress = progressByCategory["path-of-progress"];
     const indexProgress = progressByCategory["index-mania"];
     const petQuestProgress = progressByCategory["pet-quest"];
+    const petAchievements = achievementsByCategory["pet-quest"];
+    const petHealthAchievements = petAchievements.filter(({ rewardStat }) => rewardStat === "health");
+    const petDamageAchievements = petAchievements.filter(({ rewardStat }) => rewardStat === "damage");
+    const petHealthCompleted = petHealthAchievements.filter(({ id }) => selectedSet.has(id)).length;
+    const petDamageCompleted = petDamageAchievements.filter(({ id }) => selectedSet.has(id)).length;
 
     useEffect(() => {
         if (!isOpen) return;
@@ -138,6 +140,59 @@ export function AccountMultipliers({
 
     const reset = () => updateSelectedIds([]);
 
+    const progressCards = [
+        {
+            key: "index",
+            category: "index-mania" as const,
+            title: "Index Mania",
+            iconSrc: "/account-icons/index-mania.png",
+            completed: indexProgress.completed,
+            total: indexProgress.total,
+            percent: indexProgress.damagePercent,
+            stat: "Damage",
+            statIconSrc: "/account-icons/damage.png",
+            tone: "amber",
+        },
+        {
+            key: "path",
+            category: "path-of-progress" as const,
+            title: "Path of Progress",
+            iconSrc: "/account-icons/path-of-progress.png",
+            completed: pathProgress.completed,
+            total: pathProgress.total,
+            percent: pathProgress.healthPercent,
+            stat: "Health",
+            statIconSrc: "/account-icons/health.png",
+            tone: "green",
+        },
+        {
+            key: "pet-damage",
+            category: "pet-quest" as const,
+            title: "Pet Quest",
+            qualifier: "Damage",
+            iconSrc: "/account-icons/damage-up.png",
+            completed: petDamageCompleted,
+            total: petDamageAchievements.length,
+            percent: petQuestProgress.damagePercent,
+            stat: "Damage",
+            statIconSrc: "/account-icons/damage.png",
+            tone: "gold",
+        },
+        {
+            key: "pet-health",
+            category: "pet-quest" as const,
+            title: "Pet Quest",
+            qualifier: "Health",
+            iconSrc: "/account-icons/health-up.png",
+            completed: petHealthCompleted,
+            total: petHealthAchievements.length,
+            percent: petQuestProgress.healthPercent,
+            stat: "Health",
+            statIconSrc: "/account-icons/health.png",
+            tone: "gold",
+        },
+    ];
+
     return (
         <>
             <section className="rounded-lg border border-[#272d3a] bg-[#11141c] px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.16)]">
@@ -155,22 +210,33 @@ export function AccountMultipliers({
                         </button>
                     </div>
 
-                    {ACCOUNT_MULTIPLIER_CATEGORIES.map((category) => {
+                    {PRIMARY_ACCOUNT_MULTIPLIER_CATEGORIES.map((category) => {
                         const details = ACCOUNT_MULTIPLIER_DETAILS[category];
                         const progress = progressByCategory[category];
+                        const categoryIcon = category === "path-of-progress"
+                            ? "/account-icons/path-of-progress.png"
+                            : category === "index-mania"
+                                ? "/account-icons/index-mania.png"
+                                : "/account-icons/health-up.png";
 
                         return (
-                            <button key={category} type="button" onClick={() => { setExpandedCategory(category); setIsOpen(true); }} className="flex min-w-0 items-center gap-3 rounded-md border border-[#303848] bg-[#171b25] px-3 py-2 text-left transition hover:border-[#4a5568]">
-                                <span className={`grid size-8 shrink-0 place-items-center rounded border text-xs font-black shadow-md ${categoryStyles[category]}`}>
-                                    {progress.completed}/{progress.total}
+                            <button key={category} type="button" onClick={() => { setExpandedCategory(category); setIsOpen(true); }} className="group flex min-w-0 items-center gap-3 rounded-lg border border-[#303848] bg-gradient-to-r from-[#171b25] to-[#121620] px-3 py-2 text-left transition hover:-translate-y-0.5 hover:border-[#4c5a70] hover:bg-[#1a202c]">
+                                <span className="relative grid size-12 shrink-0 place-items-center">
+                                    <img src={categoryIcon} alt="" className={`${category === "pet-quest" ? "absolute left-0 top-0 size-9" : "max-h-12 max-w-12"} object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]`} />
+                                    {category === "pet-quest" && <img src="/account-icons/damage-up.png" alt="" className="absolute bottom-0 right-0 size-8 object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]" />}
                                 </span>
                                 <span className="min-w-0 flex-1">
-                                    <span className="block truncate text-xs font-medium text-[#d8dee9]">{details.label}</span>
-                                    <span className={`mt-0.5 block truncate text-[10px] ${progress.completed ? "text-[#79e3ae]" : "text-[#788295]"}`}>
-                                        {rewardText(progress.healthPercent, progress.damagePercent)}
+                                    <span className="flex min-w-0 items-center gap-2">
+                                        <span className="truncate text-xs font-bold text-[#e7ebf2]">{details.label}</span>
+                                        <span className={`shrink-0 rounded border px-1.5 py-0.5 text-[9px] font-black tabular-nums ${categoryStyles[category]}`}>{progress.completed}/{progress.total}</span>
+                                    </span>
+                                    <span className={`mt-1 flex items-center gap-2 text-[10px] font-bold ${progress.completed ? "text-[#79e3ae]" : "text-[#788295]"}`}>
+                                        {progress.healthPercent > 0 && <span className="flex items-center gap-1"><img src="/account-icons/health.png" alt="Health" className="size-5 object-contain" />+{progress.healthPercent}%</span>}
+                                        {progress.damagePercent > 0 && <span className="flex items-center gap-1"><img src="/account-icons/damage.png" alt="Damage" className="size-5 object-contain" />+{progress.damagePercent}%</span>}
+                                        {!progress.healthPercent && !progress.damagePercent && "No bonus yet"}
                                     </span>
                                 </span>
-                                <span className="text-[#657084]">›</span>
+                                <span className="text-[#657084] transition group-hover:translate-x-0.5 group-hover:text-[#9aabc3]">›</span>
                             </button>
                         );
                     })}
@@ -191,94 +257,181 @@ export function AccountMultipliers({
                             <button ref={closeButtonRef} type="button" onClick={() => setIsOpen(false)} aria-label="Close account multipliers" className="grid size-9 shrink-0 place-items-center rounded-md border border-[#303848] bg-[#171b25] text-lg text-[#99a2b3] hover:border-[#79e3ae] hover:text-[#79e3ae]">×</button>
                         </header>
 
-                        <div className="space-y-5 p-5">
-                            {ACCOUNT_MULTIPLIER_CATEGORIES.map((category) => {
+                        <div className="space-y-4 p-4 sm:p-5">
+                            <div className="grid gap-3 sm:grid-cols-2">
+                                {progressCards.map((card) => {
+                                    const isGreen = card.tone === "green";
+                                    const isGold = card.tone === "gold";
+                                    const isExpanded = expandedCategory === card.category;
+                                    const frame = isGreen ? "border-[#176b34] bg-[#071c10]" : isGold ? "border-[#66520d] bg-[#1d1704]" : "border-[#75410b] bg-[#241304]";
+                                    const glow = isGreen ? "from-[#0b5525] via-[#073a1a]" : isGold ? "from-[#604606] via-[#3d2d04]" : "from-[#673505] via-[#402204]";
+                                    const accent = isGreen ? "text-[#24eb57]" : isGold ? "text-[#ffd32e]" : "text-[#ffb21b]";
+                                    const badge = isGreen ? "border-[#17b64c] bg-[#063718] text-[#39f46a]" : "border-[#c17d08] bg-[#3a2503] text-[#ffd146]";
+
+                                    return (
+                                        <button
+                                            key={card.key}
+                                            type="button"
+                                            onClick={() => setExpandedCategory(isExpanded ? null : card.category)}
+                                            aria-expanded={isExpanded}
+                                            className={`group relative overflow-hidden rounded-2xl border-2 p-1 text-left shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition hover:-translate-y-0.5 hover:brightness-110 ${frame} ${isExpanded ? "ring-2 ring-[#79e3ae]/60" : ""}`}
+                                        >
+                                            <span className={`relative flex min-h-28 items-center gap-3 overflow-hidden rounded-xl bg-gradient-to-r ${glow} to-[#090c10] px-4 py-3`}>
+                                                <span aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1.5px)", backgroundSize: "14px 14px" }} />
+                                                <span className="relative grid size-16 shrink-0 place-items-center">
+                                                    <img src={card.iconSrc} alt="" className="max-h-16 max-w-16 object-contain drop-shadow-[0_4px_5px_rgba(0,0,0,0.65)]" />
+                                                </span>
+                                                <span className="relative min-w-0 flex-1">
+                                                    <span className="flex flex-wrap items-baseline gap-x-1 text-white drop-shadow-[0_2px_1px_#000]">
+                                                        <span className="text-lg font-black tracking-tight">{card.title}</span>
+                                                        {card.qualifier && <span className="text-[10px] font-bold uppercase tracking-wide text-white/70">({card.qualifier})</span>}
+                                                    </span>
+                                                    <span className={`mt-2 inline-flex rounded-lg border-2 px-2 py-0.5 text-base font-black tabular-nums shadow-inner ${badge}`}>
+                                                        {card.completed}/{card.total}
+                                                    </span>
+                                                </span>
+                                                <span className="relative shrink-0 text-right">
+                                                    <span className={`block text-2xl font-black tabular-nums drop-shadow-[0_2px_1px_#000] ${accent}`}>+{card.percent}%</span>
+                                                    <span className="mt-1 block text-sm font-black text-white drop-shadow-[0_2px_1px_#000]">{card.stat}</span>
+                                                    <img src={card.statIconSrc} alt="" className="ml-auto mt-1 size-7 object-contain" />
+                                                </span>
+                                            </span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            <section className="rounded-xl border border-[#303848] bg-[#0d1118] p-3">
+                                <div className="mb-3 px-1">
+                                    <div>
+                                        <h3 className="text-sm font-black text-white">Additional Bonuses</h3>
+                                        <p className="mt-0.5 text-[10px] text-[#788295]">Rare account rewards with specialized effects.</p>
+                                    </div>
+                                </div>
+                                <div className="grid gap-2 sm:grid-cols-2">
+                                    {ADDITIONAL_ACCOUNT_MULTIPLIER_CATEGORIES.map((category) => {
+                                        const achievement = achievementsByCategory[category][0];
+                                        if (!achievement) return null;
+
+                                        const isSelected = selectedSet.has(achievement.id);
+                                        const isRift = category === "rift-challenger";
+                                        const details = ACCOUNT_MULTIPLIER_DETAILS[category];
+                                        const achievementIcon = isRift
+                                            ? "/account-icons/rift-challenger.png"
+                                            : "/account-icons/strive-for-perfection.png";
+                                        const rewardIcon = isRift
+                                            ? "/account-icons/rift-damage.png"
+                                            : "/account-icons/crit-chance-up.png";
+
+                                        return (
+                                            <button
+                                                key={category}
+                                                type="button"
+                                                role="checkbox"
+                                                aria-checked={isSelected}
+                                                onClick={() => toggleAchievement(achievement)}
+                                                className={`group flex min-w-0 items-center gap-3 rounded-lg border p-3 text-left transition ${isSelected ? "border-[#79e3ae] bg-[#123421]" : "border-[#303848] bg-[#151923] hover:border-[#4a5568] hover:bg-[#1a202b]"}`}
+                                            >
+                                                <img src={achievementIcon} alt="" className="size-12 shrink-0 object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]" />
+                                                <span className="min-w-0 flex-1">
+                                                    <span className="block truncate text-xs font-black text-white">{details.label}</span>
+                                                    <span className="mt-1 flex items-center gap-1.5 text-[10px] font-bold text-[#aab3c2]">
+                                                        <img src={rewardIcon} alt="" className="size-6 object-contain" />
+                                                        {details.shortReward}
+                                                    </span>
+                                                </span>
+                                                <span className={`grid size-7 shrink-0 place-items-center rounded-md border-2 text-sm font-black ${isSelected ? "border-[#3ee378] bg-[#26c965] text-[#07130b]" : "border-[#4a5568] bg-[#0d1118] text-transparent"}`}>✓</span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </section>
+
+                            {expandedCategory && (() => {
+                                const category = expandedCategory;
                                 const details = ACCOUNT_MULTIPLIER_DETAILS[category];
                                 const categoryAchievements = achievementsByCategory[category];
                                 const progress = progressByCategory[category];
-                                const isExpanded = expandedCategory === category;
 
                                 return (
-                                    <section key={category} className="overflow-hidden rounded-xl border border-[#303848] bg-[#151923]">
-                                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#303848] p-4">
-                                            <button
-                                                type="button"
-                                                onClick={() => setExpandedCategory(isExpanded ? null : category)}
-                                                aria-expanded={isExpanded}
-                                                className="min-w-0 flex-1 text-left"
-                                            >
-                                                <div className="flex items-center gap-2">
-                                                    <h3 className="text-sm font-bold text-[#e8ebf0]">{details.label}</h3>
-                                                    <span className={`rounded border px-2 py-0.5 text-[10px] font-bold ${categoryStyles[category]}`}>{details.shortReward}</span>
+                                    <section className="overflow-hidden rounded-xl border border-[#3a4353] bg-[#121722] shadow-xl">
+                                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#303848] bg-[#171d28] p-4">
+                                            <div className="min-w-0 flex-1">
+                                                <div className="flex flex-wrap items-center gap-2">
+                                                    <h3 className="text-sm font-black text-white">{details.label} Achievements</h3>
+                                                    <span className={`flex items-center gap-1 rounded border px-2 py-0.5 text-[10px] font-bold ${categoryStyles[category]}`}>
+                                                        <img src={category === "path-of-progress" ? "/account-icons/health.png" : category === "index-mania" ? "/account-icons/damage.png" : "/account-icons/health-up.png"} alt="" className="size-4 object-contain" />
+                                                        {details.shortReward}
+                                                    </span>
                                                 </div>
-                                                <p className="mt-1 text-[11px] text-[#788295]">{details.description}</p>
-                                                <span className="mt-2 inline-block text-[10px] font-semibold text-[#79e3ae]">
-                                                    {isExpanded ? "Hide achievements ↑" : "Show achievements ↓"}
-                                                </span>
-                                            </button>
-
-                                            <label className="flex items-center gap-2 rounded-lg border border-[#3a4353] bg-[#0e1118] px-3 py-2">
-                                                <span className="text-[10px] font-bold uppercase tracking-wide text-[#788295]">Completed</span>
-                                                <input
-                                                    type="number"
-                                                    min={0}
-                                                    max={categoryAchievements.length}
-                                                    value={progress.completed}
-                                                    onChange={(event) => setCategoryCount(category, Number(event.target.value))}
-                                                    className="w-12 bg-transparent text-right text-sm font-bold text-[#f2f4f8] outline-none"
-                                                    aria-label={`${details.label} completed`}
-                                                />
-                                                <span className="text-sm font-bold text-[#788295]">/{categoryAchievements.length}</span>
+                                                <p className="mt-1 text-[11px] text-[#8f9aae]">{details.description}</p>
+                                            </div>
+                                            <label className="flex items-center gap-2 rounded-lg border border-[#4a5568] bg-[#090c12] px-3 py-2">
+                                                <span className="text-[9px] font-bold uppercase tracking-wide text-[#788295]">Completed</span>
+                                                <input type="number" min={0} max={categoryAchievements.length} value={progress.completed} onChange={(event) => setCategoryCount(category, Number(event.target.value))} className="w-12 bg-transparent text-right text-sm font-black text-white outline-none" aria-label={`${details.label} completed`} />
+                                                <span className="text-sm font-black text-[#788295]">/{categoryAchievements.length}</span>
                                             </label>
+                                            <button type="button" onClick={() => setExpandedCategory(null)} className="text-xs font-bold text-[#79e3ae] hover:text-white">Hide ↑</button>
                                         </div>
-
-                                        {isExpanded && <div className={category === "index-mania" ? "max-h-80 overflow-y-auto" : ""}>
+                                        <div className={category === "index-mania" ? "max-h-80 overflow-y-auto" : ""}>
                                             {categoryAchievements.map((achievement) => {
                                                 const isSelected = selectedSet.has(achievement.id);
                                                 return (
-                                                    <button key={achievement.id} type="button" role="checkbox" aria-checked={isSelected} onClick={() => toggleAchievement(achievement)} className={`flex w-full items-center gap-3 border-b border-[#272d3a] px-4 py-3 text-left transition last:border-b-0 ${isSelected ? "bg-[#173126]/55" : "hover:bg-[#1b202c]"}`}>
-                                                        <span className={`grid size-6 shrink-0 place-items-center rounded border text-xs font-black ${isSelected ? "border-[#79e3ae] bg-[#79e3ae] text-[#0b1510]" : "border-[#4a5568] text-transparent"}`}>✓</span>
+                                                    <button key={achievement.id} type="button" role="checkbox" aria-checked={isSelected} onClick={() => toggleAchievement(achievement)} className={`flex w-full items-center gap-3 border-b border-[#272d3a] px-4 py-3 text-left transition last:border-b-0 ${isSelected ? "bg-[#123421]" : "hover:bg-[#1b202c]"}`}>
+                                                        <span className={`grid size-7 shrink-0 place-items-center rounded-md border-2 text-sm font-black ${isSelected ? "border-[#3ee378] bg-[#26c965] text-[#07130b]" : "border-[#4a5568] bg-[#0d1118] text-transparent"}`}>✓</span>
                                                         <span className="min-w-0 flex-1">
-                                                            <span className="block text-sm font-semibold text-[#e8ebf0]">{achievement.name}</span>
+                                                            <span className="block text-sm font-bold text-[#eef1f6]">{achievement.name}</span>
                                                             <span className="mt-0.5 block text-xs text-[#788295]">{achievementGoal(achievement)}</span>
                                                         </span>
-                                                        <span className={`shrink-0 text-xs font-bold ${achievement.rewardStat === "health" ? "text-[#7dd3fc]" : "text-[#f9a8d4]"}`}>
-                                                            +{achievement.rewardPercent}% {achievement.rewardStat === "health" ? "HP" : "DMG"}
+                                                        <span className={`flex shrink-0 items-center gap-1.5 text-xs font-black ${achievement.rewardStat === "health" ? "text-[#39ef64]" : "text-[#ff6388]"}`}>
+                                                            <img src={achievement.rewardStat === "health" ? "/account-icons/health.png" : "/account-icons/damage.png"} alt="" className="size-5 object-contain" />
+                                                            +{achievement.rewardPercent}%
                                                         </span>
                                                     </button>
                                                 );
                                             })}
-                                        </div>}
+                                        </div>
                                     </section>
                                 );
-                            })}
+                            })()}
 
-                            <div className="grid gap-3 rounded-lg border border-[#2c6048] bg-[#173126]/45 p-4 sm:grid-cols-2">
-                                <div>
-                                    <p className="text-xs text-[#9ab2a5]">Total Health Bonus</p>
-                                    <p className="mt-1 text-2xl font-bold text-[#7dd3fc]">+{bonuses.healthPercent}%</p>
-                                    <p className="mt-2 text-[11px] text-[#99a2b3]">
-                                        Path {formatMultiplier(1 + pathProgress.healthPercent / 100)}
-                                        <span className="px-1.5 text-[#657084]">×</span>
-                                        Pet Quest {formatMultiplier(1 + petQuestProgress.healthPercent / 100)}
-                                    </p>
-                                    <p className="mt-0.5 text-xs font-semibold text-[#7dd3fc]">
-                                        = {formatMultiplier(bonuses.healthMultiplier)} Health
-                                    </p>
+                            <section className="overflow-hidden rounded-2xl border-2 border-[#5a4a45] bg-[#071015] p-1 shadow-[0_12px_35px_rgba(0,0,0,0.45)]">
+                                <div className="rounded-xl bg-gradient-to-b from-[#0d2025] to-[#080d12] px-4 py-4 sm:px-6">
+                                    <div className="mb-4 flex items-center gap-3">
+                                        <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[#42505b]" />
+                                        <h3 className="text-xl font-black text-white drop-shadow-[0_2px_1px_#000]">Total Bonuses</h3>
+                                        <span className="h-px flex-1 bg-gradient-to-l from-transparent to-[#42505b]" />
+                                    </div>
+                                    <div className="grid gap-4 sm:grid-cols-2 sm:divide-x sm:divide-[#39434b]">
+                                        <div className="text-center sm:pr-4">
+                                            <p className="flex items-center justify-center gap-2 text-2xl font-black text-[#ff517e] drop-shadow-[0_0_10px_rgba(255,81,126,0.35)]"><img src="/account-icons/damage.png" alt="Damage" className="size-9 object-contain" />+{bonuses.damagePercent}%</p>
+                                            <p className="text-sm font-black text-white">Damage</p>
+                                            <p className="mt-3 rounded-lg border border-[#76243e] bg-[#250c15] px-2 py-1.5 text-[11px] font-bold text-[#ff7899]">{formatBonusPercent(indexProgress.damagePercent)} × {formatBonusPercent(petQuestProgress.damagePercent)} = {formatBonusPercent(bonuses.damagePercent)}</p>
+                                        </div>
+                                        <div className="border-t border-[#39434b] pt-4 text-center sm:border-t-0 sm:pl-4 sm:pt-0">
+                                            <p className="flex items-center justify-center gap-2 text-2xl font-black text-[#39ef64] drop-shadow-[0_0_10px_rgba(57,239,100,0.35)]"><img src="/account-icons/health.png" alt="Health" className="size-9 object-contain" />+{bonuses.healthPercent}%</p>
+                                            <p className="text-sm font-black text-white">Health</p>
+                                            <p className="mt-3 rounded-lg border border-[#1f7438] bg-[#092314] px-2 py-1.5 text-[11px] font-bold text-[#62f383]">{formatBonusPercent(pathProgress.healthPercent)} × {formatBonusPercent(petQuestProgress.healthPercent)} = {formatBonusPercent(bonuses.healthPercent)}</p>
+                                        </div>
+                                    </div>
+                                    {(bonuses.riftDamagePercent > 0 || bonuses.critChancePercent > 0) && (
+                                        <div className="mt-4 flex flex-wrap justify-center gap-2 border-t border-[#303b43] pt-3">
+                                            {bonuses.riftDamagePercent > 0 && (
+                                                <span className="flex items-center gap-1.5 rounded-lg border border-[#247899] bg-[#092634] px-2.5 py-1.5 text-[11px] font-black text-[#83e5ff]">
+                                                    <img src="/account-icons/rift-damage.png" alt="" className="size-6 object-contain" />
+                                                    +{bonuses.riftDamagePercent}% Rift Damage
+                                                </span>
+                                            )}
+                                            {bonuses.critChancePercent > 0 && (
+                                                <span className="flex items-center gap-1.5 rounded-lg border border-[#a98212] bg-[#302505] px-2.5 py-1.5 text-[11px] font-black text-[#ffe05b]">
+                                                    <img src="/account-icons/crit-chance-up.png" alt="" className="size-6 object-contain" />
+                                                    +{bonuses.critChancePercent}% Crit Chance
+                                                </span>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
-                                <div>
-                                    <p className="text-xs text-[#9ab2a5]">Total Damage Bonus</p>
-                                    <p className="mt-1 text-2xl font-bold text-[#f9a8d4]">+{bonuses.damagePercent}%</p>
-                                    <p className="mt-2 text-[11px] text-[#99a2b3]">
-                                        Index {formatMultiplier(1 + indexProgress.damagePercent / 100)}
-                                        <span className="px-1.5 text-[#657084]">×</span>
-                                        Pet Quest {formatMultiplier(1 + petQuestProgress.damagePercent / 100)}
-                                    </p>
-                                    <p className="mt-0.5 text-xs font-semibold text-[#f9a8d4]">
-                                        = {formatMultiplier(bonuses.damageMultiplier)} Damage
-                                    </p>
-                                </div>
-                            </div>
+                            </section>
                         </div>
 
                         <footer className="sticky bottom-0 z-20 flex justify-between gap-3 border-t border-[#272d3a] bg-[#11141c] px-5 py-4">

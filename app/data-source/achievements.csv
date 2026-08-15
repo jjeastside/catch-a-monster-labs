@@ -66,3 +66,5 @@ duneveil-isle-pet-quest,pet-quest,1,Duneveil Isle Pet Quest,Duneveil Isle,Reward
 tideland-pet-quest,pet-quest,2,Tideland Pet Quest,Tideland,Reward Claimed,,damage,8,true,Complete the Tideland Pet Quest and all previous Pet Quests.
 mobius-circus-pet-quest,pet-quest,3,Mobius Circus Pet Quest,Mobius Circus,Reward Claimed,,health,8,true,Complete the Mobius Circus Pet Quest and all previous Pet Quests.
 specter-shallows-pet-quest,pet-quest,4,Specter Shallows Pet Quest,Specter Shallows,Reward Claimed,,damage,8,true,Complete the Specter Shallows Pet Quest and all previous Pet Quests.
+rift-challenger,rift-challenger,1,Rift Challenger,,Group Reward Claimed,,rift-damage,5,false,Complete all Rift Challenger goals and claim the group reward.
+strive-for-perfection,strive-for-perfection,1,Strive for Perfection,,Group Reward Claimed,,crit-chance,5,false,Complete all Strive for Perfection goals and claim the group reward.

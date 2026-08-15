@@ -24,6 +24,8 @@ export type StatMultipliers = {
     equipmentDamage: number;
     accountHealth: number;
     accountDamage: number;
+    accountRiftDamagePercent: number;
+    accountCritChancePercent: number;
 
     critChance: number;
     critMultiplier: number;
@@ -98,9 +100,11 @@ export function createStatMultipliers(
         equipmentDamage,
         accountHealth: account.healthMultiplier,
         accountDamage: account.damageMultiplier,
+        accountRiftDamagePercent: account.riftDamagePercent,
+        accountCritChancePercent: account.critChancePercent,
 
         critChance:
-        mutationEffects.critChance,
+            mutationEffects.critChance + account.critChancePercent,
 
         critMultiplier:
         mutationEffects.critMultiplier,

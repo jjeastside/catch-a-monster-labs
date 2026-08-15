@@ -1,9 +1,15 @@
 export type AchievementCategory =
     | "index-mania"
     | "path-of-progress"
-    | "pet-quest";
+    | "pet-quest"
+    | "rift-challenger"
+    | "strive-for-perfection";
 
-export type AchievementRewardStat = "health" | "damage";
+export type AchievementRewardStat =
+    | "health"
+    | "damage"
+    | "rift-damage"
+    | "crit-chance";
 
 export type Achievement = {
     id: string;

@@ -872,5 +872,31 @@ export const GENERATED_ACHIEVEMENTS: Achievement[] = [
     "rewardPercent": 8,
     "requiresPrevious": true,
     "description": "Complete the Specter Shallows Pet Quest and all previous Pet Quests."
+  },
+  {
+    "id": "rift-challenger",
+    "category": "rift-challenger",
+    "order": 1,
+    "name": "Rift Challenger",
+    "island": null,
+    "goalType": "Group Reward Claimed",
+    "goalAmount": null,
+    "rewardStat": "rift-damage",
+    "rewardPercent": 5,
+    "requiresPrevious": false,
+    "description": "Complete all Rift Challenger goals and claim the group reward."
+  },
+  {
+    "id": "strive-for-perfection",
+    "category": "strive-for-perfection",
+    "order": 1,
+    "name": "Strive for Perfection",
+    "island": null,
+    "goalType": "Group Reward Claimed",
+    "goalAmount": null,
+    "rewardStat": "crit-chance",
+    "rewardPercent": 5,
+    "requiresPrevious": false,
+    "description": "Complete all Strive for Perfection goals and claim the group reward."
   }
 ];
