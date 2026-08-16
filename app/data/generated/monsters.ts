@@ -2169,7 +2169,14 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/flaragon.png",
     "element": "Fire",
     "rarity": "Mythical",
-    "sources": [],
+    "sources": [
+      {
+        "type": "Egg",
+        "name": "Flaragon's Egg",
+        "location": "Volcano",
+        "status": "Current"
+      }
+    ],
     "skillIds": [
       "claw-attack",
       "ex-fireball"

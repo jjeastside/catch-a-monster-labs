@@ -12,6 +12,7 @@ import { AccountMultipliers } from "./account-multipliers";
 import { CalculatorResults } from "./calculator-results";
 import { MonsterBrowser } from "./monster-browser";
 import { TopNavigation } from "./top-navigation";
+import { SiteFooter } from "./site-footer";
 
 export function AppShell() {
     const hasInitializedAccountStorage = useRef(false);
@@ -123,7 +124,7 @@ export function AppShell() {
         <div className="min-h-screen bg-[#090b10] text-[#f2f4f8]">
             <TopNavigation />
 
-            <div className="w-full px-4 pt-3 lg:px-5">
+            <div className="mx-auto w-full max-w-[1800px] px-4 pt-3 sm:px-5 xl:px-7 2xl:px-8">
                 <AccountMultipliers
                     build={build}
                     onBuildChangeAction={setBuild}
@@ -133,14 +134,20 @@ export function AppShell() {
             <main
                 className="
                     grid
+                    mx-auto
                     w-full
+                    max-w-[1800px]
                     gap-4
-                    p-4
+                    px-4
+                    pb-5
                     pt-3
+                    sm:px-5
                     lg:h-[calc(100vh-170px)]
                     lg:grid-cols-[minmax(250px,0.85fr)_minmax(420px,1.65fr)_minmax(280px,1fr)]
                     lg:overflow-hidden
-                    lg:p-5
+                    xl:gap-5
+                    xl:px-7
+                    2xl:px-8
                 "
             >
                 <MonsterBrowser
@@ -167,6 +174,7 @@ export function AppShell() {
                     onResetAction={resetBuild}
                 />
             </main>
+            <SiteFooter />
         </div>
     );
 }

@@ -12,10 +12,6 @@ import {
 } from "../lib/calculations/evolution";
 import type { Build, Mutation, Rank } from "../types/build";
 import type { Monster } from "../types/monster";
-import {
-    getSkill,
-    getSkillTotalMultiplier,
-} from "../data/skills";
 import { ARMORS, WEAPONS, getEquipment } from "../data/equipments";
 import { getAttribute, getAttributesForGear } from "../data/attributes";
 import { getActiveAttributeIds, getAttributeSlotCount, getFixedAttributeIds } from "../lib/calculations/attributes";
@@ -33,6 +29,7 @@ const mutations: {
     effects: string[];
     xIcon: string;
     xEffects: string[];
+    accent: string;
 }[] = [
     {
         id: "huge",
@@ -45,6 +42,7 @@ const mutations: {
         ],
         xIcon: "/icons/huge-x.png",
         xEffects: ["+60% Health", "+60% Damage"],
+        accent: "#e954d8",
     },
     {
         id: "shiny",
@@ -57,6 +55,7 @@ const mutations: {
         ],
         xIcon: "/icons/shiny-x.png",
         xEffects: ["+25% Damage", "+35% Crit Chance"],
+        accent: "#e8df39",
     },
     {
         id: "bloodlit",
@@ -69,6 +68,7 @@ const mutations: {
         ],
         xIcon: "/icons/bloodlit-x.png",
         xEffects: ["+15% Crit Chance", "+145% Crit Damage"],
+        accent: "#ff515b",
     },
     {
         id: "fairy",
@@ -81,29 +81,73 @@ const mutations: {
         ],
         xIcon: "/icons/fairy-x.png",
         xEffects: ["-35% Incoming Damage", "-25% Cooldown"],
+        accent: "#9f6cff",
     },
 ];
 
-const ranks: Rank[] = ["SS", "S", "A", "B", "C", "D", "E"];
+function getAggregatedMutationEffects(selectedMutations: Mutation[]) {
+    const totals = new Map<string, number>();
 
-const enhancements = Array.from(
-    { length: 11 },
-    (_, index) => index,
-);
+    mutations.forEach((mutation) => {
+        const isX = selectedMutations.includes(mutation.xId);
+        const isNormal = selectedMutations.includes(mutation.id);
+        if (!isX && !isNormal) return;
 
-const geneticPotentialValues = [
-    0,
-    6,
-    12,
-    18,
-    24,
-    30,
-    36,
-    42,
-    48,
-    54,
-    60,
-];
+        const effects = isX ? mutation.xEffects : mutation.effects;
+        effects.forEach((effect) => {
+            const match = effect.match(/^([+-])(\d+(?:\.\d+)?)%\s+(.+)$/);
+            if (!match) return;
+
+            const [, sign, amount, stat] = match;
+            const signedAmount = Number(amount) * (sign === "-" ? -1 : 1);
+            totals.set(stat, (totals.get(stat) ?? 0) + signedAmount);
+        });
+    });
+
+    return Array.from(totals, ([stat, value]) => ({
+        stat,
+        value,
+        label: `${value >= 0 ? "+" : ""}${value}% ${stat}`,
+    }));
+}
+
+const ranks: Rank[] = ["E", "D", "C", "B", "A", "S", "SS"];
+
+const rankVisuals: Record<Rank, {
+    color: string;
+    activeBackground: string;
+    labelBackground?: string;
+}> = {
+    E: {
+        color: "#a3a3aa",
+        activeBackground: "rgba(163,163,170,0.14)",
+    },
+    D: {
+        color: "#35d328",
+        activeBackground: "rgba(53,211,40,0.13)",
+    },
+    C: {
+        color: "#23bfd3",
+        activeBackground: "rgba(35,191,211,0.13)",
+    },
+    B: {
+        color: "#e45bd8",
+        activeBackground: "rgba(228,91,216,0.13)",
+    },
+    A: {
+        color: "#ffad0a",
+        activeBackground: "rgba(255,173,10,0.14)",
+    },
+    S: {
+        color: "#67e879",
+        activeBackground: "rgba(74,201,126,0.13)",
+        labelBackground: "linear-gradient(100deg,#ff4545 4%,#ffd83d 25%,#43e86e 45%,#31cbea 65%,#8e62ff 82%,#ff58a8 100%)",
+    },
+    SS: {
+        color: "#ff5a62",
+        activeBackground: "rgba(255,90,98,0.14)",
+    },
+};
 
 type SelectOption = {
     id: string;
@@ -152,8 +196,93 @@ function SelectField({
     );
 }
 
-function formatSkillMultiplier(value: number): string {
-    return Number(value.toFixed(4)).toString();
+function HelpTooltip({
+                         title,
+                         text,
+                         align = "center",
+                     }: {
+    title: string;
+    text: string;
+    align?: "center" | "right";
+}) {
+    return (
+        <span className="group/help relative inline-flex">
+            <span
+                tabIndex={0}
+                role="button"
+                aria-label={`About ${title}`}
+                className="grid size-5 place-items-center rounded-full border border-[#4b566a] bg-[#171b25] text-[11px] font-black text-[#99a2b3] outline-none transition hover:border-[#79e3ae] hover:text-[#79e3ae] focus:border-[#79e3ae] focus:text-[#79e3ae]"
+            >
+                ?
+            </span>
+            <span
+                role="tooltip"
+                className={`pointer-events-none absolute bottom-full z-[70] mb-2 w-64 translate-y-1 rounded-lg border border-[#303848] bg-[#11141c] p-3 text-left text-xs font-normal leading-5 text-[#b8c0ce] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100 ${align === "right" ? "right-0" : "left-1/2 -translate-x-1/2"}`}
+            >
+                <strong className="block font-semibold text-[#e8ebf0]">{title}</strong>
+                <span className="mt-1 block">{text}</span>
+            </span>
+        </span>
+    );
+}
+
+type GeneticPotentialSliderProps = {
+    label: "Attack" | "Health";
+    icon: string;
+    value: number;
+    color: string;
+    onChange: (value: number) => void;
+};
+
+function GeneticPotentialSlider({
+                                    label,
+                                    icon,
+                                    value,
+                                    color,
+                                    onChange,
+                                }: GeneticPotentialSliderProps) {
+    const filledSegments = value / 6;
+
+    return (
+        <div>
+            <div className="mb-1.5 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                    <img src={icon} alt="" className="size-6 rounded object-contain"/>
+                    <span className="text-xs font-black uppercase tracking-wide text-[#e8ebf0]">
+                        {label}
+                    </span>
+                </div>
+                <strong className="text-sm font-black tabular-nums" style={{ color }}>
+                    {value === 0 ? "0%" : `+${value}%`}
+                </strong>
+            </div>
+
+            <div className="relative h-4">
+                <div className="pointer-events-none absolute inset-0 grid grid-cols-10 gap-0.5 overflow-hidden rounded border border-[#3a4354] bg-[#0d1017] p-0.5">
+                    {Array.from({ length: 10 }, (_, index) => (
+                        <span
+                            key={index}
+                            className="rounded-[2px] border border-white/[0.035]"
+                            style={{
+                                backgroundColor: index < filledSegments ? color : "#252b36",
+                                opacity: index < filledSegments ? 1 : 0.72,
+                            }}
+                        />
+                    ))}
+                </div>
+                <input
+                    type="range"
+                    min="0"
+                    max="60"
+                    step="6"
+                    value={value}
+                    onChange={(event) => onChange(Number(event.target.value))}
+                    aria-label={`${label} Genetic Potential`}
+                    className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent outline-none [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#11141c] [&::-moz-range-track]:bg-transparent [&::-webkit-slider-runnable-track]:h-4 [&::-webkit-slider-runnable-track]:bg-transparent [&::-webkit-slider-thumb]:mt-0 [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#11141c] [&::-webkit-slider-thumb]:shadow-[0_0_0_2px_rgba(0,0,0,0.45)]"
+                />
+            </div>
+        </div>
+    );
 }
 
 type EvolutionMultiplierEditorProps = {
@@ -317,6 +446,9 @@ export function BuildEditor({
                                 onBuildChangeAction,
                                 onResetAction,
                             }: BuildEditorProps) {
+    const [mutationHelpId, setMutationHelpId] = useState<string | null>(null);
+    const [mutationEffectsOpen, setMutationEffectsOpen] = useState(false);
+
     const update = <K extends keyof Build>(
         key: K,
         value: Build[K],
@@ -341,9 +473,10 @@ export function BuildEditor({
         }
     };
 
-    const selectedSkill = getSkill(build.selectedSkillId);
     const selectedWeapon = getEquipment(build.weaponId);
     const selectedArmor = getEquipment(build.armorId);
+    const mutationHelp = mutations.find((mutation) => mutation.id === mutationHelpId) ?? null;
+    const aggregatedMutationEffects = getAggregatedMutationEffects(build.mutations);
     const hasHpConditionalAttribute = getActiveAttributeIds(build)
         .map(getAttribute)
         .some((attribute) => Boolean(attribute?.hpCondition));
@@ -365,19 +498,15 @@ export function BuildEditor({
         if (
             Number.isInteger(level) &&
             level >= 1 &&
-            level <= 100
+            level <= 105
         ) {
             update("level", level);
         }
     };
 
-    const geneticPotentialOptions =
-        geneticPotentialValues.map((value) => ({
-            id: String(value),
-            label: value === 0 ? "None" : `+${value}%`,
-        }));
-
-
+    const updateEnhancement = (value: number) => {
+        update("enhancement", Math.max(0, Math.min(10, value)));
+    };
 
     return (
         <Panel
@@ -408,101 +537,164 @@ export function BuildEditor({
                 )}
 
                 <CollapsibleSection title="Pet">
-                    <div className="grid grid-cols-2 gap-2">
-                        <label>
-              <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
-                Level
-              </span>
+                    <div className="space-y-4">
+                        <div>
+                            <div className="mb-1.5 flex items-center justify-between gap-3">
+                                <label
+                                    htmlFor="build-level-slider"
+                                    className="text-xs font-medium text-[#c5cbd5]"
+                                >
+                                    Level
+                                </label>
+
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max="105"
+                                        step="1"
+                                        value={build.level}
+                                        onChange={(event) => updateLevel(event.target.value)}
+                                        aria-label="Monster level"
+                                        className="w-[4.25rem] appearance-none rounded-md border border-[#303848] bg-[#11141c] px-2 py-1.5 text-center text-sm font-semibold tabular-nums text-[#e8ebf0] outline-none transition focus:border-[#4d96ff] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                    />
+                                    <span className="text-xs tabular-nums text-[#788295]">/ 105</span>
+                                </div>
+                            </div>
+
                             <input
-                                type="number"
+                                id="build-level-slider"
+                                type="range"
                                 min="1"
-                                max="100"
+                                max="105"
                                 step="1"
                                 value={build.level}
-                                onChange={(event) =>
-                                    updateLevel(event.target.value)
-                                }
-                                className="w-full rounded-md border border-[#303848] bg-[#171b25] px-3 py-2 text-sm text-[#d8dee9]"
+                                onChange={(event) => updateLevel(event.target.value)}
+                                style={{
+                                    background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((build.level - 1) / 104) * 100}%, #283140 ${((build.level - 1) / 104) * 100}%, #283140 100%)`,
+                                }}
+                                className="h-1.5 w-full cursor-pointer appearance-none rounded-full outline-none [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#3b82f6] [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#3b82f6] [&::-webkit-slider-thumb]:shadow-[0_0_0_3px_rgba(59,130,246,0.16)]"
                             />
-                        </label>
+                        </div>
 
-                        <SelectField
-                            label="Rank"
-                            value={build.rank}
-                            onChange={(value) =>
-                                update("rank", value as Rank | null)
-                            }
-                            options={ranks.map((rank) => ({
-                                id: rank,
-                                label: rank,
-                            }))}
-                            emptyLabel=""
-                        />
+                        <div>
+                            <p className="mb-1.5 text-xs font-medium text-[#c5cbd5]">Rank</p>
+                            <div className="grid grid-cols-7 overflow-hidden rounded-lg border border-[#303848] bg-[#0d1017]">
+                                {ranks.map((rank, index) => {
+                                    const selected = build.rank === rank;
+                                    const visual = rankVisuals[rank];
 
-                        <SelectField
-                            label="Enhancement"
-                            value={String(build.enhancement)}
-                            onChange={(value) =>
-                                update(
-                                    "enhancement",
-                                    Number(value ?? 0),
-                                )
-                            }
-                            options={enhancements.map((value) => ({
-                                id: String(value),
-                                label: `+${value}`,
-                            }))}
-                        />
-                    </div>
-
-                    <div className="mt-3 rounded-lg border border-[#303848] bg-[#11141c] p-3">
-                        <div className="mb-3 flex items-center gap-3">
-                            <img
-                                src="/icons/genetic-potential.png"
-                                alt="Genetic Potential"
-                                className="size-9 shrink-0 object-contain"
-                            />
-
-                            <div>
-                                <p className="text-sm font-semibold text-[#e8ebf0]">
-                                    Genetic Potential
-                                </p>
-
-                                <p className="text-xs text-[#788295]">
-                                    Separate bonuses for Health and Damage
-                                </p>
+                                    return (
+                                        <button
+                                            key={rank}
+                                            type="button"
+                                            onClick={() => update("rank", rank)}
+                                            aria-pressed={selected}
+                                            style={{
+                                                background: selected ? visual.activeBackground : undefined,
+                                                boxShadow: selected
+                                                    ? `inset 0 0 0 1px ${visual.color}99, inset 0 1px 0 rgba(255,255,255,0.08)`
+                                                    : undefined,
+                                            }}
+                                            className={`min-w-0 py-2 text-sm font-black tracking-wide transition hover:bg-[#171b25] ${index > 0 ? "border-l border-[#303848]" : ""}`}
+                                        >
+                                            <span
+                                                style={visual.labelBackground
+                                                    ? {
+                                                        backgroundImage: visual.labelBackground,
+                                                        backgroundClip: "text",
+                                                        WebkitBackgroundClip: "text",
+                                                        color: "transparent",
+                                                        textShadow: "none",
+                                                        filter: "drop-shadow(0 1px 0 #050608)",
+                                                        display: "inline-block",
+                                                        fontSize: "1rem",
+                                                        fontWeight: 900,
+                                                        lineHeight: 1,
+                                                        transform: "scaleX(1.08)",
+                                                    }
+                                                    : {
+                                                        color: visual.color,
+                                                        textShadow: "-0.5px 0 #050608, 0.5px 0 #050608, 0 1px #050608",
+                                                        display: "inline-block",
+                                                        fontSize: "1rem",
+                                                        fontWeight: 900,
+                                                        lineHeight: 1,
+                                                        transform: "scaleX(1.08)",
+                                                    }}
+                                            >
+                                                {rank}
+                                            </span>
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-2">
-                            <SelectField
-                                label="Health GP"
-                                value={String(
-                                    build.healthGeneticPotential,
-                                )}
-                                onChange={(value) =>
-                                    update(
-                                        "healthGeneticPotential",
-                                        Number(value ?? 0),
-                                    )
-                                }
-                                options={geneticPotentialOptions}
-                                emptyLabel=""
-                            />
+                        <div>
+                            <div className="mb-1.5 flex items-center justify-between">
+                                <p className="text-xs font-medium text-[#c5cbd5]">Enhancement</p>
+                                <span className="text-xs tabular-nums text-[#788295]">+10 max</span>
+                            </div>
 
-                            <SelectField
-                                label="Damage GP"
-                                value={String(
-                                    build.damageGeneticPotential,
-                                )}
-                                onChange={(value) =>
-                                    update(
-                                        "damageGeneticPotential",
-                                        Number(value ?? 0),
-                                    )
-                                }
-                                options={geneticPotentialOptions}
-                                emptyLabel=""
+                            <div className="grid grid-cols-[3rem_minmax(0,1fr)_3rem] overflow-hidden rounded-lg border border-[#303848] bg-[#0d1017]">
+                                <button
+                                    type="button"
+                                    onClick={() => updateEnhancement(build.enhancement - 1)}
+                                    disabled={build.enhancement <= 0}
+                                    aria-label="Decrease enhancement"
+                                    className="border-r border-[#303848] py-2 text-base text-[#99a2b3] transition hover:bg-[#171b25] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+                                >
+                                    −
+                                </button>
+
+                                <div className={`grid place-items-center bg-[#11141c] text-sm font-black tabular-nums [text-shadow:0_1px_0_#050608] ${build.enhancement === 0 ? "text-[#e8ebf0]" : "text-[#4d96ff]"}`}>
+                                    +{build.enhancement}
+                                </div>
+
+                                <button
+                                    type="button"
+                                    onClick={() => updateEnhancement(build.enhancement + 1)}
+                                    disabled={build.enhancement >= 10}
+                                    aria-label="Increase enhancement"
+                                    className="border-l border-[#303848] py-2 text-base text-[#99a2b3] transition hover:bg-[#171b25] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+                                >
+                                    +
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-3 rounded-lg border border-[#303848] bg-[#11141c] p-3">
+                        <div className="mb-3 flex items-center gap-2">
+                            <img
+                                src="/icons/genetic-potential.png"
+                                alt="Genetic Potential"
+                                className="size-7 shrink-0 object-contain"
+                            />
+                            <p className="text-sm font-semibold text-[#e8ebf0]">
+                                Genetic Potential
+                            </p>
+                            <HelpTooltip
+                                title="Genetic Potential"
+                                text="Adds separate percentage bonuses to Attack and Health. Drag or click either bar; each segment is 6%, up to 60%."
+                            />
+                        </div>
+
+                        <div className="space-y-3">
+                            <GeneticPotentialSlider
+                                label="Attack"
+                                icon="/icons/breed-attack.png"
+                                value={build.damageGeneticPotential}
+                                color="#e743df"
+                                onChange={(value) => update("damageGeneticPotential", value)}
+                            />
+                            <GeneticPotentialSlider
+                                label="Health"
+                                icon="/icons/breed-health.png"
+                                value={build.healthGeneticPotential}
+                                color="#ff4f78"
+                                onChange={(value) => update("healthGeneticPotential", value)}
                             />
                         </div>
                     </div>
@@ -518,135 +710,151 @@ export function BuildEditor({
                     )}
                 </CollapsibleSection>
 
-                <CollapsibleSection title="Mutations">
-                    <div className="flex flex-wrap gap-2">
+                <CollapsibleSection
+                    title={
+                        <span className="flex items-center gap-2">
+                            <span>Mutations</span>
+                            <span className="rounded-full border border-[#3a4354] bg-[#171b25] px-2 py-0.5 text-[10px] font-semibold tabular-nums text-[#99a2b3]">
+                                {build.mutations.length} / 4
+                            </span>
+                        </span>
+                    }
+                >
+                    <p className="mb-2.5 text-[11px] text-[#788295]">
+                        Click to cycle: <span className="text-[#b8c0ce]">Normal → X → Off</span>
+                    </p>
+
+                    <div className="grid grid-cols-2 gap-2">
                         {mutations.map((mutation) => {
                             const isX = build.mutations.includes(mutation.xId);
                             const isSelected = isX || build.mutations.includes(mutation.id);
                             const label = isX ? `${mutation.label} X` : mutation.label;
+                            const stateLabel = isX ? "X Mutation" : isSelected ? "Selected" : "Not selected";
 
                             return (
-                                <button
-                                    key={mutation.id}
-                                    type="button"
-                                    onClick={() => cycleMutation(mutation)}
-                                    aria-pressed={isSelected}
-                                    aria-label={`${label}. Click to ${isX ? "remove" : isSelected ? `upgrade to ${mutation.label} X` : "select"}.`}
-                                    title={`${label} · Click to ${isX ? "remove" : isSelected ? "upgrade" : "select"}`}
-                                    className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-md border transition ${
-                                        isSelected
-                                            ? "border-[#79e3ae] bg-[#173126] shadow-[0_0_12px_rgba(121,227,174,0.18)]"
-                                            : "border-[#303848] bg-[#171b25] hover:border-[#4a5568] hover:bg-[#1b202b]"
-                                    }`}
-                                >
-                                    <img
-                                        src={isX ? mutation.xIcon : mutation.icon}
-                                        alt={label}
-                                        className="size-10 object-contain"
-                                    />
+                                <div key={mutation.id} className="relative min-w-0">
+                                    <button
+                                        type="button"
+                                        onClick={() => cycleMutation(mutation)}
+                                        aria-pressed={isSelected}
+                                        aria-label={`${label}. Click to ${isX ? "remove" : isSelected ? `upgrade to ${mutation.label} X` : "select"}.`}
+                                        style={isSelected
+                                            ? {
+                                                borderColor: mutation.accent,
+                                                backgroundColor: `${mutation.accent}12`,
+                                                boxShadow: `inset 0 0 0 1px ${mutation.accent}25${isX ? `, 0 0 12px ${mutation.accent}20` : ""}`,
+                                            }
+                                            : undefined}
+                                        className="group/mutation flex min-h-[58px] w-full items-center gap-2 rounded-lg border border-[#303848] bg-[#171b25] p-2 pr-8 text-left transition hover:border-[#4a5568] hover:bg-[#1b202b]"
+                                    >
+                                        <span className="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-md border border-[#3a4354] bg-[#0d1017]">
+                                            <img
+                                                src={isX ? mutation.xIcon : mutation.icon}
+                                                alt=""
+                                                className={`size-9 object-contain transition ${isSelected ? "opacity-100" : "opacity-65 group-hover/mutation:opacity-90"}`}
+                                            />
+                                        </span>
 
-                                    {isSelected && (
-                                        <span
-                                            className="absolute right-1 top-1 flex size-4 items-center justify-center rounded-full bg-[#79e3ae] text-[9px] font-black text-[#0b1510]">
-                            ✓
-                        </span>
-                                    )}
-                                </button>
+                                        <span className="min-w-0">
+                                            <span className="block truncate text-xs font-semibold text-[#e8ebf0]">
+                                                {mutation.label}
+                                            </span>
+                                            <span
+                                                className="mt-0.5 block truncate text-[10px] font-medium"
+                                                style={{ color: isSelected ? mutation.accent : "#788295" }}
+                                            >
+                                                {stateLabel}
+                                            </span>
+                                        </span>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setMutationHelpId((current) =>
+                                            current === mutation.id ? null : mutation.id,
+                                        )}
+                                        aria-label={`About ${mutation.label}`}
+                                        aria-expanded={mutationHelpId === mutation.id}
+                                        className={`absolute right-2 top-1/2 z-10 grid size-5 -translate-y-1/2 place-items-center rounded-full border bg-[#171b25] text-[11px] font-black outline-none transition ${mutationHelpId === mutation.id ? "border-[#79e3ae] text-[#79e3ae]" : "border-[#4b566a] text-[#99a2b3] hover:border-[#79e3ae] hover:text-[#79e3ae]"}`}
+                                    >
+                                        ?
+                                    </button>
+                                </div>
                             );
                         })}
                     </div>
 
-                    <div className="mt-3 border-t border-[#252c38] pt-2">
-                        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
-                            Selected Effects
-                        </p>
+                    {mutationHelp && (
+                        <div
+                            className="mt-2.5 rounded-lg border p-3"
+                            style={{
+                                borderColor: `${mutationHelp.accent}70`,
+                                backgroundColor: `${mutationHelp.accent}0d`,
+                            }}
+                        >
+                            <div className="flex items-center justify-between gap-3">
+                                <div className="flex items-center gap-2">
+                                    <img src={mutationHelp.icon} alt="" className="size-6 object-contain"/>
+                                    <strong className="text-xs text-[#e8ebf0]">{mutationHelp.label}</strong>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => setMutationHelpId(null)}
+                                    aria-label="Close mutation information"
+                                    className="text-base leading-none text-[#788295] hover:text-[#e8ebf0]"
+                                >
+                                    ×
+                                </button>
+                            </div>
+                            <div className="mt-2 grid gap-2 text-[10px] sm:grid-cols-2">
+                                <div className="rounded-md border border-[#303848] bg-[#11141c] p-2 text-[#99a2b3]">
+                                    <span className="mb-1 block font-semibold text-[#d8dee9]">Normal</span>
+                                    {mutationHelp.effects.join(" · ")}
+                                </div>
+                                <div className="rounded-md border border-[#303848] bg-[#11141c] p-2 text-[#99a2b3]">
+                                    <span className="mb-1 block font-semibold" style={{ color: mutationHelp.accent }}>X Mutation</span>
+                                    {mutationHelp.xEffects.join(" · ")}
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
-                        {build.mutations.length === 0 ? (
-                            <p className="text-xs text-[#788295]">
-                                No mutations selected.
-                            </p>
-                        ) : (
-                            <div className="grid grid-cols-2 gap-1.5">
-                                {mutations
-                                    .filter((mutation) =>
-                                        build.mutations.includes(mutation.id) ||
-                                        build.mutations.includes(mutation.xId),
-                                    )
-                                    .map((mutation) => {
-                                        const isX = build.mutations.includes(mutation.xId);
-                                        const label = isX ? `${mutation.label} X` : mutation.label;
-                                        const icon = isX ? mutation.xIcon : mutation.icon;
-                                        const effects = isX ? mutation.xEffects : mutation.effects;
-                                        return (
-                                            <div
-                                                key={mutation.id}
-                                                className="flex min-w-0 items-center gap-2 rounded-md border border-[#252c38] bg-[#11141c] p-2"
+                    <div className="mt-3 overflow-hidden rounded-lg border border-[#303848] bg-[#11141c]">
+                        <button
+                            type="button"
+                            onClick={() => setMutationEffectsOpen((current) => !current)}
+                            aria-expanded={mutationEffectsOpen}
+                            className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition hover:bg-[#171b25]"
+                        >
+                            <span className="flex items-center gap-2">
+                                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
+                                    Active Effects
+                                </span>
+                                <span className="rounded-full bg-[#202632] px-1.5 py-0.5 text-[9px] font-semibold tabular-nums text-[#99a2b3]">
+                                    {aggregatedMutationEffects.length}
+                                </span>
+                            </span>
+                            <span className="text-xs text-[#788295]">{mutationEffectsOpen ? "▲" : "▼"}</span>
+                        </button>
+
+                        {mutationEffectsOpen && (
+                            <div className="border-t border-[#252c38] p-2.5">
+                                {aggregatedMutationEffects.length === 0 ? (
+                                    <p className="text-xs text-[#788295]">No mutations selected.</p>
+                                ) : (
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {aggregatedMutationEffects.map((effect) => (
+                                            <span
+                                                key={effect.stat}
+                                                className="rounded-md border border-[#303848] bg-[#171b25] px-2 py-1 text-[10px] font-medium text-[#b8c0ce]"
                                             >
-                                                <img
-                                                    src={icon}
-                                                    alt=""
-                                                    className="size-7 shrink-0 object-contain"
-                                                />
-
-                                                <div className="min-w-0">
-                                                    <p className="text-xs font-semibold text-[#e8ebf0]">
-                                                        {label}
-                                                    </p>
-
-                                                    <p className="mt-0.5 truncate text-[9px] text-[#788295]" title={effects.join(" · ")}>
-                                                        {effects.join(" · ")}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
+                                                {effect.label}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         )}
-                    </div>
-                </CollapsibleSection>
-
-                <CollapsibleSection title="Skill">
-                    <div className="grid grid-cols-[minmax(0,1fr)_6rem] gap-2">
-                        <SelectField
-                            label="Skill"
-                            value={build.selectedSkillId}
-                            onChange={(value) =>
-                                update(
-                                    "selectedSkillId",
-                                    value as Build["selectedSkillId"],
-                                )
-                            }
-                            options={
-                                monster?.skillIds
-                                    .map(getSkill)
-                                    .filter(
-                                        (skill): skill is NonNullable<typeof skill> =>
-                                            skill !== null,
-                                    )
-                                    .map((skill) => ({
-                                        id: skill.id,
-                                        label: skill.name,
-                                    })) ?? []
-                            }
-                            emptyLabel=""
-                        />
-
-                        <label className="block">
-                            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
-                                Multiplier
-                            </span>
-                            <input
-                                readOnly
-                                value={
-                                    selectedSkill
-                                        ? `${formatSkillMultiplier(
-                                            getSkillTotalMultiplier(selectedSkill),
-                                        )}×`
-                                        : "—"
-                                }
-                                className="w-full rounded-md border border-[#303848] bg-[#171b25] px-3 py-2 text-sm text-[#788295]"
-                            />
-                        </label>
                     </div>
                 </CollapsibleSection>
 
@@ -747,7 +955,7 @@ export function BuildEditor({
 
                     {hasHpConditionalAttribute && (
                         <label className="mt-3 block">
-                        <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Current HP for conditional attributes</span>
+                            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Current HP for conditional attributes</span>
                             <div className="flex items-center gap-3">
                                 <input type="range" min="0" max="100" value={build.currentHpPercent} onChange={(event) => update("currentHpPercent", Number(event.target.value))} className="min-w-0 flex-1 accent-[#79e3ae]" />
                                 <span className="w-12 text-right text-sm font-semibold text-[#d8dee9]">{build.currentHpPercent}%</span>
