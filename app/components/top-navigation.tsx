@@ -8,7 +8,7 @@ const navItems = [
 
 export function TopNavigation() {
     return (
-        <header className="border-b border-[#272d3a] bg-[#0d1017]/95 px-4 backdrop-blur sm:px-6">
+        <header className="border-b border-[#343b4b] bg-[#11151e]/95 px-4 backdrop-blur sm:px-6">
             <nav
                 aria-label="Primary navigation"
                 className="flex h-[73px] w-full items-center justify-between gap-4"
@@ -17,11 +17,11 @@ export function TopNavigation() {
                     href="#workspace"
                     className="flex shrink-0 items-center gap-3 font-semibold tracking-tight text-white"
                 >
-                    <span className="grid size-9 place-items-center rounded-lg bg-[#79e3ae] text-lg font-black text-[#0b1510]">
-                        M
+                    <span className="grid size-9 place-items-center rounded-lg border border-[#7585ff]/45 bg-[#252a46] text-lg font-black text-[#aeb7ff] shadow-[0_0_18px_rgba(117,133,255,0.12)]">
+                        C
                     </span>
 
-                    <span>Monster Lab</span>
+                    <span>Cam Lab</span>
                 </a>
 
                 <div className="hidden items-center gap-1 sm:flex">

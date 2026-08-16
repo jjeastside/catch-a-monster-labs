@@ -21,7 +21,7 @@ export function AttributeSelect({
     const [isOpen, setIsOpen] = useState(false);
     const [opensUpward, setOpensUpward] = useState(false);
     const [alignsRight, setAlignsRight] = useState(false);
-    const [menuMaxHeight, setMenuMaxHeight] = useState(320);
+    const [menuMaxHeight, setMenuMaxHeight] = useState(264);
     const rootRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const selected = options.find((attribute) => attribute.id === value) ?? null;
@@ -59,7 +59,7 @@ export function AttributeSelect({
 
         setOpensUpward(shouldOpenUpward);
         setAlignsRight(buttonRect.left + menuWidth > window.innerWidth - 8);
-        setMenuMaxHeight(Math.max(80, Math.min(320, availableSpace)));
+        setMenuMaxHeight(Math.max(80, Math.min(264, availableSpace)));
     }, []);
 
     useEffect(() => {
@@ -112,7 +112,7 @@ export function AttributeSelect({
                 }}
                 aria-expanded={isOpen}
                 aria-label={selected ? `Change ${selected.name}` : `Select ${label}`}
-                className="relative grid min-h-[72px] w-full place-items-center overflow-hidden rounded-md border border-[#303848] bg-[#0d1017] p-0.5 hover:border-[#4a5568] focus:border-[#79e3ae] focus:outline-none"
+                className="relative grid aspect-[2.85/1] min-h-[54px] w-full place-items-center overflow-hidden rounded-md border border-[#303848] bg-[#11151e] p-0.5 hover:border-[#4a5568] focus:border-[#7585ff] focus:outline-none"
             >
                 {selected ? (
                     <img
@@ -124,11 +124,11 @@ export function AttributeSelect({
                     <span className="text-xs text-[#697386]">Select attribute</span>
                 )}
 
-                <span className="absolute left-1.5 top-1.5 rounded bg-[#0d1017]/90 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-[#99a2b3]">
+                <span className="absolute left-1.5 top-1.5 rounded bg-[#11151e]/90 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-[#99a2b3]">
                     {label}
                 </span>
 
-                <span className="absolute right-1.5 top-1.5 rounded bg-[#0d1017]/85 px-1 text-[9px] text-[#99a2b3]">
+                <span className="absolute right-1.5 top-1.5 rounded bg-[#11151e]/85 px-1 text-[9px] text-[#99a2b3]">
                     {isOpen ? "▲" : "▼"}
                 </span>
             </button>
@@ -137,7 +137,7 @@ export function AttributeSelect({
                     role="listbox"
                     aria-label={label}
                     style={{maxHeight: `${menuMaxHeight}px` }}
-                    className={`absolute z-50 w-[min(20rem,calc(100vw-3rem))] space-y-2 overflow-y-auto rounded-lg border border-[#303848] bg-[#11141c] p-2 shadow-2xl ${
+                    className={`absolute z-50 w-[min(16rem,calc(100vw-3rem))] space-y-1 overflow-y-auto rounded-lg border border-[#303848] bg-[#131720] p-1.5 shadow-2xl ${
                         opensUpward ? "bottom-full mb-1" : "top-full mt-1"
                     } ${alignsRight ? "right-0" : "left-0"}`}
                 >
@@ -146,7 +146,7 @@ export function AttributeSelect({
                         role="option"
                         aria-selected={value === null}
                         onClick={() => choose(null)}
-                        className="w-full rounded-md border border-transparent p-2 text-left text-xs text-[#99a2b3] hover:border-[#303848] hover:bg-[#171b25]"
+                        className="w-full rounded-md border border-transparent p-2 text-left text-xs text-[#99a2b3] hover:border-[#303848] hover:bg-[#1a1f2a]"
                     >
                         None
                     </button>
@@ -164,12 +164,12 @@ export function AttributeSelect({
                                 aria-selected={attribute.id === value}
                                 onClick={() => choose(attribute.id)}
                                 aria-label={`Select ${attribute.name}`}
-                                className={`relative grid h-24 w-full place-items-center overflow-hidden rounded-md border border-[#303848] p-0.5 ${
+                                className={`relative grid h-16 w-full place-items-center overflow-hidden rounded-md border border-[#303848] p-0.5 ${
                                     disabled
                                         ? "cursor-not-allowed opacity-35"
                                         : attribute.id === value
-                                            ? "bg-[#173126] ring-1 ring-[#79e3ae]"
-                                            : "bg-[#0d1017] hover:border-[#4a5568]"
+                                            ? "bg-[#1f2540] ring-1 ring-[#7585ff]"
+                                            : "bg-[#11151e] hover:border-[#4a5568]"
                                 }`}
                             >
                                 <img
@@ -179,7 +179,7 @@ export function AttributeSelect({
                                     className="h-full w-full object-contain"
                                 />
                                 {attribute.id === value && (
-                                    <span className="absolute right-2 top-2 rounded-full bg-[#173126] px-1.5 text-xs font-bold text-[#79e3ae]">
+                                    <span className="absolute right-2 top-2 rounded-full bg-[#1f2540] px-1.5 text-xs font-bold text-[#7585ff]">
                                         ✓
                                     </span>
                                 )}

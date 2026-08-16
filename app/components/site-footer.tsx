@@ -17,12 +17,12 @@ function FooterLink({ label, href }: { label: string; href: string }) {
         <li>
             <a
                 href={href}
-                className="group inline-flex items-center gap-1.5 text-sm text-[#8f99aa] transition hover:text-[#79e3ae] focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#79e3ae]/60"
+                className="group inline-flex items-center gap-1.5 text-sm text-[#8f99aa] transition hover:text-[#7585ff] focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7585ff]/60"
             >
                 <span>{label}</span>
                 <span
                     aria-hidden="true"
-                    className="translate-x-0 text-[#79e3ae] opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100"
+                    className="translate-x-0 text-[#7585ff] opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100"
                 >
                     →
                 </span>
@@ -36,23 +36,23 @@ export function SiteFooter() {
         <footer className="relative mt-5 overflow-hidden border-t border-[#293140] bg-[#0b0e14]">
             <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#79e3ae]/70 to-transparent"
+                className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#7585ff]/70 to-transparent"
             />
             <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -left-28 -top-36 size-72 rounded-full bg-[#79e3ae]/[0.055] blur-3xl"
+                className="pointer-events-none absolute -left-28 -top-36 size-72 rounded-full bg-[#7585ff]/[0.055] blur-3xl"
             />
 
             <div className="relative mx-auto w-full max-w-[1800px] px-5 py-8 sm:px-7 lg:px-10">
                 <div className="grid gap-8 md:grid-cols-[minmax(0,1.5fr)_minmax(10rem,0.65fr)_minmax(10rem,0.65fr)]">
                     <div className="max-w-xl">
                         <div className="flex items-center gap-3">
-                            <span className="grid size-10 place-items-center rounded-xl border border-[#79e3ae]/35 bg-[#173126] text-sm font-black tracking-tight text-[#79e3ae] shadow-[0_0_24px_rgba(121,227,174,0.08)]">
+                            <span className="grid size-10 place-items-center rounded-xl border border-[#7585ff]/35 bg-[#1f2540] text-sm font-black tracking-tight text-[#7585ff] shadow-[0_0_24px_rgba(117,133,255,0.08)]">
                                 C/L
                             </span>
                             <div>
                                 <p className="text-base font-bold tracking-tight text-[#f2f4f8]">
-                                    CAM<span className="text-[#79e3ae]">/</span>LAB
+                                    CAM<span className="text-[#7585ff]">/</span>LAB
                                 </p>
                                 <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#697386]">
                                     Roblox fan-made companion
@@ -69,7 +69,7 @@ export function SiteFooter() {
                             <span aria-hidden="true" className="text-[#3a4354]">•</span>
                             <span>ROBLOX FAN-SITE</span>
                             <span aria-hidden="true" className="text-[#3a4354]">•</span>
-                            <span className="rounded-full border border-[#303848] bg-[#11141c] px-2 py-0.5 font-medium text-[#99a2b3]">
+                            <span className="rounded-full border border-[#303848] bg-[#131720] px-2 py-0.5 font-medium text-[#99a2b3]">
                                 v1.0.0
                             </span>
                             <span aria-hidden="true" className="text-[#3a4354]">•</span>
@@ -79,7 +79,7 @@ export function SiteFooter() {
                                     href="https://github.com/jjeastside"
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="font-semibold text-[#79e3ae] transition hover:text-[#a6f0cb]"
+                                    className="font-semibold text-[#7585ff] transition hover:text-[#a8b0ff]"
                                 >
                                     @jjeastside
                                 </a>
@@ -88,7 +88,7 @@ export function SiteFooter() {
                     </div>
 
                     <nav aria-label="Explore CAM Lab">
-                        <h2 className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#79e3ae]">
+                        <h2 className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#7585ff]">
                             Explore
                         </h2>
                         <ul className="mt-4 space-y-2.5">
@@ -99,7 +99,7 @@ export function SiteFooter() {
                     </nav>
 
                     <nav aria-label="CAM Lab project links">
-                        <h2 className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#79e3ae]">
+                        <h2 className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#7585ff]">
                             Project
                         </h2>
                         <ul className="mt-4 space-y-2.5">

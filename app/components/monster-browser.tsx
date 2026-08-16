@@ -36,7 +36,7 @@ type MonsterBrowserProps = {
 };
 
 type EvolutionFilter = "all" | "can-evolve" | "evolved" | "standard";
-const selectClassName = "min-w-0 rounded-md border border-[#303848] bg-[#171b25] px-3 py-2 text-xs text-[#c5cbd5] outline-none focus:border-[#79e3ae]";
+const selectClassName = "min-w-0 rounded-md border border-[#303848] bg-[#1a1f2a] px-3 py-2 text-xs text-[#c5cbd5] outline-none focus:border-[#7585ff]";
 
 type MonsterOptionProps = {
     monster: Monster;
@@ -53,7 +53,7 @@ function MonsterOption({ monster, selected, onSelect, compact = false }: Monster
         <button
             type="button"
             onClick={onSelect}
-            className={`group flex w-full items-center rounded-xl border text-left transition ${compact ? "min-h-[58px] gap-2 px-2.5 py-1.5" : "min-h-[72px] gap-3 px-3 py-2"} ${selected ? "border-[#79e3ae] bg-[#173126] shadow-[inset_3px_0_0_#79e3ae]" : "border-[#303848] bg-[#171b25] hover:border-[#4b566a] hover:bg-[#1b202b]"}`}
+            className={`group flex w-full items-center rounded-xl border text-left transition ${compact ? "min-h-[58px] gap-2 px-2.5 py-1.5" : "min-h-[72px] gap-3 px-3 py-2"} ${selected ? "border-[#7585ff] bg-[#1f2540] shadow-[inset_3px_0_0_#7585ff]" : "border-[#303848] bg-[#1a1f2a] hover:border-[#4b566a] hover:bg-[#1b202b]"}`}
         >
             <span className={`grid shrink-0 place-items-center overflow-hidden rounded-xl border bg-gradient-to-br p-[2px] ${compact ? "size-11" : "size-14"} ${rarityPortraitClasses[monster.rarity]}`}>
                 <span className={`grid h-full w-full place-items-center overflow-hidden rounded-[9px] ${monster.rarity === "Mythical" ? "bg-[conic-gradient(from_225deg_at_50%_55%,#16874a,#12a8a7,#365dcc,#743bb0,#b92c79,#bd3d35,#b87818,#16874a)]" : "bg-[#111722]/90"}`}>
@@ -147,7 +147,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterB
     return (
         <>
             <Panel
-                eyebrow="Step 1"
+                eyebrow="Select"
                 title="Monster Browser"
                 action={<span className="rounded-full bg-[#202632] px-2.5 py-1 text-xs text-[#99a2b3]">
         {selectedMonster ? "1 selected" : "0 selected"}
@@ -162,7 +162,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterB
                             value={searchQuery}
                             onChange={(event) => setSearchQuery(event.target.value)}
                             placeholder="Search monsters"
-                            className="w-full rounded-lg border border-[#303848] bg-[#0d1017] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#697386] focus:border-[#79e3ae]"
+                            className="w-full rounded-lg border border-[#303848] bg-[#11151e] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#697386] focus:border-[#7585ff]"
                         />
                     </label>
 
@@ -197,7 +197,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterB
                     <div className="flex items-center justify-between text-xs text-[#788295]">
                         <span>{filteredMonsters.length} of {monsters.length} monsters</span>
                         {activeFilterCount > 0 && (
-                            <button type="button" onClick={clearFilters} className="text-[#79e3ae] hover:text-[#a6f0cb]">
+                            <button type="button" onClick={clearFilters} className="text-[#7585ff] hover:text-[#a8b0ff]">
                                 Clear {activeFilterCount} {activeFilterCount === 1 ? "filter" : "filters"}
                             </button>
                         )}
@@ -225,7 +225,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterB
                                 setVisibleMonsterCount(60);
                                 setShowAllMonsters(true);
                             }}
-                            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#303848] bg-[#171b25] px-4 py-3 text-sm font-semibold text-[#d8dee9] transition hover:border-[#4b566a] hover:bg-[#1b202b]"
+                            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#303848] bg-[#1a1f2a] px-4 py-3 text-sm font-semibold text-[#d8dee9] transition hover:border-[#4b566a] hover:bg-[#1b202b]"
                         >
                         <span aria-hidden="true" className="grid grid-cols-2 gap-0.5">
                             <span className="size-1.5 rounded-[1px] border border-current"/>
@@ -250,11 +250,11 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterB
                         if (event.target === event.currentTarget) setShowAllMonsters(false);
                     }}
                 >
-                    <section className="flex h-[92vh] max-h-[58rem] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-[#303848] bg-[#11141c] shadow-2xl">
+                    <section className="flex h-[92vh] max-h-[58rem] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-[#303848] bg-[#131720] shadow-2xl">
                         <div className="border-b border-[#303848] p-3 sm:px-4 sm:py-3">
                             <div className="flex items-start justify-between gap-4">
                                 <div>
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#79e3ae]">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7585ff]">
                                         Monster Database
                                     </p>
                                     <h2 id="all-monsters-title" className="mt-0.5 text-lg font-bold text-[#f2f4f8]">
@@ -286,7 +286,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterB
                                     }}
                                     placeholder="Search all monsters"
                                     autoFocus
-                                    className="w-full rounded-lg border border-[#303848] bg-[#0d1017] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#697386] focus:border-[#79e3ae]"
+                                    className="w-full rounded-lg border border-[#303848] bg-[#11151e] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#697386] focus:border-[#7585ff]"
                                 />
                             </label>
                         </div>

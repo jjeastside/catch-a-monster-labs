@@ -180,7 +180,7 @@ function SelectField({
                 onChange={(event) =>
                     onChange(event.target.value || null)
                 }
-                className="w-full rounded-md border border-[#303848] bg-[#171b25] px-3 py-2 text-sm text-[#d8dee9] outline-none focus:border-[#79e3ae]"
+                className="w-full rounded-md border border-[#303848] bg-[#1a1f2a] px-3 py-2 text-sm text-[#d8dee9] outline-none focus:border-[#7585ff]"
             >
                 {emptyLabel && (
                     <option value="">{emptyLabel}</option>
@@ -211,13 +211,13 @@ function HelpTooltip({
                 tabIndex={0}
                 role="button"
                 aria-label={`About ${title}`}
-                className="grid size-5 place-items-center rounded-full border border-[#4b566a] bg-[#171b25] text-[11px] font-black text-[#99a2b3] outline-none transition hover:border-[#79e3ae] hover:text-[#79e3ae] focus:border-[#79e3ae] focus:text-[#79e3ae]"
+                className="grid size-5 place-items-center rounded-full border border-[#4b566a] bg-[#1a1f2a] text-[11px] font-black text-[#99a2b3] outline-none transition hover:border-[#7585ff] hover:text-[#7585ff] focus:border-[#7585ff] focus:text-[#7585ff]"
             >
                 ?
             </span>
             <span
                 role="tooltip"
-                className={`pointer-events-none absolute bottom-full z-[70] mb-2 w-64 translate-y-1 rounded-lg border border-[#303848] bg-[#11141c] p-3 text-left text-xs font-normal leading-5 text-[#b8c0ce] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100 ${align === "right" ? "right-0" : "left-1/2 -translate-x-1/2"}`}
+                className={`pointer-events-none absolute bottom-full z-[70] mb-2 w-64 translate-y-1 rounded-lg border border-[#303848] bg-[#131720] p-3 text-left text-xs font-normal leading-5 text-[#b8c0ce] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100 ${align === "right" ? "right-0" : "left-1/2 -translate-x-1/2"}`}
             >
                 <strong className="block font-semibold text-[#e8ebf0]">{title}</strong>
                 <span className="mt-1 block">{text}</span>
@@ -258,7 +258,7 @@ function GeneticPotentialSlider({
             </div>
 
             <div className="relative h-4">
-                <div className="pointer-events-none absolute inset-0 grid grid-cols-10 gap-0.5 overflow-hidden rounded border border-[#3a4354] bg-[#0d1017] p-0.5">
+                <div className="pointer-events-none absolute inset-0 grid grid-cols-10 gap-0.5 overflow-hidden rounded border border-[#3a4354] bg-[#11151e] p-0.5">
                     {Array.from({ length: 10 }, (_, index) => (
                         <span
                             key={index}
@@ -278,7 +278,7 @@ function GeneticPotentialSlider({
                     value={value}
                     onChange={(event) => onChange(Number(event.target.value))}
                     aria-label={`${label} Genetic Potential`}
-                    className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent outline-none [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#11141c] [&::-moz-range-track]:bg-transparent [&::-webkit-slider-runnable-track]:h-4 [&::-webkit-slider-runnable-track]:bg-transparent [&::-webkit-slider-thumb]:mt-0 [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#11141c] [&::-webkit-slider-thumb]:shadow-[0_0_0_2px_rgba(0,0,0,0.45)]"
+                    className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent outline-none [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#131720] [&::-moz-range-track]:bg-transparent [&::-webkit-slider-runnable-track]:h-4 [&::-webkit-slider-runnable-track]:bg-transparent [&::-webkit-slider-thumb]:mt-0 [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#131720] [&::-webkit-slider-thumb]:shadow-[0_0_0_2px_rgba(0,0,0,0.45)]"
                 />
             </div>
         </div>
@@ -510,7 +510,7 @@ export function BuildEditor({
 
     return (
         <Panel
-            eyebrow="Step 2"
+            eyebrow="Customize"
             title="Build Editor"
             action={
                 <button
@@ -524,7 +524,7 @@ export function BuildEditor({
         >
             <div className="flex flex-1 flex-col gap-2 overflow-auto p-3">
                 {!monster && (
-                    <div className="rounded-lg border border-dashed border-[#303848] bg-[#0d1017]/45 p-4 text-center">
+                    <div className="rounded-lg border border-dashed border-[#303848] bg-[#11151e]/45 p-4 text-center">
                         <p className="text-sm font-medium text-[#d8dee9]">
                             No monster selected
                         </p>
@@ -556,7 +556,7 @@ export function BuildEditor({
                                         value={build.level}
                                         onChange={(event) => updateLevel(event.target.value)}
                                         aria-label="Monster level"
-                                        className="w-[4.25rem] appearance-none rounded-md border border-[#303848] bg-[#11141c] px-2 py-1.5 text-center text-sm font-semibold tabular-nums text-[#e8ebf0] outline-none transition focus:border-[#4d96ff] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                        className="w-[4.25rem] appearance-none rounded-md border border-[#303848] bg-[#131720] px-2 py-1.5 text-center text-sm font-semibold tabular-nums text-[#e8ebf0] outline-none transition focus:border-[#4d96ff] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                     />
                                     <span className="text-xs tabular-nums text-[#788295]">/ 105</span>
                                 </div>
@@ -579,7 +579,7 @@ export function BuildEditor({
 
                         <div>
                             <p className="mb-1.5 text-xs font-medium text-[#c5cbd5]">Rank</p>
-                            <div className="grid grid-cols-7 overflow-hidden rounded-lg border border-[#303848] bg-[#0d1017]">
+                            <div className="grid grid-cols-7 overflow-hidden rounded-lg border border-[#303848] bg-[#11151e]">
                                 {ranks.map((rank, index) => {
                                     const selected = build.rank === rank;
                                     const visual = rankVisuals[rank];
@@ -596,7 +596,7 @@ export function BuildEditor({
                                                     ? `inset 0 0 0 1px ${visual.color}99, inset 0 1px 0 rgba(255,255,255,0.08)`
                                                     : undefined,
                                             }}
-                                            className={`min-w-0 py-2 text-sm font-black tracking-wide transition hover:bg-[#171b25] ${index > 0 ? "border-l border-[#303848]" : ""}`}
+                                            className={`min-w-0 py-2 text-sm font-black tracking-wide transition hover:bg-[#1a1f2a] ${index > 0 ? "border-l border-[#303848]" : ""}`}
                                         >
                                             <span
                                                 style={visual.labelBackground
@@ -637,18 +637,18 @@ export function BuildEditor({
                                 <span className="text-xs tabular-nums text-[#788295]">+10 max</span>
                             </div>
 
-                            <div className="grid grid-cols-[3rem_minmax(0,1fr)_3rem] overflow-hidden rounded-lg border border-[#303848] bg-[#0d1017]">
+                            <div className="grid grid-cols-[3rem_minmax(0,1fr)_3rem] overflow-hidden rounded-lg border border-[#303848] bg-[#11151e]">
                                 <button
                                     type="button"
                                     onClick={() => updateEnhancement(build.enhancement - 1)}
                                     disabled={build.enhancement <= 0}
                                     aria-label="Decrease enhancement"
-                                    className="border-r border-[#303848] py-2 text-base text-[#99a2b3] transition hover:bg-[#171b25] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+                                    className="border-r border-[#303848] py-2 text-base text-[#99a2b3] transition hover:bg-[#1a1f2a] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
                                 >
                                     −
                                 </button>
 
-                                <div className={`grid place-items-center bg-[#11141c] text-sm font-black tabular-nums [text-shadow:0_1px_0_#050608] ${build.enhancement === 0 ? "text-[#e8ebf0]" : "text-[#4d96ff]"}`}>
+                                <div className={`grid place-items-center bg-[#131720] text-sm font-black tabular-nums [text-shadow:0_1px_0_#050608] ${build.enhancement === 0 ? "text-[#e8ebf0]" : "text-[#4d96ff]"}`}>
                                     +{build.enhancement}
                                 </div>
 
@@ -657,7 +657,7 @@ export function BuildEditor({
                                     onClick={() => updateEnhancement(build.enhancement + 1)}
                                     disabled={build.enhancement >= 10}
                                     aria-label="Increase enhancement"
-                                    className="border-l border-[#303848] py-2 text-base text-[#99a2b3] transition hover:bg-[#171b25] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+                                    className="border-l border-[#303848] py-2 text-base text-[#99a2b3] transition hover:bg-[#1a1f2a] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
                                 >
                                     +
                                 </button>
@@ -665,7 +665,7 @@ export function BuildEditor({
                         </div>
                     </div>
 
-                    <div className="mt-3 rounded-lg border border-[#303848] bg-[#11141c] p-3">
+                    <div className="mt-3 rounded-lg border border-[#303848] bg-[#131720] p-3">
                         <div className="mb-3 flex items-center gap-2">
                             <img
                                 src="/icons/genetic-potential.png"
@@ -697,6 +697,12 @@ export function BuildEditor({
                                 onChange={(value) => update("healthGeneticPotential", value)}
                             />
                         </div>
+
+                        {(build.damageGeneticPotential === 0 || build.healthGeneticPotential === 0) && (
+                            <p className="mt-3 rounded-md border border-[#f4bd6a]/35 bg-[#342612]/45 px-2.5 py-2 text-[10px] leading-4 text-[#f4bd6a]">
+                                0% Genetic Potential is currently bugged in-game. The calculator will still use the selected 0% value.
+                            </p>
+                        )}
                     </div>
 
                     {monster?.isEvolved && (
@@ -714,7 +720,7 @@ export function BuildEditor({
                     title={
                         <span className="flex items-center gap-2">
                             <span>Mutations</span>
-                            <span className="rounded-full border border-[#3a4354] bg-[#171b25] px-2 py-0.5 text-[10px] font-semibold tabular-nums text-[#99a2b3]">
+                            <span className="rounded-full border border-[#3a4354] bg-[#1a1f2a] px-2 py-0.5 text-[10px] font-semibold tabular-nums text-[#99a2b3]">
                                 {build.mutations.length} / 4
                             </span>
                         </span>
@@ -745,9 +751,9 @@ export function BuildEditor({
                                                 boxShadow: `inset 0 0 0 1px ${mutation.accent}25${isX ? `, 0 0 12px ${mutation.accent}20` : ""}`,
                                             }
                                             : undefined}
-                                        className="group/mutation flex min-h-[58px] w-full items-center gap-2 rounded-lg border border-[#303848] bg-[#171b25] p-2 pr-8 text-left transition hover:border-[#4a5568] hover:bg-[#1b202b]"
+                                        className="group/mutation flex min-h-[58px] w-full items-center gap-2 rounded-lg border border-[#303848] bg-[#1a1f2a] p-2 pr-8 text-left transition hover:border-[#4a5568] hover:bg-[#1b202b]"
                                     >
-                                        <span className="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-md border border-[#3a4354] bg-[#0d1017]">
+                                        <span className="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-md border border-[#3a4354] bg-[#11151e]">
                                             <img
                                                 src={isX ? mutation.xIcon : mutation.icon}
                                                 alt=""
@@ -775,7 +781,7 @@ export function BuildEditor({
                                         )}
                                         aria-label={`About ${mutation.label}`}
                                         aria-expanded={mutationHelpId === mutation.id}
-                                        className={`absolute right-2 top-1/2 z-10 grid size-5 -translate-y-1/2 place-items-center rounded-full border bg-[#171b25] text-[11px] font-black outline-none transition ${mutationHelpId === mutation.id ? "border-[#79e3ae] text-[#79e3ae]" : "border-[#4b566a] text-[#99a2b3] hover:border-[#79e3ae] hover:text-[#79e3ae]"}`}
+                                        className={`absolute right-2 top-1/2 z-10 grid size-5 -translate-y-1/2 place-items-center rounded-full border bg-[#1a1f2a] text-[11px] font-black outline-none transition ${mutationHelpId === mutation.id ? "border-[#7585ff] text-[#7585ff]" : "border-[#4b566a] text-[#99a2b3] hover:border-[#7585ff] hover:text-[#7585ff]"}`}
                                     >
                                         ?
                                     </button>
@@ -807,11 +813,11 @@ export function BuildEditor({
                                 </button>
                             </div>
                             <div className="mt-2 grid gap-2 text-[10px] sm:grid-cols-2">
-                                <div className="rounded-md border border-[#303848] bg-[#11141c] p-2 text-[#99a2b3]">
+                                <div className="rounded-md border border-[#303848] bg-[#131720] p-2 text-[#99a2b3]">
                                     <span className="mb-1 block font-semibold text-[#d8dee9]">Normal</span>
                                     {mutationHelp.effects.join(" · ")}
                                 </div>
-                                <div className="rounded-md border border-[#303848] bg-[#11141c] p-2 text-[#99a2b3]">
+                                <div className="rounded-md border border-[#303848] bg-[#131720] p-2 text-[#99a2b3]">
                                     <span className="mb-1 block font-semibold" style={{ color: mutationHelp.accent }}>X Mutation</span>
                                     {mutationHelp.xEffects.join(" · ")}
                                 </div>
@@ -819,12 +825,12 @@ export function BuildEditor({
                         </div>
                     )}
 
-                    <div className="mt-3 overflow-hidden rounded-lg border border-[#303848] bg-[#11141c]">
+                    <div className="mt-3 overflow-hidden rounded-lg border border-[#303848] bg-[#131720]">
                         <button
                             type="button"
                             onClick={() => setMutationEffectsOpen((current) => !current)}
                             aria-expanded={mutationEffectsOpen}
-                            className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition hover:bg-[#171b25]"
+                            className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition hover:bg-[#1a1f2a]"
                         >
                             <span className="flex items-center gap-2">
                                 <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
@@ -846,7 +852,7 @@ export function BuildEditor({
                                         {aggregatedMutationEffects.map((effect) => (
                                             <span
                                                 key={effect.stat}
-                                                className="rounded-md border border-[#303848] bg-[#171b25] px-2 py-1 text-[10px] font-medium text-[#b8c0ce]"
+                                                className="rounded-md border border-[#303848] bg-[#1a1f2a] px-2 py-1 text-[10px] font-medium text-[#b8c0ce]"
                                             >
                                                 {effect.label}
                                             </span>
@@ -867,13 +873,13 @@ export function BuildEditor({
                                     tabIndex={0}
                                     role="button"
                                     aria-label="How equipment and attributes work"
-                                    className="grid size-5 place-items-center rounded-full border border-[#4b566a] bg-[#171b25] text-[11px] font-black text-[#99a2b3] outline-none transition hover:border-[#79e3ae] hover:text-[#79e3ae] focus:border-[#79e3ae] focus:text-[#79e3ae]"
+                                    className="grid size-5 place-items-center rounded-full border border-[#4b566a] bg-[#1a1f2a] text-[11px] font-black text-[#99a2b3] outline-none transition hover:border-[#7585ff] hover:text-[#7585ff] focus:border-[#7585ff] focus:text-[#7585ff]"
                                 >
                                     ?
                                 </span>
                                 <span
                                     role="tooltip"
-                                    className="pointer-events-none absolute bottom-full left-1/2 z-[70] mb-2 w-64 -translate-x-1/2 translate-y-1 rounded-lg border border-[#303848] bg-[#11141c] p-3 text-left text-xs font-normal leading-5 text-[#b8c0ce] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100"
+                                    className="pointer-events-none absolute bottom-full left-1/2 z-[70] mb-2 w-64 -translate-x-1/2 translate-y-1 rounded-lg border border-[#303848] bg-[#131720] p-3 text-left text-xs font-normal leading-5 text-[#b8c0ce] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100"
                                 >
                                     <strong className="block font-semibold text-[#e8ebf0]">Equipment &amp; Attributes</strong>
                                     <span className="mt-1 block">Weapons increase Damage. Armor increases Health. Attributes affect skills and combat outcomes rather than base stats.</span>
@@ -920,30 +926,32 @@ export function BuildEditor({
                             const selectedIds = build[key];
                             return (
                                 <div key={type}
-                                     className="self-start space-y-2 rounded-md border border-[#252c38] bg-[#11141c] p-2">
+                                     className="self-start space-y-2 rounded-md border border-[#252c38] bg-[#131720] p-2">
                                     <p className="text-xs font-semibold text-[#e8ebf0]">{type === "weapon" ? "Weapon" : "Armor"} Attributes</p>
-                                    {fixedIds.map((id) => {
-                                        const attribute = getAttribute(id);
-                                        return attribute ? (
-                                            <div key={id}
-                                                 className="relative grid min-h-[72px] w-full place-items-center overflow-hidden rounded-md border border-[#ff9f43]/50 bg-[#0d1017] p-1">
-                                                <img src={`/attributes/${id}.png`} alt={attribute.name}
-                                                     className="block h-auto w-full"/>
-                                                <span
-                                                    className="absolute right-1.5 top-1.5 rounded bg-[#2a1a0d]/90 px-1.5 py-0.5 text-[9px] font-semibold text-[#ffb866]">FIXED</span>
-                                            </div>
-                                        ) : null;
-                                    })}
-                                    {Array.from({length: slots}, (_, index) => (
-                                        <AttributeSelect
-                                            key={index}
-                                            label={`Slot ${index + 1}`}
-                                            options={getAttributesForGear(type)}
-                                            value={selectedIds[index] ?? null}
-                                            usedIds={selectedIds}
-                                            onChange={(value) => updateAttribute(key, index, value)}
-                                        />
-                                    ))}
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {fixedIds.map((id) => {
+                                            const attribute = getAttribute(id);
+                                            return attribute ? (
+                                                <div key={id}
+                                                     className="relative grid aspect-[2.85/1] min-h-[54px] w-full place-items-center overflow-hidden rounded-md border border-[#ff9f43]/50 bg-[#11151e] p-0.5">
+                                                    <img src={`/attributes/${id}.png`} alt={attribute.name}
+                                                         className="block h-auto w-full"/>
+                                                    <span
+                                                        className="absolute right-1 top-1 rounded bg-[#2a1a0d]/90 px-1 py-0.5 text-[8px] font-semibold text-[#ffb866]">FIXED</span>
+                                                </div>
+                                            ) : null;
+                                        })}
+                                        {Array.from({length: slots}, (_, index) => (
+                                            <AttributeSelect
+                                                key={index}
+                                                label={`Slot ${index + 1}`}
+                                                options={getAttributesForGear(type)}
+                                                value={selectedIds[index] ?? null}
+                                                usedIds={selectedIds}
+                                                onChange={(value) => updateAttribute(key, index, value)}
+                                            />
+                                        ))}
+                                    </div>
                                     {!equipment && <p className="text-[10px] text-[#788295]">Select gear first.</p>}
                                     {equipment && slots === 0 && fixedIds.length === 0 &&
                                         <p className="text-[10px] text-[#788295]">Attributes require Legendary gear or
@@ -957,7 +965,7 @@ export function BuildEditor({
                         <label className="mt-3 block">
                             <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Current HP for conditional attributes</span>
                             <div className="flex items-center gap-3">
-                                <input type="range" min="0" max="100" value={build.currentHpPercent} onChange={(event) => update("currentHpPercent", Number(event.target.value))} className="min-w-0 flex-1 accent-[#79e3ae]" />
+                                <input type="range" min="0" max="100" value={build.currentHpPercent} onChange={(event) => update("currentHpPercent", Number(event.target.value))} className="min-w-0 flex-1 accent-[#7585ff]" />
                                 <span className="w-12 text-right text-sm font-semibold text-[#d8dee9]">{build.currentHpPercent}%</span>
                             </div>
                         </label>
@@ -976,8 +984,8 @@ export function BuildEditor({
                             type="button"
                             className={`rounded-md px-3 py-2 text-xs font-semibold ${
                                 index === 0
-                                    ? "bg-[#79e3ae] font-bold text-[#0b1510]"
-                                    : "border border-[#303848] bg-[#171b25] text-[#d8dee9]"
+                                    ? "bg-[#7585ff] font-bold text-[#0b1510]"
+                                    : "border border-[#303848] bg-[#1a1f2a] text-[#d8dee9]"
                             }`}
                         >
                             {item}
@@ -987,7 +995,7 @@ export function BuildEditor({
                     <button
                         type="button"
                         onClick={onResetAction}
-                        className="rounded-md border border-[#303848] bg-[#171b25] px-3 py-2 text-xs font-semibold text-[#d8dee9]"
+                        className="rounded-md border border-[#303848] bg-[#1a1f2a] px-3 py-2 text-xs font-semibold text-[#d8dee9]"
                     >
                         Reset
                     </button>

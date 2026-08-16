@@ -27,7 +27,7 @@ export function EquipmentSelect({
     const [isOpen, setIsOpen] = useState(false);
     const [opensUpward, setOpensUpward] = useState(false);
     const [alignsRight, setAlignsRight] = useState(false);
-    const [menuMaxHeight, setMenuMaxHeight] = useState(288);
+    const [menuMaxHeight, setMenuMaxHeight] = useState(248);
     const containerRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const selectedItem = items.find((item) => item.id === value) ?? null;
@@ -53,7 +53,7 @@ export function EquipmentSelect({
         }
 
         const buttonRect = button.getBoundingClientRect();
-        const menuWidth = Math.min(352, window.innerWidth - 48);
+        const menuWidth = Math.min(256, window.innerWidth - 32);
         const boundaryRect = scrollBoundary?.getBoundingClientRect();
         const boundaryTop = Math.max(8, boundaryRect?.top ?? 8);
         const boundaryBottom = Math.min(
@@ -66,8 +66,13 @@ export function EquipmentSelect({
         const availableSpace = shouldOpenUpward ? spaceAbove : spaceBelow;
 
         setOpensUpward(shouldOpenUpward);
-        setAlignsRight(buttonRect.left + menuWidth > window.innerWidth - 8);
-        setMenuMaxHeight(Math.max(64, Math.min(288, availableSpace)));
+        const boundaryRight = Math.min(
+            window.innerWidth - 8,
+            boundaryRect?.right ?? window.innerWidth - 8,
+        );
+
+        setAlignsRight(buttonRect.left + menuWidth > boundaryRight);
+        setMenuMaxHeight(Math.max(64, Math.min(248, availableSpace)));
     }, []);
 
     useEffect(() => {
@@ -127,26 +132,26 @@ export function EquipmentSelect({
                 }}
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
-                className="flex min-h-14 w-full items-center gap-2 rounded-md border border-[#303848] bg-[#171b25] px-2 py-1.5 text-left outline-none hover:border-[#4a5568] focus:border-[#79e3ae]"
+                className="flex min-h-10 w-full items-center gap-1.5 rounded-md border border-[#303848] bg-[#1a1f2a] px-1.5 py-0.5 text-left outline-none hover:border-[#4a5568] focus:border-[#7585ff]"
             >
                 {selectedItem ? (
                     <>
                         <img
                             src={`/gear/${selectedItem.id}.png`}
                             alt=""
-                            className="size-10 shrink-0 rounded object-contain"
+                            className="size-7 shrink-0 rounded object-contain"
                         />
                         <span className="min-w-0 flex-1">
-                            <span className="block truncate text-xs font-semibold text-[#e8ebf0]">
+                            <span className="block truncate text-[11px] font-semibold leading-tight text-[#e8ebf0]">
                                 {selectedItem.name}
                             </span>
-                            <span className={`block text-[10px] ${rarityTextClasses[selectedItem.rarity]}`}>
+                            <span className={`mt-0.5 block truncate text-[9px] leading-tight ${rarityTextClasses[selectedItem.rarity]}`}>
                                 +{selectedItem.percentage}% {selectedItem.type === "weapon" ? "Damage" : "Health"}
                             </span>
                         </span>
                     </>
                 ) : (
-                    <span className="flex-1 px-1 text-sm text-[#788295]">None</span>
+                    <span className="flex-1 px-1 text-xs text-[#788295]">None</span>
                 )}
                 <span aria-hidden="true" className="shrink-0 text-xs text-[#788295]">
                     {isOpen ? "▲" : "▼"}
@@ -158,7 +163,7 @@ export function EquipmentSelect({
                     role="listbox"
                     aria-label={label}
                     style={{ maxHeight: `${menuMaxHeight}px` }}
-                    className={`absolute z-50 w-[min(22rem,calc(100vw-3rem))] overflow-y-auto rounded-lg border border-[#303848] bg-[#11141c] p-1 shadow-2xl ${
+                    className={`absolute z-50 w-[min(16rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border border-[#303848] bg-[#131720] p-1 shadow-2xl ${
                         opensUpward
                             ? "bottom-full mb-1"
                             : "top-full mt-1"
@@ -169,8 +174,8 @@ export function EquipmentSelect({
                         role="option"
                         aria-selected={value === null}
                         onClick={() => selectItem(null)}
-                        className={`w-full rounded-md px-3 py-2 text-left text-sm ${
-                            value === null ? "bg-[#173126] text-[#79e3ae]" : "text-[#99a2b3] hover:bg-[#171b25]"
+                        className={`w-full rounded-md px-2 py-1.5 text-left text-xs ${
+                            value === null ? "bg-[#1f2540] text-[#7585ff]" : "text-[#99a2b3] hover:bg-[#1a1f2a]"
                         }`}
                     >
                         None
@@ -185,25 +190,25 @@ export function EquipmentSelect({
                                 role="option"
                                 aria-selected={selected}
                                 onClick={() => selectItem(item.id)}
-                                className={`flex w-full items-center gap-3 rounded-md p-2 text-left ${
-                                    selected ? "bg-[#173126]" : "hover:bg-[#171b25]"
+                                className={`flex w-full items-center gap-2 rounded-md p-1.5 text-left ${
+                                    selected ? "bg-[#1f2540]" : "hover:bg-[#1a1f2a]"
                                 }`}
                             >
                                 <img
                                     src={`/gear/${item.id}.png`}
                                     alt=""
                                     loading="lazy"
-                                    className="size-12 shrink-0 rounded-md object-contain"
+                                    className="size-10 shrink-0 rounded-md object-contain"
                                 />
                                 <span className="min-w-0 flex-1">
-                                    <span className="block truncate text-sm font-semibold text-[#e8ebf0]">
+                                    <span className="block truncate text-xs font-semibold text-[#e8ebf0]">
                                         {item.name}
                                     </span>
-                                    <span className={`mt-0.5 block text-xs ${rarityTextClasses[item.rarity]}`}>
+                                    <span className={`mt-0.5 block text-[10px] ${rarityTextClasses[item.rarity]}`}>
                                         {item.rarity} · +{item.percentage}% {item.type === "weapon" ? "Damage" : "Health"}
                                     </span>
                                 </span>
-                                {selected && <span className="text-[#79e3ae]">✓</span>}
+                                {selected && <span className="text-[#7585ff]">✓</span>}
                             </button>
                         );
                     })}

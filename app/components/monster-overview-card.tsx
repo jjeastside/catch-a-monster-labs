@@ -201,8 +201,8 @@ export function MonsterOverviewCard({
     const elementIcon = elementIconPaths[monster.element];
 
     return (
-        <section className="relative flex gap-6 overflow-hidden rounded-xl border border-[#303848] bg-[#171b25] p-5 sm:p-6">
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-64 bg-[radial-gradient(circle_at_left,rgba(121,227,174,0.09),transparent_70%)]" />
+        <section className="relative flex gap-6 overflow-hidden rounded-xl border border-[#303848] bg-[#1a1f2a] p-5 sm:p-6">
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-64 bg-[radial-gradient(circle_at_left,rgba(117,133,255,0.09),transparent_70%)]" />
             <div
                 className={`relative grid size-40 shrink-0 place-items-center overflow-hidden rounded-2xl border-2 p-[3px] shadow-[0_12px_30px_rgba(0,0,0,0.28)] xl:size-44 ${
                     rarityImageClasses[monster.rarity]
@@ -216,7 +216,7 @@ export function MonsterOverviewCard({
                             className="h-full w-full object-contain p-1 drop-shadow-[0_10px_10px_rgba(0,0,0,0.38)]"
                         />
                     ) : (
-                        <span className="text-xl font-black text-[#79e3ae]">
+                        <span className="text-xl font-black text-[#7585ff]">
                 {monster.name.slice(0, 2).toUpperCase()}
             </span>
                     )}
@@ -226,7 +226,7 @@ export function MonsterOverviewCard({
             <div className="relative min-w-0 flex-1 py-1">
                 <div className="flex items-start justify-between gap-4">
                     <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#79e3ae]">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7585ff]">
                             Monster Overview
                         </p>
 
@@ -244,14 +244,14 @@ export function MonsterOverviewCard({
                         }
                         aria-pressed={isFavorite}
                         onClick={onToggleFavorite}
-                        className="grid size-10 shrink-0 place-items-center rounded-lg border border-[#303848] bg-[#11141c] text-xl text-[#79e3ae] transition hover:border-[#79e3ae]"
+                        className="grid size-10 shrink-0 place-items-center rounded-lg border border-[#303848] bg-[#131720] text-xl text-[#7585ff] transition hover:border-[#7585ff]"
                     >
                         {isFavorite ? "★" : "☆"}
                     </button>
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-                    <span className="flex items-center gap-1.5 rounded-md border border-[#303848] bg-[#11141c] px-2.5 py-1 text-xs text-[#d8dee9]">
+                    <span className="flex items-center gap-1.5 rounded-md border border-[#303848] bg-[#131720] px-2.5 py-1 text-xs text-[#d8dee9]">
                         <img
                             src={elementIcon}
                             alt=""
@@ -272,7 +272,7 @@ export function MonsterOverviewCard({
                         (sourceLabel) => (
                             <span
                                 key={`${monster.id}-${sourceLabel}`}
-                                className="rounded-md border border-[#303848] bg-[#11141c] px-2.5 py-1 text-xs text-[#d8dee9]"
+                                className="rounded-md border border-[#303848] bg-[#131720] px-2.5 py-1 text-xs text-[#d8dee9]"
                             >
                                 {sourceLabel}
                             </span>
@@ -281,7 +281,7 @@ export function MonsterOverviewCard({
 
                     {monster.hasEvolution && (
                         <span
-                            className="rounded-md border border-[#79e3ae]/30 bg-[#173126]/40 px-2.5 py-1 text-xs text-[#79e3ae]">
+                            className="rounded-md border border-[#7585ff]/30 bg-[#1f2540]/40 px-2.5 py-1 text-xs text-[#7585ff]">
               Evolution available
             </span>
                     )}

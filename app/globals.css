@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #090b10;
-  --panel: #11141c;
-  --panel-raised: #171b25;
-  --border: #272d3a;
+  --background: #181c25;
+  --panel: #131720;
+  --panel-raised: #1a1f2a;
+  --border: #323949;
   --text: #f2f4f8;
   --muted: #99a2b3;
-  --accent: #79e3ae;
+  --accent: #7585ff;
 }
 
 * {
@@ -34,7 +34,7 @@
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: #648777;
+  background-color: #68738d;
 }
 
 *::-webkit-scrollbar-corner {
