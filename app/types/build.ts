@@ -1,6 +1,7 @@
 import type { SkillId } from "../data/skills";
 
 export type Rank = "SS" | "S" | "A" | "B" | "C" | "D" | "E";
+export type CombatContext = "standard" | "boss" | "spire" | "rift" | "dungeon";
 export type Mutation =
     | "huge"
     | "huge-x"
@@ -83,6 +84,7 @@ export type Build = {
   weaponAttributeIds: string[];
   armorAttributeIds: string[];
   currentHpPercent: number;
+  combatContext: CombatContext;
 
   accountMultipliers: {
     completedAchievementIds: string[];
@@ -111,6 +113,7 @@ export function createDefaultBuild(
     weaponAttributeIds: [],
     armorAttributeIds: [],
     currentHpPercent: 100,
+    combatContext: "standard",
     accountMultipliers: {
       completedAchievementIds: [],
     },

@@ -290,6 +290,7 @@ export function MonsterOverviewCard({
                 <p className="mt-4 max-w-3xl text-sm leading-6 text-[#aab2c1]">
                     {createDescription(monster)}
                 </p>
+
             </div>
         </section>
     );

@@ -3747,7 +3747,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "id": "trialPower",
         "effects": [
           {
-            "stat": "damage",
+            "stat": "dungeonDamage",
             "value": 50
           }
         ],
@@ -4143,7 +4143,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "id": "trialPower",
         "effects": [
           {
-            "stat": "damage",
+            "stat": "dungeonDamage",
             "value": 50
           }
         ],
@@ -4242,7 +4242,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "id": "vitalSurge",
         "effects": [
           {
-            "stat": "healthRestore",
+            "stat": "damage",
             "value": 60
           }
         ],
@@ -5377,7 +5377,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "id": "trialPower",
         "effects": [
           {
-            "stat": "damage",
+            "stat": "dungeonDamage",
             "value": 50
           }
         ],
@@ -6194,7 +6194,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "id": "trialPower",
         "effects": [
           {
-            "stat": "damage",
+            "stat": "dungeonDamage",
             "value": 50
           }
         ],
@@ -6601,7 +6601,11 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "id": "sacredBeetle",
         "effects": [
           {
-            "stat": "healthRestore",
+            "stat": "stunImmunity",
+            "value": true
+          },
+          {
+            "stat": "bossDamage",
             "value": 35
           }
         ],
@@ -6689,7 +6693,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "id": "trialPower",
         "effects": [
           {
-            "stat": "damage",
+            "stat": "dungeonDamage",
             "value": 50
           }
         ],
@@ -7142,7 +7146,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "id": "trialPower",
         "effects": [
           {
-            "stat": "damage",
+            "stat": "dungeonDamage",
             "value": 60
           }
         ],

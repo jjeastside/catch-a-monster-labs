@@ -9,7 +9,7 @@ import {
     clampEvolutionPercent,
     getEvolutionBarFill,
 } from "../lib/calculations/evolution";
-import type { Build, Mutation, Rank } from "../types/build";
+import type { Build, CombatContext, Mutation, Rank } from "../types/build";
 import type { Monster } from "../types/monster";
 import { ARMORS, WEAPONS, getEquipment } from "../data/equipments";
 import { getAttribute, getAttributesForGear } from "../data/attributes";
@@ -82,6 +82,14 @@ const mutations: {
         xEffects: ["-35% Incoming Damage", "-25% Cooldown"],
         accent: "#9f6cff",
     },
+];
+
+const combatContexts: Array<{ id: CombatContext; label: string }> = [
+    { id: "standard", label: "Standard" },
+    { id: "boss", label: "Boss" },
+    { id: "spire", label: "Spire" },
+    { id: "rift", label: "Rift" },
+    { id: "dungeon", label: "Dungeon" },
 ];
 
 function getAggregatedMutationEffects(selectedMutations: Mutation[]) {
@@ -299,6 +307,11 @@ function EvolutionMultiplierEditor({
         min: number;
         max: number;
     } | null>(null);
+    const [precisionOverlay, setPrecisionOverlay] = useState<{
+        left: number;
+        top: number;
+        width: number;
+    } | null>(null);
     const dragState = useRef<{
         pointerId: number;
         left: number;
@@ -398,13 +411,9 @@ function EvolutionMultiplierEditor({
                     <div
                         className="fixed z-[80] max-w-[calc(100vw-1rem)] -translate-x-1/2 -translate-y-full rounded-lg border border-[#f1a45c]/70 bg-[#11151e]/95 px-3 py-2.5 shadow-[0_10px_28px_rgba(0,0,0,0.48),0_0_18px_rgba(255,157,66,0.10)] backdrop-blur-sm"
                         style={{
-                            left: dragState.current
-                                ? dragState.current.overlayLeft
-                                : 0,
-                            top: dragState.current ? dragState.current.top - 12 : 0,
-                            width: dragState.current
-                                ? dragState.current.overlayWidth
-                                : undefined,
+                            left: precisionOverlay?.left ?? 0,
+                            top: precisionOverlay?.top ?? 0,
+                            width: precisionOverlay?.width,
                         }}
                     >
                         <div className="mb-2 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-[#f3b170]">
@@ -486,6 +495,7 @@ function EvolutionMultiplierEditor({
                                 };
                                 event.currentTarget.setPointerCapture(event.pointerId);
                                 setPrecisionRange(null);
+                                setPrecisionOverlay(null);
                                 setDragPreview(preview);
                             }}
                             onPointerMove={(event) => {
@@ -519,6 +529,11 @@ function EvolutionMultiplierEditor({
                                     drag.precisionStartX = event.clientX;
                                     drag.precisionStartValue = drag.preview;
                                     setPrecisionRange(drag.precisionRange);
+                                    setPrecisionOverlay({
+                                        left: drag.overlayLeft,
+                                        top: drag.top - 12,
+                                        width: drag.overlayWidth,
+                                    });
                                     setDragPreview(drag.preview);
                                     return;
                                 }
@@ -568,6 +583,7 @@ function EvolutionMultiplierEditor({
                                 setInputDraft(null);
                                 setDragPreview(null);
                                 setPrecisionRange(null);
+                                setPrecisionOverlay(null);
                                 dragState.current = null;
                                 event.currentTarget.releasePointerCapture(event.pointerId);
                             }}
@@ -575,6 +591,7 @@ function EvolutionMultiplierEditor({
                                 dragState.current = null;
                                 setDragPreview(null);
                                 setPrecisionRange(null);
+                                setPrecisionOverlay(null);
                             }}
                             onChange={(event) => {
                                 if (dragState.current) {
@@ -665,6 +682,9 @@ export function BuildEditor({
     const hasHpConditionalAttribute = getActiveAttributeIds(build)
         .map(getAttribute)
         .some((attribute) => Boolean(attribute?.hpCondition));
+    const hasHpConditionalPassive = monster?.passives?.some(
+        (passive) => typeof passive.condition === "number",
+    ) ?? false;
 
     const updateAttribute = (
         key: "weaponAttributeIds" | "armorAttributeIds",
@@ -1137,16 +1157,38 @@ export function BuildEditor({
                         })}
                     </div>
 
-                    {hasHpConditionalAttribute && (
+                </CollapsibleSection>
+
+                <CollapsibleSection title="Combat Conditions">
+                    <p className="mb-2.5 text-[11px] leading-4 text-[#788295]">
+                        Select the encounter used by conditional damage and resistance passives.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                        {combatContexts.map((context) => (
+                            <button
+                                key={context.id}
+                                type="button"
+                                onClick={() => update("combatContext", context.id)}
+                                aria-pressed={build.combatContext === context.id}
+                                className={`rounded-md border px-3 py-2 text-xs font-semibold transition ${
+                                    build.combatContext === context.id
+                                        ? "border-[#7585ff] bg-[#1f2540] text-[#aeb7ff]"
+                                        : "border-[#303848] bg-[#1a1f2a] text-[#99a2b3] hover:border-[#465064] hover:text-[#d8dee9]"
+                                }`}
+                            >
+                                {context.label}
+                            </button>
+                        ))}
+                    </div>
+                    {(hasHpConditionalAttribute || hasHpConditionalPassive) && (
                         <label className="mt-3 block">
-                            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Current HP for conditional attributes</span>
+                            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Current HP for conditional effects</span>
                             <div className="flex items-center gap-3">
                                 <input type="range" min="0" max="100" value={build.currentHpPercent} onChange={(event) => update("currentHpPercent", Number(event.target.value))} className="min-w-0 flex-1 accent-[#7585ff]" />
                                 <span className="w-12 text-right text-sm font-semibold text-[#d8dee9]">{build.currentHpPercent}%</span>
                             </div>
                         </label>
                     )}
-
                 </CollapsibleSection>
 
                 <div className="grid grid-cols-2 gap-2 pt-1">

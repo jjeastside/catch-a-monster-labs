@@ -200,7 +200,7 @@ const passiveEffects = {
     ],
 
     trialPower: (a) => [
-        { stat: "damage", value: a },
+        { stat: "dungeonDamage", value: a },
     ],
 
     dungeonGuard: (a) => [
@@ -229,7 +229,8 @@ const passiveEffects = {
     ],
 
     sacredBeetle: (a) => [
-        { stat: "healthRestore", value: a },
+        { stat: "stunImmunity", value: true },
+        { stat: "bossDamage", value: a },
     ],
 
     lastBlessing: (a) => [
@@ -237,7 +238,7 @@ const passiveEffects = {
     ],
 
     vitalSurge: (a) => [
-        { stat: "healthRestore", value: a },
+        { stat: "damage", value: a },
     ],
 
     potentialSeeker: () => [],

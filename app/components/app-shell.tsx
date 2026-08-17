@@ -188,6 +188,8 @@ export function AppShell() {
                 mutations: Array.isArray(parsed.mutations) ? parsed.mutations : [],
                 weaponAttributeIds: Array.isArray(parsed.weaponAttributeIds) ? parsed.weaponAttributeIds : [],
                 armorAttributeIds: Array.isArray(parsed.armorAttributeIds) ? parsed.armorAttributeIds : [],
+                combatContext: parsed.combatContext ?? "standard",
+                currentHpPercent: typeof parsed.currentHpPercent === "number" ? parsed.currentHpPercent : 100,
                 accountMultipliers: current.accountMultipliers,
             }));
             return true;

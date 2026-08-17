@@ -41,6 +41,7 @@ export type CalculatedStats = {
     equipmentDamageMultiplier: number;
     accountHealthMultiplier: number;
     accountDamageMultiplier: number;
+    accountRiftDamageMultiplier: number;
 
     healthTotalMultiplier: number;
     damageTotalMultiplier: number;
@@ -161,6 +162,9 @@ function createCalculatedStats(
 
         accountDamageMultiplier:
         multipliers.accountDamage,
+
+        accountRiftDamageMultiplier:
+            1 + multipliers.accountRiftDamagePercent / 100,
 
         healthTotalMultiplier:
         multipliers.healthTotal,

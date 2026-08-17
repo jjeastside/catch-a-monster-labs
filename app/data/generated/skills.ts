@@ -1154,6 +1154,20 @@ export const GENERATED_SKILLS = {
     "notes": "Target: Enemy. Enemy effects: Stagger Ally effects: 25% chance to trigger overvolt tempest overload deal 100% damage",
     "validationStatus": "Ready"
   },
+  "overvolt-tempest-overload": {
+    "id": "overvolt-tempest-overload",
+    "name": "Overvolt Tempest (Overload)",
+    "element": "Common",
+    "damageInstances": [
+      {
+        "multiplier": 0.4,
+        "hits": 11
+      }
+    ],
+    "cooldown": 6,
+    "notes": "Alternate version of Overvolt Tempest. The same 11-hit attack at 40% of Attack per hit.",
+    "validationStatus": "Ready"
+  },
   "petal-dance": {
     "id": "petal-dance",
     "name": "Petal Dance",
