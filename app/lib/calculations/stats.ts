@@ -1,4 +1,4 @@
-import type { Build } from "../../types/build";
+import type { Build, MonsterPassive } from "../../types/build";
 import type { MonsterStatData } from "../../types/monster-stats";
 import {
     getSkill,
@@ -15,6 +15,7 @@ import {
     createStatMultipliers,
     type StatMultipliers,
 } from "./multiplier-context";
+import { getPassiveEffectTotals } from "./passive-effects";
 
 export type CalculatedStats = {
     health: number;
@@ -239,6 +240,7 @@ function calculateStandardStats(
 export function calculateStats(
     statData: MonsterStatData | null,
     build: StatsBuild,
+    passives: MonsterPassive[] = [],
 ): CalculatedStats | null {
     validateLevel(build.level);
 
@@ -246,8 +248,13 @@ export function calculateStats(
         return null;
     }
 
-    const multipliers =
-        createStatMultipliers(build, statData.baseCritChance);
+    const passiveEffects = getPassiveEffectTotals(passives);
+    const multipliers = createStatMultipliers(
+        build,
+        statData.baseCritChance,
+        passiveEffects.critChance,
+        passiveEffects.critDamage,
+    );
 
     if (!multipliers) {
         return null;

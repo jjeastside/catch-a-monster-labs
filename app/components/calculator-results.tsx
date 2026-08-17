@@ -24,7 +24,7 @@ import {
     getMutationCooldownMultiplier,
 } from "../lib/calculations/mutations";
 
-import type { Build, Mutation, Rank } from "../types/build";
+import type { Build, Mutation, PassiveEffectStat, Rank } from "../types/build";
 import type { Monster } from "../types/monster";
 import type { MonsterStatData } from "../types/monster-stats";
 
@@ -76,6 +76,53 @@ function formatStatNumber(value: number): string {
     return `${new Intl.NumberFormat("en-US", {
         maximumFractionDigits: Math.max(0, 4 - scaledMagnitude - 1),
     }).format(scaledValue)}${unit.suffix}`;
+}
+
+const passiveEffectLabels: Record<PassiveEffectStat, string> = {
+    damage: "Combat Damage",
+    incomingDamage: "Incoming Damage",
+    critChance: "Crit Chance",
+    critDamage: "Crit Damage",
+    bossDamage: "Boss Damage",
+    bossIncomingDamage: "Incoming Boss Damage",
+    spireDamage: "Spire Damage",
+    spireIncomingDamage: "Incoming Spire Damage",
+    riftDamage: "Rift Damage",
+    riftIncomingDamage: "Incoming Rift Damage",
+    dungeonDamage: "Dungeon Damage",
+    dungeonIncomingDamage: "Incoming Dungeon Damage",
+    coinGain: "Coins",
+    xpGain: "XP",
+    rankLuck: "Rank Luck",
+    healthRestore: "Health Restore",
+    mutationRate: "Mutation Rate",
+    stunImmunity: "Stun Immunity",
+};
+
+const skillDamagePassiveStats: ReadonlySet<PassiveEffectStat> = new Set([
+    "damage",
+    "bossDamage",
+    "spireDamage",
+    "riftDamage",
+    "dungeonDamage",
+]);
+
+function formatPassiveEffect(stat: PassiveEffectStat, value: number | boolean): string {
+    if (typeof value === "boolean") {
+        return value ? passiveEffectLabels[stat] : `No ${passiveEffectLabels[stat]}`;
+    }
+
+    return `${value >= 0 ? "+" : ""}${formatNumber(value)}% ${passiveEffectLabels[stat]}`;
+}
+
+function getDamageHealingPercent(notes: string | undefined): number | null {
+    const match = notes?.match(/(\d+(?:\.\d+)?)% of damage/i);
+    return match ? Number(match[1]) : null;
+}
+
+function getHealthHealingPercent(notes: string | undefined): number | null {
+    const match = notes?.match(/(\d+(?:\.\d+)?)% of (?:max(?:imum)? )?health/i);
+    return match ? Number(match[1]) : null;
 }
 
 const rankColors: Record<Rank, string> = {
@@ -226,6 +273,50 @@ function SkillDamagePanel({
         critMultiplier: stats.critMultiplier,
     });
 
+    // Overload replaces the normal Overvolt Tempest cast; it is not a third skill.
+    const hasOvervoltTempestOverload =
+        skill.id === "overvolt-tempest";
+    const alternateTotalMultiplier = hasOvervoltTempestOverload
+        ? 0.4 * 11
+        : null;
+    const alternateCombatDamage = alternateTotalMultiplier === null
+        ? null
+        : calculateCombatDamage({
+            monster,
+            baseDamage:
+                stats.damage *
+                alternateTotalMultiplier *
+                attributeEffects.skillDamageMultiplier,
+            critMultiplier: stats.critMultiplier,
+        });
+
+    const damageHealingPercent = getDamageHealingPercent(skill.notes);
+    const healthHealingPercent = getHealthHealingPercent(skill.notes);
+    const healingEffectivenessMultiplier = 1 + attributeEffects.healEffectiveness / 100;
+    const healingDamageBase = isDamagingSkill
+        ? combatDamage.normalDamage
+        : stats.damage;
+    const damageHealingAmount = damageHealingPercent === null
+        ? 0
+        : healingDamageBase * (damageHealingPercent / 100);
+    const healthHealingAmount = healthHealingPercent === null
+        ? 0
+        : stats.health * (healthHealingPercent / 100);
+    const hasCalculatedHealing = damageHealingPercent !== null || healthHealingPercent !== null;
+    const healingAmount = hasCalculatedHealing
+        ? (damageHealingAmount + healthHealingAmount) * healingEffectivenessMultiplier
+        : null;
+    const criticalHealingAmount = !hasCalculatedHealing || !isDamagingSkill
+        ? null
+        : (
+        (damageHealingPercent === null
+            ? 0
+            : combatDamage.criticalDamage * (damageHealingPercent / 100)) +
+        healthHealingAmount
+    ) * healingEffectivenessMultiplier;
+    const lifeStealAmount = combatDamage.normalDamage * (attributeEffects.lifeSteal / 100);
+    const criticalLifeStealAmount = combatDamage.criticalDamage * (attributeEffects.lifeSteal / 100);
+
     const damagePassiveDetails =
         monster.passives
             ?.flatMap((passive) =>
@@ -242,11 +333,18 @@ function SkillDamagePanel({
                         value: effect.value as number,
                     })),
             ) ?? [];
-
     const displayedCooldown =
         skill.cooldown === null
             ? null
             : skill.cooldown * cooldownMultiplier;
+    const isTriggeredSkill =
+        skill.cooldown === null &&
+        skill.notes?.toLowerCase().includes("triggered");
+    const cooldownLabel = displayedCooldown !== null
+        ? `${formatNumber(displayedCooldown)}s`
+        : isTriggeredSkill
+            ? "Triggered"
+            : "Unknown";
 
     const skillIconPath = `/skill-icons/${skill.id}.png`;
     const elementIconPath = `/element-icons/${skill.element.toLowerCase()}.png`;
@@ -291,13 +389,56 @@ function SkillDamagePanel({
                                 </>
                             )}
                             <span aria-hidden="true" className="text-[#465064]">•</span>
-                            <span><strong className="text-[#d8dee9]">{displayedCooldown !== null ? `${formatNumber(displayedCooldown)}s` : "Unknown"}</strong> cooldown</span>
+                            <span>
+                                <strong className="text-[#d8dee9]">{cooldownLabel}</strong>
+                                {!isTriggeredSkill && " cooldown"}
+                            </span>
                             {hasFairy && (
                                 <span className="rounded border border-[#c28cff]/30 bg-[#201b35] px-1.5 py-0.5 font-semibold text-[#d8b7ff]">
                                     {fairyLabel}
                                 </span>
                             )}
                         </div>
+
+                        {monster.passives?.some((passive) =>
+                            passive.effects.some((effect) =>
+                                skillDamagePassiveStats.has(effect.stat) &&
+                                typeof effect.value === "number" &&
+                                effect.value > 0,
+                            ),
+                        ) && (
+                            <div className="mt-2 flex flex-wrap gap-1.5">
+                                {monster.passives?.flatMap((passive) => {
+                                    const damageEffects = passive.effects.filter((effect) =>
+                                        skillDamagePassiveStats.has(effect.stat) &&
+                                        typeof effect.value === "number" &&
+                                        effect.value > 0,
+                                    );
+
+                                    if (damageEffects.length === 0) {
+                                        return [];
+                                    }
+
+                                    return [
+                                        <span
+                                            key={passive.id}
+                                            className="rounded-md border border-[#7585ff]/25 bg-[#1f2540]/45 px-2 py-1 text-[10px] text-[#aeb7ff]"
+                                        >
+                                            <strong>{PASSIVE_DEFINITIONS[passive.id].name}:</strong>{" "}
+                                            {damageEffects
+                                                .map((effect) => formatPassiveEffect(effect.stat, effect.value))
+                                                .join(" · ")}
+                                        </span>,
+                                    ];
+                                })}
+                            </div>
+                        )}
+
+                        {isTriggeredSkill && skill.notes && (
+                            <p className="mt-2 text-[10px] leading-4 text-[#99a2b3]">
+                                {skill.notes}
+                            </p>
+                        )}
                     </div>
                 </div>
 
@@ -330,6 +471,38 @@ function SkillDamagePanel({
                                 {formatStatNumber(combatDamage.criticalDamage)}
                             </p>
                         </div>
+
+                        {hasOvervoltTempestOverload && alternateCombatDamage && alternateTotalMultiplier !== null && (
+                            <>
+                                <div className="min-w-0 rounded-lg border border-[#5363a8]/45 bg-[#20263a] p-3">
+                                    <div className="flex items-center gap-1.5 text-[#aeb7ff]">
+                                        <img src="/account-icons/damage.png" alt="" className="size-4 shrink-0 object-contain" />
+                                        <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Normal (Overload)</p>
+                                        <InfoTooltip
+                                            label="Explain Overvolt Tempest Overload"
+                                            text="The 25% chance Overvolt Tempest Overload cast. It uses the same 11-hit attack and cooldown with +100% damage, increasing each hit from 0.2× to 0.4× Attack."
+                                        />
+                                    </div>
+                                    <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f2f4f8]" title={formatStatNumber(alternateCombatDamage.normalDamage)}>
+                                        {formatStatNumber(alternateCombatDamage.normalDamage)}
+                                    </p>
+                                </div>
+
+                                <div className="min-w-0 rounded-lg border border-[#ff7448]/45 bg-[#43231f]/45 p-3">
+                                    <div className="flex items-center gap-1.5 text-[#ff936d]">
+                                        <img src="/account-icons/critical-damage.png" alt="" className="size-4 shrink-0 object-contain" />
+                                        <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Critical (Overload)</p>
+                                        <InfoTooltip
+                                            label="Explain critical Overvolt Tempest Overload"
+                                            text={`The critical result for the 25% chance Overvolt Tempest Overload cast. It deals +100% skill damage and uses the current ${formatNumber(stats.critMultiplier)}× critical multiplier.`}
+                                        />
+                                    </div>
+                                    <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f2f4f8]" title={formatStatNumber(alternateCombatDamage.criticalDamage)}>
+                                        {formatStatNumber(alternateCombatDamage.criticalDamage)}
+                                    </p>
+                                </div>
+                            </>
+                        )}
                     </div>
                 )}
             </div>
@@ -339,6 +512,25 @@ function SkillDamagePanel({
                     <p className="text-sm text-[#99a2b3]">
                         {skill.notes ?? "This skill does not deal damage."}
                     </p>
+                    {healingAmount !== null && (
+                        <div className="mt-3 rounded-md border border-[#7585ff]/25 bg-[#1f2540]/35 p-3">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#aeb7ff]">Healing</p>
+                            <p className="mt-1 text-lg font-bold text-[#e8ebf0]">{formatStatNumber(healingAmount)}</p>
+                            <p className="mt-1 text-xs text-[#99a2b3]">
+                                {damageHealingPercent !== null && (
+                                    <>{formatStatNumber(healingDamageBase)} Damage × {formatNumber(damageHealingPercent)}%</>
+                                )}
+                                {damageHealingPercent !== null && healthHealingPercent !== null ? " + " : ""}
+                                {healthHealingPercent !== null && (
+                                    <>{formatStatNumber(stats.health)} Health × {formatNumber(healthHealingPercent)}%</>
+                                )}
+                                {attributeEffects.healEffectiveness > 0
+                                    ? ` × ${formatNumber(healingEffectivenessMultiplier)} healing effectiveness`
+                                    : ""}
+                                {" = "}{formatStatNumber(healingAmount)} healed
+                            </p>
+                        </div>
+                    )}
                 </div>
             ) : (
                 <>
@@ -389,7 +581,12 @@ function SkillDamagePanel({
                                 <div>
                                     <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Attribute Effects</p>
                                     <div className="mt-2 flex flex-wrap gap-2 text-xs">
-                                        {attributeEffects.lifeSteal > 0 && <span className="rounded bg-[#1f2540] px-2 py-1 text-[#7585ff]">Heal {attributeEffects.lifeSteal}% of damage dealt</span>}
+                                        {attributeEffects.lifeSteal > 0 && (
+                                            <span className="rounded bg-[#1f2540] px-2 py-1 text-[#7585ff]">
+                                                Life Siphon: {formatStatNumber(combatDamage.normalDamage)} × {formatNumber(attributeEffects.lifeSteal)}% = {formatStatNumber(lifeStealAmount)} healed
+                                                {" · "}{formatStatNumber(criticalLifeStealAmount)} on critical
+                                            </span>
+                                        )}
                                         {attributeEffects.cooldownSkipChance > 0 && <span className="rounded bg-[#201b35] px-2 py-1 text-[#c28cff]">{attributeEffects.cooldownSkipChance}% cooldown-skip chance</span>}
                                         {attributeEffects.healEffectiveness > 0 && <span className="rounded bg-[#1f2540] px-2 py-1 text-[#7585ff]">+{attributeEffects.healEffectiveness}% healing</span>}
                                         {attributeEffects.shieldEffectiveness > 0 && <span className="rounded bg-[#17283a] px-2 py-1 text-[#70b7ff]">+{attributeEffects.shieldEffectiveness}% shield gain</span>}
@@ -398,6 +595,42 @@ function SkillDamagePanel({
                                         {attributeEffects.damageRedirect > 0 && <span className="rounded bg-[#17283a] px-2 py-1 text-[#70b7ff]">{attributeEffects.damageRedirect}% damage redirect</span>}
                                         {attributeEffects.damageImmunitySeconds > 0 && <span className="rounded bg-[#342612] px-2 py-1 text-[#f4bd6a]">{attributeEffects.damageImmunitySeconds}s damage immunity</span>}
                                         {attributeEffects.maxHpRegenPerSecond > 0 && <span className="rounded bg-[#1f2540] px-2 py-1 text-[#7585ff]">Healing Pulse: restore {attributeEffects.maxHpRegenPerSecond}% max HP every second ({formatStatNumber(stats.health * attributeEffects.maxHpRegenPerSecond / 100)} HP/s)</span>}
+                                    </div>
+                                </div>
+                            )}
+
+                            {healingAmount !== null && (
+                                <div>
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Healing Calculation</p>
+                                    <div className="mt-2 rounded-lg border border-[#7585ff]/25 bg-[#1f2540]/35 p-3 text-xs text-[#99a2b3]">
+                                        <p>
+                                            {damageHealingPercent !== null && (
+                                                <>{formatStatNumber(healingDamageBase)} Damage × {formatNumber(damageHealingPercent)}%</>
+                                            )}
+                                            {damageHealingPercent !== null && healthHealingPercent !== null ? " + " : ""}
+                                            {healthHealingPercent !== null && (
+                                                <>{formatStatNumber(stats.health)} Health × {formatNumber(healthHealingPercent)}%</>
+                                            )}
+                                            {attributeEffects.healEffectiveness > 0
+                                                ? ` × ${formatNumber(healingEffectivenessMultiplier)} healing effectiveness`
+                                                : ""}
+                                            {" = "}<strong className="text-[#aeb7ff]">{formatStatNumber(healingAmount)} healed</strong>
+                                        </p>
+                                        {criticalHealingAmount !== null && (
+                                            <p className="mt-1">
+                                                Critical: {damageHealingPercent !== null && (
+                                                <>{formatStatNumber(combatDamage.criticalDamage)} Damage × {formatNumber(damageHealingPercent)}%</>
+                                            )}
+                                                {damageHealingPercent !== null && healthHealingPercent !== null ? " + " : ""}
+                                                {healthHealingPercent !== null && (
+                                                    <>{formatStatNumber(stats.health)} Health × {formatNumber(healthHealingPercent)}%</>
+                                                )}
+                                                {attributeEffects.healEffectiveness > 0
+                                                    ? ` × ${formatNumber(healingEffectivenessMultiplier)}`
+                                                    : ""}
+                                                {" = "}<strong className="text-[#ff936d]">{formatStatNumber(criticalHealingAmount)} healed</strong>
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -896,7 +1129,7 @@ function BuildResultsPanel({
 
                     {monster?.isEvolved && (
                         <span className="whitespace-nowrap">
-                            Evolution Multiplier{" "}
+                            EM{" "}
                             <strong className="font-semibold text-[#d8dee9]">{build.evolutionPercent}%</strong>
                         </span>
                     )}
@@ -1022,6 +1255,7 @@ export function CalculatorResults({
             ? calculateStats(
                 monsterStatData,
                 build,
+                monster?.passives ?? [],
             )
             : null;
 

@@ -17,6 +17,7 @@ import { SiteHeading } from "./site-heading";
 
 export function AppShell() {
     const hasInitializedAccountStorage = useRef(false);
+    const hasInitializedFavoriteStorage = useRef(false);
     const [build, setBuild] = useState<Build>(() => {
         const defaultMonster = monsters[0];
 
@@ -86,6 +87,43 @@ export function AppShell() {
     }, [build.accountMultipliers]);
 
     const [favoriteMonsterIds, setFavoriteMonsterIds] = useState<string[]>([]);
+
+    useEffect(() => {
+        const frameId = window.requestAnimationFrame(() => {
+            const saved = window.localStorage.getItem("cam-lab-favorite-monsters");
+            if (!saved) return;
+
+            try {
+                const parsed = JSON.parse(saved);
+                if (!Array.isArray(parsed)) return;
+
+                const validMonsterIds = new Set(monsters.map(({ id }) => id));
+                setFavoriteMonsterIds(
+                    parsed.filter(
+                        (id): id is string =>
+                            typeof id === "string" && validMonsterIds.has(id),
+                    ),
+                );
+            } catch {
+                window.localStorage.removeItem("cam-lab-favorite-monsters");
+            }
+        });
+
+        return () => window.cancelAnimationFrame(frameId);
+    }, []);
+
+    useEffect(() => {
+        if (!hasInitializedFavoriteStorage.current) {
+            hasInitializedFavoriteStorage.current = true;
+            return;
+        }
+
+        window.localStorage.setItem(
+            "cam-lab-favorite-monsters",
+            JSON.stringify(favoriteMonsterIds),
+        );
+    }, [favoriteMonsterIds]);
+
     const selectedMonster =
         monsters.find((monster) => monster.id === build.monsterId) ?? null;
 
@@ -123,6 +161,39 @@ export function AppShell() {
                 ? currentIds.filter((id) => id !== selectedMonster.id)
                 : [...currentIds, selectedMonster.id],
         );
+    }
+
+    function saveBuild(): boolean {
+        try {
+            window.localStorage.setItem("cam-lab-saved-build", JSON.stringify(build));
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    function loadBuild(): boolean {
+        try {
+            const saved = window.localStorage.getItem("cam-lab-saved-build");
+            if (!saved) return false;
+
+            const parsed = JSON.parse(saved) as Partial<Build>;
+            const savedMonster = monsters.find(({ id }) => id === parsed.monsterId);
+            if (!savedMonster) return false;
+
+            setBuild((current) => ({
+                ...createDefaultBuild({ monsterId: savedMonster.id }),
+                ...parsed,
+                monsterId: savedMonster.id,
+                mutations: Array.isArray(parsed.mutations) ? parsed.mutations : [],
+                weaponAttributeIds: Array.isArray(parsed.weaponAttributeIds) ? parsed.weaponAttributeIds : [],
+                armorAttributeIds: Array.isArray(parsed.armorAttributeIds) ? parsed.armorAttributeIds : [],
+                accountMultipliers: current.accountMultipliers,
+            }));
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     return (
@@ -178,6 +249,8 @@ export function AppShell() {
                     build={build}
                     onBuildChangeAction={setBuild}
                     onResetAction={resetBuild}
+                    onSaveAction={saveBuild}
+                    onLoadAction={loadBuild}
                 />
             </main>
             <SiteFooter />

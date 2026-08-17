@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useRef, useState, type Dispatch, type SetStateAction } from "react";
 
 import {
     EVOLUTION_STEP,
@@ -8,7 +8,6 @@ import {
     MIN_EVOLUTION_PERCENT,
     clampEvolutionPercent,
     getEvolutionBarFill,
-    getEvolutionMultiplier,
 } from "../lib/calculations/evolution";
 import type { Build, Mutation, Rank } from "../types/build";
 import type { Monster } from "../types/monster";
@@ -203,7 +202,7 @@ function HelpTooltip({
                      }: {
     title: string;
     text: string;
-    align?: "center" | "right";
+    align?: "center" | "left" | "right";
 }) {
     return (
         <span className="group/help relative inline-flex">
@@ -217,7 +216,7 @@ function HelpTooltip({
             </span>
             <span
                 role="tooltip"
-                className={`pointer-events-none absolute bottom-full z-[70] mb-2 w-64 translate-y-1 rounded-lg border border-[#303848] bg-[#131720] p-3 text-left text-xs font-normal leading-5 text-[#b8c0ce] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100 ${align === "right" ? "right-0" : "left-1/2 -translate-x-1/2"}`}
+                className={`pointer-events-none absolute bottom-full z-[70] mb-2 w-64 max-w-[calc(100vw-2rem)] translate-y-1 rounded-lg border border-[#303848] bg-[#131720] p-3 text-left text-xs font-normal leading-5 text-[#b8c0ce] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100 ${align === "right" ? "right-0" : align === "left" ? "left-0" : "left-1/2 -translate-x-1/2"}`}
             >
                 <strong className="block font-semibold text-[#e8ebf0]">{title}</strong>
                 <span className="mt-1 block">{text}</span>
@@ -294,9 +293,27 @@ function EvolutionMultiplierEditor({
                                        value,
                                        onChange,
                                    }: EvolutionMultiplierEditorProps) {
-    const [inputValue, setInputValue] = useState(
-        value.toFixed(2),
-    );
+    const [inputDraft, setInputDraft] = useState<string | null>(null);
+    const [dragPreview, setDragPreview] = useState<number | null>(null);
+    const [precisionRange, setPrecisionRange] = useState<{
+        min: number;
+        max: number;
+    } | null>(null);
+    const dragState = useRef<{
+        pointerId: number;
+        left: number;
+        top: number;
+        width: number;
+        overlayLeft: number;
+        overlayWidth: number;
+        startY: number;
+        preview: number;
+        precisionRange: { min: number; max: number } | null;
+        precisionStartX: number | null;
+        precisionStartValue: number | null;
+    } | null>(null);
+    const inputValue = inputDraft ?? value.toFixed(2);
+    const displayedValue = dragPreview ?? value;
 
     const parsedValue = Number(inputValue);
 
@@ -309,126 +326,289 @@ function EvolutionMultiplierEditor({
         (parsedValue < MIN_EVOLUTION_PERCENT ||
             parsedValue > MAX_EVOLUTION_PERCENT);
 
-    const previewPercent = isNumeric
-        ? clampEvolutionPercent(parsedValue)
-        : value;
-
-    const evolutionMultiplier =
-        getEvolutionMultiplier(previewPercent);
-
-    const evolutionBarFill =
-        getEvolutionBarFill(previewPercent);
-
-    const applyValue = () => {
+    const commitInputValue = () => {
         const normalizedValue = isNumeric
             ? clampEvolutionPercent(parsedValue)
             : value;
 
         onChange(normalizedValue);
-        setInputValue(normalizedValue.toFixed(2));
+        setInputDraft(null);
     };
 
-    const cancelEdit = () => {
-        setInputValue(value.toFixed(2));
-    };
-
+    const evolutionBarFill = getEvolutionBarFill(displayedValue);
+    const precisionFill = precisionRange
+        ? ((displayedValue - precisionRange.min) /
+        (precisionRange.max - precisionRange.min)) * 100
+        : 0;
 
     return (
-        <div className="mt-4 rounded-lg border border-[#ff9f43]/40 bg-[#2a1a0d]/55 p-3">
-            <div className="flex items-start justify-between gap-3">
-                <div>
-                    <p className="text-sm font-semibold text-[#fff3e6]">
-                        Evolution Multiplier
-                    </p>
-
-                    <p className="mt-0.5 text-xs text-[#c9a27c]">
-                        Available only for evolved monsters
-                    </p>
-                </div>
-
-                <p className="text-sm font-bold text-[#ffad5c]">
-                    ×{evolutionMultiplier.toFixed(4)}
-                </p>
-            </div>
-
-            <div className="mt-3 rounded-lg border-2 border-[#f4d4b3] bg-[#343434] p-1 shadow-inner">
-                <div className="relative h-7 overflow-hidden rounded-md bg-[#3a3a3a]">
-                    <div
-                        className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#ffd2a3] via-[#ffb160] to-[#ff8a24] transition-[width] duration-150"
-                        style={{ width: `${evolutionBarFill}%` }}
+        <div>
+            <div className="mb-2.5 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                    <p className="text-sm font-semibold text-[#e8ebf0]">EM</p>
+                    <HelpTooltip
+                        title="Evolution Multiplier (EM)"
+                        text="EM is the percentage of an evolved monster's base Damage and Health used by the game. 100% keeps its normal base stats; for example, 160% gives 1.60× base Damage and Health. Drag normally for quick changes. While dragging, slide upward to open the 0.01% precision range, then release to apply."
+                        align="left"
                     />
-
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-sm font-black text-white [text-shadow:0_2px_0_#111,1px_0_0_#111,-1px_0_0_#111,0_-1px_0_#111]">
-                            EM:{previewPercent.toFixed(2)}%
-                        </span>
-                    </div>
                 </div>
+
+                <label className="relative w-32">
+                    <input
+                        type="number"
+                        min={MIN_EVOLUTION_PERCENT}
+                        max={MAX_EVOLUTION_PERCENT}
+                        step={EVOLUTION_STEP}
+                        value={inputValue}
+                        onChange={(event) => {
+                            const nextInput = event.target.value;
+                            const nextValue = Number(nextInput);
+
+                            setInputDraft(nextInput);
+                            if (
+                                nextInput.trim() !== "" &&
+                                Number.isFinite(nextValue) &&
+                                nextValue >= MIN_EVOLUTION_PERCENT &&
+                                nextValue <= MAX_EVOLUTION_PERCENT
+                            ) {
+                                onChange(nextValue);
+                            }
+                        }}
+                        onBlur={commitInputValue}
+                        onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                                commitInputValue();
+                                event.currentTarget.blur();
+                            }
+                        }}
+                        aria-label="Exact EM percentage"
+                        aria-invalid={!isNumeric || isOutOfRange}
+                        className={`w-full rounded-md border bg-[#1a1f2a] px-2.5 py-1.5 pr-6 text-right text-xs font-semibold tabular-nums text-[#d8dee9] outline-none ${
+                            !isNumeric || isOutOfRange
+                                ? "border-[#ff7657] focus:border-[#ff7657]"
+                                : "border-[#303848] focus:border-[#7585ff]"
+                        }`}
+                    />
+                    <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-[10px] text-[#788295]">%</span>
+                </label>
             </div>
 
-            <div className="mt-3 grid grid-cols-[1fr_auto] items-end gap-3">
-                <label>
-                    <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#c9a27c]">
-                        Exact EM Percentage
+            <div className="relative">
+                {precisionRange && (
+                    <div
+                        className="fixed z-[80] max-w-[calc(100vw-1rem)] -translate-x-1/2 -translate-y-full rounded-lg border border-[#f1a45c]/70 bg-[#11151e]/95 px-3 py-2.5 shadow-[0_10px_28px_rgba(0,0,0,0.48),0_0_18px_rgba(255,157,66,0.10)] backdrop-blur-sm"
+                        style={{
+                            left: dragState.current
+                                ? dragState.current.overlayLeft
+                                : 0,
+                            top: dragState.current ? dragState.current.top - 12 : 0,
+                            width: dragState.current
+                                ? dragState.current.overlayWidth
+                                : undefined,
+                        }}
+                    >
+                        <div className="mb-2 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-[#f3b170]">
+                            Precision · 0.01%
+                        </div>
+                        <div className="mb-2 flex items-center justify-between gap-3 text-[10px] font-semibold tabular-nums text-[#99a2b3]">
+                            <span>{precisionRange.min.toFixed(2)}%</span>
+                            <strong className="rounded-md border border-[#f1a45c]/50 bg-[#342313] px-2.5 py-1 text-sm font-black text-white shadow-[0_0_12px_rgba(255,157,66,0.16)]">
+                                EM:{displayedValue.toFixed(2)}%
+                            </strong>
+                            <span>{precisionRange.max.toFixed(2)}%</span>
+                        </div>
+                        <div className="relative h-1.5 rounded-full bg-[#283140]">
+                            <div
+                                className="absolute inset-y-0 left-0 rounded-full bg-[#ff9d42]"
+                                style={{ width: `${precisionFill}%` }}
+                            />
+                            <span
+                                className="absolute top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-[#ff9d42] shadow-[0_0_0_3px_rgba(255,157,66,0.16)]"
+                                style={{ left: `${precisionFill}%` }}
+                            />
+                        </div>
+                    </div>
+                )}
+
+                <div className="relative rounded-lg border-2 border-[#f4d4b3] bg-[#343434] p-1 shadow-inner">
+                    <div className="relative h-7 overflow-hidden rounded-md bg-[#3a3a3a]">
+                        <div
+                            className="pointer-events-none absolute inset-y-0 left-0 bg-gradient-to-r from-[#ffd2a3] via-[#ffb160] to-[#ff8a24]"
+                            style={{ width: `${evolutionBarFill}%` }}
+                        />
+
+                        <span className="pointer-events-none absolute inset-0 z-10 grid place-items-center text-sm font-black tabular-nums text-white [text-shadow:0_2px_0_#111,1px_0_0_#111,-1px_0_0_#111,0_-1px_0_#111]">
+                        EM:{displayedValue.toFixed(2)}%
                     </span>
 
-                    <div className="relative">
                         <input
-                            type="number"
+                            type="range"
                             min={MIN_EVOLUTION_PERCENT}
                             max={MAX_EVOLUTION_PERCENT}
                             step={EVOLUTION_STEP}
-                            value={inputValue}
-                            onChange={(event) =>
-                                setInputValue(event.target.value)
-                            }
-                            onBlur={applyValue}
-                            onKeyDown={(event) => {
-                                if (event.key === "Enter") {
-                                    applyValue();
-                                    event.currentTarget.blur();
+                            value={value}
+                            onPointerDown={(event) => {
+                                event.preventDefault();
+                                const track = event.currentTarget.parentElement?.getBoundingClientRect();
+                                if (!track) {
+                                    return;
                                 }
 
-                                if (event.key === "Escape") {
-                                    cancelEdit();
-                                    event.currentTarget.blur();
-                                }
+                                const mainProgress = Math.min(
+                                    1,
+                                    Math.max(
+                                        0,
+                                        (event.clientX - (track.left + track.width / 2)) /
+                                        (track.width / 2),
+                                    ),
+                                );
+                                const preview = clampEvolutionPercent(
+                                    MIN_EVOLUTION_PERCENT +
+                                    mainProgress * (MAX_EVOLUTION_PERCENT - MIN_EVOLUTION_PERCENT),
+                                );
+                                const overlayWidth = Math.min(
+                                    Math.max(track.width + 128, track.width * 1.28),
+                                    window.innerWidth - 16,
+                                );
+
+                                dragState.current = {
+                                    pointerId: event.pointerId,
+                                    left: track.left,
+                                    top: track.top,
+                                    width: track.width,
+                                    overlayLeft: track.left + track.width / 2,
+                                    overlayWidth,
+                                    startY: event.clientY,
+                                    preview,
+                                    precisionRange: null,
+                                    precisionStartX: null,
+                                    precisionStartValue: null,
+                                };
+                                event.currentTarget.setPointerCapture(event.pointerId);
+                                setPrecisionRange(null);
+                                setDragPreview(preview);
                             }}
-                            aria-invalid={!isNumeric || isOutOfRange}
-                            className={`w-full rounded-md border bg-[#17120e] px-3 py-2 pr-8 text-sm text-[#fff3e6] outline-none ${
-                                !isNumeric || isOutOfRange
-                                    ? "border-[#ff7657] focus:border-[#ff7657]"
-                                    : "border-[#6f4a2d] focus:border-[#ff9f43]"
-                            }`}
+                            onPointerMove={(event) => {
+                                const drag = dragState.current;
+                                if (!drag || drag.pointerId !== event.pointerId) {
+                                    return;
+                                }
+
+                                if (!drag.precisionRange && drag.startY - event.clientY >= 24) {
+                                    const desiredWidth = Math.max(
+                                        drag.width + 128,
+                                        drag.width * 1.28,
+                                    );
+                                    const availableHalfWidth = Math.max(
+                                        0,
+                                        Math.min(
+                                            event.clientX - 8,
+                                            window.innerWidth - event.clientX - 8,
+                                        ),
+                                    );
+
+                                    drag.overlayLeft = event.clientX;
+                                    drag.overlayWidth = Math.min(
+                                        desiredWidth,
+                                        availableHalfWidth * 2,
+                                    );
+                                    drag.precisionRange = {
+                                        min: Math.max(MIN_EVOLUTION_PERCENT, drag.preview - 1),
+                                        max: Math.min(MAX_EVOLUTION_PERCENT, drag.preview + 1),
+                                    };
+                                    drag.precisionStartX = event.clientX;
+                                    drag.precisionStartValue = drag.preview;
+                                    setPrecisionRange(drag.precisionRange);
+                                    setDragPreview(drag.preview);
+                                    return;
+                                }
+
+                                if (
+                                    drag.precisionRange &&
+                                    drag.precisionStartX !== null &&
+                                    drag.precisionStartValue !== null
+                                ) {
+                                    const precisionSpan =
+                                        drag.precisionRange.max - drag.precisionRange.min;
+                                    drag.preview = clampEvolutionPercent(
+                                        Math.min(
+                                            drag.precisionRange.max,
+                                            Math.max(
+                                                drag.precisionRange.min,
+                                                drag.precisionStartValue +
+                                                ((event.clientX - drag.precisionStartX) / drag.overlayWidth) *
+                                                precisionSpan,
+                                            ),
+                                        ),
+                                    );
+                                } else {
+                                    const progress = Math.min(
+                                        1,
+                                        Math.max(
+                                            0,
+                                            (event.clientX - (drag.left + drag.width / 2)) /
+                                            (drag.width / 2),
+                                        ),
+                                    );
+                                    drag.preview = clampEvolutionPercent(
+                                        MIN_EVOLUTION_PERCENT +
+                                        progress * (MAX_EVOLUTION_PERCENT - MIN_EVOLUTION_PERCENT),
+                                    );
+                                }
+
+                                setDragPreview(drag.preview);
+                            }}
+                            onPointerUp={(event) => {
+                                const drag = dragState.current;
+                                if (!drag || drag.pointerId !== event.pointerId) {
+                                    return;
+                                }
+
+                                onChange(drag.preview);
+                                setInputDraft(null);
+                                setDragPreview(null);
+                                setPrecisionRange(null);
+                                dragState.current = null;
+                                event.currentTarget.releasePointerCapture(event.pointerId);
+                            }}
+                            onPointerCancel={() => {
+                                dragState.current = null;
+                                setDragPreview(null);
+                                setPrecisionRange(null);
+                            }}
+                            onChange={(event) => {
+                                if (dragState.current) {
+                                    return;
+                                }
+
+                                const nextValue = clampEvolutionPercent(
+                                    Math.max(
+                                        MIN_EVOLUTION_PERCENT,
+                                        Number(event.target.value),
+                                    ),
+                                );
+                                onChange(nextValue);
+                                setInputDraft(null);
+                            }}
+                            aria-label="EM percentage"
+                            aria-valuemin={MIN_EVOLUTION_PERCENT}
+                            aria-valuemax={MAX_EVOLUTION_PERCENT}
+                            aria-valuenow={displayedValue}
+                            title="Drag upward while adjusting to open the precision slider."
+                            className="absolute inset-0 z-20 h-full w-full cursor-ew-resize touch-none appearance-none bg-transparent opacity-0"
                         />
-
-                        <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-[#c9a27c]">
-                            %
-                        </span>
                     </div>
-                </label>
-
-                <button
-                    type="button"
-                    onClick={applyValue}
-                    className="rounded-md border border-[#6f4a2d] bg-[#24170e] px-3 py-2 text-xs font-semibold text-[#ffad5c] hover:border-[#ff9f43]"
-                >
-                    Apply
-                </button>
+                </div>
             </div>
 
             {(!isNumeric || isOutOfRange) && (
-                <p className="mt-2 text-xs text-[#ff9a7f]">
+                <p className="mt-2 text-[10px] text-[#ff9a7f]">
                     {!isNumeric
-                        ? "Enter a valid number."
-                        : `The applied value will be clamped to ${MIN_EVOLUTION_PERCENT.toFixed(2)}%–${MAX_EVOLUTION_PERCENT.toFixed(2)}%.`}
+                        ? "Enter a valid EM percentage."
+                        : `EM must be between ${MIN_EVOLUTION_PERCENT.toFixed(2)}% and ${MAX_EVOLUTION_PERCENT.toFixed(2)}%.`}
                 </p>
             )}
 
-            <div className="mt-2 flex justify-between text-[10px] font-semibold text-[#9d7958]">
-                <span>100.00%</span>
-                <span>220.00%</span>
-            </div>
         </div>
     );
 }
@@ -438,6 +618,8 @@ type BuildEditorProps = {
     build: Build;
     onBuildChangeAction: Dispatch<SetStateAction<Build>>;
     onResetAction: () => void;
+    onSaveAction: () => boolean;
+    onLoadAction: () => boolean;
 };
 
 export function BuildEditor({
@@ -445,9 +627,12 @@ export function BuildEditor({
                                 build,
                                 onBuildChangeAction,
                                 onResetAction,
+                                onSaveAction,
+                                onLoadAction,
                             }: BuildEditorProps) {
     const [mutationHelpId, setMutationHelpId] = useState<string | null>(null);
     const [mutationEffectsOpen, setMutationEffectsOpen] = useState(false);
+    const [buildStorageMessage, setBuildStorageMessage] = useState<string | null>(null);
 
     const update = <K extends keyof Build>(
         key: K,
@@ -663,6 +848,16 @@ export function BuildEditor({
                                 </button>
                             </div>
                         </div>
+
+                        {monster?.isEvolved && (
+                            <EvolutionMultiplierEditor
+                                key={monster.id}
+                                value={build.evolutionPercent}
+                                onChange={(value) =>
+                                    update("evolutionPercent", value)
+                                }
+                            />
+                        )}
                     </div>
 
                     <div className="mt-3 rounded-lg border border-[#303848] bg-[#131720] p-3">
@@ -705,15 +900,6 @@ export function BuildEditor({
                         )}
                     </div>
 
-                    {monster?.isEvolved && (
-                        <EvolutionMultiplierEditor
-                            key={`${monster.id}-${build.evolutionPercent}`}
-                            value={build.evolutionPercent}
-                            onChange={(value) =>
-                                update("evolutionPercent", value)
-                            }
-                        />
-                    )}
                 </CollapsibleSection>
 
                 <CollapsibleSection
@@ -868,22 +1054,12 @@ export function BuildEditor({
                     title={
                         <span className="flex items-center gap-2">
                             <span>Equipment</span>
-                            <span className="group/help relative" onClick={(event) => event.stopPropagation()}>
-                                <span
-                                    tabIndex={0}
-                                    role="button"
-                                    aria-label="How equipment and attributes work"
-                                    className="grid size-5 place-items-center rounded-full border border-[#4b566a] bg-[#1a1f2a] text-[11px] font-black text-[#99a2b3] outline-none transition hover:border-[#7585ff] hover:text-[#7585ff] focus:border-[#7585ff] focus:text-[#7585ff]"
-                                >
-                                    ?
-                                </span>
-                                <span
-                                    role="tooltip"
-                                    className="pointer-events-none absolute bottom-full left-1/2 z-[70] mb-2 w-64 -translate-x-1/2 translate-y-1 rounded-lg border border-[#303848] bg-[#131720] p-3 text-left text-xs font-normal leading-5 text-[#b8c0ce] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100"
-                                >
-                                    <strong className="block font-semibold text-[#e8ebf0]">Equipment &amp; Attributes</strong>
-                                    <span className="mt-1 block">Weapons increase Damage. Armor increases Health. Attributes affect skills and combat outcomes rather than base stats.</span>
-                                </span>
+                            <span onClick={(event) => event.stopPropagation()}>
+                                <HelpTooltip
+                                    title="Equipment & Attributes"
+                                    text="Weapons increase Damage, while Armor increases Health. Attributes add effects to skills and combat outcomes rather than directly changing base stats."
+                                    align="left"
+                                />
                             </span>
                         </span>
                     }
@@ -974,23 +1150,30 @@ export function BuildEditor({
                 </CollapsibleSection>
 
                 <div className="grid grid-cols-2 gap-2 pt-1">
-                    {[
-                        "Save Build",
-                        "Load Build",
-                        "Compare Builds",
-                    ].map((item, index) => (
-                        <button
-                            key={item}
-                            type="button"
-                            className={`rounded-md px-3 py-2 text-xs font-semibold ${
-                                index === 0
-                                    ? "bg-[#7585ff] font-bold text-[#0b1510]"
-                                    : "border border-[#303848] bg-[#1a1f2a] text-[#d8dee9]"
-                            }`}
-                        >
-                            {item}
-                        </button>
-                    ))}
+                    <button
+                        type="button"
+                        onClick={() => setBuildStorageMessage(onSaveAction() ? "Build saved locally." : "Unable to save build.")}
+                        className="rounded-md bg-[#7585ff] px-3 py-2 text-xs font-bold text-[#0b1510]"
+                    >
+                        Save Build
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => setBuildStorageMessage(onLoadAction() ? "Saved build loaded." : "No saved build found.")}
+                        className="rounded-md border border-[#303848] bg-[#1a1f2a] px-3 py-2 text-xs font-semibold text-[#d8dee9]"
+                    >
+                        Load Build
+                    </button>
+
+                    <button
+                        type="button"
+                        disabled
+                        title="Build comparison is planned for a future update."
+                        className="cursor-not-allowed rounded-md border border-[#303848] bg-[#1a1f2a] px-3 py-2 text-xs font-semibold text-[#788295] opacity-60"
+                    >
+                        Compare Builds
+                    </button>
 
                     <button
                         type="button"
@@ -1000,6 +1183,12 @@ export function BuildEditor({
                         Reset
                     </button>
                 </div>
+
+                {buildStorageMessage && (
+                    <p className="text-center text-[10px] text-[#99a2b3]" role="status">
+                        {buildStorageMessage}
+                    </p>
+                )}
             </div>
         </Panel>
     );

@@ -239,6 +239,9 @@ oblivion-beam,Oblivion Beam,Common,"[
 overvolt-tempest,Overvolt Tempest,Common,"[
   { multiplier: 0.2, hits: 11 },
 ]",6,Target: Enemy. Enemy effects: Stagger Ally effects: 25% chance to trigger overvolt tempest overload deal 100% damage,Ready
+overvolt-tempest-overload,Overvolt Tempest (Overload),Common,"[
+  { multiplier: 0.4, hits: 11 },
+]",6,Alternate version of Overvolt Tempest. The same 11-hit attack at 40% of Attack per hit.,Ready
 petal-dance,Petal Dance,Grass,"[
   { multiplier: 0.3, hits: 3 },
 ]",6,Target: Enemy. Enemy effects: Stagger,Ready

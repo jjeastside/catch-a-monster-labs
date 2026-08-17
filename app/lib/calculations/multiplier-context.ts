@@ -51,6 +51,8 @@ type MultiplierBuild = Pick<
 export function createStatMultipliers(
     build: MultiplierBuild,
     baseCritChance = 0,
+    passiveCritChance = 0,
+    passiveCritDamage = 0,
 ): StatMultipliers | null {
     if (!build.rank) {
         return null;
@@ -104,10 +106,10 @@ export function createStatMultipliers(
         accountCritChancePercent: account.critChancePercent,
 
         critChance:
-            mutationEffects.critChance + account.critChancePercent,
+            mutationEffects.critChance + account.critChancePercent + passiveCritChance,
 
         critMultiplier:
-        mutationEffects.critMultiplier,
+            mutationEffects.critMultiplier + passiveCritDamage / 100,
 
         healthTotal:
             rank *
