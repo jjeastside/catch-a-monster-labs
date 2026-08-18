@@ -1,0 +1,22 @@
+trait_id,image_id,rarity,name,type,percentage,description,condition,exclusive_source
+impair-1,impair-1.png,rare,Impair I,Damage,5,(+5%) Damage,,
+impair-2,impair-2.png,epic,Impair II,Damage,10,(+10%) Damage,,
+impair-3,impair-3.png,legendary,Impair III,Damage,15,(+15%) Damage,,
+impair-4,impair-4.png,mythical,Impair IV,Damage,30,(+30%) Damage,,runegolem
+fortify-1,fortify-1.png,rare,Fortify I,Damage Reduction,5,(+5%) Damage Reduction,,
+fortify-2,fortify-2.png,epic,Fortify II,Damage Reduction,10,(+10%) Damage Reduction,,
+fortify-3,fortify-3.png,legendary,Fortify III,Damage Reduction,15,(+15%) Damage Reduction,,
+fortify-4,fortify-4.png,mythical,Fortify IV,Damage Reduction,30,(+30%) Damage Reduction,,beatopus
+hasten-1,hasten-1.png,rare,Hasten I,Cooldown Reduction,5,(-5%) Skill Cooldown,,
+hasten-2,hasten-2.png,epic,Hasten 2,Cooldown Reduction,10,(-10%) Skill Cooldown,,
+hasten-3,hasten-3.png,legendary,Hasten 3,Cooldown Reduction,15,(-15%) Skill Cooldown,,
+elude-1,elude-1.png,rare,Elude 1,Dodge Chance,5,(+5%) Dodge Chance,,
+elude-2,elude-2.png,epic,Elude 2,Dodge Chance,10,(+10%) Dodge Chance,,
+elude-3,elude-3.png,legendary,Elude 3,Dodge Chance,15,(+15%) Dodge Chance,,
+scorch,scorch.png,mythical,Scorch,Burn Duriation,50,(+50%) Burn Duration,,stormhorn
+rebirth,rebirth.png,mythical,Rebirth,Revive,20,Revive after death restores (20%) HP. Triggeres once per battle.,,crabblaze
+gallop,gallop.png,mythical,Gallop,Mount Speed,5,(+5) Mount Speed,,
+grace,grace.png,mythical,Grace,Healing Recieved,30,(+30%) Healing amount increased ,,rainimp
+vitiate,vitiate.png,mythical,Vitiate,Attack Reduction Effectiveness,50,(+50%) Attack reduction effect,,
+fragility-vulnerable,vitiate.png,mythical,Fragility,Vulnerability Effectiveness,50,(+50%) Vulnerability Effect,,sylvaris
+fragility-status,vitiate.png,mythical,Fragility,Damage,50,(+50%) damage to enemies with Burn/Poison effects,Target is Poisoned/Burning,

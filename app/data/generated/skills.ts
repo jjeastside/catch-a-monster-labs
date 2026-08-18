@@ -321,7 +321,7 @@ export const GENERATED_SKILLS = {
     ],
     "cooldown": 6,
     "notes": "Target: Enemy.",
-    "validationStatus": "Review"
+    "validationStatus": "Ready"
   },
   "ex-fireball": {
     "id": "ex-fireball",
@@ -1194,7 +1194,7 @@ export const GENERATED_SKILLS = {
     ],
     "cooldown": null,
     "notes": "Target: Enemy. Enemy effects: Cast four posion orbs at the enemy, orb applies a stack of posion. Each stack of Posion deals 0.4% of current hp per secs and reduces enemy attack by 4%.",
-    "validationStatus": "Review"
+    "validationStatus": "Ready"
   },
   "rallying-war-cry-3-sec-50": {
     "id": "rallying-war-cry-3-sec-50",
@@ -1395,7 +1395,7 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
-    "notes": "Target: Enemy. Enemy effects: Stun 2 secs",
+    "notes": "Target: Enemy. Enemy effects: Stun 2 secs; Vulnerability (20%) incoming damage for 10 secs",
     "validationStatus": "Ready"
   },
   "soul-reap-chain-scareharvest": {

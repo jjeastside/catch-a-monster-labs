@@ -186,6 +186,8 @@ export function AppShell() {
                 ...parsed,
                 monsterId: savedMonster.id,
                 mutations: Array.isArray(parsed.mutations) ? parsed.mutations : [],
+                traitId: typeof parsed.traitId === "string" ? parsed.traitId : null,
+                targetStatused: parsed.targetStatused === true,
                 weaponAttributeIds: Array.isArray(parsed.weaponAttributeIds) ? parsed.weaponAttributeIds : [],
                 armorAttributeIds: Array.isArray(parsed.armorAttributeIds) ? parsed.armorAttributeIds : [],
                 combatContext: parsed.combatContext ?? "standard",

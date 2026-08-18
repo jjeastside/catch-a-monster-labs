@@ -18,6 +18,7 @@ import { getActiveAttributeIds, getAttributeSlotCount, getFixedAttributeIds } fr
 import { CollapsibleSection } from "./collapsible-section";
 import { EquipmentSelect } from "./equipment-select";
 import { AttributeSelect } from "./attribute-select";
+import { TraitSelect } from "./trait-select";
 import { Panel } from "./panel";
 
 const mutations: {
@@ -1073,6 +1074,29 @@ export function BuildEditor({
                 <CollapsibleSection
                     title={
                         <span className="flex items-center gap-2">
+                            <span>Trait</span>
+                            <span onClick={(event) => event.stopPropagation()}>
+                                <HelpTooltip
+                                    title="Traits"
+                                    text="Traits use their own multiplier and can add conditional or unique combat effects. Exclusive traits occur naturally on their listed monster and require breeding to transfer to another pet."
+                                    align="left"
+                                />
+                            </span>
+                            {build.traitId && (
+                                <span className="rounded-full border border-[#7585ff]/35 bg-[#1f2540] px-2 py-0.5 text-[10px] font-semibold text-[#aeb7ff]">1 / 1</span>
+                            )}
+                        </span>
+                    }
+                >
+                    <TraitSelect
+                        value={build.traitId}
+                        onChange={(value) => update("traitId", value)}
+                    />
+                </CollapsibleSection>
+
+                <CollapsibleSection
+                    title={
+                        <span className="flex items-center gap-2">
                             <span>Equipment</span>
                             <span onClick={(event) => event.stopPropagation()}>
                                 <HelpTooltip
@@ -1105,7 +1129,6 @@ export function BuildEditor({
                             items={ARMORS}
                         />
                     </div>
-
                     <div
                         className="mt-3 grid items-start gap-2 [grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))]">
                         {[{
@@ -1180,6 +1203,19 @@ export function BuildEditor({
                             </button>
                         ))}
                     </div>
+                    <button
+                        type="button"
+                        onClick={() => update("targetStatused", !build.targetStatused)}
+                        aria-pressed={build.targetStatused}
+                        className={`mt-3 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-xs font-semibold transition ${
+                            build.targetStatused
+                                ? "border-[#ff7448]/55 bg-[#3a201b]/45 text-[#ff9a7f]"
+                                : "border-[#303848] bg-[#1a1f2a] text-[#99a2b3] hover:border-[#465064] hover:text-[#d8dee9]"
+                        }`}
+                    >
+                        <span>Target is Burning or Poisoned</span>
+                        <span>{build.targetStatused ? "Active" : "Inactive"}</span>
+                    </button>
                     {(hasHpConditionalAttribute || hasHpConditionalPassive) && (
                         <label className="mt-3 block">
                             <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Current HP for conditional effects</span>

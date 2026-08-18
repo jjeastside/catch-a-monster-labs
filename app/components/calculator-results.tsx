@@ -11,6 +11,7 @@ import {
     getSkillTotalMultiplier,
 } from "../data/skills";
 import { getEquipment } from "../data/equipments";
+import { getTrait } from "../data/traits";
 import { calculateSkillAttributeEffects } from "../lib/calculations/attributes";
 
 import {
@@ -24,6 +25,7 @@ import {
 import {
     getMutationCooldownMultiplier,
 } from "../lib/calculations/mutations";
+import { getTraitCooldownMultiplier, getTraitDamageMultiplier } from "../lib/calculations/traits";
 
 import type { Build, MonsterPassive, Mutation, PassiveEffectStat, Rank } from "../types/build";
 import type { Monster } from "../types/monster";
@@ -31,6 +33,7 @@ import type { MonsterStatData } from "../types/monster-stats";
 
 import { MonsterOverviewCard } from "./monster-overview-card";
 import { Panel } from "./panel";
+import { TraitIcon } from "./trait-icon";
 
 function formatNumber(value: number): string {
     return new Intl.NumberFormat("en-US", {
@@ -345,13 +348,32 @@ function SkillDamagePanel({
         ? stats.accountRiftDamageMultiplier
         : 1;
 
-    const cooldownMultiplier = getMutationCooldownMultiplier(build.mutations);
-    const hasFairy = cooldownMultiplier < 1;
+    const mutationCooldownMultiplier = getMutationCooldownMultiplier(build.mutations);
+    const traitCooldownMultiplier = getTraitCooldownMultiplier(build.traitId);
+    const cooldownMultiplier = mutationCooldownMultiplier * traitCooldownMultiplier;
+    const hasFairy = mutationCooldownMultiplier < 1;
     const fairyLabel = build.mutations.includes("fairy-x") ? "Fairy X" : "Fairy";
+    const selectedTrait = getTrait(build.traitId);
+    const traitDamageMultiplier = getTraitDamageMultiplier(build.traitId, {
+        targetStatused: build.targetStatused,
+    });
+    const traitSkillEffects = selectedTrait?.effects.map((effect) => {
+        const notes = skill.notes?.toLowerCase() ?? "";
+        const active = effect.condition === "targetStatused"
+            ? build.targetStatused
+            : effect.type === "attackReductionEffectiveness"
+                ? /attack.{0,20}(reduc|lower)|(?:reduc|lower).{0,20}attack/.test(notes)
+                : effect.type === "vulnerabilityEffectiveness"
+                    ? notes.includes("vulnerab") || skill.id === "root-spike"
+                    : effect.type === "burnDuration"
+                        ? notes.includes("burn")
+                        : true;
+        return { ...effect, active };
+    }) ?? [];
 
     const combatDamage = calculateCombatDamage({
         monster,
-        baseDamage: stats.damage * totalMultiplier * attributeEffects.skillDamageMultiplier * accountRiftDamageMultiplier,
+        baseDamage: stats.damage * totalMultiplier * traitDamageMultiplier * attributeEffects.skillDamageMultiplier * accountRiftDamageMultiplier,
         critMultiplier: stats.critMultiplier,
         combatContext: build.combatContext,
         currentHpPercent: build.currentHpPercent,
@@ -370,6 +392,7 @@ function SkillDamagePanel({
             baseDamage:
                 stats.damage *
                 alternateTotalMultiplier *
+                traitDamageMultiplier *
                 attributeEffects.skillDamageMultiplier *
                 accountRiftDamageMultiplier,
             critMultiplier: stats.critMultiplier,
@@ -474,12 +497,34 @@ function SkillDamagePanel({
                                     {fairyLabel}
                                 </span>
                             )}
+                            {traitCooldownMultiplier < 1 && selectedTrait && (
+                                <span className="rounded border border-[#7585ff]/30 bg-[#1f2540] px-1.5 py-0.5 font-semibold text-[#aeb7ff]">
+                                    {selectedTrait.name}
+                                </span>
+                            )}
                         </div>
 
                         {isTriggeredSkill && skill.notes && (
                             <p className="mt-2 text-[10px] leading-4 text-[#99a2b3]">
                                 {skill.notes}
                             </p>
+                        )}
+
+                        {traitSkillEffects.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-1.5">
+                                {traitSkillEffects.map((effect) => (
+                                    <span
+                                        key={`${effect.type}-${effect.description}`}
+                                        className={`rounded border px-1.5 py-0.5 text-[10px] font-semibold ${
+                                            effect.active
+                                                ? "border-[#7585ff]/30 bg-[#1f2540] text-[#aeb7ff]"
+                                                : "border-[#f4bd6a]/30 bg-[#342612]/45 text-[#f4bd6a]"
+                                        }`}
+                                    >
+                                        {effect.description}{effect.active ? "" : " · inactive"}
+                                    </span>
+                                ))}
+                            </div>
                         )}
                     </div>
                 </div>
@@ -599,6 +644,12 @@ function SkillDamagePanel({
                                             <span className="rounded-lg border border-[#303848] bg-[#131720] px-3 py-2">Passive <strong className="ml-1 text-[#e8ebf0]">{formatNumber(combatDamage.passiveDamageMultiplier)}×</strong></span>
                                         </>
                                     )}
+                                    {traitDamageMultiplier !== 1 && (
+                                        <>
+                                            <span className="text-base font-bold text-[#788295]">×</span>
+                                            <span className="rounded-lg border border-[#303848] bg-[#131720] px-3 py-2">Trait <strong className="ml-1 text-[#e8ebf0]">{formatNumber(traitDamageMultiplier)}×</strong></span>
+                                        </>
+                                    )}
                                     {attributeEffects.skillDamageMultiplier !== 1 && (
                                         <>
                                             <span className="text-base font-bold text-[#788295]">×</span>
@@ -703,6 +754,7 @@ function SkillDamagePanel({
                                             const baseDamagePerHit =
                                                 stats.damage *
                                                 instance.multiplier *
+                                                traitDamageMultiplier *
                                                 attributeEffects.skillDamageMultiplier *
                                                 accountRiftDamageMultiplier;
 
@@ -1225,6 +1277,7 @@ function BuildResultsPanel({
                            }: BuildResultsPanelProps) {
     const selectedWeapon = getEquipment(build.weaponId);
     const selectedArmor = getEquipment(build.armorId);
+    const selectedTrait = getTrait(build.traitId);
 
     return (
         <section className="overflow-hidden rounded-lg border border-[#303848] bg-[#1a1f2a]">
@@ -1283,6 +1336,14 @@ function BuildResultsPanel({
                                     />
                                 );
                             })}
+                        </span>
+                    )}
+
+                    {selectedTrait && (
+                        <span className="flex items-center gap-1.5 whitespace-nowrap" title={selectedTrait.effects.map(({ description }) => description).join(" · ")}>
+                            <span>Trait</span>
+                            <TraitIcon trait={selectedTrait} size="combat" />
+                            <strong className="font-semibold text-[#d8dee9]">{selectedTrait.name}</strong>
                         </span>
                     )}
 

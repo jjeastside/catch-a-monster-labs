@@ -75,6 +75,8 @@ export type Build = {
   damageGeneticPotential: number;
   evolutionPercent: number;
   mutations: Mutation[];
+  traitId: string | null;
+  targetStatused: boolean;
 
 
   selectedSkillId: SkillId | null;
@@ -107,6 +109,8 @@ export function createDefaultBuild(
     damageGeneticPotential: 6,
     evolutionPercent: defaults?.evolutionPercent ?? 100,
     mutations: [],
+    traitId: null,
+    targetStatused: false,
     selectedSkillId: null,
     weaponId: null,
     armorId: null,

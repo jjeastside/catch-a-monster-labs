@@ -64,7 +64,7 @@ ex-air-bullet,Ex Air Bullet,Common,"[
 ]",6,Target: Enemy.,Ready
 ex-candy-bomb,Ex Candy Bomb,Common,"[
   { multiplier: 0.3, hits: 4 },
-]",6,Target: Enemy.,Review
+]",6,Target: Enemy.,Ready
 ex-fireball,Ex Fireball,Fire,"[
   { multiplier: 0.3, hits: 4 },
 ]",6,Target: Enemy | Self. Ally effects: 25% self Damage for 6 secs,Ready
@@ -247,7 +247,7 @@ petal-dance,Petal Dance,Grass,"[
 ]",6,Target: Enemy. Enemy effects: Stagger,Ready
 poison-volley,Poison Volley,Fire,"[
   { multiplier: 0.3, hits: 4 },
-]",,"Target: Enemy. Enemy effects: Cast four posion orbs at the enemy, orb applies a stack of posion. Each stack of Posion deals 0.4% of current hp per secs and reduces enemy attack by 4%.",Review
+]",,"Target: Enemy. Enemy effects: Cast four posion orbs at the enemy, orb applies a stack of posion. Each stack of Posion deals 0.4% of current hp per secs and reduces enemy attack by 4%.",Ready
 rallying-war-cry-3-sec-50,Rallying War Cry (3 sec 50%),Fire,[],3,Target: Allies. Ally effects: 50% team damage for 3 secs,Ready
 rallying-war-cry-6-sec-40-self-70,Rallying War Cry (6 sec 40% self 70%),Ground,[],6,Target: Allies | Self. Ally effects: 40% team damage for 6 secs; 70% self damage for 6 secs,Ready
 rallying-war-cry-6-sec-50,Rallying War Cry (6 sec 50%),Fire,[],6,Target: Allies. Ally effects: 50% team damage for 6 secs,Ready
@@ -287,7 +287,7 @@ solar-breath,Solar Breath,Grass,"[
 ]",8,Target: Enemy. Enemy effects: Knockback,Ready
 soul-reap-chain,Soul Reap Chain,Common,"[
   { multiplier: 1.5, hits: 1 },
-]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+]",6,Target: Enemy. Enemy effects: Stun 2 secs; Vulnerability (20%) incoming damage for 10 secs,Ready
 soul-reap-chain-scareharvest,Soul Reap Chain (Scareharvest),Common,"[
   { multiplier: 2.5, hits: 1 },
 ]",6,Target: Enemy. Enemy effects: 1 stack of Poison,Ready
