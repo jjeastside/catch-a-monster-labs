@@ -45,6 +45,9 @@ type MultiplierBuild = Pick<
     | "selectedSkillId"
     | "weaponId"
     | "armorId"
+    | "weaponAttributeIds"
+    | "armorAttributeIds"
+    | "currentHpPercent"
     | "accountMultipliers"
 >;
 

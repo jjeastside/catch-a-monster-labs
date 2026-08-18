@@ -16,6 +16,7 @@ import {
     type StatMultipliers,
 } from "./multiplier-context";
 import { getPassiveEffectTotals } from "./passive-effects";
+import { calculateSkillAttributeEffects } from "./attributes";
 
 export type CalculatedStats = {
     health: number;
@@ -68,6 +69,9 @@ type StatsBuild = Pick<
     | "selectedSkillId"
     | "weaponId"
     | "armorId"
+    | "weaponAttributeIds"
+    | "armorAttributeIds"
+    | "currentHpPercent"
     | "accountMultipliers"
 >;
 
@@ -112,8 +116,12 @@ function createCalculatedStats(
             ? getSkillTotalMultiplier(skill)
             : 1;
 
+    const skillAttributeMultiplier = skill
+        ? calculateSkillAttributeEffects(multipliers.build, skill.element).skillDamageMultiplier
+        : 1;
+
     const skillDamage =
-        damage * skillMultiplier;
+        damage * skillMultiplier * skillAttributeMultiplier;
 
     return {
         health,

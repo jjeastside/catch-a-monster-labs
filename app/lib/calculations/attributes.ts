@@ -3,6 +3,15 @@ import { getEquipment } from "../../data/equipments";
 import type { Build } from "../../types/build";
 import type { SkillElement } from "../../types/skill";
 
+type AttributeBuild = Pick<
+    Build,
+    | "weaponId"
+    | "armorId"
+    | "weaponAttributeIds"
+    | "armorAttributeIds"
+    | "currentHpPercent"
+>;
+
 export function getAttributeSlotCount(rarity: string | undefined): number {
     if (rarity === "Legendary") return 1;
     if (rarity === "Mythical" || rarity === "Secret") return 2;
@@ -24,7 +33,7 @@ export function hpConditionMatches(condition: string | null, hpPercent: number):
     return false;
 }
 
-export function getActiveAttributeIds(build: Build): string[] {
+export function getActiveAttributeIds(build: AttributeBuild): string[] {
     return [
         ...getFixedAttributeIds(build.weaponId),
         ...build.weaponAttributeIds,
@@ -34,15 +43,21 @@ export function getActiveAttributeIds(build: Build): string[] {
 }
 
 export function calculateSkillAttributeEffects(
-    build: Build,
+    build: AttributeBuild,
     skillElement: SkillElement,
 ) {
-    const element = skillElement.toLowerCase();
+    // The game calls this element Ground, while its gear attributes and image
+    // asset IDs use Earth. Normalize both labels before comparing them.
+    const normalizeElement = (value: string) => {
+        const normalized = value.trim().toLowerCase();
+        return normalized === "earth" ? "ground" : normalized;
+    };
+    const element = normalizeElement(skillElement);
     const active = getActiveAttributeIds(build)
         .map(getAttribute)
         .filter((attribute): attribute is NonNullable<typeof attribute> => Boolean(attribute));
     const applicable = active.filter((attribute) =>
-        (!attribute.skillElement || attribute.skillElement === element) &&
+        (!attribute.skillElement || normalizeElement(attribute.skillElement) === element) &&
         hpConditionMatches(attribute.hpCondition, build.currentHpPercent),
     );
     const total = (effectType: string) => applicable
