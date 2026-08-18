@@ -20,10 +20,10 @@ export const TRAITS: Trait[] = [
     { id: "gallop", name: "Gallop", rarity: "mythical", image: "/trait-icons/gallop.png", symbolImage: "/trait-symbols/gallop.png", effects: [{ type: "mountSpeed", percentage: 5, description: "+5 Mount Speed" }] },
     { id: "grace", name: "Grace", rarity: "mythical", image: "/trait-icons/grace.png", symbolImage: "/trait-symbols/grace.png", naturalSource: "Rainimp", effects: [{ type: "healingReceived", percentage: 30, description: "+30% Healing Received" }] },
     { id: "vitiate", name: "Vitiate - Attack Reduction", rarity: "mythical", image: "/trait-icons/vitiate.png", symbolImage: "/trait-symbols/vitiate.png", effects: [{ type: "attackReductionEffectiveness", percentage: 50, description: "+50% Attack Reduction Effectiveness" }] },
-    { id: "fragility-vulnerable", name: "Vitiate - Vulnerable", rarity: "mythical", image: "/trait-icons/vitiate.png", symbolImage: "/trait-symbols/fragility.png", naturalSource: "Sylvaris", effects: [
+    { id: "fragility-vulnerable", name: "Fragility - Vulnerable", rarity: "mythical", image: "/trait-icons/fragility.png", symbolImage: "/trait-symbols/fragility.png", naturalSource: "Sylvaris", effects: [
             { type: "vulnerabilityEffectiveness", percentage: 50, description: "+50% Vulnerability Effectiveness" },
         ] },
-    { id: "fragility-status", name: "Vitiate - Burn/Poison Damage", rarity: "mythical", image: "/trait-icons/vitiate.png", symbolImage: "/trait-symbols/fragility.png", naturalSource: "Sylvaris", effects: [
+    { id: "fragility-status", name: "Fragility - Burn/Poison Damage", rarity: "mythical", image: "/trait-icons/fragility.png", symbolImage: "/trait-symbols/fragility.png", naturalSource: "Sylvaris", effects: [
             { type: "damage", percentage: 50, description: "+50% Damage to Burning or Poisoned targets", condition: "targetStatused" },
         ] },
 ];
