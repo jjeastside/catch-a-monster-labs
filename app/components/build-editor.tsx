@@ -651,6 +651,7 @@ export function BuildEditor({
                             }: BuildEditorProps) {
     const [mutationHelpId, setMutationHelpId] = useState<string | null>(null);
     const [mutationEffectsOpen, setMutationEffectsOpen] = useState(false);
+    const [geneticPotentialOpen, setGeneticPotentialOpen] = useState(false);
     const [buildStorageMessage, setBuildStorageMessage] = useState<string | null>(null);
 
     const update = <K extends keyof Build>(
@@ -882,43 +883,62 @@ export function BuildEditor({
                         )}
                     </div>
 
-                    <div className="mt-3 rounded-lg border border-[#303848] bg-[#131720] p-3">
-                        <div className="mb-3 flex items-center gap-2">
-                            <img
-                                src={assetPath("/icons/genetic-potential.png")}
-                                alt="Genetic Potential"
-                                className="size-7 shrink-0 object-contain"
-                            />
-                            <p className="text-sm font-semibold text-[#e8ebf0]">
-                                Genetic Potential
-                            </p>
+                    <div className="mt-3 rounded-lg border border-[#303848] bg-[#131720]">
+                        <div className="flex items-center pr-3 transition hover:bg-[#181d27]">
+                            <button
+                                type="button"
+                                onClick={() => setGeneticPotentialOpen((open) => !open)}
+                                aria-expanded={geneticPotentialOpen}
+                                aria-controls="genetic-potential-controls"
+                                className="flex min-w-0 flex-1 items-center gap-2 p-3 pr-2 text-left"
+                            >
+                                <img
+                                    src={assetPath("/icons/genetic-potential.png")}
+                                    alt="Genetic Potential"
+                                    className="size-7 shrink-0 object-contain"
+                                />
+                                <p className="text-sm font-semibold text-[#e8ebf0]">
+                                    Genetic Potential
+                                </p>
+                                <span
+                                    aria-hidden="true"
+                                    className={`ml-auto text-xs text-[#788295] transition-transform ${geneticPotentialOpen ? "rotate-180" : ""}`}
+                                >
+                                    ▼
+                                </span>
+                            </button>
                             <HelpTooltip
                                 title="Genetic Potential"
                                 text="Adds separate percentage bonuses to Attack and Health. Drag or click either bar; each segment is 6%, up to 60%."
+                                align="right"
                             />
                         </div>
 
-                        <div className="space-y-3">
-                            <GeneticPotentialSlider
-                                label="Attack"
-                                icon="/icons/breed-attack.png"
-                                value={build.damageGeneticPotential}
-                                color="#e743df"
-                                onChange={(value) => update("damageGeneticPotential", value)}
-                            />
-                            <GeneticPotentialSlider
-                                label="Health"
-                                icon="/icons/breed-health.png"
-                                value={build.healthGeneticPotential}
-                                color="#ff4f78"
-                                onChange={(value) => update("healthGeneticPotential", value)}
-                            />
-                        </div>
+                        {geneticPotentialOpen && (
+                            <div id="genetic-potential-controls" className="border-t border-[#303848] p-3">
+                                <div className="space-y-3">
+                                    <GeneticPotentialSlider
+                                        label="Attack"
+                                        icon="/icons/breed-attack.png"
+                                        value={build.damageGeneticPotential}
+                                        color="#e743df"
+                                        onChange={(value) => update("damageGeneticPotential", value)}
+                                    />
+                                    <GeneticPotentialSlider
+                                        label="Health"
+                                        icon="/icons/breed-health.png"
+                                        value={build.healthGeneticPotential}
+                                        color="#ff4f78"
+                                        onChange={(value) => update("healthGeneticPotential", value)}
+                                    />
+                                </div>
 
-                        {(build.damageGeneticPotential === 0 || build.healthGeneticPotential === 0) && (
-                            <p className="mt-3 rounded-md border border-[#f4bd6a]/35 bg-[#342612]/45 px-2.5 py-2 text-[10px] leading-4 text-[#f4bd6a]">
-                                0% Genetic Potential is currently bugged in-game. Monsters are currently bugged have a minimum of 6% Attack and 6% Damage these values will NOT match your pet. The calculator will still use the selected 0% value.
-                            </p>
+                                {(build.damageGeneticPotential === 0 || build.healthGeneticPotential === 0) && (
+                                    <p className="mt-3 rounded-md border border-[#f4bd6a]/35 bg-[#342612]/45 px-2.5 py-2 text-[10px] leading-4 text-[#f4bd6a]">
+                                        0% Genetic Potential is currently bugged in-game. Monsters are currently bugged have a minimum of 6% Attack and 6% Damage these values will NOT match your pet. The calculator will still use the selected 0% value.
+                                    </p>
+                                )}
+                            </div>
                         )}
                     </div>
 
