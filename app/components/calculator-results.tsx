@@ -1465,7 +1465,7 @@ export function CalculatorResults({
                                 <div className="divide-y divide-[#303848]">
                                     {monsterSkills.map((skill, index) => (
                                         <SkillDamagePanel
-                                            key={skill.id}
+                                            key={`${skill.id}-${index}`}
                                             monster={monster}
                                             skill={skill}
                                             stats={stats}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { PASSIVE_DEFINITIONS } from "../data/passives";
 import type { Monster } from "../types/monster";
 import { Panel } from "./panel";
 
@@ -24,7 +25,7 @@ const rarityPortraitClasses: Record<Monster["rarity"], string> = {
     Rare: "border-[#299ddd] from-[#17486a] to-[#0b2131]",
     Epic: "border-[#bd45d8] from-[#5b1e64] to-[#27102d]",
     Legendary: "border-[#ff9f43] from-[#6a3a12] to-[#291608]",
-    Mythical: "border-transparent bg-[conic-gradient(from_210deg,#ff3b3b,#ff9f1c,#ffe94a,#48f58a,#39d9ff,#637bff,#d65cff,#ff3b86,#ff3b3b)] shadow-[0_0_12px_rgba(124,107,255,0.38)]",
+    Mythical: "border-transparent bg-[linear-gradient(to_right,#ff3347,#ff8a1f,#ffe13b,#35e56f,#22bde8,#b43cff)] shadow-[0_0_12px_rgba(124,107,255,0.38)]",
     Secret: "border-[#ff7139] from-[#5d1714] to-[#21130b]",
     Void: "border-[#35e9d0] from-[#123c43] to-[#101d2b]",
 };
@@ -36,6 +37,7 @@ type MonsterBrowserProps = {
 };
 
 type EvolutionFilter = "all" | "can-evolve" | "evolved" | "standard";
+type PassiveFilter = "all" | string;
 const selectClassName = "min-w-0 rounded-md border border-[#303848] bg-[#1a1f2a] px-3 py-2 text-xs text-[#c5cbd5] outline-none focus:border-[#7585ff]";
 
 type MonsterOptionProps = {
@@ -48,6 +50,33 @@ type MonsterOptionProps = {
 function MonsterOption({ monster, selected, onSelect, compact = false }: MonsterOptionProps) {
     const color = elementColors[monster.element] ?? "#788295";
     const elementIcon = elementIconPaths[monster.element];
+    const portraitBackground = "bg-[#111722]/90";
+    const portraitStyle = monster.rarity === "Legendary"
+        ? {
+            background: "linear-gradient(to top, #c97813 0%, #a0520d 32%, #6b3009 53%, #351708 72%, #160c09 87%, #090808 100%)",
+        }
+        : monster.rarity === "Mythical"
+            ? {
+                background: "linear-gradient(to bottom, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.78) 30%, rgba(0,0,0,0.38) 62%, rgba(0,0,0,0.04) 100%), linear-gradient(to right, #e53b3b 0%, #f08324 18%, #f0d832 36%, #35c95c 55%, #249fd5 76%, #a43fc4 100%)",
+            }
+            : monster.rarity === "Secret"
+                ? {
+                    background: "linear-gradient(to top, #d91f2c 0%, #bb1724 18%, #77101a 38%, #3a0911 60%, #18070b 79%, #080708 100%)",
+                }
+                : undefined;
+    const portraitFrameStyle = monster.rarity === "Mythical"
+        ? { border: "none", padding: "2px" }
+        : monster.rarity === "Legendary"
+            ? { border: "none", padding: "2px", background: "#f28a22" }
+            : monster.rarity === "Secret"
+                ? { border: "none", padding: "2px", background: "#ff2738" }
+                : monster.rarity === "Void"
+                    ? {
+                        border: "none",
+                        padding: "2px",
+                        background: "linear-gradient(135deg, #84ff00 0%, #4cff8f 32%, #00f2ff 68%, #0096c7 100%)",
+                    }
+                    : undefined;
 
     return (
         <button
@@ -55,8 +84,14 @@ function MonsterOption({ monster, selected, onSelect, compact = false }: Monster
             onClick={onSelect}
             className={`group flex w-full items-center rounded-xl border text-left transition ${compact ? "min-h-[58px] gap-2 px-2.5 py-1.5" : "min-h-[72px] gap-3 px-3 py-2"} ${selected ? "border-[#7585ff] bg-[#1f2540] shadow-[inset_3px_0_0_#7585ff]" : "border-[#303848] bg-[#1a1f2a] hover:border-[#4b566a] hover:bg-[#1b202b]"}`}
         >
-            <span className={`grid shrink-0 place-items-center overflow-hidden rounded-xl border bg-gradient-to-br p-[2px] ${compact ? "size-11" : "size-14"} ${rarityPortraitClasses[monster.rarity]}`}>
-                <span className={`grid h-full w-full place-items-center overflow-hidden rounded-[9px] ${monster.rarity === "Mythical" ? "bg-[conic-gradient(from_225deg_at_50%_55%,#16874a,#12a8a7,#365dcc,#743bb0,#b92c79,#bd3d35,#b87818,#16874a)]" : "bg-[#111722]/90"}`}>
+            <span
+                className={`grid shrink-0 place-items-center overflow-hidden rounded-xl border bg-gradient-to-br p-[2px] ${compact ? "size-11" : "size-14"} ${rarityPortraitClasses[monster.rarity]}`}
+                style={portraitFrameStyle}
+            >
+                <span
+                    className={`grid h-full w-full place-items-center overflow-hidden rounded-[9px] ${portraitBackground}`}
+                    style={portraitStyle}
+                >
                     {monster.image ? (
                         <img
                             src={monster.image}
@@ -97,15 +132,19 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterB
     const [rarityFilter, setRarityFilter] = useState("all");
     const [elementFilter, setElementFilter] = useState("all");
     const [evolutionFilter, setEvolutionFilter] = useState<EvolutionFilter>("all");
+    const [passiveFilter, setPassiveFilter] = useState<PassiveFilter>("all");
     const [showAllMonsters, setShowAllMonsters] = useState(false);
     const [visibleMonsterCount, setVisibleMonsterCount] = useState(60);
 
     const filterOptions = useMemo(() => ({
         sources: [...new Set(monsters.flatMap((monster) =>
             monster.sources.map((source) => source.type),
-        ))].sort(),
+        ))].filter((source) => source !== "Evolution").sort(),
         rarities: [...new Set(monsters.map((monster) => monster.rarity))].sort(),
         elements: [...new Set(monsters.map((monster) => monster.element))].sort(),
+        passives: [...new Set(monsters.flatMap((monster) =>
+            (monster.passives ?? []).map((passive) => PASSIVE_DEFINITIONS[passive.id].name),
+        ))].sort(),
     }), [monsters]);
 
     const filteredMonsters = useMemo(() => {
@@ -116,6 +155,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterB
                 ...monster.sources.flatMap((source) => [
                     source.type, source.name, source.location ?? "",
                 ]),
+                ...(monster.passives ?? []).map((passive) => PASSIVE_DEFINITIONS[passive.id].name),
             ];
             const matchesSearch = !query || searchableValues.some((value) =>
                 value.toLowerCase().includes(query),
@@ -128,13 +168,18 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterB
                 (evolutionFilter === "can-evolve" && monster.hasEvolution) ||
                 (evolutionFilter === "evolved" && monster.isEvolved === true) ||
                 (evolutionFilter === "standard" && !monster.hasEvolution && monster.isEvolved !== true);
+            const passiveNames = (monster.passives ?? []).map((passive) =>
+                PASSIVE_DEFINITIONS[passive.id].name,
+            );
+            const matchesPassive = passiveFilter === "all" ||
+                passiveNames.includes(passiveFilter);
 
             return matchesSearch && matchesSource && matchesRarity &&
-                matchesElement && matchesEvolution;
+                matchesElement && matchesEvolution && matchesPassive;
         });
-    }, [monsters, searchQuery, sourceFilter, rarityFilter, elementFilter, evolutionFilter]);
+    }, [monsters, searchQuery, sourceFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter]);
 
-    const activeFilterCount = [sourceFilter, rarityFilter, elementFilter, evolutionFilter]
+    const activeFilterCount = [sourceFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter]
         .filter((value) => value !== "all").length;
 
     const clearFilters = () => {
@@ -142,6 +187,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterB
         setRarityFilter("all");
         setElementFilter("all");
         setEvolutionFilter("all");
+        setPassiveFilter("all");
     };
 
     return (
@@ -187,10 +233,16 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterB
 
                         <label className="sr-only" htmlFor="evolution-filter">Evolution</label>
                         <select id="evolution-filter" value={evolutionFilter} onChange={(event) => setEvolutionFilter(event.target.value as EvolutionFilter)} className={selectClassName}>
-                            <option value="all">All evolution types</option>
+                            <option value="all">All Evolution Types</option>
                             <option value="can-evolve">Can evolve</option>
                             <option value="evolved">Evolved forms</option>
                             <option value="standard">No evolution</option>
+                        </select>
+
+                        <label className="sr-only" htmlFor="passive-filter">Passive</label>
+                        <select id="passive-filter" value={passiveFilter} onChange={(event) => setPassiveFilter(event.target.value)} className={`${selectClassName} col-span-2`}>
+                            <option value="all">All Passive Types</option>
+                            {filterOptions.passives.map((passive) => <option key={passive} value={passive}>{passive}</option>)}
                         </select>
                     </div>
 

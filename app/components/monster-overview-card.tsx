@@ -14,12 +14,12 @@ const rarityBadgeClasses: Record<Monster["rarity"], string> = {
     Epic: "border-[#bd45d8] bg-[#411546] text-[#eb7cff]",
     Legendary: "border-[#ff9f43] bg-[#4a2910] text-[#ffb866]",
     Mythical:
-        "border-[#bd8be0] bg-[linear-gradient(90deg,#963838,#a8742d,#478a54,#37838b,#4960a0,#86499a)] text-[#fffaff] shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]",
+        "border-[#bd61e8] bg-[linear-gradient(to_bottom,rgba(0,0,0,0.58),rgba(0,0,0,0.08)),linear-gradient(to_right,#e53b3b,#f08324,#f0d832,#35c95c,#249fd5,#a43fc4)] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]",
     Secret:
-        "border-transparent bg-[linear-gradient(135deg,#5d0000,#ff1f1f,#ff7a00,#ffd400,#78ff00)] text-white",
+        "border-[#ff2738] bg-[linear-gradient(to_top,#c91b28,#74101a_48%,#18070b)] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]",
 
     Void:
-        "border-transparent bg-[linear-gradient(135deg,#84ff00,#4cff8f,#00f2ff,#00b7ff,#0096c7)] text-white",
+        "border-[#28e9c5] bg-[linear-gradient(135deg,#4acb28,#16b879_45%,#078fa8)] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]",
 };
 
 const rarityImageClasses: Record<Monster["rarity"], string> = {
@@ -34,7 +34,7 @@ const rarityImageClasses: Record<Monster["rarity"], string> = {
     Legendary:
         "border-[#ff9f43] bg-gradient-to-br from-[#6a3a12] to-[#291608]",
     Mythical:
-        "border-transparent bg-[conic-gradient(from_210deg,#ff3030,#ff9418,#ffe83d,#42f57b,#2de2e6,#5271ff,#cf4dff,#ff3684,#ff3030)] shadow-[0_0_24px_rgba(111,91,255,0.42),0_12px_30px_rgba(0,0,0,0.34)]",
+        "border-transparent bg-[linear-gradient(to_right,#ff3347,#ff8a1f,#ffe13b,#35e56f,#22bde8,#b43cff)] shadow-[0_0_24px_rgba(111,91,255,0.42),0_12px_30px_rgba(0,0,0,0.34)]",
     Secret:
         "border-transparent bg-[linear-gradient(135deg,#5d0000,#ff1f1f,#ff7a00,#ffd400,#78ff00)]",
     Void:
@@ -199,6 +199,32 @@ export function MonsterOverviewCard({
                                         onToggleFavorite,
                                     }: MonsterOverviewCardProps) {
     const elementIcon = elementIconPaths[monster.element];
+    const portraitStyle = monster.rarity === "Legendary"
+        ? {
+            background: "linear-gradient(to top, #c97813 0%, #a0520d 32%, #6b3009 53%, #351708 72%, #160c09 87%, #090808 100%)",
+        }
+        : monster.rarity === "Mythical"
+            ? {
+                background: "linear-gradient(to bottom, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.78) 30%, rgba(0,0,0,0.38) 62%, rgba(0,0,0,0.04) 100%), linear-gradient(to right, #e53b3b 0%, #f08324 18%, #f0d832 36%, #35c95c 55%, #249fd5 76%, #a43fc4 100%)",
+            }
+            : monster.rarity === "Secret"
+                ? {
+                    background: "linear-gradient(to top, #d91f2c 0%, #bb1724 18%, #77101a 38%, #3a0911 60%, #18070b 79%, #080708 100%)",
+                }
+                : undefined;
+    const portraitFrameStyle = monster.rarity === "Mythical"
+        ? { border: "none", padding: "2px" }
+        : monster.rarity === "Legendary"
+            ? { border: "none", padding: "2px", background: "#f28a22" }
+            : monster.rarity === "Secret"
+                ? { border: "none", padding: "2px", background: "#ff2738" }
+                : monster.rarity === "Void"
+                    ? {
+                        border: "none",
+                        padding: "2px",
+                        background: "linear-gradient(135deg, #84ff00 0%, #4cff8f 32%, #00f2ff 68%, #0096c7 100%)",
+                    }
+                    : undefined;
 
     return (
         <section className="relative flex gap-6 overflow-hidden rounded-xl border border-[#303848] bg-[#1a1f2a] p-5 sm:p-6">
@@ -207,8 +233,12 @@ export function MonsterOverviewCard({
                 className={`relative grid size-40 shrink-0 place-items-center overflow-hidden rounded-2xl border-2 p-[3px] shadow-[0_12px_30px_rgba(0,0,0,0.28)] xl:size-44 ${
                     rarityImageClasses[monster.rarity]
                 }`}
+                style={portraitFrameStyle}
             >
-                <div className={`grid h-full w-full place-items-center overflow-hidden rounded-[13px] ${monster.rarity === "Mythical" ? "bg-[conic-gradient(from_225deg_at_50%_55%,#16874a,#12a8a7,#365dcc,#743bb0,#b92c79,#bd3d35,#b87818,#16874a)]" : "bg-[#10141d]/85"}`}>
+                <div
+                    className="grid h-full w-full place-items-center overflow-hidden rounded-[13px] bg-[#10141d]/85"
+                    style={portraitStyle}
+                >
                     {monster.image ? (
                         <img
                             src={monster.image}
