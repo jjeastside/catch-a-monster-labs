@@ -1,21 +1,26 @@
+import Image from "next/image";
+import Link from "next/link";
+
+import camLabLogo from "../assets/cam-lab-logo.png";
+
 const exploreLinks = [
     { label: "Calculator", href: "/" },
-    { label: "Monster Database", href: "/monsters" },
-    { label: "Guides", href: "/guides" },
-    { label: "Compare Builds", href: "/compare" },
+    { label: "Monster Database", href: "/work-in-progress" },
+    { label: "Guides", href: "/work-in-progress" },
+    { label: "Compare Builds", href: "/work-in-progress" },
 ];
 
 const projectLinks = [
-    { label: "Changelog", href: "/changelog" },
-    { label: "Feedback", href: "/feedback" },
-    { label: "About CAM/LAB", href: "/about" },
-    { label: "Privacy", href: "/privacy" },
+    { label: "Changelog", href: "/work-in-progress" },
+    { label: "Feedback", href: "/work-in-progress" },
+    { label: "About CAM Lab", href: "/work-in-progress" },
+    { label: "Privacy", href: "/work-in-progress" },
 ];
 
 function FooterLink({ label, href }: { label: string; href: string }) {
     return (
         <li>
-            <a
+            <Link
                 href={href}
                 className="group inline-flex items-center gap-1.5 text-sm text-[#8f99aa] transition hover:text-[#7585ff] focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7585ff]/60"
             >
@@ -26,7 +31,7 @@ function FooterLink({ label, href }: { label: string; href: string }) {
                 >
                     →
                 </span>
-            </a>
+            </Link>
         </li>
     );
 }
@@ -47,8 +52,13 @@ export function SiteFooter() {
                 <div className="grid gap-8 md:grid-cols-[minmax(0,1.5fr)_minmax(10rem,0.65fr)_minmax(10rem,0.65fr)]">
                     <div className="max-w-xl">
                         <div className="flex items-center gap-3">
-                            <span className="grid size-10 place-items-center rounded-xl border border-[#7585ff]/35 bg-[#1f2540] text-sm font-black tracking-tight text-[#7585ff] shadow-[0_0_24px_rgba(117,133,255,0.08)]">
-                                C/L
+                            <span className="grid size-12 place-items-center">
+                                <Image
+                                    src={camLabLogo}
+                                    alt="Cam Lab logo"
+                                    unoptimized
+                                    className="h-full w-full object-contain"
+                                />
                             </span>
                             <div>
                                 <p className="text-base font-bold tracking-tight text-[#f2f4f8]">
@@ -65,7 +75,7 @@ export function SiteFooter() {
                         </p>
 
                         <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-[#788295]">
-                            <span>© 2026 CAM/LAB</span>
+                            <span>© 2026 CAM Lab</span>
                             <span aria-hidden="true" className="text-[#3a4354]">•</span>
                             <span>ROBLOX FAN-SITE</span>
                             <span aria-hidden="true" className="text-[#3a4354]">•</span>
@@ -93,7 +103,7 @@ export function SiteFooter() {
                         </h2>
                         <ul className="mt-4 space-y-2.5">
                             {exploreLinks.map((link) => (
-                                <FooterLink key={link.href} {...link}/>
+                                <FooterLink key={link.label} {...link}/>
                             ))}
                         </ul>
                     </nav>
@@ -104,7 +114,7 @@ export function SiteFooter() {
                         </h2>
                         <ul className="mt-4 space-y-2.5">
                             {projectLinks.map((link) => (
-                                <FooterLink key={link.href} {...link}/>
+                                <FooterLink key={link.label} {...link}/>
                             ))}
                         </ul>
                     </nav>
@@ -112,7 +122,7 @@ export function SiteFooter() {
 
                 <div className="mt-8 border-t border-[#252c39] pt-5">
                     <p className="max-w-5xl text-xs leading-5 text-[#697386]">
-                        CAM/LAB is an independent fan-made companion site. It is not affiliated with, endorsed by, or sponsored by Roblox Corporation or LDS II. All trademarks are property of their respective owners.
+                        Cam LAB is an independent fan-made companion site. It is not affiliated with, endorsed by, or sponsored by Roblox Corporation or LDS II. All trademarks are property of their respective owners.
                     </p>
                 </div>
             </div>

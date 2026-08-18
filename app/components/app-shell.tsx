@@ -18,6 +18,7 @@ import { SiteHeading } from "./site-heading";
 export function AppShell() {
     const hasInitializedAccountStorage = useRef(false);
     const hasInitializedFavoriteStorage = useRef(false);
+    const hasInitializedMonsterStorage = useRef(false);
     const [build, setBuild] = useState<Build>(() => {
         const defaultMonster = monsters[0];
 
@@ -126,6 +127,32 @@ export function AppShell() {
 
     const selectedMonster =
         monsters.find((monster) => monster.id === build.monsterId) ?? null;
+
+    useEffect(() => {
+        const frameId = window.requestAnimationFrame(() => {
+            const savedMonsterId = window.localStorage.getItem("cam-lab-selected-monster");
+            const savedMonster = monsters.find(({ id }) => id === savedMonsterId);
+
+            if (savedMonster) {
+                selectMonster(savedMonster);
+            }
+        });
+
+        return () => window.cancelAnimationFrame(frameId);
+    }, []);
+
+    useEffect(() => {
+        if (!hasInitializedMonsterStorage.current) {
+            hasInitializedMonsterStorage.current = true;
+            return;
+        }
+
+        if (build.monsterId) {
+            window.localStorage.setItem("cam-lab-selected-monster", build.monsterId);
+        } else {
+            window.localStorage.removeItem("cam-lab-selected-monster");
+        }
+    }, [build.monsterId]);
 
     function selectMonster(monster: Monster) {
         setBuild((current) => ({
