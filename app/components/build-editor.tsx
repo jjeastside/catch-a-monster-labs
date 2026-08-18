@@ -917,7 +917,7 @@ export function BuildEditor({
 
                         {(build.damageGeneticPotential === 0 || build.healthGeneticPotential === 0) && (
                             <p className="mt-3 rounded-md border border-[#f4bd6a]/35 bg-[#342612]/45 px-2.5 py-2 text-[10px] leading-4 text-[#f4bd6a]">
-                                0% Genetic Potential is currently bugged in-game. The calculator will still use the selected 0% value.
+                                0% Genetic Potential is currently bugged in-game. Monsters are currently bugged have a minimum of 6% Attack and 6% Damage these values will NOT match your pet. The calculator will still use the selected 0% value.
                             </p>
                         )}
                     </div>
