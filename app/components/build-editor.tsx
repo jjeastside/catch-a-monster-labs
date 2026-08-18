@@ -14,6 +14,7 @@ import type { Monster } from "../types/monster";
 import { ARMORS, WEAPONS, getEquipment } from "../data/equipments";
 import { getAttribute, getAttributesForGear } from "../data/attributes";
 import { getActiveAttributeIds, getAttributeSlotCount, getFixedAttributeIds } from "../lib/calculations/attributes";
+import { assetPath } from "../lib/asset-path";
 
 import { CollapsibleSection } from "./collapsible-section";
 import { EquipmentSelect } from "./equipment-select";
@@ -255,7 +256,7 @@ function GeneticPotentialSlider({
         <div>
             <div className="mb-1.5 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                    <img src={icon} alt="" className="size-6 rounded object-contain"/>
+                    <img src={assetPath(icon)} alt="" className="size-6 rounded object-contain"/>
                     <span className="text-xs font-black uppercase tracking-wide text-[#e8ebf0]">
                         {label}
                     </span>
@@ -884,7 +885,7 @@ export function BuildEditor({
                     <div className="mt-3 rounded-lg border border-[#303848] bg-[#131720] p-3">
                         <div className="mb-3 flex items-center gap-2">
                             <img
-                                src="/icons/genetic-potential.png"
+                                src={assetPath("/icons/genetic-potential.png")}
                                 alt="Genetic Potential"
                                 className="size-7 shrink-0 object-contain"
                             />
@@ -962,7 +963,7 @@ export function BuildEditor({
                                     >
                                         <span className="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-md border border-[#3a4354] bg-[#11151e]">
                                             <img
-                                                src={isX ? mutation.xIcon : mutation.icon}
+                                                src={assetPath(isX ? mutation.xIcon : mutation.icon)}
                                                 alt=""
                                                 className={`size-9 object-contain transition ${isSelected ? "opacity-100" : "opacity-65 group-hover/mutation:opacity-90"}`}
                                             />
@@ -1007,7 +1008,7 @@ export function BuildEditor({
                         >
                             <div className="flex items-center justify-between gap-3">
                                 <div className="flex items-center gap-2">
-                                    <img src={mutationHelp.icon} alt="" className="size-6 object-contain"/>
+                                    <img src={assetPath(mutationHelp.icon)} alt="" className="size-6 object-contain"/>
                                     <strong className="text-xs text-[#e8ebf0]">{mutationHelp.label}</strong>
                                 </div>
                                 <button
@@ -1090,7 +1091,7 @@ export function BuildEditor({
                 >
                     <TraitSelect
                         value={build.traitId}
-                        onChange={(value) => update("traitId", value)}
+                        onChangeAction={(value) => update("traitId", value)}
                     />
                 </CollapsibleSection>
 
@@ -1112,7 +1113,7 @@ export function BuildEditor({
                         <EquipmentSelect
                             label="Weapon"
                             value={build.weaponId}
-                            onChange={(value) => {
+                            onChangeAction={(value) => {
                                 update("weaponId", value);
                                 update("weaponAttributeIds", []);
                             }}
@@ -1122,7 +1123,7 @@ export function BuildEditor({
                         <EquipmentSelect
                             label="Armor"
                             value={build.armorId}
-                            onChange={(value) => {
+                            onChangeAction={(value) => {
                                 update("armorId", value);
                                 update("armorAttributeIds", []);
                             }}
@@ -1153,7 +1154,7 @@ export function BuildEditor({
                                             return attribute ? (
                                                 <div key={id}
                                                      className="relative grid aspect-[2.85/1] min-h-[54px] w-full place-items-center overflow-hidden rounded-md border border-[#ff9f43]/50 bg-[#11151e] p-0.5">
-                                                    <img src={`/attributes/${id}.png`} alt={attribute.name}
+                                                    <img src={assetPath(`/attributes/${id}.png`)} alt={attribute.name}
                                                          className="block h-auto w-full"/>
                                                     <span
                                                         className="absolute right-1 top-1 rounded bg-[#2a1a0d]/90 px-1 py-0.5 text-[8px] font-semibold text-[#ffb866]">FIXED</span>
@@ -1167,7 +1168,7 @@ export function BuildEditor({
                                                 options={getAttributesForGear(type)}
                                                 value={selectedIds[index] ?? null}
                                                 usedIds={selectedIds}
-                                                onChange={(value) => updateAttribute(key, index, value)}
+                                                onChangeAction={(value) => updateAttribute(key, index, value)}
                                             />
                                         ))}
                                     </div>

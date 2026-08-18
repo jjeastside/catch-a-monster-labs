@@ -13,6 +13,7 @@ import {
 import { getEquipment } from "../data/equipments";
 import { getTrait } from "../data/traits";
 import { calculateSkillAttributeEffects } from "../lib/calculations/attributes";
+import { assetPath } from "../lib/asset-path";
 
 import {
     calculateStats,
@@ -258,7 +259,7 @@ function BuildStat({
         <div className="rounded-lg border border-[#303848] bg-[#131720] p-4">
             <div className="flex items-center gap-2">
                 <img
-                    src={iconSrc}
+                    src={assetPath(iconSrc)}
                     alt=""
                     className="size-5 shrink-0 object-contain"
                 />
@@ -454,7 +455,7 @@ function SkillDamagePanel({
                 <div className="flex min-w-0 items-center gap-3">
                     <div className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-lg border border-[#3a4354] bg-[#11151e] p-0.5 shadow-[0_6px_14px_rgba(0,0,0,0.2)]">
                         <img
-                            src={skillIconPath}
+                            src={assetPath(skillIconPath)}
                             alt={`${skill.name} skill`}
                             className="h-full w-full scale-[1.4] rounded-md object-cover"
                             onError={(event) => {
@@ -476,7 +477,7 @@ function SkillDamagePanel({
 
                         <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-[#8993a5]">
                             <span className="flex items-center gap-1">
-                                <img src={elementIconPath} alt="" className="size-3.5 object-contain" />
+                                <img src={assetPath(elementIconPath)} alt="" className="size-3.5 object-contain" />
                                 {skill.element}
                             </span>
                             {isDamagingSkill && (
@@ -533,7 +534,7 @@ function SkillDamagePanel({
                     <div className="grid grid-cols-2 gap-2">
                         <div className="min-w-0 rounded-lg border border-[#39415a] bg-[#1c2130] p-3">
                             <div className="flex items-center gap-1.5 text-[#aeb7ff]">
-                                <img src="/account-icons/damage.png" alt="" className="size-4 shrink-0 object-contain" />
+                                <img src={assetPath("/account-icons/damage.png")} alt="" className="size-4 shrink-0 object-contain" />
                                 <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Normal</p>
                                 <InfoTooltip
                                     label="Explain total skill damage"
@@ -547,7 +548,7 @@ function SkillDamagePanel({
 
                         <div className="min-w-0 rounded-lg border border-[#ff7448]/35 bg-[#3a201b]/35 p-3">
                             <div className="flex items-center gap-1.5 text-[#ff936d]">
-                                <img src="/account-icons/critical-damage.png" alt="" className="size-4 shrink-0 object-contain" />
+                                <img src={assetPath("/account-icons/critical-damage.png")} alt="" className="size-4 shrink-0 object-contain" />
                                 <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Critical</p>
                                 <InfoTooltip
                                     label="Explain critical damage"
@@ -563,7 +564,7 @@ function SkillDamagePanel({
                             <>
                                 <div className="min-w-0 rounded-lg border border-[#5363a8]/45 bg-[#20263a] p-3">
                                     <div className="flex items-center gap-1.5 text-[#aeb7ff]">
-                                        <img src="/account-icons/damage.png" alt="" className="size-4 shrink-0 object-contain" />
+                                        <img src={assetPath("/account-icons/damage.png")} alt="" className="size-4 shrink-0 object-contain" />
                                         <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Normal (Overload)</p>
                                         <InfoTooltip
                                             label="Explain Overvolt Tempest Overload"
@@ -577,7 +578,7 @@ function SkillDamagePanel({
 
                                 <div className="min-w-0 rounded-lg border border-[#ff7448]/45 bg-[#43231f]/45 p-3">
                                     <div className="flex items-center gap-1.5 text-[#ff936d]">
-                                        <img src="/account-icons/critical-damage.png" alt="" className="size-4 shrink-0 object-contain" />
+                                        <img src={assetPath("/account-icons/critical-damage.png")} alt="" className="size-4 shrink-0 object-contain" />
                                         <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Critical (Overload)</p>
                                         <InfoTooltip
                                             label="Explain critical Overvolt Tempest Overload"
@@ -870,7 +871,7 @@ function PassiveAnalysisPanel({
                     >
                         {imagePath ? (
                             <img
-                                src={imagePath}
+                                src={assetPath(imagePath)}
                                 alt={`${definition.name} passive`}
                                 className="h-full w-full object-cover"
                             />
@@ -1311,11 +1312,11 @@ function BuildResultsPanel({
                     <span className="flex items-center gap-2 whitespace-nowrap">
                         <span>Genetic Potential</span>
                         <span className="flex items-center gap-1" title="Damage Genetic Potential">
-                            <img src="/icons/breed-attack.png" alt="Damage" className="size-5 object-contain" />
+                            <img src={assetPath("/icons/breed-attack.png")} alt="Damage" className="size-5 object-contain" />
                             <strong className="font-semibold text-[#d8dee9]">{build.damageGeneticPotential}%</strong>
                         </span>
                         <span className="flex items-center gap-1" title="Health Genetic Potential">
-                            <img src="/icons/breed-health.png" alt="Health" className="size-5 object-contain" />
+                            <img src={assetPath("/icons/breed-health.png")} alt="Health" className="size-5 object-contain" />
                             <strong className="font-semibold text-[#d8dee9]">{build.healthGeneticPotential}%</strong>
                         </span>
                     </span>
@@ -1329,7 +1330,7 @@ function BuildResultsPanel({
                                 return (
                                     <img
                                         key={mutation}
-                                        src={summary.icon}
+                                        src={assetPath(summary.icon)}
                                         alt={summary.label}
                                         title={summary.label}
                                         className="size-6 rounded object-contain"
@@ -1358,7 +1359,7 @@ function BuildResultsPanel({
                         <span>Weapon</span>
                         {selectedWeapon ? (
                             <>
-                                <img src={`/gear/${selectedWeapon.id}.png`} alt="" className="size-6 rounded object-contain" />
+                                <img src={assetPath(`/gear/${selectedWeapon.id}.png`)} alt="" className="size-6 rounded object-contain" />
                                 <strong className="font-semibold text-[#d8dee9]">{selectedWeapon.percentage}%</strong>
                             </>
                         ) : (
@@ -1370,7 +1371,7 @@ function BuildResultsPanel({
                         <span>Armor</span>
                         {selectedArmor ? (
                             <>
-                                <img src={`/gear/${selectedArmor.id}.png`} alt="" className="size-6 rounded object-contain" />
+                                <img src={assetPath(`/gear/${selectedArmor.id}.png`)} alt="" className="size-6 rounded object-contain" />
                                 <strong className="font-semibold text-[#d8dee9]">{selectedArmor.percentage}%</strong>
                             </>
                         ) : (

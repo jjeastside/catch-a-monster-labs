@@ -1,6 +1,7 @@
 import { useState, type CSSProperties } from "react";
 
 import type { Trait } from "../types/trait";
+import { assetPath } from "../lib/asset-path";
 
 type TraitIconProps = {
     trait: Trait;
@@ -72,7 +73,7 @@ export function TraitIcon({ trait, size = "selected" }: TraitIconProps) {
             <span className={`relative size-full overflow-hidden ${dimensions.inset} ${visual.surface}`}>
                 {trait.symbolImage && (
                     <img
-                        src={trait.symbolImage}
+                        src={assetPath(trait.symbolImage)}
                         alt=""
                         aria-hidden="true"
                         className="hidden"

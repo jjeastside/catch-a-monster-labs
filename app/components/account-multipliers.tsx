@@ -13,6 +13,7 @@ import {
 } from "../lib/calculations/account-multipliers";
 import type { Achievement, AchievementCategory } from "../types/achievement";
 import type { Build } from "../types/build";
+import { assetPath } from "../lib/asset-path";
 
 type AccountMultipliersProps = {
     build: Build;
@@ -222,8 +223,8 @@ export function AccountMultipliers({
                         return (
                             <button key={category} type="button" onClick={() => { setExpandedCategory(category); setIsOpen(true); }} className="group flex min-w-0 items-center gap-3 rounded-lg border border-[#303848] bg-gradient-to-r from-[#1a1f2a] to-[#121620] px-3 py-2 text-left transition hover:-translate-y-0.5 hover:border-[#4c5a70] hover:bg-[#1a202c]">
                                 <span className="relative grid size-12 shrink-0 place-items-center">
-                                    <img src={categoryIcon} alt="" className={`${category === "pet-quest" ? "absolute left-0 top-0 size-9" : "max-h-12 max-w-12"} object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]`} />
-                                    {category === "pet-quest" && <img src="/account-icons/damage-up.png" alt="" className="absolute bottom-0 right-0 size-8 object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]" />}
+                                    <img src={assetPath(categoryIcon)} alt="" className={`${category === "pet-quest" ? "absolute left-0 top-0 size-9" : "max-h-12 max-w-12"} object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]`} />
+                                    {category === "pet-quest" && <img src={assetPath("/account-icons/damage-up.png")} alt="" className="absolute bottom-0 right-0 size-8 object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]" />}
                                 </span>
                                 <span className="min-w-0 flex-1">
                                     <span className="flex min-w-0 items-center gap-2">
@@ -231,8 +232,8 @@ export function AccountMultipliers({
                                         <span className={`shrink-0 rounded border px-1.5 py-0.5 text-[9px] font-black tabular-nums ${categoryStyles[category]}`}>{progress.completed}/{progress.total}</span>
                                     </span>
                                     <span className={`mt-1 flex items-center gap-2 text-[10px] font-bold ${progress.completed ? "text-[#7585ff]" : "text-[#788295]"}`}>
-                                        {progress.healthPercent > 0 && <span className="flex items-center gap-1"><img src="/account-icons/health.png" alt="Health" className="size-5 object-contain" />+{progress.healthPercent}%</span>}
-                                        {progress.damagePercent > 0 && <span className="flex items-center gap-1"><img src="/account-icons/damage.png" alt="Damage" className="size-5 object-contain" />+{progress.damagePercent}%</span>}
+                                        {progress.healthPercent > 0 && <span className="flex items-center gap-1"><img src={assetPath("/account-icons/health.png")} alt="Health" className="size-5 object-contain" />+{progress.healthPercent}%</span>}
+                                        {progress.damagePercent > 0 && <span className="flex items-center gap-1"><img src={assetPath("/account-icons/damage.png")} alt="Damage" className="size-5 object-contain" />+{progress.damagePercent}%</span>}
                                         {!progress.healthPercent && !progress.damagePercent && "No bonus yet"}
                                     </span>
                                 </span>
@@ -279,7 +280,7 @@ export function AccountMultipliers({
                                             <span className={`relative flex min-h-28 items-center gap-3 overflow-hidden rounded-xl bg-gradient-to-r ${glow} to-[#090c10] px-4 py-3`}>
                                                 <span aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1.5px)", backgroundSize: "14px 14px" }} />
                                                 <span className="relative grid size-16 shrink-0 place-items-center">
-                                                    <img src={card.iconSrc} alt="" className="max-h-16 max-w-16 object-contain drop-shadow-[0_4px_5px_rgba(0,0,0,0.65)]" />
+                                                    <img src={assetPath(card.iconSrc)} alt="" className="max-h-16 max-w-16 object-contain drop-shadow-[0_4px_5px_rgba(0,0,0,0.65)]" />
                                                 </span>
                                                 <span className="relative min-w-0 flex-1">
                                                     <span className="flex flex-wrap items-baseline gap-x-1 text-white drop-shadow-[0_2px_1px_#000]">
@@ -293,7 +294,7 @@ export function AccountMultipliers({
                                                 <span className="relative shrink-0 text-right">
                                                     <span className={`block text-2xl font-black tabular-nums drop-shadow-[0_2px_1px_#000] ${accent}`}>+{card.percent}%</span>
                                                     <span className="mt-1 block text-sm font-black text-white drop-shadow-[0_2px_1px_#000]">{card.stat}</span>
-                                                    <img src={card.statIconSrc} alt="" className="ml-auto mt-1 size-7 object-contain" />
+                                                    <img src={assetPath(card.statIconSrc)} alt="" className="ml-auto mt-1 size-7 object-contain" />
                                                 </span>
                                             </span>
                                         </button>
@@ -332,11 +333,11 @@ export function AccountMultipliers({
                                                 onClick={() => toggleAchievement(achievement)}
                                                 className={`group flex min-w-0 items-center gap-3 rounded-lg border p-3 text-left transition ${isSelected ? "border-[#7585ff] bg-[#1f2540]" : "border-[#303848] bg-[#151923] hover:border-[#4a5568] hover:bg-[#1a202b]"}`}
                                             >
-                                                <img src={achievementIcon} alt="" className="size-12 shrink-0 object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]" />
+                                                <img src={assetPath(achievementIcon)} alt="" className="size-12 shrink-0 object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]" />
                                                 <span className="min-w-0 flex-1">
                                                     <span className="block truncate text-xs font-black text-white">{details.label}</span>
                                                     <span className="mt-1 flex items-center gap-1.5 text-[10px] font-bold text-[#aab3c2]">
-                                                        <img src={rewardIcon} alt="" className="size-6 object-contain" />
+                                                        <img src={assetPath(rewardIcon)} alt="" className="size-6 object-contain" />
                                                         {details.shortReward}
                                                     </span>
                                                 </span>
@@ -360,7 +361,7 @@ export function AccountMultipliers({
                                                 <div className="flex flex-wrap items-center gap-2">
                                                     <h3 className="text-sm font-black text-white">{details.label} Achievements</h3>
                                                     <span className={`flex items-center gap-1 rounded border px-2 py-0.5 text-[10px] font-bold ${categoryStyles[category]}`}>
-                                                        <img src={category === "path-of-progress" ? "/account-icons/health.png" : category === "index-mania" ? "/account-icons/damage.png" : "/account-icons/health-up.png"} alt="" className="size-4 object-contain" />
+                                                        <img src={assetPath(category === "path-of-progress" ? "/account-icons/health.png" : category === "index-mania" ? "/account-icons/damage.png" : "/account-icons/health-up.png")} alt="" className="size-4 object-contain" />
                                                         {details.shortReward}
                                                     </span>
                                                 </div>
@@ -384,7 +385,7 @@ export function AccountMultipliers({
                                                             <span className="mt-0.5 block text-xs text-[#788295]">{achievementGoal(achievement)}</span>
                                                         </span>
                                                         <span className={`flex shrink-0 items-center gap-1.5 text-xs font-black ${achievement.rewardStat === "health" ? "text-[#39ef64]" : "text-[#ff6388]"}`}>
-                                                            <img src={achievement.rewardStat === "health" ? "/account-icons/health.png" : "/account-icons/damage.png"} alt="" className="size-5 object-contain" />
+                                                            <img src={assetPath(achievement.rewardStat === "health" ? "/account-icons/health.png" : "/account-icons/damage.png")} alt="" className="size-5 object-contain" />
                                                             +{achievement.rewardPercent}%
                                                         </span>
                                                     </button>
@@ -404,12 +405,12 @@ export function AccountMultipliers({
                                     </div>
                                     <div className="grid gap-4 sm:grid-cols-2 sm:divide-x sm:divide-[#39434b]">
                                         <div className="text-center sm:pr-4">
-                                            <p className="flex items-center justify-center gap-2 text-2xl font-black text-[#ff517e] drop-shadow-[0_0_10px_rgba(255,81,126,0.35)]"><img src="/account-icons/damage.png" alt="Damage" className="size-9 object-contain" />+{bonuses.damagePercent}%</p>
+                                            <p className="flex items-center justify-center gap-2 text-2xl font-black text-[#ff517e] drop-shadow-[0_0_10px_rgba(255,81,126,0.35)]"><img src={assetPath("/account-icons/damage.png")} alt="Damage" className="size-9 object-contain" />+{bonuses.damagePercent}%</p>
                                             <p className="text-sm font-black text-white">Damage</p>
                                             <p className="mt-3 rounded-lg border border-[#76243e] bg-[#250c15] px-2 py-1.5 text-[11px] font-bold text-[#ff7899]">{formatBonusPercent(indexProgress.damagePercent)} × {formatBonusPercent(petQuestProgress.damagePercent)} = {formatBonusPercent(bonuses.damagePercent)}</p>
                                         </div>
                                         <div className="border-t border-[#39434b] pt-4 text-center sm:border-t-0 sm:pl-4 sm:pt-0">
-                                            <p className="flex items-center justify-center gap-2 text-2xl font-black text-[#39ef64] drop-shadow-[0_0_10px_rgba(57,239,100,0.35)]"><img src="/account-icons/health.png" alt="Health" className="size-9 object-contain" />+{bonuses.healthPercent}%</p>
+                                            <p className="flex items-center justify-center gap-2 text-2xl font-black text-[#39ef64] drop-shadow-[0_0_10px_rgba(57,239,100,0.35)]"><img src={assetPath("/account-icons/health.png")} alt="Health" className="size-9 object-contain" />+{bonuses.healthPercent}%</p>
                                             <p className="text-sm font-black text-white">Health</p>
                                             <p className="mt-3 rounded-lg border border-[#1f7438] bg-[#092314] px-2 py-1.5 text-[11px] font-bold text-[#62f383]">{formatBonusPercent(pathProgress.healthPercent)} × {formatBonusPercent(petQuestProgress.healthPercent)} = {formatBonusPercent(bonuses.healthPercent)}</p>
                                         </div>
@@ -418,13 +419,13 @@ export function AccountMultipliers({
                                         <div className="mt-4 flex flex-wrap justify-center gap-2 border-t border-[#303b43] pt-3">
                                             {bonuses.riftDamagePercent > 0 && (
                                                 <span className="flex items-center gap-1.5 rounded-lg border border-[#247899] bg-[#092634] px-2.5 py-1.5 text-[11px] font-black text-[#83e5ff]">
-                                                    <img src="/account-icons/rift-damage.png" alt="" className="size-6 object-contain" />
+                                                    <img src={assetPath("/account-icons/rift-damage.png")} alt="" className="size-6 object-contain" />
                                                     +{bonuses.riftDamagePercent}% Rift Damage
                                                 </span>
                                             )}
                                             {bonuses.critChancePercent > 0 && (
                                                 <span className="flex items-center gap-1.5 rounded-lg border border-[#a98212] bg-[#302505] px-2.5 py-1.5 text-[11px] font-black text-[#ffe05b]">
-                                                    <img src="/account-icons/crit-chance-up.png" alt="" className="size-6 object-contain" />
+                                                    <img src={assetPath("/account-icons/crit-chance-up.png")} alt="" className="size-6 object-contain" />
                                                     +{bonuses.critChancePercent}% Crit Chance
                                                 </span>
                                             )}

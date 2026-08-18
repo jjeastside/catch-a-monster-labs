@@ -1,5 +1,6 @@
 import type {Monster} from "../types/monster";
 import {getSkill} from "../data/skills";
+import {assetPath} from "../lib/asset-path";
 
 type MonsterOverviewCardProps = {
     monster: Monster;
@@ -241,7 +242,7 @@ export function MonsterOverviewCard({
                 >
                     {monster.image ? (
                         <img
-                            src={monster.image}
+                            src={assetPath(monster.image)}
                             alt={monster.name}
                             className="h-full w-full object-contain p-1 drop-shadow-[0_10px_10px_rgba(0,0,0,0.38)]"
                         />
@@ -283,7 +284,7 @@ export function MonsterOverviewCard({
                 <div className="mt-3 flex flex-wrap gap-2">
                     <span className="flex items-center gap-1.5 rounded-md border border-[#303848] bg-[#131720] px-2.5 py-1 text-xs text-[#d8dee9]">
                         <img
-                            src={elementIcon}
+                            src={assetPath(elementIcon)}
                             alt=""
                             className="size-4 object-contain"
                         />

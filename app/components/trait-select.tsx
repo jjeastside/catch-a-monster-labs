@@ -8,7 +8,7 @@ import { TraitIcon } from "./trait-icon";
 
 type TraitSelectProps = {
     value: string | null;
-    onChange: (value: string | null) => void;
+    onChangeAction: (value: string | null) => void;
 };
 
 const rarityTextClasses: Record<Trait["rarity"], string> = {
@@ -22,7 +22,7 @@ function effectLabel(trait: Trait): string {
     return trait.effects.map(({ description }) => description).join(" · ");
 }
 
-export function TraitSelect({ value, onChange }: TraitSelectProps) {
+export function TraitSelect({ value, onChangeAction }: TraitSelectProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [opensUpward, setOpensUpward] = useState(false);
     const [menuMaxHeight, setMenuMaxHeight] = useState(300);
@@ -82,7 +82,7 @@ export function TraitSelect({ value, onChange }: TraitSelectProps) {
     }, [isOpen, updateMenuPosition]);
 
     const selectTrait = (id: string | null) => {
-        onChange(id);
+        onChangeAction(id);
         setIsOpen(false);
     };
 

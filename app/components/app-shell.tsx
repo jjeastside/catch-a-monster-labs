@@ -261,7 +261,7 @@ export function AppShell() {
                 <MonsterBrowser
                     monsters={monsters}
                     selectedMonster={selectedMonster}
-                    onSelect={selectMonster}
+                    onSelectAction={selectMonster}
                 />
 
                 <CalculatorResults

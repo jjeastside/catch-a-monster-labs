@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { PASSIVE_DEFINITIONS } from "../data/passives";
+import { assetPath } from "../lib/asset-path";
 import type { Monster } from "../types/monster";
 import { Panel } from "./panel";
 
@@ -33,7 +34,7 @@ const rarityPortraitClasses: Record<Monster["rarity"], string> = {
 type MonsterBrowserProps = {
     monsters: Monster[];
     selectedMonster: Monster | null;
-    onSelect: (monster: Monster) => void;
+    onSelectAction: (monster: Monster) => void;
 };
 
 type EvolutionFilter = "all" | "can-evolve" | "evolved" | "standard";
@@ -94,7 +95,7 @@ function MonsterOption({ monster, selected, onSelect, compact = false }: Monster
                 >
                     {monster.image ? (
                         <img
-                            src={monster.image}
+                            src={assetPath(monster.image)}
                             alt=""
                             loading="lazy"
                             className="h-full w-full object-contain p-0.5 transition-transform duration-200 group-hover:scale-110"
@@ -113,7 +114,7 @@ function MonsterOption({ monster, selected, onSelect, compact = false }: Monster
                 </span>
                 <span className={`${compact ? "mt-0.5" : "mt-1"} flex min-w-0 items-center text-xs text-[#99a2b3]`}>
                     <span className="flex shrink-0 items-center gap-1 font-medium" style={{ color }}>
-                        <img src={elementIcon} alt="" className="size-4 object-contain" />
+                        <img src={assetPath(elementIcon)} alt="" className="size-4 object-contain" />
                         {monster.element}
                     </span>
                 </span>
@@ -126,7 +127,7 @@ function MonsterOption({ monster, selected, onSelect, compact = false }: Monster
     );
 }
 
-export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterBrowserProps) {
+export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: MonsterBrowserProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [sourceFilter, setSourceFilter] = useState("all");
     const [rarityFilter, setRarityFilter] = useState("all");
@@ -261,7 +262,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterB
                                 key={monster.id}
                                 monster={monster}
                                 selected={selectedMonster?.id === monster.id}
-                                onSelect={() => onSelect(monster)}
+                                onSelect={() => onSelectAction(monster)}
                             />
                         ))}
 
@@ -362,7 +363,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelect }: MonsterB
                                         compact
                                         selected={selectedMonster?.id === monster.id}
                                         onSelect={() => {
-                                            onSelect(monster);
+                                            onSelectAction(monster);
                                             setShowAllMonsters(false);
                                         }}
                                     />

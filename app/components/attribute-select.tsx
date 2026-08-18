@@ -2,13 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { GearAttribute } from "../types/attribute";
+import { assetPath } from "../lib/asset-path";
 
 type AttributeSelectProps = {
     label: string;
     options: GearAttribute[];
     value: string | null;
     usedIds: string[];
-    onChange: (value: string | null) => void;
+    onChangeAction: (value: string | null) => void;
 };
 
 export function AttributeSelect({
@@ -16,7 +17,7 @@ export function AttributeSelect({
                                     options,
                                     value,
                                     usedIds,
-                                    onChange,
+                                    onChangeAction,
                                 }: AttributeSelectProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [opensUpward, setOpensUpward] = useState(false);
@@ -97,7 +98,7 @@ export function AttributeSelect({
     }, [isOpen, updateMenuPosition]);
 
     const choose = (id: string | null) => {
-        onChange(id);
+        onChangeAction(id);
         setIsOpen(false);
     };
 
@@ -116,7 +117,7 @@ export function AttributeSelect({
             >
                 {selected ? (
                     <img
-                        src={`/attributes/${selected.id}.png`}
+                        src={assetPath(`/attributes/${selected.id}.png`)}
                         alt={selected.name}
                         className="block h-auto w-full"
                     />
@@ -173,7 +174,7 @@ export function AttributeSelect({
                                 }`}
                             >
                                 <img
-                                    src={`/attributes/${attribute.id}.png`}
+                                    src={assetPath(`/attributes/${attribute.id}.png`)}
                                     alt={attribute.name}
                                     loading="lazy"
                                     className="h-full w-full object-contain"

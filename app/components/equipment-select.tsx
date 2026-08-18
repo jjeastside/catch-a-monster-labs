@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Equipment } from "../types/equipment";
+import { assetPath } from "../lib/asset-path";
 
 const rarityTextClasses: Record<Equipment["rarity"], string> = {
     Rare: "text-[#6bc8ff]",
@@ -15,14 +16,14 @@ type EquipmentSelectProps = {
     label: string;
     items: Equipment[];
     value: string | null;
-    onChange: (value: string | null) => void;
+    onChangeAction: (value: string | null) => void;
 };
 
 export function EquipmentSelect({
                                     label,
                                     items,
                                     value,
-                                    onChange,
+                                    onChangeAction,
                                 }: EquipmentSelectProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [opensUpward, setOpensUpward] = useState(false);
@@ -110,7 +111,7 @@ export function EquipmentSelect({
     }, [isOpen, updateMenuPosition]);
 
     const selectItem = (id: string | null) => {
-        onChange(id);
+        onChangeAction(id);
         setIsOpen(false);
     };
 
@@ -137,7 +138,7 @@ export function EquipmentSelect({
                 {selectedItem ? (
                     <>
                         <img
-                            src={`/gear/${selectedItem.id}.png`}
+                            src={assetPath(`/gear/${selectedItem.id}.png`)}
                             alt=""
                             className="size-7 shrink-0 rounded object-contain"
                         />
@@ -195,7 +196,7 @@ export function EquipmentSelect({
                                 }`}
                             >
                                 <img
-                                    src={`/gear/${item.id}.png`}
+                                    src={assetPath(`/gear/${item.id}.png`)}
                                     alt=""
                                     loading="lazy"
                                     className="size-10 shrink-0 rounded-md object-contain"
