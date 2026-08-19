@@ -935,7 +935,11 @@ export function BuildEditor({
 
                                 {(build.damageGeneticPotential === 0 || build.healthGeneticPotential === 0) && (
                                     <p className="mt-3 rounded-md border border-[#f4bd6a]/35 bg-[#342612]/45 px-2.5 py-2 text-[10px] leading-4 text-[#f4bd6a]">
-                                        0% Genetic Potential is currently bugged in-game. Monsters are currently bugged have a minimum of 6% Attack and 6% Damage these values will NOT match your pet. The calculator will still use the selected 0% value.
+                                        <strong>⚠️ 0% GP In-Game Bug:</strong> Monsters with 0% Genetic Potential
+                                        currently receive a minimum of <strong>6% Attack and 6% Health in-game</strong>.
+                                        The calculator does <strong>not</strong> account for this bug and will calculate
+                                        the selected <strong>0% GP as a true 0%</strong>. As a result, calculated stats
+                                        will <strong>not match your monster&#39;s in-game stats</strong> when using 0% GP.
                                     </p>
                                 )}
                             </div>
@@ -948,7 +952,8 @@ export function BuildEditor({
                     title={
                         <span className="flex items-center gap-2">
                             <span>Mutations</span>
-                            <span className="rounded-full border border-[#3a4354] bg-[#1a1f2a] px-2 py-0.5 text-[10px] font-semibold tabular-nums text-[#99a2b3]">
+                            <span
+                                className="rounded-full border border-[#3a4354] bg-[#1a1f2a] px-2 py-0.5 text-[10px] font-semibold tabular-nums text-[#99a2b3]">
                                 {build.mutations.length} / 4
                             </span>
                         </span>
