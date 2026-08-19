@@ -52,8 +52,8 @@ export function TraitIcon({ trait, size = "selected" }: TraitIconProps) {
     const dimensions = sizes[size];
     const useSymbol = Boolean(trait.symbolImage) && failedSymbol !== trait.symbolImage;
     const maskStyle = useSymbol ? ({
-        WebkitMaskImage: `url(${trait.symbolImage})`,
-        maskImage: `url(${trait.symbolImage})`,
+        WebkitMaskImage: `url(${assetPath(trait.symbolImage!)})`,
+        maskImage: `url(${assetPath(trait.symbolImage!)})`,
         WebkitMaskPosition: "center",
         maskPosition: "center",
         WebkitMaskRepeat: "no-repeat",
