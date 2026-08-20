@@ -68,17 +68,14 @@ Aurobull,Legendary,Common,37306,399190,0,,Standard,Dash,Ex Air Bullet,,,Island S
 King Penguin,Legendary,Water,626,6700,0,,Standard,Ex Water Jet,Wind Disc,,,Island Special Spawn | Special Spawn | Starter Island | Current,58
 Fanglo,Legendary,Fire,21441,330370,0,,Standard,Dash,Fire Tornado,,Capturer's Boon | 5,Chest | Rift Chest | Abyss Shop | Current,59
 Weasplash,Legendary,Water,113736,1216900,0,,Standard,Tsunami,Water Shuriken,,,Island Spawn | Natural Spawn | Tideland | Current,60
-Walrusk,Legendary,Water,138693,1465400,0,,Standard,Ice Road,Ex Water Shuriken,,,"Island Special Spawn | Special Spawn | Tideland | Current
-Rift | Tideland Rift 1 | Tideland | Current",61
+Walrusk,Legendary,Water,138693,1465400,0,,Standard,Ice Road,Ex Water Shuriken,,,Island Special Spawn | Special Spawn | Tideland | Current,61
 Deerleaf,Legendary,Grass,198590,2124900,0,,Standard,Wind Disc,Leaf Surge,,,Island Spawn | Natural Spawn | Spirit Grove | Current,62
-Mintwolf,Legendary,Grass,287955,3081100,10,,Standard,Root Spike,Grass Tornado,,,"Egg | Giant Tree Egg | Spirit Grove | Current
-Rift | Spirit Grove Rift 1 | Spirit Grove | Current",63
+Mintwolf,Legendary,Grass,287955,3081100,10,,Standard,Root Spike,Grass Tornado,,,Egg | Giant Tree Egg | Spirit Grove | Current,63
 Nivisgon,Legendary,Water,346740,3710100,0,,Standard,Ex Water Jet,Ice Road,,,Island Spawn | Natural Spawn | Dragon's Breath | Current,64
 Tricerasteel,Legendary,Ground,335184,8069450,0,,Standard,Earth Smash,Gravel Scatter Shot,,,"Island Special Spawn | Special Spawn | Dragon's Breath | Current
-Egg | Ancient Egg | Dragon's Breath | Current
-Rift | Dragon's Breath Rift 1 | Dragon's Breath | Current",65
+Egg | Ancient Egg | Dragon's Breath | Current",65
 Cloveria,Legendary,Grass,605420,6477600,0,,Standard,Grass Tornado,Ex Seed Grenade,,,Island Spawn | Natural Spawn | Blossom Haven | Current,66
-Shadecloak,Legendary,Common,874800,6500500,0,,Standard,Barrier,Soul Reap Chain,,,Egg | Void Purple Egg | Blossom Haven | Current,67
+Shadecloak,Legendary,Common,874800,6500500,0,,Standard,Barrier,Soul Reap Chain,,,Island Spawn | Natural Spawn | Blossom Haven | Current,67
 Emberwolf,Legendary,Fire,482759,3587200,0,Mintwolf,Standard,Rallying War Cry (6 sec 50%),Fire Tornado,,,Evolution | Mintwolf Evolution |  | Current |  | Evolves from Mintwolf.,68
 Jackpotron,Legendary,Common,1273000,13620000,0,,Standard,Egg Blast,Egg Blast,,,Island Spawn | Natural Spawn | Mobius Circus | Current,69
 Sleetwolf,Legendary,Water,335253,5165200,0,Mintwolf,Standard,Ripple Guard,Tsunami,,,Evolution | Mintwolf Evolution |  | Current |  | Evolves from Mintwolf.,70
@@ -148,15 +145,13 @@ AbyssalDrake,Mythical,Common,1323800,7226900,10,,Standard,Fire Dragon Flame Blas
 Berrybun,Mythical,Common,1140000,12188000,10,,Standard,Egg Blast,,,"Mentor Spirit | 25
 Capturer's Boon | 10","Chest | Memory Chest 1 | Abyss Shop | Current
 Egg | Berrybun's Egg | Easter Event 2026 | Unavailable |  | Was obtainable as a drop from Cinderclaw Castle Normal during the Easter 2026 event",116
-Bladetooth,Mythical,Ground,704700,16965000,10,,Standard,Sunder Taunt,Thorn Shield,,,"Island Special Spawn | Special Spawn | Blossom Haven | Current
-Rift | Blossom Haven Rift 1 | Blossom Haven | Current",117
+Bladetooth,Mythical,Ground,704700,16965000,10,,Standard,Sunder Taunt,Thorn Shield,,,Island Special Spawn | Special Spawn | Blossom Haven | Current,117
 Thunderclaw,Mythical,Ground,1782000,9728600,0,,Standard,Gravel Whirlwind,Electro Nova,,,Egg | Thunderclaw's Egg | Blossom Haven | Current,118
 Burrowbun,Mythical,Ground,981300,10500000,0,,Standard,Gravel Whirlwind,Rock Road,,Fortune Spirit | 30,Chest | Rift Chest | Abyss Shop | Current,119
 Aetherpanther,Mythical,Common,2452200,10250300,10,,Standard,Thunder Stun,Bale Breath,,Spire Dominance | 50,Rift | Blossom Haven Rift 3 | Blossom Haven | Current,120
 Crystalfae,Mythical,Water,1707500,12688000,10,,Standard,Vortex Nova,Tsunami,,Rift Guard | 30,Egg | Crystalfae's Egg | Blossom Haven | Current |  | Area: Maze,121
 Magma Tortoise,Mythical,Fire,1101000,26499000,10,,Standard,Flame Jet,Thorn Shield,,Spire Guard | 30,Egg | Magma Tortoise's Egg | Cinderclaw Castle | Current |  | Nightmare Difficulty,122
-Stellar Sentinel,Mythical,Water,2569600,19095000,10,,Standard,Ghost Impact,Soul Reap Chain,,,"Island Special Spawn | Special Spawn | Mobius Circus | Current
-Rift | Mobius Rift 1 | Mobius Circus | Current",123
+Stellar Sentinel,Mythical,Water,2569600,19095000,10,,Standard,Ghost Impact,Soul Reap Chain,,,Island Special Spawn | Special Spawn | Mobius Circus | Current,123
 Lampyr,Mythical,Water,1600000,38423000,0,,Standard,Void Orb,Thunder Stun,,,Egg | Lampyr's Egg | Mobius Circus | Current,124
 Umbra Reaver,Mythical,Common,3750000,20450000,0,,Standard,Lightning Storm (Blue),Lightning Thrust,,Trial Power | 50,Rift | Mobius Rift 3 | Mobius Circus | Current,125
 Lumen Knight,Mythical,Common,1500000,64023300,10,,Standard,Lightning Storm (Purple),Lightning Thrust,,Dungeon Guard | 30,Rift | Mobius Rift 3 | Mobius Circus | Current,126
@@ -188,7 +183,7 @@ Flaragaqua,Mythical,Water,13179,141042,0,Flaragon,Standard,Ex Water Jet,Ex Water
 Glazadonbloom,Mythical,Grass,13180,141040,0,Glazadon,Standard,Solar Breath,Leaf Surge,,,Evolution | Glazadon Evolution |  | Current |  | Evolves from Glazadon.,147
 GlazadonWave,Mythical,Water,12280,189210,0,Glazadon,Standard,Water Breath,Ex Water Jet,,,Evolution | Glazadon Evolution |  | Current |  | Evolves from Glazadon.,148
 Glazadonflare,Mythical,Fire,15820,117530,0,Glazadon,Standard,Flame Breath,Ex Fireball,,,Evolution | Glazadon Evolution |  | Current |  | Evolves from Glazadon.,149
-Frostvolf,Mythical,Ice,41706,446200,0,,Standard,Holy Aura (Frostvolf),Ice Road,Ex Iceball,,Event | New Year Event Task | New Year Event 2025 | Legacy |  | Final reward for completing icevolf's mission.,150
+Frostvolf,Mythical,Ice,41706,446240,0,,Standard,Holy Aura (Frostvolf),Ice Road,Ex Iceball,,Event | New Year Event Task | New Year Event 2025 | Legacy |  | Final reward for completing icevolf's mission.,150
 Frostusk,Mythical,Ice,21370,228630,0,Mountusk,Standard,Ice Road,Ex Iceball,,,Evolution | Mountusk Evolution |  | Current |  | Evolves from Mountusk.,151
 Volctusk,Mythical,Fire,25600,190500,0,Mountusk,Standard,Inferno Maelstrom,Ex Fireball,,,Evolution | Mountusk Evolution |  | Current |  | Evolves from Mountusk.,152
 Terratops,Mythical,Ground,17804,274353,0,Mountusk,Standard,Barrier,Earth Smash,,,Evolution | Mountusk Evolution |  | Current |  | Evolves from Mountusk.,153
@@ -250,7 +245,7 @@ Poseidine,Secret,Water,1418000,10537000,15,Undine,Standard,Hydro Cannon,Healing 
 Armored Dracospike,Secret,Ground,1060000,32700000,15,Dracospike,Standard,Emergency Thorn Shield,Ion Blast,,Rift Guard | 30,Evolution | Dracospike Evolution |  | Current |  | Evolves from Dracospike.,208
 Soulguard,Secret,Fire,5040000,27531000,15,,Standard,Soul Slash,Ghost Fireball,,Spire Dominance | 50,Egg | Soulguard's Egg | Cinderclaw Castle | Current |  | Nightmare Difficulty,209
 Motovok,Secret,Common,3827000,16010000,15,Mechavolt,Standard,Overvolt Tempest,Electro Nova,,Critical Chance | 30,Evolution | Mechavolt Evolution |  | Current |  | Evolves from Mechavolt.,210
-Crystalwing,Secret,Ice,862100,82780000,10,Cobaltwing,Standard,Glacial Wall,Healing Water Ball,,Dungeon Guard | 35,Evolution | Cobaltwing Evolution |  | Current |  | Evolves from Cobaltwing.,211
+Crystalwing,Secret,Ice,859500,82776000,10,Cobaltwing,Standard,Glacial Wall,Healing Water Ball,,Dungeon Guard | 35,Evolution | Cobaltwing Evolution |  | Current |  | Evolves from Cobaltwing.,211
 Divineclaw,Secret,Ground,5351300,22367000,15,Thunderclaw,Standard,Divine Energy Blast,Rock Road,,Sacred Beetle | 35,Evolution | Thunderclaw Evolution |  | Current |  | Evolves from Thunderclaw.,212
 Djinn Lampyr,Secret,Common,5020000,37270000,15,Lampyr,Standard,Holy Aura (Djinn Lampyr),Thunder Stun,,Last Blessing | 80,Evolution | Lampyr Evolution |  | Current |  | Evolves from Lampyr.,213
 Necro Hydra Tortelloni,Secret,Fire,10064800,42066000,15,Necro Dragon Cannelloni,Standard,Dragon's Rage,,,"Dragon's Curse | 15
@@ -271,8 +266,7 @@ Chest | Memory Chest 2 | Abyss Shop | Legacy",222
 Void Shadecloak,Void,Common,1057070,11311000,0,,Standard,Barrier,Soul Reap Chain,,,"Event | Void Jars | Void Event 2025 | Legacy
 Chest | Memory Chest 2 | Abyss Shop | Current",223
 Void Strum Bones,Void,Common,2090000,89450000,10,,Standard,Demonic Lullaby,Healing Pulse,,"Mentor Spirit | 35
-Fortune Spirit | 35","Rift | Specter Shallows Rift 1 | Specter Shallows | Current
-Chest | Memory Chest 2 | Abyss Shop | Current",224
+Fortune Spirit | 35",Chest | Memory Chest 2 | Abyss Shop | Current,224
 Void Nightveil,Void,Common,3350000,18300000,15,Void Shadecloak,Standard,The Ring,Soul Reap Chain,,Trial Power | 60,Evolution | Void Shadecloak Evolution |  | Current |  | Evolves from Void Shadecloak.,225
 Void Scareaper,Void,Common,1741000,167690000,0,,Standard,Fear Taunt,Reaper's Crescents,,Capturer's Boon | 25,"Egg | Scareaper's Egg | Specter Shallows | Current
 Chest | Memory Chest 1 | Abyss Shop | Current",226
