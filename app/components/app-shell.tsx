@@ -14,11 +14,22 @@ import { MonsterBrowser } from "./monster-browser";
 import { TopNavigation } from "./top-navigation";
 import { SiteFooter } from "./site-footer";
 import { SiteHeading } from "./site-heading";
+import { SavedBuildsPanel, type SavedBuildSlot } from "./saved-builds-panel";
+
+const SAVED_BUILDS_KEY = "cam-lab-saved-builds";
+const LEGACY_SAVED_BUILD_KEY = "cam-lab-saved-build";
+const SAVE_SLOT_COUNT = 3;
+
+function emptySaveSlots(): Array<SavedBuildSlot | null> {
+    return Array.from({ length: SAVE_SLOT_COUNT }, () => null);
+}
 
 export function AppShell() {
     const hasInitializedAccountStorage = useRef(false);
     const hasInitializedFavoriteStorage = useRef(false);
     const hasInitializedMonsterStorage = useRef(false);
+    const [savedBuildsMode, setSavedBuildsMode] = useState<"save" | "load" | null>(null);
+    const [savedBuildSlots, setSavedBuildSlots] = useState<Array<SavedBuildSlot | null>>(emptySaveSlots);
     const [build, setBuild] = useState<Build>(() => {
         const defaultMonster = monsters[0];
 
@@ -48,7 +59,6 @@ export function AppShell() {
                     )
                     : [];
 
-                // Migrate the original all-or-nothing switches without losing saved progress.
                 if (storedIds.length === 0) {
                     if (parsed.indexMania) {
                         storedIds.push(...getAchievementsByCategory("index-mania").map(({ id }) => id));
@@ -154,6 +164,56 @@ export function AppShell() {
         }
     }, [build.monsterId]);
 
+    useEffect(() => {
+        const frameId = window.requestAnimationFrame(() => {
+            try {
+                const saved = window.localStorage.getItem(SAVED_BUILDS_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed)) {
+                        const slots = emptySaveSlots();
+                        parsed.slice(0, SAVE_SLOT_COUNT).forEach((value, index) => {
+                            if (!value || typeof value !== "object") return;
+                            const candidate = value as Partial<SavedBuildSlot>;
+                            const candidateBuild = candidate.build as Partial<Build> | undefined;
+                            if (!candidateBuild?.monsterId) return;
+                            if (!monsters.some(({ id }) => id === candidateBuild.monsterId)) return;
+
+                            slots[index] = {
+                                version: 1,
+                                savedAt: typeof candidate.savedAt === "number" ? candidate.savedAt : Date.now(),
+                                build: candidateBuild as Build,
+                            };
+                        });
+                        setSavedBuildSlots(slots);
+                        return;
+                    }
+                }
+
+                // One-time migration from the original single-save system into Slot 1.
+                const legacy = window.localStorage.getItem(LEGACY_SAVED_BUILD_KEY);
+                if (!legacy) return;
+
+                const legacyBuild = JSON.parse(legacy) as Partial<Build>;
+                if (!legacyBuild.monsterId || !monsters.some(({ id }) => id === legacyBuild.monsterId)) return;
+
+                const migrated: SavedBuildSlot = {
+                    version: 1,
+                    savedAt: Date.now(),
+                    build: legacyBuild as Build,
+                };
+                const slots = emptySaveSlots();
+                slots[0] = migrated;
+                setSavedBuildSlots(slots);
+                window.localStorage.setItem(SAVED_BUILDS_KEY, JSON.stringify(slots));
+            } catch {
+                window.localStorage.removeItem(SAVED_BUILDS_KEY);
+            }
+        });
+
+        return () => window.cancelAnimationFrame(frameId);
+    }, []);
+
     function selectMonster(monster: Monster) {
         setBuild((current) => ({
             ...createDefaultBuild({ monsterId: monster.id }),
@@ -179,9 +239,7 @@ export function AppShell() {
     }
 
     function toggleSelectedMonsterFavorite() {
-        if (!selectedMonster) {
-            return;
-        }
+        if (!selectedMonster) return;
 
         setFavoriteMonsterIds((currentIds) =>
             currentIds.includes(selectedMonster.id)
@@ -190,21 +248,38 @@ export function AppShell() {
         );
     }
 
-    function saveBuild(): boolean {
+    function persistSavedBuildSlots(nextSlots: Array<SavedBuildSlot | null>): boolean {
         try {
-            window.localStorage.setItem("cam-lab-saved-build", JSON.stringify(build));
+            window.localStorage.setItem(SAVED_BUILDS_KEY, JSON.stringify(nextSlots));
+            setSavedBuildSlots(nextSlots);
             return true;
         } catch {
             return false;
         }
     }
 
-    function loadBuild(): boolean {
-        try {
-            const saved = window.localStorage.getItem("cam-lab-saved-build");
-            if (!saved) return false;
+    function saveBuildToSlot(slotIndex: number): boolean {
+        if (!selectedMonster || slotIndex < 0 || slotIndex >= SAVE_SLOT_COUNT) return false;
 
-            const parsed = JSON.parse(saved) as Partial<Build>;
+        const nextSlots = [...savedBuildSlots];
+        nextSlots[slotIndex] = {
+            version: 1,
+            savedAt: Date.now(),
+            build: {
+                ...build,
+                accountMultipliers: { completedAchievementIds: [] },
+            },
+        };
+
+        return persistSavedBuildSlots(nextSlots);
+    }
+
+    function loadBuildFromSlot(slotIndex: number): boolean {
+        try {
+            const savedSlot = savedBuildSlots[slotIndex];
+            if (!savedSlot) return false;
+
+            const parsed = savedSlot.build;
             const savedMonster = monsters.find(({ id }) => id === parsed.monsterId);
             if (!savedMonster) return false;
 
@@ -212,6 +287,9 @@ export function AppShell() {
                 ...createDefaultBuild({ monsterId: savedMonster.id }),
                 ...parsed,
                 monsterId: savedMonster.id,
+                selectedSkillId: parsed.selectedSkillId && savedMonster.skillIds.includes(parsed.selectedSkillId)
+                    ? parsed.selectedSkillId
+                    : savedMonster.skillIds[0] ?? null,
                 mutations: Array.isArray(parsed.mutations) ? parsed.mutations : [],
                 traitId: typeof parsed.traitId === "string" ? parsed.traitId : null,
                 targetStatused: parsed.targetStatused === true,
@@ -225,6 +303,13 @@ export function AppShell() {
         } catch {
             return false;
         }
+    }
+
+    function clearBuildSlot(slotIndex: number) {
+        if (slotIndex < 0 || slotIndex >= SAVE_SLOT_COUNT) return;
+        const nextSlots = [...savedBuildSlots];
+        nextSlots[slotIndex] = null;
+        persistSavedBuildSlots(nextSlots);
     }
 
     return (
@@ -280,11 +365,26 @@ export function AppShell() {
                     build={build}
                     onBuildChangeAction={setBuild}
                     onResetAction={resetBuild}
-                    onSaveAction={saveBuild}
-                    onLoadAction={loadBuild}
+                    onOpenSaveBuildsAction={() => setSavedBuildsMode("save")}
+                    onOpenLoadBuildsAction={() => setSavedBuildsMode("load")}
                 />
             </main>
+
             <SiteFooter />
+
+            {savedBuildsMode && (
+                <SavedBuildsPanel
+                    mode={savedBuildsMode}
+                    currentBuild={build}
+                    currentMonster={selectedMonster}
+                    monsters={monsters}
+                    slots={savedBuildSlots}
+                    onCloseAction={() => setSavedBuildsMode(null)}
+                    onSaveSlotAction={saveBuildToSlot}
+                    onLoadSlotAction={loadBuildFromSlot}
+                    onClearSlotAction={clearBuildSlot}
+                />
+            )}
         </div>
     );
 }

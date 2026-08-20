@@ -637,8 +637,8 @@ type BuildEditorProps = {
     build: Build;
     onBuildChangeAction: Dispatch<SetStateAction<Build>>;
     onResetAction: () => void;
-    onSaveAction: () => boolean;
-    onLoadAction: () => boolean;
+    onOpenSaveBuildsAction: () => void;
+    onOpenLoadBuildsAction: () => void;
 };
 
 export function BuildEditor({
@@ -646,13 +646,12 @@ export function BuildEditor({
                                 build,
                                 onBuildChangeAction,
                                 onResetAction,
-                                onSaveAction,
-                                onLoadAction,
+                                onOpenSaveBuildsAction,
+                                onOpenLoadBuildsAction,
                             }: BuildEditorProps) {
     const [mutationHelpId, setMutationHelpId] = useState<string | null>(null);
     const [mutationEffectsOpen, setMutationEffectsOpen] = useState(false);
     const [geneticPotentialOpen, setGeneticPotentialOpen] = useState(false);
-    const [buildStorageMessage, setBuildStorageMessage] = useState<string | null>(null);
 
     const update = <K extends keyof Build>(
         key: K,
@@ -1256,7 +1255,7 @@ export function BuildEditor({
                 <div className="grid grid-cols-2 gap-2 pt-1">
                     <button
                         type="button"
-                        onClick={() => setBuildStorageMessage(onSaveAction() ? "Build saved locally." : "Unable to save build.")}
+                        onClick={onOpenSaveBuildsAction}
                         className="rounded-md bg-[#7585ff] px-3 py-2 text-xs font-bold text-[#0b1510]"
                     >
                         Save Build
@@ -1264,7 +1263,7 @@ export function BuildEditor({
 
                     <button
                         type="button"
-                        onClick={() => setBuildStorageMessage(onLoadAction() ? "Saved build loaded." : "No saved build found.")}
+                        onClick={onOpenLoadBuildsAction}
                         className="rounded-md border border-[#303848] bg-[#1a1f2a] px-3 py-2 text-xs font-semibold text-[#d8dee9]"
                     >
                         Load Build
@@ -1288,11 +1287,6 @@ export function BuildEditor({
                     </button>
                 </div>
 
-                {buildStorageMessage && (
-                    <p className="text-center text-[10px] text-[#99a2b3]" role="status">
-                        {buildStorageMessage}
-                    </p>
-                )}
             </div>
         </Panel>
     );
