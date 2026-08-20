@@ -77,6 +77,10 @@ function getUniqueSourceLabels(monster: Monster): string[] {
     ];
 }
 
+function isCurrentlyObtainable(monster: Monster): boolean {
+    return monster.sources.some((source) => source.status === "Current");
+}
+
 function formatList(values: string[]): string {
     if (values.length <= 1) {
         return values[0] ?? "";
@@ -192,6 +196,10 @@ function createDescription(monster: Monster): string {
     const monsterClassification =
         `${monster.element}-type ${monster.rarity} monster`;
 
+    if (!isCurrentlyObtainable(monster)) {
+        return `A ${monsterClassification} that is currently unobtainable.${skillText}`;
+    }
+
     const sourceText = createSourceText(monster);
 
     return `A ${monsterClassification} obtainable ${sourceText}.${skillText}`;
@@ -301,6 +309,12 @@ export function MonsterOverviewCard({
                     >
     {monster.rarity}
 </span>
+
+                    {!isCurrentlyObtainable(monster) && (
+                        <span className="rounded-md border border-[#ef4444]/40 bg-[#3a171b]/70 px-2.5 py-1 text-xs font-semibold text-[#ff7b86]">
+                            Currently Unobtainable
+                        </span>
+                    )}
 
                     {getUniqueSourceLabels(monster).map(
                         (sourceLabel) => (
