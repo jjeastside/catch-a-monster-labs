@@ -7,7 +7,7 @@ import type { Monster } from "../types/monster";
 import { Panel } from "./panel";
 
 const elementColors: Record<string, string> = {
-    Common: "#788295", Grass: "#79e3ae", Water: "#70b7ff",
+    Common: "#7f8b9e", Grass: "#79e3ae", Water: "#70b7ff",
     Fire: "#ff9d6c", Ice: "#9ee7ff", Ground: "#d6a66f",
 };
 
@@ -39,7 +39,7 @@ type MonsterBrowserProps = {
 
 type EvolutionFilter = "all" | "can-evolve" | "evolved" | "standard";
 type PassiveFilter = "all" | string;
-const selectClassName = "min-w-0 rounded-md border border-[#303848] bg-[#1a1f2a] px-3 py-2 text-xs text-[#c5cbd5] outline-none focus:border-[#7585ff]";
+const selectClassName = "min-w-0 rounded-md border border-[#344050] bg-[#141c28] px-3 py-2 text-xs text-[#bfc7d5] outline-none focus:border-[#7182ff]";
 
 type MonsterOptionProps = {
     monster: Monster;
@@ -49,7 +49,7 @@ type MonsterOptionProps = {
 };
 
 function MonsterOption({ monster, selected, onSelect, compact = false }: MonsterOptionProps) {
-    const color = elementColors[monster.element] ?? "#788295";
+    const color = elementColors[monster.element] ?? "#7f8b9e";
     const elementIcon = elementIconPaths[monster.element];
     const portraitBackground = "bg-[#111722]/90";
     const portraitStyle = monster.rarity === "Legendary"
@@ -83,7 +83,7 @@ function MonsterOption({ monster, selected, onSelect, compact = false }: Monster
         <button
             type="button"
             onClick={onSelect}
-            className={`group flex w-full items-center rounded-xl border text-left transition ${compact ? "min-h-[58px] gap-2 px-2.5 py-1.5" : "min-h-[72px] gap-3 px-3 py-2"} ${selected ? "border-[#7585ff] bg-[#1f2540] shadow-[inset_3px_0_0_#7585ff]" : "border-[#303848] bg-[#1a1f2a] hover:border-[#4b566a] hover:bg-[#1b202b]"}`}
+            className={`group flex w-full items-center rounded-xl border text-left transition ${compact ? "min-h-[58px] gap-2 px-2.5 py-1.5" : "min-h-[72px] gap-3 px-3 py-2"} ${selected ? "border-[#7182ff] bg-[#202846] shadow-[inset_3px_0_0_#7182ff]" : "border-[#344050] bg-[#141c28] hover:border-[#5c6a80] hover:bg-[#1b202b]"}`}
         >
             <span
                 className={`grid shrink-0 place-items-center overflow-hidden rounded-xl border bg-gradient-to-br p-[2px] ${compact ? "size-11" : "size-14"} ${rarityPortraitClasses[monster.rarity]}`}
@@ -109,10 +109,10 @@ function MonsterOption({ monster, selected, onSelect, compact = false }: Monster
             </span>
 
             <span className="min-w-0 flex-1">
-                <span className="block text-sm font-semibold leading-snug text-[#e8ebf0]">
+                <span className="block text-sm font-semibold leading-snug text-[#e3e8f1]">
                     {monster.name}
                 </span>
-                <span className={`${compact ? "mt-0.5" : "mt-1"} flex min-w-0 items-center text-xs text-[#99a2b3]`}>
+                <span className={`${compact ? "mt-0.5" : "mt-1"} flex min-w-0 items-center text-xs text-[#8e99ad]`}>
                     <span className="flex shrink-0 items-center gap-1 font-medium" style={{ color }}>
                         <img src={assetPath(elementIcon)} alt="" className="size-4 object-contain" />
                         {monster.element}
@@ -120,7 +120,7 @@ function MonsterOption({ monster, selected, onSelect, compact = false }: Monster
                 </span>
             </span>
 
-            <span className={`grid shrink-0 place-items-center text-xl text-[#788295] ${compact ? "size-8" : "size-9"}`} aria-label={`Favorite ${monster.name}`}>
+            <span className={`grid shrink-0 place-items-center text-xl text-[#7f8b9e] ${compact ? "size-8" : "size-9"}`} aria-label={`Favorite ${monster.name}`}>
                 ☆
             </span>
         </button>
@@ -196,20 +196,20 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
             <Panel
                 eyebrow="Select"
                 title="Monster Browser"
-                action={<span className="rounded-full bg-[#202632] px-2.5 py-1 text-xs text-[#99a2b3]">
+                action={<span className="rounded-full bg-[#202632] px-2.5 py-1 text-xs text-[#8e99ad]">
         {selectedMonster ? "1 selected" : "0 selected"}
       </span>}
             >
                 <div className="flex min-h-0 flex-1 flex-col gap-4 p-5">
                     <label className="relative block">
                         <span className="sr-only">Search monsters</span>
-                        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#788295]">⌕</span>
+                        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#7f8b9e]">⌕</span>
                         <input
                             type="search"
                             value={searchQuery}
                             onChange={(event) => setSearchQuery(event.target.value)}
                             placeholder="Search monsters"
-                            className="w-full rounded-lg border border-[#303848] bg-[#11151e] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#697386] focus:border-[#7585ff]"
+                            className="w-full rounded-lg border border-[#344050] bg-[#0d131d] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#69768a] focus:border-[#7182ff]"
                         />
                     </label>
 
@@ -247,10 +247,10 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
                         </select>
                     </div>
 
-                    <div className="flex items-center justify-between text-xs text-[#788295]">
+                    <div className="flex items-center justify-between text-xs text-[#7f8b9e]">
                         <span>{filteredMonsters.length} of {monsters.length} monsters</span>
                         {activeFilterCount > 0 && (
-                            <button type="button" onClick={clearFilters} className="text-[#7585ff] hover:text-[#a8b0ff]">
+                            <button type="button" onClick={clearFilters} className="text-[#7182ff] hover:text-[#a8b0ff]">
                                 Clear {activeFilterCount} {activeFilterCount === 1 ? "filter" : "filters"}
                             </button>
                         )}
@@ -267,7 +267,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
                         ))}
 
                         {filteredMonsters.length === 0 && (
-                            <p className="py-8 text-center text-sm text-[#788295]">No monsters match your search and filters.</p>
+                            <p className="py-8 text-center text-sm text-[#7f8b9e]">No monsters match your search and filters.</p>
                         )}
                     </div>
 
@@ -278,7 +278,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
                                 setVisibleMonsterCount(60);
                                 setShowAllMonsters(true);
                             }}
-                            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#303848] bg-[#1a1f2a] px-4 py-3 text-sm font-semibold text-[#d8dee9] transition hover:border-[#4b566a] hover:bg-[#1b202b]"
+                            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#344050] bg-[#141c28] px-4 py-3 text-sm font-semibold text-[#e3e8f1] transition hover:border-[#5c6a80] hover:bg-[#1b202b]"
                         >
                         <span aria-hidden="true" className="grid grid-cols-2 gap-0.5">
                             <span className="size-1.5 rounded-[1px] border border-current"/>
@@ -287,7 +287,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
                             <span className="size-1.5 rounded-[1px] border border-current"/>
                         </span>
                             View All Monsters
-                            <span className="text-xs font-normal text-[#788295]">({filteredMonsters.length})</span>
+                            <span className="text-xs font-normal text-[#7f8b9e]">({filteredMonsters.length})</span>
                         </button>
                     )}
                 </div>
@@ -303,17 +303,17 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
                         if (event.target === event.currentTarget) setShowAllMonsters(false);
                     }}
                 >
-                    <section className="flex h-[92vh] max-h-[58rem] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-[#303848] bg-[#131720] shadow-2xl">
-                        <div className="border-b border-[#303848] p-3 sm:px-4 sm:py-3">
+                    <section className="flex h-[92vh] max-h-[58rem] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-[#344050] bg-[#0f1620] shadow-2xl">
+                        <div className="border-b border-[#344050] p-3 sm:px-4 sm:py-3">
                             <div className="flex items-start justify-between gap-4">
                                 <div>
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7585ff]">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7182ff]">
                                         Monster Database
                                     </p>
-                                    <h2 id="all-monsters-title" className="mt-0.5 text-lg font-bold text-[#f2f4f8]">
+                                    <h2 id="all-monsters-title" className="mt-0.5 text-lg font-bold text-[#f6f8fc]">
                                         Select a Monster
                                     </h2>
-                                    <p className="mt-1 text-xs text-[#788295]">
+                                    <p className="mt-1 text-xs text-[#7f8b9e]">
                                         {filteredMonsters.length} matching monsters
                                     </p>
                                 </div>
@@ -321,7 +321,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
                                     type="button"
                                     onClick={() => setShowAllMonsters(false)}
                                     aria-label="Close all monsters"
-                                    className="grid size-9 shrink-0 place-items-center rounded-lg border border-[#303848] text-lg text-[#99a2b3] transition hover:bg-[#1b202b] hover:text-white"
+                                    className="grid size-9 shrink-0 place-items-center rounded-lg border border-[#344050] text-lg text-[#8e99ad] transition hover:bg-[#1b202b] hover:text-white"
                                 >
                                     ×
                                 </button>
@@ -329,7 +329,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
 
                             <label className="relative mt-3 block">
                                 <span className="sr-only">Search all monsters</span>
-                                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#788295]">⌕</span>
+                                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#7f8b9e]">⌕</span>
                                 <input
                                     type="search"
                                     value={searchQuery}
@@ -339,7 +339,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
                                     }}
                                     placeholder="Search all monsters"
                                     autoFocus
-                                    className="w-full rounded-lg border border-[#303848] bg-[#11151e] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#697386] focus:border-[#7585ff]"
+                                    className="w-full rounded-lg border border-[#344050] bg-[#0d131d] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#69768a] focus:border-[#7182ff]"
                                 />
                             </label>
                         </div>
@@ -371,13 +371,13 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
                             </div>
 
                             {visibleMonsterCount < filteredMonsters.length && (
-                                <p className="py-4 text-center text-xs text-[#788295]">
+                                <p className="py-4 text-center text-xs text-[#7f8b9e]">
                                     Keep scrolling to load more monsters
                                 </p>
                             )}
 
                             {filteredMonsters.length === 0 && (
-                                <p className="py-16 text-center text-sm text-[#788295]">
+                                <p className="py-16 text-center text-sm text-[#7f8b9e]">
                                     No monsters match your search and filters.
                                 </p>
                             )}

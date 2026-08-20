@@ -228,7 +228,7 @@ export function MonsterOverviewCard({
                     : undefined;
 
     return (
-        <section className="relative flex gap-6 overflow-hidden rounded-xl border border-[#303848] bg-[#1a1f2a] p-5 sm:p-6">
+        <section className="relative flex gap-6 overflow-hidden rounded-xl border border-[#344050] bg-[#141c28] p-5 sm:p-6">
             <div className="pointer-events-none absolute inset-y-0 left-0 w-64 bg-[radial-gradient(circle_at_left,rgba(117,133,255,0.09),transparent_70%)]" />
             <div
                 className={`relative grid size-40 shrink-0 place-items-center overflow-hidden rounded-2xl border-2 p-[3px] shadow-[0_12px_30px_rgba(0,0,0,0.28)] xl:size-44 ${
@@ -247,7 +247,7 @@ export function MonsterOverviewCard({
                             className="h-full w-full object-contain p-1 drop-shadow-[0_10px_10px_rgba(0,0,0,0.38)]"
                         />
                     ) : (
-                        <span className="text-xl font-black text-[#7585ff]">
+                        <span className="text-xl font-black text-[#7182ff]">
                 {monster.name.slice(0, 2).toUpperCase()}
             </span>
                     )}
@@ -257,11 +257,11 @@ export function MonsterOverviewCard({
             <div className="relative min-w-0 flex-1 py-1">
                 <div className="flex items-start justify-between gap-4">
                     <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7585ff]">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7182ff]">
                             Monster Overview
                         </p>
 
-                        <h2 className="mt-1 text-3xl font-bold tracking-tight text-[#f2f4f8]">
+                        <h2 className="mt-1 text-3xl font-bold tracking-tight text-[#f6f8fc]">
                             {monster.name}
                         </h2>
                     </div>
@@ -275,14 +275,14 @@ export function MonsterOverviewCard({
                         }
                         aria-pressed={isFavorite}
                         onClick={onToggleFavorite}
-                        className="grid size-10 shrink-0 place-items-center rounded-lg border border-[#303848] bg-[#131720] text-xl text-[#7585ff] transition hover:border-[#7585ff]"
+                        className="grid size-10 shrink-0 place-items-center rounded-lg border border-[#344050] bg-[#0f1620] text-xl text-[#7182ff] transition hover:border-[#7182ff]"
                     >
                         {isFavorite ? "★" : "☆"}
                     </button>
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-                    <span className="flex items-center gap-1.5 rounded-md border border-[#303848] bg-[#131720] px-2.5 py-1 text-xs text-[#d8dee9]">
+                    <span className="flex items-center gap-1.5 rounded-md border border-[#344050] bg-[#0f1620] px-2.5 py-1 text-xs text-[#e3e8f1]">
                         <img
                             src={assetPath(elementIcon)}
                             alt=""
@@ -303,7 +303,7 @@ export function MonsterOverviewCard({
                         (sourceLabel) => (
                             <span
                                 key={`${monster.id}-${sourceLabel}`}
-                                className="rounded-md border border-[#303848] bg-[#131720] px-2.5 py-1 text-xs text-[#d8dee9]"
+                                className="rounded-md border border-[#344050] bg-[#0f1620] px-2.5 py-1 text-xs text-[#e3e8f1]"
                             >
                                 {sourceLabel}
                             </span>
@@ -312,7 +312,7 @@ export function MonsterOverviewCard({
 
                     {monster.hasEvolution && (
                         <span
-                            className="rounded-md border border-[#7585ff]/30 bg-[#1f2540]/40 px-2.5 py-1 text-xs text-[#7585ff]">
+                            className="rounded-md border border-[#7182ff]/30 bg-[#202846]/40 px-2.5 py-1 text-xs text-[#7182ff]">
               Evolution available
             </span>
                     )}

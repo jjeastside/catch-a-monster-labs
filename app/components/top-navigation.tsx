@@ -13,7 +13,7 @@ const navItems = [
 
 export function TopNavigation() {
     return (
-        <header className="border-b border-[#343b4b] bg-[#11151e]/95 px-4 backdrop-blur sm:px-6">
+        <header className="border-b border-[#3b4759] bg-[#0d131d]/95 px-4 backdrop-blur sm:px-6">
             <nav
                 aria-label="Primary navigation"
                 className="grid h-[73px] w-full grid-cols-[1fr_auto_1fr] items-center gap-4"
@@ -46,7 +46,7 @@ export function TopNavigation() {
                                 className={`rounded-md px-3 py-2 text-sm transition-colors ${
                                     isActive
                                         ? "bg-[#1c2330] text-white"
-                                        : "text-[#99a2b3] hover:text-white"
+                                        : "text-[#8e99ad] hover:text-white"
                                 }`}
                             >
                                 {item.label}

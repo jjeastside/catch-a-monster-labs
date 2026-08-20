@@ -117,7 +117,7 @@ export function EquipmentSelect({
 
     return (
         <div ref={containerRef} className="relative min-w-0">
-            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
+            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">
                 {label}
             </span>
 
@@ -133,7 +133,7 @@ export function EquipmentSelect({
                 }}
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
-                className="flex min-h-10 w-full items-center gap-1.5 rounded-md border border-[#303848] bg-[#1a1f2a] px-1.5 py-0.5 text-left outline-none hover:border-[#4a5568] focus:border-[#7585ff]"
+                className="flex min-h-10 w-full items-center gap-1.5 rounded-md border border-[#344050] bg-[#141c28] px-1.5 py-0.5 text-left outline-none hover:border-[#5c6a80] focus:border-[#7182ff]"
             >
                 {selectedItem ? (
                     <>
@@ -143,7 +143,7 @@ export function EquipmentSelect({
                             className="size-7 shrink-0 rounded object-contain"
                         />
                         <span className="min-w-0 flex-1">
-                            <span className="block truncate text-[11px] font-semibold leading-tight text-[#e8ebf0]">
+                            <span className="block truncate text-[11px] font-semibold leading-tight text-[#e3e8f1]">
                                 {selectedItem.name}
                             </span>
                             <span className={`mt-0.5 block truncate text-[9px] leading-tight ${rarityTextClasses[selectedItem.rarity]}`}>
@@ -152,9 +152,9 @@ export function EquipmentSelect({
                         </span>
                     </>
                 ) : (
-                    <span className="flex-1 px-1 text-xs text-[#788295]">None</span>
+                    <span className="flex-1 px-1 text-xs text-[#7f8b9e]">None</span>
                 )}
-                <span aria-hidden="true" className="shrink-0 text-xs text-[#788295]">
+                <span aria-hidden="true" className="shrink-0 text-xs text-[#7f8b9e]">
                     {isOpen ? "▲" : "▼"}
                 </span>
             </button>
@@ -164,7 +164,7 @@ export function EquipmentSelect({
                     role="listbox"
                     aria-label={label}
                     style={{ maxHeight: `${menuMaxHeight}px` }}
-                    className={`absolute z-50 w-[min(16rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border border-[#303848] bg-[#131720] p-1 shadow-2xl ${
+                    className={`absolute z-50 w-[min(16rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border border-[#344050] bg-[#0f1620] p-1 shadow-2xl ${
                         opensUpward
                             ? "bottom-full mb-1"
                             : "top-full mt-1"
@@ -176,7 +176,7 @@ export function EquipmentSelect({
                         aria-selected={value === null}
                         onClick={() => selectItem(null)}
                         className={`w-full rounded-md px-2 py-1.5 text-left text-xs ${
-                            value === null ? "bg-[#1f2540] text-[#7585ff]" : "text-[#99a2b3] hover:bg-[#1a1f2a]"
+                            value === null ? "bg-[#202846] text-[#7182ff]" : "text-[#8e99ad] hover:bg-[#141c28]"
                         }`}
                     >
                         None
@@ -192,7 +192,7 @@ export function EquipmentSelect({
                                 aria-selected={selected}
                                 onClick={() => selectItem(item.id)}
                                 className={`flex w-full items-center gap-2 rounded-md p-1.5 text-left ${
-                                    selected ? "bg-[#1f2540]" : "hover:bg-[#1a1f2a]"
+                                    selected ? "bg-[#202846]" : "hover:bg-[#141c28]"
                                 }`}
                             >
                                 <img
@@ -202,14 +202,14 @@ export function EquipmentSelect({
                                     className="size-10 shrink-0 rounded-md object-contain"
                                 />
                                 <span className="min-w-0 flex-1">
-                                    <span className="block truncate text-xs font-semibold text-[#e8ebf0]">
+                                    <span className="block truncate text-xs font-semibold text-[#e3e8f1]">
                                         {item.name}
                                     </span>
                                     <span className={`mt-0.5 block text-[10px] ${rarityTextClasses[item.rarity]}`}>
                                         {item.rarity} · +{item.percentage}% {item.type === "weapon" ? "Damage" : "Health"}
                                     </span>
                                 </span>
-                                {selected && <span className="text-[#7585ff]">✓</span>}
+                                {selected && <span className="text-[#7182ff]">✓</span>}
                             </button>
                         );
                     })}

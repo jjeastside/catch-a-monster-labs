@@ -180,7 +180,7 @@ function SelectField({
                      }: SelectFieldProps) {
     return (
         <label className="block">
-      <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
+      <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">
         {label}
       </span>
 
@@ -189,7 +189,7 @@ function SelectField({
                 onChange={(event) =>
                     onChange(event.target.value || null)
                 }
-                className="w-full rounded-md border border-[#303848] bg-[#1a1f2a] px-3 py-2 text-sm text-[#d8dee9] outline-none focus:border-[#7585ff]"
+                className="w-full rounded-md border border-[#344050] bg-[#141c28] px-3 py-2 text-sm text-[#e3e8f1] outline-none focus:border-[#7182ff]"
             >
                 {emptyLabel && (
                     <option value="">{emptyLabel}</option>
@@ -220,15 +220,15 @@ function HelpTooltip({
                 tabIndex={0}
                 role="button"
                 aria-label={`About ${title}`}
-                className="grid size-5 place-items-center rounded-full border border-[#4b566a] bg-[#1a1f2a] text-[11px] font-black text-[#99a2b3] outline-none transition hover:border-[#7585ff] hover:text-[#7585ff] focus:border-[#7585ff] focus:text-[#7585ff]"
+                className="grid size-5 place-items-center rounded-full border border-[#5c6a80] bg-[#141c28] text-[11px] font-black text-[#8e99ad] outline-none transition hover:border-[#7182ff] hover:text-[#7182ff] focus:border-[#7182ff] focus:text-[#7182ff]"
             >
                 ?
             </span>
             <span
                 role="tooltip"
-                className={`pointer-events-none absolute bottom-full z-[70] mb-2 w-64 max-w-[calc(100vw-2rem)] translate-y-1 rounded-lg border border-[#303848] bg-[#131720] p-3 text-left text-xs font-normal leading-5 text-[#b8c0ce] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100 ${align === "right" ? "right-0" : align === "left" ? "left-0" : "left-1/2 -translate-x-1/2"}`}
+                className={`pointer-events-none absolute bottom-full z-[70] mb-2 w-64 max-w-[calc(100vw-2rem)] translate-y-1 rounded-lg border border-[#344050] bg-[#0f1620] p-3 text-left text-xs font-normal leading-5 text-[#bfc7d5] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100 ${align === "right" ? "right-0" : align === "left" ? "left-0" : "left-1/2 -translate-x-1/2"}`}
             >
-                <strong className="block font-semibold text-[#e8ebf0]">{title}</strong>
+                <strong className="block font-semibold text-[#e3e8f1]">{title}</strong>
                 <span className="mt-1 block">{text}</span>
             </span>
         </span>
@@ -257,7 +257,7 @@ function GeneticPotentialSlider({
             <div className="mb-1.5 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
                     <img src={assetPath(icon)} alt="" className="size-6 rounded object-contain"/>
-                    <span className="text-xs font-black uppercase tracking-wide text-[#e8ebf0]">
+                    <span className="text-xs font-black uppercase tracking-wide text-[#e3e8f1]">
                         {label}
                     </span>
                 </div>
@@ -267,7 +267,7 @@ function GeneticPotentialSlider({
             </div>
 
             <div className="relative h-4">
-                <div className="pointer-events-none absolute inset-0 grid grid-cols-10 gap-0.5 overflow-hidden rounded border border-[#3a4354] bg-[#11151e] p-0.5">
+                <div className="pointer-events-none absolute inset-0 grid grid-cols-10 gap-0.5 overflow-hidden rounded border border-[#41506a] bg-[#0d131d] p-0.5">
                     {Array.from({ length: 10 }, (_, index) => (
                         <span
                             key={index}
@@ -287,7 +287,7 @@ function GeneticPotentialSlider({
                     value={value}
                     onChange={(event) => onChange(Number(event.target.value))}
                     aria-label={`${label} Genetic Potential`}
-                    className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent outline-none [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#131720] [&::-moz-range-track]:bg-transparent [&::-webkit-slider-runnable-track]:h-4 [&::-webkit-slider-runnable-track]:bg-transparent [&::-webkit-slider-thumb]:mt-0 [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#131720] [&::-webkit-slider-thumb]:shadow-[0_0_0_2px_rgba(0,0,0,0.45)]"
+                    className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent outline-none [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#0f1620] [&::-moz-range-track]:bg-transparent [&::-webkit-slider-runnable-track]:h-4 [&::-webkit-slider-runnable-track]:bg-transparent [&::-webkit-slider-thumb]:mt-0 [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#0f1620] [&::-webkit-slider-thumb]:shadow-[0_0_0_2px_rgba(0,0,0,0.45)]"
                 />
             </div>
         </div>
@@ -360,7 +360,7 @@ function EvolutionMultiplierEditor({
         <div>
             <div className="mb-2.5 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-[#e8ebf0]">EM</p>
+                    <p className="text-sm font-semibold text-[#e3e8f1]">EM</p>
                     <HelpTooltip
                         title="Evolution Multiplier (EM)"
                         text="EM is the percentage of an evolved monster's base Damage and Health used by the game. 100% keeps its normal base stats; for example, 160% gives 1.60× base Damage and Health. Drag normally for quick changes. While dragging, slide upward to open the 0.01% precision range, then release to apply."
@@ -398,20 +398,20 @@ function EvolutionMultiplierEditor({
                         }}
                         aria-label="Exact EM percentage"
                         aria-invalid={!isNumeric || isOutOfRange}
-                        className={`w-full rounded-md border bg-[#1a1f2a] px-2.5 py-1.5 pr-6 text-right text-xs font-semibold tabular-nums text-[#d8dee9] outline-none ${
+                        className={`w-full rounded-md border bg-[#141c28] px-2.5 py-1.5 pr-6 text-right text-xs font-semibold tabular-nums text-[#e3e8f1] outline-none ${
                             !isNumeric || isOutOfRange
                                 ? "border-[#ff7657] focus:border-[#ff7657]"
-                                : "border-[#303848] focus:border-[#7585ff]"
+                                : "border-[#344050] focus:border-[#7182ff]"
                         }`}
                     />
-                    <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-[10px] text-[#788295]">%</span>
+                    <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-[10px] text-[#7f8b9e]">%</span>
                 </label>
             </div>
 
             <div className="relative">
                 {precisionRange && (
                     <div
-                        className="fixed z-[80] max-w-[calc(100vw-1rem)] -translate-x-1/2 -translate-y-full rounded-lg border border-[#f1a45c]/70 bg-[#11151e]/95 px-3 py-2.5 shadow-[0_10px_28px_rgba(0,0,0,0.48),0_0_18px_rgba(255,157,66,0.10)] backdrop-blur-sm"
+                        className="fixed z-[80] max-w-[calc(100vw-1rem)] -translate-x-1/2 -translate-y-full rounded-lg border border-[#f1a45c]/70 bg-[#0d131d]/95 px-3 py-2.5 shadow-[0_10px_28px_rgba(0,0,0,0.48),0_0_18px_rgba(255,157,66,0.10)] backdrop-blur-sm"
                         style={{
                             left: precisionOverlay?.left ?? 0,
                             top: precisionOverlay?.top ?? 0,
@@ -421,7 +421,7 @@ function EvolutionMultiplierEditor({
                         <div className="mb-2 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-[#f3b170]">
                             Precision · 0.01%
                         </div>
-                        <div className="mb-2 flex items-center justify-between gap-3 text-[10px] font-semibold tabular-nums text-[#99a2b3]">
+                        <div className="mb-2 flex items-center justify-between gap-3 text-[10px] font-semibold tabular-nums text-[#8e99ad]">
                             <span>{precisionRange.min.toFixed(2)}%</span>
                             <strong className="rounded-md border border-[#f1a45c]/50 bg-[#342313] px-2.5 py-1 text-sm font-black text-white shadow-[0_0_12px_rgba(255,157,66,0.16)]">
                                 EM:{displayedValue.toFixed(2)}%
@@ -723,7 +723,7 @@ export function BuildEditor({
                 <button
                     type="button"
                     onClick={onResetAction}
-                    className="text-xs font-medium text-[#99a2b3]"
+                    className="text-xs font-medium text-[#8e99ad]"
                 >
                     Reset
                 </button>
@@ -731,12 +731,12 @@ export function BuildEditor({
         >
             <div className="flex flex-1 flex-col gap-2 overflow-auto p-3">
                 {!monster && (
-                    <div className="rounded-lg border border-dashed border-[#303848] bg-[#11151e]/45 p-4 text-center">
-                        <p className="text-sm font-medium text-[#d8dee9]">
+                    <div className="rounded-lg border border-dashed border-[#344050] bg-[#0d131d]/45 p-4 text-center">
+                        <p className="text-sm font-medium text-[#e3e8f1]">
                             No monster selected
                         </p>
 
-                        <p className="mt-1 text-xs leading-5 text-[#788295]">
+                        <p className="mt-1 text-xs leading-5 text-[#7f8b9e]">
                             Pick a monster from the browser to begin editing
                             its build.
                         </p>
@@ -749,7 +749,7 @@ export function BuildEditor({
                             <div className="mb-1.5 flex items-center justify-between gap-3">
                                 <label
                                     htmlFor="build-level-slider"
-                                    className="text-xs font-medium text-[#c5cbd5]"
+                                    className="text-xs font-medium text-[#bfc7d5]"
                                 >
                                     Level
                                 </label>
@@ -763,9 +763,9 @@ export function BuildEditor({
                                         value={build.level}
                                         onChange={(event) => updateLevel(event.target.value)}
                                         aria-label="Monster level"
-                                        className="w-[4.25rem] appearance-none rounded-md border border-[#303848] bg-[#131720] px-2 py-1.5 text-center text-sm font-semibold tabular-nums text-[#e8ebf0] outline-none transition focus:border-[#4d96ff] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                        className="w-[4.25rem] appearance-none rounded-md border border-[#344050] bg-[#0f1620] px-2 py-1.5 text-center text-sm font-semibold tabular-nums text-[#e3e8f1] outline-none transition focus:border-[#4d96ff] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                     />
-                                    <span className="text-xs tabular-nums text-[#788295]">/ 105</span>
+                                    <span className="text-xs tabular-nums text-[#7f8b9e]">/ 105</span>
                                 </div>
                             </div>
 
@@ -785,8 +785,8 @@ export function BuildEditor({
                         </div>
 
                         <div>
-                            <p className="mb-1.5 text-xs font-medium text-[#c5cbd5]">Rank</p>
-                            <div className="grid grid-cols-7 overflow-hidden rounded-lg border border-[#303848] bg-[#11151e]">
+                            <p className="mb-1.5 text-xs font-medium text-[#bfc7d5]">Rank</p>
+                            <div className="grid grid-cols-7 overflow-hidden rounded-lg border border-[#344050] bg-[#0d131d]">
                                 {ranks.map((rank, index) => {
                                     const selected = build.rank === rank;
                                     const visual = rankVisuals[rank];
@@ -803,7 +803,7 @@ export function BuildEditor({
                                                     ? `inset 0 0 0 1px ${visual.color}99, inset 0 1px 0 rgba(255,255,255,0.08)`
                                                     : undefined,
                                             }}
-                                            className={`min-w-0 py-2 text-sm font-black tracking-wide transition hover:bg-[#1a1f2a] ${index > 0 ? "border-l border-[#303848]" : ""}`}
+                                            className={`min-w-0 py-2 text-sm font-black tracking-wide transition hover:bg-[#141c28] ${index > 0 ? "border-l border-[#344050]" : ""}`}
                                         >
                                             <span
                                                 style={visual.labelBackground
@@ -840,22 +840,22 @@ export function BuildEditor({
 
                         <div>
                             <div className="mb-1.5 flex items-center justify-between">
-                                <p className="text-xs font-medium text-[#c5cbd5]">Enhancement</p>
-                                <span className="text-xs tabular-nums text-[#788295]">+10 max</span>
+                                <p className="text-xs font-medium text-[#bfc7d5]">Enhancement</p>
+                                <span className="text-xs tabular-nums text-[#7f8b9e]">+10 max</span>
                             </div>
 
-                            <div className="grid grid-cols-[3rem_minmax(0,1fr)_3rem] overflow-hidden rounded-lg border border-[#303848] bg-[#11151e]">
+                            <div className="grid grid-cols-[3rem_minmax(0,1fr)_3rem] overflow-hidden rounded-lg border border-[#344050] bg-[#0d131d]">
                                 <button
                                     type="button"
                                     onClick={() => updateEnhancement(build.enhancement - 1)}
                                     disabled={build.enhancement <= 0}
                                     aria-label="Decrease enhancement"
-                                    className="border-r border-[#303848] py-2 text-base text-[#99a2b3] transition hover:bg-[#1a1f2a] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+                                    className="border-r border-[#344050] py-2 text-base text-[#8e99ad] transition hover:bg-[#141c28] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
                                 >
                                     −
                                 </button>
 
-                                <div className={`grid place-items-center bg-[#131720] text-sm font-black tabular-nums [text-shadow:0_1px_0_#050608] ${build.enhancement === 0 ? "text-[#e8ebf0]" : "text-[#4d96ff]"}`}>
+                                <div className={`grid place-items-center bg-[#0f1620] text-sm font-black tabular-nums [text-shadow:0_1px_0_#050608] ${build.enhancement === 0 ? "text-[#e3e8f1]" : "text-[#4d96ff]"}`}>
                                     +{build.enhancement}
                                 </div>
 
@@ -864,7 +864,7 @@ export function BuildEditor({
                                     onClick={() => updateEnhancement(build.enhancement + 1)}
                                     disabled={build.enhancement >= 10}
                                     aria-label="Increase enhancement"
-                                    className="border-l border-[#303848] py-2 text-base text-[#99a2b3] transition hover:bg-[#1a1f2a] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+                                    className="border-l border-[#344050] py-2 text-base text-[#8e99ad] transition hover:bg-[#141c28] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
                                 >
                                     +
                                 </button>
@@ -882,7 +882,7 @@ export function BuildEditor({
                         )}
                     </div>
 
-                    <div className="mt-3 rounded-lg border border-[#303848] bg-[#131720]">
+                    <div className="mt-3 rounded-lg border border-[#344050] bg-[#0f1620]">
                         <div className="flex items-center pr-3 transition hover:bg-[#181d27]">
                             <button
                                 type="button"
@@ -896,12 +896,12 @@ export function BuildEditor({
                                     alt="Genetic Potential"
                                     className="size-7 shrink-0 object-contain"
                                 />
-                                <p className="text-sm font-semibold text-[#e8ebf0]">
+                                <p className="text-sm font-semibold text-[#e3e8f1]">
                                     Genetic Potential
                                 </p>
                                 <span
                                     aria-hidden="true"
-                                    className={`ml-auto text-xs text-[#788295] transition-transform ${geneticPotentialOpen ? "rotate-180" : ""}`}
+                                    className={`ml-auto text-xs text-[#7f8b9e] transition-transform ${geneticPotentialOpen ? "rotate-180" : ""}`}
                                 >
                                     ▼
                                 </span>
@@ -914,7 +914,7 @@ export function BuildEditor({
                         </div>
 
                         {geneticPotentialOpen && (
-                            <div id="genetic-potential-controls" className="border-t border-[#303848] p-3">
+                            <div id="genetic-potential-controls" className="border-t border-[#344050] p-3">
                                 <div className="space-y-3">
                                     <GeneticPotentialSlider
                                         label="Attack"
@@ -952,14 +952,14 @@ export function BuildEditor({
                         <span className="flex items-center gap-2">
                             <span>Mutations</span>
                             <span
-                                className="rounded-full border border-[#3a4354] bg-[#1a1f2a] px-2 py-0.5 text-[10px] font-semibold tabular-nums text-[#99a2b3]">
+                                className="rounded-full border border-[#41506a] bg-[#141c28] px-2 py-0.5 text-[10px] font-semibold tabular-nums text-[#8e99ad]">
                                 {build.mutations.length} / 4
                             </span>
                         </span>
                     }
                 >
-                    <p className="mb-2.5 text-[11px] text-[#788295]">
-                        Click to cycle: <span className="text-[#b8c0ce]">Normal → X → Off</span>
+                    <p className="mb-2.5 text-[11px] text-[#7f8b9e]">
+                        Click to cycle: <span className="text-[#bfc7d5]">Normal → X → Off</span>
                     </p>
 
                     <div className="grid grid-cols-2 gap-2">
@@ -983,9 +983,9 @@ export function BuildEditor({
                                                 boxShadow: `inset 0 0 0 1px ${mutation.accent}25${isX ? `, 0 0 12px ${mutation.accent}20` : ""}`,
                                             }
                                             : undefined}
-                                        className="group/mutation flex min-h-[58px] w-full items-center gap-2 rounded-lg border border-[#303848] bg-[#1a1f2a] p-2 pr-8 text-left transition hover:border-[#4a5568] hover:bg-[#1b202b]"
+                                        className="group/mutation flex min-h-[58px] w-full items-center gap-2 rounded-lg border border-[#344050] bg-[#141c28] p-2 pr-8 text-left transition hover:border-[#5c6a80] hover:bg-[#1b202b]"
                                     >
-                                        <span className="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-md border border-[#3a4354] bg-[#11151e]">
+                                        <span className="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-md border border-[#41506a] bg-[#0d131d]">
                                             <img
                                                 src={assetPath(isX ? mutation.xIcon : mutation.icon)}
                                                 alt=""
@@ -994,12 +994,12 @@ export function BuildEditor({
                                         </span>
 
                                         <span className="min-w-0">
-                                            <span className="block truncate text-xs font-semibold text-[#e8ebf0]">
+                                            <span className="block truncate text-xs font-semibold text-[#e3e8f1]">
                                                 {mutation.label}
                                             </span>
                                             <span
                                                 className="mt-0.5 block truncate text-[10px] font-medium"
-                                                style={{ color: isSelected ? mutation.accent : "#788295" }}
+                                                style={{ color: isSelected ? mutation.accent : "#7f8b9e" }}
                                             >
                                                 {stateLabel}
                                             </span>
@@ -1013,7 +1013,7 @@ export function BuildEditor({
                                         )}
                                         aria-label={`About ${mutation.label}`}
                                         aria-expanded={mutationHelpId === mutation.id}
-                                        className={`absolute right-2 top-1/2 z-10 grid size-5 -translate-y-1/2 place-items-center rounded-full border bg-[#1a1f2a] text-[11px] font-black outline-none transition ${mutationHelpId === mutation.id ? "border-[#7585ff] text-[#7585ff]" : "border-[#4b566a] text-[#99a2b3] hover:border-[#7585ff] hover:text-[#7585ff]"}`}
+                                        className={`absolute right-2 top-1/2 z-10 grid size-5 -translate-y-1/2 place-items-center rounded-full border bg-[#141c28] text-[11px] font-black outline-none transition ${mutationHelpId === mutation.id ? "border-[#7182ff] text-[#7182ff]" : "border-[#5c6a80] text-[#8e99ad] hover:border-[#7182ff] hover:text-[#7182ff]"}`}
                                     >
                                         ?
                                     </button>
@@ -1033,23 +1033,23 @@ export function BuildEditor({
                             <div className="flex items-center justify-between gap-3">
                                 <div className="flex items-center gap-2">
                                     <img src={assetPath(mutationHelp.icon)} alt="" className="size-6 object-contain"/>
-                                    <strong className="text-xs text-[#e8ebf0]">{mutationHelp.label}</strong>
+                                    <strong className="text-xs text-[#e3e8f1]">{mutationHelp.label}</strong>
                                 </div>
                                 <button
                                     type="button"
                                     onClick={() => setMutationHelpId(null)}
                                     aria-label="Close mutation information"
-                                    className="text-base leading-none text-[#788295] hover:text-[#e8ebf0]"
+                                    className="text-base leading-none text-[#7f8b9e] hover:text-[#e3e8f1]"
                                 >
                                     ×
                                 </button>
                             </div>
                             <div className="mt-2 grid gap-2 text-[10px] sm:grid-cols-2">
-                                <div className="rounded-md border border-[#303848] bg-[#131720] p-2 text-[#99a2b3]">
-                                    <span className="mb-1 block font-semibold text-[#d8dee9]">Normal</span>
+                                <div className="rounded-md border border-[#344050] bg-[#0f1620] p-2 text-[#8e99ad]">
+                                    <span className="mb-1 block font-semibold text-[#e3e8f1]">Normal</span>
                                     {mutationHelp.effects.join(" · ")}
                                 </div>
-                                <div className="rounded-md border border-[#303848] bg-[#131720] p-2 text-[#99a2b3]">
+                                <div className="rounded-md border border-[#344050] bg-[#0f1620] p-2 text-[#8e99ad]">
                                     <span className="mb-1 block font-semibold" style={{ color: mutationHelp.accent }}>X Mutation</span>
                                     {mutationHelp.xEffects.join(" · ")}
                                 </div>
@@ -1057,34 +1057,34 @@ export function BuildEditor({
                         </div>
                     )}
 
-                    <div className="mt-3 overflow-hidden rounded-lg border border-[#303848] bg-[#131720]">
+                    <div className="mt-3 overflow-hidden rounded-lg border border-[#344050] bg-[#0f1620]">
                         <button
                             type="button"
                             onClick={() => setMutationEffectsOpen((current) => !current)}
                             aria-expanded={mutationEffectsOpen}
-                            className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition hover:bg-[#1a1f2a]"
+                            className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition hover:bg-[#141c28]"
                         >
                             <span className="flex items-center gap-2">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">
+                                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">
                                     Active Effects
                                 </span>
-                                <span className="rounded-full bg-[#202632] px-1.5 py-0.5 text-[9px] font-semibold tabular-nums text-[#99a2b3]">
+                                <span className="rounded-full bg-[#202632] px-1.5 py-0.5 text-[9px] font-semibold tabular-nums text-[#8e99ad]">
                                     {aggregatedMutationEffects.length}
                                 </span>
                             </span>
-                            <span className="text-xs text-[#788295]">{mutationEffectsOpen ? "▲" : "▼"}</span>
+                            <span className="text-xs text-[#7f8b9e]">{mutationEffectsOpen ? "▲" : "▼"}</span>
                         </button>
 
                         {mutationEffectsOpen && (
                             <div className="border-t border-[#252c38] p-2.5">
                                 {aggregatedMutationEffects.length === 0 ? (
-                                    <p className="text-xs text-[#788295]">No mutations selected.</p>
+                                    <p className="text-xs text-[#7f8b9e]">No mutations selected.</p>
                                 ) : (
                                     <div className="flex flex-wrap gap-1.5">
                                         {aggregatedMutationEffects.map((effect) => (
                                             <span
                                                 key={effect.stat}
-                                                className="rounded-md border border-[#303848] bg-[#1a1f2a] px-2 py-1 text-[10px] font-medium text-[#b8c0ce]"
+                                                className="rounded-md border border-[#344050] bg-[#141c28] px-2 py-1 text-[10px] font-medium text-[#bfc7d5]"
                                             >
                                                 {effect.label}
                                             </span>
@@ -1108,7 +1108,7 @@ export function BuildEditor({
                                 />
                             </span>
                             {build.traitId && (
-                                <span className="rounded-full border border-[#7585ff]/35 bg-[#1f2540] px-2 py-0.5 text-[10px] font-semibold text-[#aeb7ff]">1 / 1</span>
+                                <span className="rounded-full border border-[#7182ff]/35 bg-[#202846] px-2 py-0.5 text-[10px] font-semibold text-[#aeb8ff]">1 / 1</span>
                             )}
                         </span>
                     }
@@ -1170,14 +1170,14 @@ export function BuildEditor({
                             const selectedIds = build[key];
                             return (
                                 <div key={type}
-                                     className="self-start space-y-2 rounded-md border border-[#252c38] bg-[#131720] p-2">
-                                    <p className="text-xs font-semibold text-[#e8ebf0]">{type === "weapon" ? "Weapon" : "Armor"} Attributes</p>
+                                     className="self-start space-y-2 rounded-md border border-[#252c38] bg-[#0f1620] p-2">
+                                    <p className="text-xs font-semibold text-[#e3e8f1]">{type === "weapon" ? "Weapon" : "Armor"} Attributes</p>
                                     <div className="grid grid-cols-2 gap-2">
                                         {fixedIds.map((id) => {
                                             const attribute = getAttribute(id);
                                             return attribute ? (
                                                 <div key={id}
-                                                     className="relative grid aspect-[2.85/1] min-h-[54px] w-full place-items-center overflow-hidden rounded-md border border-[#ff9f43]/50 bg-[#11151e] p-0.5">
+                                                     className="relative grid aspect-[2.85/1] min-h-[54px] w-full place-items-center overflow-hidden rounded-md border border-[#ff9f43]/50 bg-[#0d131d] p-0.5">
                                                     <img src={assetPath(`/attributes/${id}.png`)} alt={attribute.name}
                                                          className="block h-auto w-full"/>
                                                     <span
@@ -1196,9 +1196,9 @@ export function BuildEditor({
                                             />
                                         ))}
                                     </div>
-                                    {!equipment && <p className="text-[10px] text-[#788295]">Select gear first.</p>}
+                                    {!equipment && <p className="text-[10px] text-[#7f8b9e]">Select gear first.</p>}
                                     {equipment && slots === 0 && fixedIds.length === 0 &&
-                                        <p className="text-[10px] text-[#788295]">Attributes require Legendary gear or
+                                        <p className="text-[10px] text-[#7f8b9e]">Attributes require Legendary gear or
                                             higher.</p>}
                                 </div>
                             );
@@ -1208,7 +1208,7 @@ export function BuildEditor({
                 </CollapsibleSection>
 
                 <CollapsibleSection title="Combat Conditions">
-                    <p className="mb-2.5 text-[11px] leading-4 text-[#788295]">
+                    <p className="mb-2.5 text-[11px] leading-4 text-[#7f8b9e]">
                         Select the encounter used by conditional damage and resistance passives.
                     </p>
                     <div className="grid grid-cols-2 gap-2">
@@ -1220,8 +1220,8 @@ export function BuildEditor({
                                 aria-pressed={build.combatContext === context.id}
                                 className={`rounded-md border px-3 py-2 text-xs font-semibold transition ${
                                     build.combatContext === context.id
-                                        ? "border-[#7585ff] bg-[#1f2540] text-[#aeb7ff]"
-                                        : "border-[#303848] bg-[#1a1f2a] text-[#99a2b3] hover:border-[#465064] hover:text-[#d8dee9]"
+                                        ? "border-[#7182ff] bg-[#202846] text-[#aeb8ff]"
+                                        : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"
                                 }`}
                             >
                                 {context.label}
@@ -1235,7 +1235,7 @@ export function BuildEditor({
                         className={`mt-3 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-xs font-semibold transition ${
                             build.targetStatused
                                 ? "border-[#ff7448]/55 bg-[#3a201b]/45 text-[#ff9a7f]"
-                                : "border-[#303848] bg-[#1a1f2a] text-[#99a2b3] hover:border-[#465064] hover:text-[#d8dee9]"
+                                : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"
                         }`}
                     >
                         <span>Target is Burning or Poisoned</span>
@@ -1243,10 +1243,10 @@ export function BuildEditor({
                     </button>
                     {(hasHpConditionalAttribute || hasHpConditionalPassive) && (
                         <label className="mt-3 block">
-                            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#788295]">Current HP for conditional effects</span>
+                            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Current HP for conditional effects</span>
                             <div className="flex items-center gap-3">
-                                <input type="range" min="0" max="100" value={build.currentHpPercent} onChange={(event) => update("currentHpPercent", Number(event.target.value))} className="min-w-0 flex-1 accent-[#7585ff]" />
-                                <span className="w-12 text-right text-sm font-semibold text-[#d8dee9]">{build.currentHpPercent}%</span>
+                                <input type="range" min="0" max="100" value={build.currentHpPercent} onChange={(event) => update("currentHpPercent", Number(event.target.value))} className="min-w-0 flex-1 accent-[#7182ff]" />
+                                <span className="w-12 text-right text-sm font-semibold text-[#e3e8f1]">{build.currentHpPercent}%</span>
                             </div>
                         </label>
                     )}
@@ -1256,7 +1256,7 @@ export function BuildEditor({
                     <button
                         type="button"
                         onClick={onOpenSaveBuildsAction}
-                        className="rounded-md bg-[#7585ff] px-3 py-2 text-xs font-bold text-[#0b1510]"
+                        className="rounded-md bg-[#7182ff] px-3 py-2 text-xs font-bold text-[#0b1510]"
                     >
                         Save Build
                     </button>
@@ -1264,7 +1264,7 @@ export function BuildEditor({
                     <button
                         type="button"
                         onClick={onOpenLoadBuildsAction}
-                        className="rounded-md border border-[#303848] bg-[#1a1f2a] px-3 py-2 text-xs font-semibold text-[#d8dee9]"
+                        className="rounded-md border border-[#344050] bg-[#141c28] px-3 py-2 text-xs font-semibold text-[#e3e8f1]"
                     >
                         Load Build
                     </button>
@@ -1273,7 +1273,7 @@ export function BuildEditor({
                         type="button"
                         disabled
                         title="Build comparison is planned for a future update."
-                        className="cursor-not-allowed rounded-md border border-[#303848] bg-[#1a1f2a] px-3 py-2 text-xs font-semibold text-[#788295] opacity-60"
+                        className="cursor-not-allowed rounded-md border border-[#344050] bg-[#141c28] px-3 py-2 text-xs font-semibold text-[#7f8b9e] opacity-60"
                     >
                         Compare Builds
                     </button>
@@ -1281,7 +1281,7 @@ export function BuildEditor({
                     <button
                         type="button"
                         onClick={onResetAction}
-                        className="rounded-md border border-[#303848] bg-[#1a1f2a] px-3 py-2 text-xs font-semibold text-[#d8dee9]"
+                        className="rounded-md border border-[#344050] bg-[#141c28] px-3 py-2 text-xs font-semibold text-[#e3e8f1]"
                     >
                         Reset
                     </button>

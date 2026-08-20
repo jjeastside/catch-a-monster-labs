@@ -97,22 +97,22 @@ export function TraitSelect({ value, onChangeAction }: TraitSelectProps) {
                 }}
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
-                className="flex min-h-[58px] w-full items-center gap-2 rounded-lg border border-[#303848] bg-[#1a1f2a] px-2 py-1.5 text-left outline-none transition hover:border-[#4a5568] focus:border-[#7585ff]"
+                className="flex min-h-[58px] w-full items-center gap-2 rounded-lg border border-[#344050] bg-[#141c28] px-2 py-1.5 text-left outline-none transition hover:border-[#5c6a80] focus:border-[#7182ff]"
             >
                 {selectedTrait ? (
                     <>
                         <TraitIcon trait={selectedTrait} size="combat" />
                         <span className="min-w-0 flex-1">
-                            <span className="block truncate text-xs font-semibold text-[#e8ebf0]">{selectedTrait.name}</span>
+                            <span className="block truncate text-xs font-semibold text-[#e3e8f1]">{selectedTrait.name}</span>
                             <span className={`mt-0.5 block truncate text-[10px] ${rarityTextClasses[selectedTrait.rarity]}`}>
                                 <span className="capitalize">{selectedTrait.rarity}</span> · {effectLabel(selectedTrait)}
                             </span>
                         </span>
                     </>
                 ) : (
-                    <span className="flex-1 px-1 text-xs text-[#788295]">No Trait</span>
+                    <span className="flex-1 px-1 text-xs text-[#7f8b9e]">No Trait</span>
                 )}
-                <span aria-hidden="true" className="shrink-0 text-xs text-[#788295]">{isOpen ? "▲" : "▼"}</span>
+                <span aria-hidden="true" className="shrink-0 text-xs text-[#7f8b9e]">{isOpen ? "▲" : "▼"}</span>
             </button>
 
             {isOpen && (
@@ -120,14 +120,14 @@ export function TraitSelect({ value, onChangeAction }: TraitSelectProps) {
                     role="listbox"
                     aria-label="Trait"
                     style={{ maxHeight: `${menuMaxHeight}px` }}
-                    className={`absolute left-0 z-50 w-full min-w-[18rem] overflow-y-auto rounded-lg border border-[#303848] bg-[#131720] p-1 shadow-2xl ${opensUpward ? "bottom-full mb-1" : "top-full mt-1"}`}
+                    className={`absolute left-0 z-50 w-full min-w-[18rem] overflow-y-auto rounded-lg border border-[#344050] bg-[#0f1620] p-1 shadow-2xl ${opensUpward ? "bottom-full mb-1" : "top-full mt-1"}`}
                 >
                     <button
                         type="button"
                         role="option"
                         aria-selected={value === null}
                         onClick={() => selectTrait(null)}
-                        className={`w-full rounded-md px-2 py-2 text-left text-xs ${value === null ? "bg-[#1f2540] text-[#7585ff]" : "text-[#99a2b3] hover:bg-[#1a1f2a]"}`}
+                        className={`w-full rounded-md px-2 py-2 text-left text-xs ${value === null ? "bg-[#202846] text-[#7182ff]" : "text-[#8e99ad] hover:bg-[#141c28]"}`}
                     >
                         No Trait
                     </button>
@@ -141,21 +141,21 @@ export function TraitSelect({ value, onChangeAction }: TraitSelectProps) {
                                 role="option"
                                 aria-selected={selected}
                                 onClick={() => selectTrait(trait.id)}
-                                className={`flex w-full items-center gap-2 rounded-md p-2 text-left ${selected ? "bg-[#1f2540]" : "hover:bg-[#1a1f2a]"}`}
+                                className={`flex w-full items-center gap-2 rounded-md p-2 text-left ${selected ? "bg-[#202846]" : "hover:bg-[#141c28]"}`}
                             >
                                 <TraitIcon trait={trait} size="combat" />
                                 <span className="min-w-0 flex-1">
-                                    <span className="block truncate text-xs font-semibold text-[#e8ebf0]">{trait.name}</span>
+                                    <span className="block truncate text-xs font-semibold text-[#e3e8f1]">{trait.name}</span>
                                     <span className={`mt-0.5 block text-[10px] ${rarityTextClasses[trait.rarity]}`}>
                                         <span className="capitalize">{trait.rarity}</span> · {effectLabel(trait)}
                                     </span>
                                     {trait.naturalSource && (
-                                        <span className="mt-0.5 block text-[9px] text-[#8993a5]">
+                                        <span className="mt-0.5 block text-[9px] text-[#7f8b9e]">
                                             Exclusive to {trait.naturalSource} · Breed to transfer
                                         </span>
                                     )}
                                 </span>
-                                {selected && <span className="text-[#7585ff]">✓</span>}
+                                {selected && <span className="text-[#7182ff]">✓</span>}
                             </button>
                         );
                     })}

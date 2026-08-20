@@ -196,17 +196,17 @@ export function AccountMultipliers({
 
     return (
         <>
-            <section className="rounded-lg border border-[#343b4b] bg-[#131720] px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.16)]">
+            <section className="rounded-lg border border-[#3b4759] bg-[#0f1620] px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.16)]">
                 <div className="grid gap-3 lg:grid-cols-[minmax(230px,0.9fr)_repeat(3,minmax(190px,1fr))] lg:items-stretch">
                     <div className="flex items-center justify-between gap-3 lg:pr-3">
                         <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-2">
-                                <h2 className="text-sm font-semibold text-[#e8ebf0]">Account Multipliers</h2>
-                                <span className="rounded border border-[#303848] bg-[#1a1f2a] px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-[#788295]">Account-wide</span>
+                                <h2 className="text-sm font-semibold text-[#e3e8f1]">Account Multipliers</h2>
+                                <span className="rounded border border-[#344050] bg-[#141c28] px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Account-wide</span>
                             </div>
-                            <p className="mt-1 text-[11px] text-[#788295]">Saved when you switch monsters or reset a build.</p>
+                            <p className="mt-1 text-[11px] text-[#7f8b9e]">Saved when you switch monsters or reset a build.</p>
                         </div>
-                        <button type="button" onClick={() => { setExpandedCategory(null); setIsOpen(true); }} className="shrink-0 rounded-md border border-[#303848] bg-[#1a1f2a] px-2.5 py-1.5 text-[10px] font-semibold text-[#99a2b3] transition hover:border-[#7585ff] hover:text-[#7585ff]">
+                        <button type="button" onClick={() => { setExpandedCategory(null); setIsOpen(true); }} className="shrink-0 rounded-md border border-[#344050] bg-[#141c28] px-2.5 py-1.5 text-[10px] font-semibold text-[#8e99ad] transition hover:border-[#7182ff] hover:text-[#7182ff]">
                             Manage
                         </button>
                     </div>
@@ -221,7 +221,7 @@ export function AccountMultipliers({
                                 : "/account-icons/health-up.png";
 
                         return (
-                            <button key={category} type="button" onClick={() => { setExpandedCategory(category); setIsOpen(true); }} className="group flex min-w-0 items-center gap-3 rounded-lg border border-[#303848] bg-gradient-to-r from-[#1a1f2a] to-[#121620] px-3 py-2 text-left transition hover:-translate-y-0.5 hover:border-[#4c5a70] hover:bg-[#1a202c]">
+                            <button key={category} type="button" onClick={() => { setExpandedCategory(category); setIsOpen(true); }} className="group flex min-w-0 items-center gap-3 rounded-lg border border-[#344050] bg-gradient-to-r from-[#141c28] to-[#121620] px-3 py-2 text-left transition hover:-translate-y-0.5 hover:border-[#4c5a70] hover:bg-[#1a202c]">
                                 <span className="relative grid size-12 shrink-0 place-items-center">
                                     <img src={assetPath(categoryIcon)} alt="" className={`${category === "pet-quest" ? "absolute left-0 top-0 size-9" : "max-h-12 max-w-12"} object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]`} />
                                     {category === "pet-quest" && <img src={assetPath("/account-icons/damage-up.png")} alt="" className="absolute bottom-0 right-0 size-8 object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]" />}
@@ -231,7 +231,7 @@ export function AccountMultipliers({
                                         <span className="truncate text-xs font-bold text-[#e7ebf2]">{details.label}</span>
                                         <span className={`shrink-0 rounded border px-1.5 py-0.5 text-[9px] font-black tabular-nums ${categoryStyles[category]}`}>{progress.completed}/{progress.total}</span>
                                     </span>
-                                    <span className={`mt-1 flex items-center gap-2 text-[10px] font-bold ${progress.completed ? "text-[#7585ff]" : "text-[#788295]"}`}>
+                                    <span className={`mt-1 flex items-center gap-2 text-[10px] font-bold ${progress.completed ? "text-[#7182ff]" : "text-[#7f8b9e]"}`}>
                                         {progress.healthPercent > 0 && <span className="flex items-center gap-1"><img src={assetPath("/account-icons/health.png")} alt="Health" className="size-5 object-contain" />+{progress.healthPercent}%</span>}
                                         {progress.damagePercent > 0 && <span className="flex items-center gap-1"><img src={assetPath("/account-icons/damage.png")} alt="Damage" className="size-5 object-contain" />+{progress.damagePercent}%</span>}
                                         {!progress.healthPercent && !progress.damagePercent && "No bonus yet"}
@@ -248,14 +248,14 @@ export function AccountMultipliers({
                 <div className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-4" onMouseDown={(event) => {
                     if (event.target === event.currentTarget) setIsOpen(false);
                 }}>
-                    <section role="dialog" aria-modal="true" aria-labelledby="account-multipliers-title" className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-xl border border-[#303848] bg-[#131720] shadow-2xl">
-                        <header className="sticky top-0 z-20 flex items-start justify-between gap-4 border-b border-[#343b4b] bg-[#131720] px-5 py-4">
+                    <section role="dialog" aria-modal="true" aria-labelledby="account-multipliers-title" className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-xl border border-[#344050] bg-[#0f1620] shadow-2xl">
+                        <header className="sticky top-0 z-20 flex items-start justify-between gap-4 border-b border-[#3b4759] bg-[#0f1620] px-5 py-4">
                             <div>
-                                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#7585ff]">Account Progress</p>
-                                <h2 id="account-multipliers-title" className="mt-1 text-lg font-semibold text-[#f2f4f8]">Account Multipliers</h2>
-                                <p className="mt-1 text-xs text-[#99a2b3]">Enter a completed total or check achievements individually.</p>
+                                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#7182ff]">Account Progress</p>
+                                <h2 id="account-multipliers-title" className="mt-1 text-lg font-semibold text-[#f6f8fc]">Account Multipliers</h2>
+                                <p className="mt-1 text-xs text-[#8e99ad]">Enter a completed total or check achievements individually.</p>
                             </div>
-                            <button ref={closeButtonRef} type="button" onClick={() => setIsOpen(false)} aria-label="Close account multipliers" className="grid size-9 shrink-0 place-items-center rounded-md border border-[#303848] bg-[#1a1f2a] text-lg text-[#99a2b3] hover:border-[#7585ff] hover:text-[#7585ff]">×</button>
+                            <button ref={closeButtonRef} type="button" onClick={() => setIsOpen(false)} aria-label="Close account multipliers" className="grid size-9 shrink-0 place-items-center rounded-md border border-[#344050] bg-[#141c28] text-lg text-[#8e99ad] hover:border-[#7182ff] hover:text-[#7182ff]">×</button>
                         </header>
 
                         <div className="space-y-4 p-4 sm:p-5">
@@ -275,7 +275,7 @@ export function AccountMultipliers({
                                             type="button"
                                             onClick={() => setExpandedCategory(isExpanded ? null : card.category)}
                                             aria-expanded={isExpanded}
-                                            className={`group relative overflow-hidden rounded-2xl border-2 p-1 text-left shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition hover:-translate-y-0.5 hover:brightness-110 ${frame} ${isExpanded ? "ring-2 ring-[#7585ff]/60" : ""}`}
+                                            className={`group relative overflow-hidden rounded-2xl border-2 p-1 text-left shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition hover:-translate-y-0.5 hover:brightness-110 ${frame} ${isExpanded ? "ring-2 ring-[#7182ff]/60" : ""}`}
                                         >
                                             <span className={`relative flex min-h-28 items-center gap-3 overflow-hidden rounded-xl bg-gradient-to-r ${glow} to-[#090c10] px-4 py-3`}>
                                                 <span aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1.5px)", backgroundSize: "14px 14px" }} />
@@ -302,11 +302,11 @@ export function AccountMultipliers({
                                 })}
                             </div>
 
-                            <section className="rounded-xl border border-[#303848] bg-[#0d1118] p-3">
+                            <section className="rounded-xl border border-[#344050] bg-[#0d1118] p-3">
                                 <div className="mb-3 px-1">
                                     <div>
                                         <h3 className="text-sm font-black text-white">Additional Bonuses</h3>
-                                        <p className="mt-0.5 text-[10px] text-[#788295]">Rare account rewards with specialized effects.</p>
+                                        <p className="mt-0.5 text-[10px] text-[#7f8b9e]">Rare account rewards with specialized effects.</p>
                                     </div>
                                 </div>
                                 <div className="grid gap-2 sm:grid-cols-2">
@@ -331,7 +331,7 @@ export function AccountMultipliers({
                                                 role="checkbox"
                                                 aria-checked={isSelected}
                                                 onClick={() => toggleAchievement(achievement)}
-                                                className={`group flex min-w-0 items-center gap-3 rounded-lg border p-3 text-left transition ${isSelected ? "border-[#7585ff] bg-[#1f2540]" : "border-[#303848] bg-[#151923] hover:border-[#4a5568] hover:bg-[#1a202b]"}`}
+                                                className={`group flex min-w-0 items-center gap-3 rounded-lg border p-3 text-left transition ${isSelected ? "border-[#7182ff] bg-[#202846]" : "border-[#344050] bg-[#151923] hover:border-[#5c6a80] hover:bg-[#1a202b]"}`}
                                             >
                                                 <img src={assetPath(achievementIcon)} alt="" className="size-12 shrink-0 object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]" />
                                                 <span className="min-w-0 flex-1">
@@ -341,7 +341,7 @@ export function AccountMultipliers({
                                                         {details.shortReward}
                                                     </span>
                                                 </span>
-                                                <span className={`grid size-7 shrink-0 place-items-center rounded-md border-2 text-sm font-black ${isSelected ? "border-[#3ee378] bg-[#26c965] text-[#07130b]" : "border-[#4a5568] bg-[#0d1118] text-transparent"}`}>✓</span>
+                                                <span className={`grid size-7 shrink-0 place-items-center rounded-md border-2 text-sm font-black ${isSelected ? "border-[#3ee378] bg-[#26c965] text-[#07130b]" : "border-[#5c6a80] bg-[#0d1118] text-transparent"}`}>✓</span>
                                             </button>
                                         );
                                     })}
@@ -356,7 +356,7 @@ export function AccountMultipliers({
 
                                 return (
                                     <section className="overflow-hidden rounded-xl border border-[#3a4353] bg-[#121722] shadow-xl">
-                                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#303848] bg-[#171d28] p-4">
+                                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#344050] bg-[#171d28] p-4">
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex flex-wrap items-center gap-2">
                                                     <h3 className="text-sm font-black text-white">{details.label} Achievements</h3>
@@ -367,22 +367,22 @@ export function AccountMultipliers({
                                                 </div>
                                                 <p className="mt-1 text-[11px] text-[#8f9aae]">{details.description}</p>
                                             </div>
-                                            <label className="flex items-center gap-2 rounded-lg border border-[#4a5568] bg-[#090c12] px-3 py-2">
-                                                <span className="text-[9px] font-bold uppercase tracking-wide text-[#788295]">Completed</span>
+                                            <label className="flex items-center gap-2 rounded-lg border border-[#5c6a80] bg-[#090c12] px-3 py-2">
+                                                <span className="text-[9px] font-bold uppercase tracking-wide text-[#7f8b9e]">Completed</span>
                                                 <input type="number" min={0} max={categoryAchievements.length} value={progress.completed} onChange={(event) => setCategoryCount(category, Number(event.target.value))} className="w-12 bg-transparent text-right text-sm font-black text-white outline-none" aria-label={`${details.label} completed`} />
-                                                <span className="text-sm font-black text-[#788295]">/{categoryAchievements.length}</span>
+                                                <span className="text-sm font-black text-[#7f8b9e]">/{categoryAchievements.length}</span>
                                             </label>
-                                            <button type="button" onClick={() => setExpandedCategory(null)} className="text-xs font-bold text-[#7585ff] hover:text-white">Hide ↑</button>
+                                            <button type="button" onClick={() => setExpandedCategory(null)} className="text-xs font-bold text-[#7182ff] hover:text-white">Hide ↑</button>
                                         </div>
                                         <div className={category === "index-mania" ? "max-h-80 overflow-y-auto" : ""}>
                                             {categoryAchievements.map((achievement) => {
                                                 const isSelected = selectedSet.has(achievement.id);
                                                 return (
-                                                    <button key={achievement.id} type="button" role="checkbox" aria-checked={isSelected} onClick={() => toggleAchievement(achievement)} className={`flex w-full items-center gap-3 border-b border-[#343b4b] px-4 py-3 text-left transition last:border-b-0 ${isSelected ? "bg-[#1f2540]" : "hover:bg-[#1b202c]"}`}>
-                                                        <span className={`grid size-7 shrink-0 place-items-center rounded-md border-2 text-sm font-black ${isSelected ? "border-[#3ee378] bg-[#26c965] text-[#07130b]" : "border-[#4a5568] bg-[#0d1118] text-transparent"}`}>✓</span>
+                                                    <button key={achievement.id} type="button" role="checkbox" aria-checked={isSelected} onClick={() => toggleAchievement(achievement)} className={`flex w-full items-center gap-3 border-b border-[#3b4759] px-4 py-3 text-left transition last:border-b-0 ${isSelected ? "bg-[#202846]" : "hover:bg-[#1b202c]"}`}>
+                                                        <span className={`grid size-7 shrink-0 place-items-center rounded-md border-2 text-sm font-black ${isSelected ? "border-[#3ee378] bg-[#26c965] text-[#07130b]" : "border-[#5c6a80] bg-[#0d1118] text-transparent"}`}>✓</span>
                                                         <span className="min-w-0 flex-1">
                                                             <span className="block text-sm font-bold text-[#eef1f6]">{achievement.name}</span>
-                                                            <span className="mt-0.5 block text-xs text-[#788295]">{achievementGoal(achievement)}</span>
+                                                            <span className="mt-0.5 block text-xs text-[#7f8b9e]">{achievementGoal(achievement)}</span>
                                                         </span>
                                                         <span className={`flex shrink-0 items-center gap-1.5 text-xs font-black ${achievement.rewardStat === "health" ? "text-[#39ef64]" : "text-[#ff6388]"}`}>
                                                             <img src={assetPath(achievement.rewardStat === "health" ? "/account-icons/health.png" : "/account-icons/damage.png")} alt="" className="size-5 object-contain" />
@@ -435,9 +435,9 @@ export function AccountMultipliers({
                             </section>
                         </div>
 
-                        <footer className="sticky bottom-0 z-20 flex justify-between gap-3 border-t border-[#343b4b] bg-[#131720] px-5 py-4">
-                            <button type="button" onClick={reset} disabled={selectedIds.length === 0} className="rounded-md px-3 py-2 text-xs font-semibold text-[#99a2b3] hover:text-[#e8ebf0] disabled:cursor-not-allowed disabled:opacity-40">Reset All</button>
-                            <button type="button" onClick={() => setIsOpen(false)} className="rounded-md bg-[#7585ff] px-5 py-2 text-sm font-bold text-[#0b1510] hover:bg-[#8f9cff]">Done</button>
+                        <footer className="sticky bottom-0 z-20 flex justify-between gap-3 border-t border-[#3b4759] bg-[#0f1620] px-5 py-4">
+                            <button type="button" onClick={reset} disabled={selectedIds.length === 0} className="rounded-md px-3 py-2 text-xs font-semibold text-[#8e99ad] hover:text-[#e3e8f1] disabled:cursor-not-allowed disabled:opacity-40">Reset All</button>
+                            <button type="button" onClick={() => setIsOpen(false)} className="rounded-md bg-[#7182ff] px-5 py-2 text-sm font-bold text-[#0b1510] hover:bg-[#8f9cff]">Done</button>
                         </footer>
                     </section>
                 </div>

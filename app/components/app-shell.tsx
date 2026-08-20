@@ -313,7 +313,7 @@ export function AppShell() {
     }
 
     return (
-        <div className="min-h-screen bg-[#181c25] text-[#f2f4f8]">
+        <div className="min-h-screen bg-[#0b111a] text-[#f6f8fc]">
             <TopNavigation />
             <SiteHeading />
 

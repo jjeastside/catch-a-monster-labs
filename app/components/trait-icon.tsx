@@ -15,7 +15,7 @@ const rarityVisuals: Record<Trait["rarity"], {
 }> = {
     rare: {
         frame: "bg-[#278fd1]",
-        surface: "bg-[radial-gradient(circle_at_50%_100%,rgba(15,135,223,0.48),transparent_72%),linear-gradient(145deg,#101b29,#11151e_62%)]",
+        surface: "bg-[radial-gradient(circle_at_50%_100%,rgba(15,135,223,0.48),transparent_72%),linear-gradient(145deg,#101b29,#0d131d_62%)]",
         symbol: "linear-gradient(145deg,#4bb9ff,#176cff 72%)",
     },
     epic: {

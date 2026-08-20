@@ -16,7 +16,7 @@ export function CollapsibleSection({
     const [isOpen, setIsOpen] = useState(true);
 
     return (
-        <section className="rounded-lg border border-[#303848] bg-[#11151e]/55">
+        <section className="rounded-lg border border-[#344050] bg-[#0d131d]/55">
             <button
                 type="button"
                 onClick={() => setIsOpen((current) => !current)}
@@ -24,23 +24,23 @@ export function CollapsibleSection({
                 className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left"
             >
                 <span>
-                    <span className="block text-sm font-semibold text-[#e8ebf0]">
+                    <span className="block text-sm font-semibold text-[#e3e8f1]">
                         {title}
                     </span>
                     {description && (
-                        <span className="mt-0.5 block text-[11px] text-[#788295]">
+                        <span className="mt-0.5 block text-[11px] text-[#7f8b9e]">
                             {description}
                         </span>
                     )}
                 </span>
 
-                <span className="text-base text-[#99a2b3]">
+                <span className="text-base text-[#8e99ad]">
                     {isOpen ? "−" : "+"}
                 </span>
             </button>
 
             {isOpen && (
-                <div className="border-t border-[#343b4b] p-3">
+                <div className="border-t border-[#3b4759] p-3">
                     {children}
                 </div>
             )}
