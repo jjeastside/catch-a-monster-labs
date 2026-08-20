@@ -2,18 +2,36 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Cam Lab",
-  description: "A build planning workspace for monster-catching games.",
+    metadataBase: new URL("https://jjeastside.github.io/catch-a-monster-labs/"),
+    title: "Cam Lab — Catch a Monster Build Calculator",
+    description:
+        "Build and compare Catch a Monster builds with combat stats, skill damage, DPS, equipment, traits, mutations, passives, and account multipliers.",
+    openGraph: {
+        title: "Cam Lab — Catch a Monster Build Calculator",
+        description:
+            "Build and compare Catch a Monster builds with combat stats, skill damage, DPS, equipment, traits, mutations, passives, and account multipliers.",
+        siteName: "Cam Lab",
+        type: "website",
+        url: "https://jjeastside.github.io/catch-a-monster-labs/",
+        images: [
+            {
+                url: "/preview.png",
+                width: 807,
+                height: 493,
+                alt: "Cam Lab — Catch a Monster Build Calculator",
+            },
+        ],
+    },
 };
 
 export default function RootLayout({
-                                     children,
+                                       children,
                                    }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-      <html lang="en">
-      <body>{children}</body>
-      </html>
-  );
+    return (
+        <html lang="en">
+        <body>{children}</body>
+        </html>
+    );
 }
