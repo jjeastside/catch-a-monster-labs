@@ -800,6 +800,9 @@ export function BuildEditor({
                                 onOpenSaveBuildsAction,
                                 onOpenLoadBuildsAction,
                             }: BuildEditorProps) {
+    const [experimentalLevelMode, setExperimentalLevelMode] = useState(false);
+    const maxSelectableLevel = experimentalLevelMode ? 110 : 105;
+
     const [mutationHelpId, setMutationHelpId] = useState<string | null>(null);
     const [mutationEffectsOpen, setMutationEffectsOpen] = useState(false);
     const [geneticPotentialOpen, setGeneticPotentialOpen] = useState(false);
@@ -911,7 +914,7 @@ export function BuildEditor({
         if (
             Number.isInteger(level) &&
             level >= 1 &&
-            level <= 110
+            level <= maxSelectableLevel
         ) {
             update("level", level);
         }
@@ -996,7 +999,7 @@ export function BuildEditor({
                                     <input
                                         type="number"
                                         min="1"
-                                        max="110"
+                                        max={maxSelectableLevel}
                                         step="1"
                                         value={build.level}
                                         onChange={(event) => updateLevel(event.target.value)}
@@ -1005,7 +1008,7 @@ export function BuildEditor({
                                         title={build.combatContext === "dungeon" ? "Dungeon mode forces Level 60." : undefined}
                                         className="w-[4.25rem] appearance-none rounded-md border border-[#344050] bg-[#0f1620] px-2 py-1.5 text-center text-sm font-semibold tabular-nums text-[#e3e8f1] outline-none transition focus:border-[#4d96ff] disabled:cursor-not-allowed disabled:opacity-60 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                     />
-                                    <span className="text-xs tabular-nums text-[#7f8b9e]">/ 110</span>
+                                    <span className="text-xs tabular-nums text-[#7f8b9e]">/ {maxSelectableLevel}</span>
                                 </div>
                             </div>
 
@@ -1013,20 +1016,17 @@ export function BuildEditor({
                                 id="build-level-slider"
                                 type="range"
                                 min="1"
-                                max="110"
+                                max={maxSelectableLevel}
                                 step="1"
                                 value={build.level}
                                 onChange={(event) => updateLevel(event.target.value)}
                                 disabled={build.combatContext === "dungeon"}
                                 title={build.combatContext === "dungeon" ? "Dungeon mode forces Level 60." : undefined}
                                 style={{
-                                    background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((build.level - 1) / 109) * 100}%, #283140 ${((build.level - 1) / 109) * 100}%, #283140 100%)`,
+                                    background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((build.level - 1) / (maxSelectableLevel - 1)) * 100}%, #283140 ${((build.level - 1) / (maxSelectableLevel - 1)) * 100}%, #283140 100%)`,
                                 }}
                                 className="h-1.5 w-full cursor-pointer appearance-none rounded-full outline-none disabled:cursor-not-allowed disabled:opacity-60 [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#3b82f6] [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#3b82f6] [&::-webkit-slider-thumb]:shadow-[0_0_0_3px_rgba(59,130,246,0.16)]"
                             />
-                            <p className="mt-2 text-[10px] leading-4 text-[#f4bd6a]">
-                                Level 105 is currently the in-game maximum. Levels 106–110 are available here for the next update.
-                            </p>
                         </div>
 
                         <div>
@@ -1532,6 +1532,45 @@ export function BuildEditor({
                             </div>
                         </label>
                     )}
+                </CollapsibleSection>
+
+                <CollapsibleSection title="Experimental Mode" defaultOpen={false}>
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between gap-3 rounded-md border border-[#344050] bg-[#0f1620] px-3 py-2.5">
+                            <div className="min-w-0">
+                                <p className="text-xs font-medium text-[#bfc7d5]">
+                                    Experimental Levels
+                                </p>
+                                <p className="mt-1 text-[10px] leading-4 text-[#7f8b9e]">
+                                    Level 105 is currently the in-game maximum. Enable this to preview levels 106–110 for the next update.
+                                </p>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setExperimentalLevelMode((current) => {
+                                        const next = !current;
+
+                                        if (!next && build.level > 105) {
+                                            update("level", 105);
+                                        }
+
+                                        return next;
+                                    });
+                                }}
+                                disabled={build.combatContext === "dungeon"}
+                                aria-pressed={experimentalLevelMode}
+                                className={`shrink-0 rounded-md border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.08em] transition ${
+                                    experimentalLevelMode
+                                        ? "border-[#7182ff]/50 bg-[#202846] text-[#aeb8ff]"
+                                        : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#465166] hover:text-[#e3e8f1]"
+                                } disabled:cursor-not-allowed disabled:opacity-50`}
+                            >
+                                {experimentalLevelMode ? "On" : "Off"}
+                            </button>
+                        </div>
+                    </div>
                 </CollapsibleSection>
 
                 <div className="grid grid-cols-2 gap-2 pt-1">

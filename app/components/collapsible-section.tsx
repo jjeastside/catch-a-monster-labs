@@ -6,14 +6,16 @@ type CollapsibleSectionProps = {
     title: ReactNode;
     children: ReactNode;
     description?: string;
+    defaultOpen?: boolean;
 };
 
 export function CollapsibleSection({
                                        title,
                                        children,
                                        description,
+                                       defaultOpen = true,
                                    }: CollapsibleSectionProps) {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(defaultOpen);
 
     return (
         <section className="w-full min-w-0 max-w-full rounded-lg border border-[#344050] bg-[#0d131d]/55">
