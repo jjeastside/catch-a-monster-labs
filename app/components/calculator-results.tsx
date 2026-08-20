@@ -1531,7 +1531,7 @@ function GrowthPreview({ build, statData, activeStat }: GrowthPreviewProps) {
     const width = 440;
     const height = 230;
     const padding = { top: 16, right: 18, bottom: 34, left: 52 };
-    const levels = Array.from({ length: 105 }, (_, index) => index + 1);
+    const levels = Array.from({ length: 110 }, (_, index) => index + 1);
     const points = statData
         ? levels.map((level) => {
             const levelStats = calculateStats(statData, { ...build, level });
@@ -1562,7 +1562,7 @@ function GrowthPreview({ build, statData, activeStat }: GrowthPreviewProps) {
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                     <h3 className="text-sm font-semibold text-[#e3e8f1]">Growth Preview</h3>
-                    <p className="mt-1 text-xs text-[#7f8b9e]">Current build bonuses · Levels 1–105</p>
+                    <p className="mt-1 text-xs text-[#7f8b9e]">Current build bonuses · Levels 1–110</p>
                 </div>
                 <div className="text-right">
                     <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">
@@ -1579,7 +1579,7 @@ function GrowthPreview({ build, statData, activeStat }: GrowthPreviewProps) {
                     viewBox={`0 0 ${width} ${height}`}
                     className="mt-3 h-auto w-full"
                     role="img"
-                    aria-label={`${activeStat} growth from level 1 to 105`}
+                    aria-label={`${activeStat} growth from level 1 to 110`}
                 >
                     <defs>
                         <linearGradient id={`growth-fill-${activeStat}`} x1="0" y1="0" x2="0" y2="1">
@@ -1600,7 +1600,7 @@ function GrowthPreview({ build, statData, activeStat }: GrowthPreviewProps) {
                         );
                     })}
 
-                    {[1, 20, 40, 60, 80, 105].map((level) => (
+                    {[1, 20, 40, 60, 80, 100, 110].map((level) => (
                         <g key={level}>
                             <line x1={xForLevel(level)} x2={xForLevel(level)} y1={padding.top} y2={padding.top + plotHeight} stroke="#222a36"/>
                             <text x={xForLevel(level)} y={height - 12} textAnchor="middle" fill="#7f8b9e" fontSize="10">
@@ -1610,7 +1610,7 @@ function GrowthPreview({ build, statData, activeStat }: GrowthPreviewProps) {
                     ))}
 
                     <path
-                        d={`${path} L ${xForLevel(105)} ${padding.top + plotHeight} L ${xForLevel(1)} ${padding.top + plotHeight} Z`}
+                        d={`${path} L ${xForLevel(110)} ${padding.top + plotHeight} L ${xForLevel(1)} ${padding.top + plotHeight} Z`}
                         fill={`url(#growth-fill-${activeStat})`}
                     />
                     <path d={path} fill="none" stroke={accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>

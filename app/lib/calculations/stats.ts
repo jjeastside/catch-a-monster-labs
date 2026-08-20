@@ -76,9 +76,9 @@ type StatsBuild = Pick<
 >;
 
 function validateLevel(level: number): void {
-    if (!Number.isInteger(level) || level < 1 || level > 105) {
+    if (!Number.isInteger(level) || level < 1 || level > 110) {
         throw new RangeError(
-            "Level must be an integer from 1 through 105.",
+            "Level must be an integer from 1 through 110.",
         );
     }
 }
