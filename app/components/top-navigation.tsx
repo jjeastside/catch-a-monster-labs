@@ -16,13 +16,13 @@ export function TopNavigation() {
         <header className="border-b border-[#3b4759] bg-[#0d131d]/95 px-4 backdrop-blur sm:px-6">
             <nav
                 aria-label="Primary navigation"
-                className="grid h-[73px] w-full grid-cols-[1fr_auto_1fr] items-center gap-4"
+                className="mx-auto grid h-[52px] w-full max-w-[1800px] grid-cols-[1fr_auto_1fr] items-center gap-4 sm:h-[73px]"
             >
                 <Link
                     href="/"
                     className="flex shrink-0 items-center gap-3 font-semibold tracking-tight text-white"
                 >
-                    <span className="grid size-12 place-items-center">
+                    <span className="grid size-8 place-items-center sm:size-12">
                         <Image
                             src={camLabLogo}
                             alt="Cam Lab logo"

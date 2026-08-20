@@ -967,7 +967,7 @@ export function BuildEditor({
                 </button>
             }
         >
-            <div className="flex flex-1 flex-col gap-2 overflow-auto p-3">
+            <div className="flex w-full min-w-0 max-w-full flex-1 flex-col gap-2 overflow-x-hidden overflow-y-auto p-3">
                 {!monster && (
                     <div className="rounded-lg border border-dashed border-[#344050] bg-[#0d131d]/45 p-4 text-center">
                         <p className="text-sm font-medium text-[#e3e8f1]">
@@ -1028,7 +1028,7 @@ export function BuildEditor({
 
                         <div>
                             <p className="mb-1.5 text-xs font-medium text-[#bfc7d5]">Rank</p>
-                            <div className="grid grid-cols-7 overflow-hidden rounded-lg border border-[#344050] bg-[#0d131d]">
+                            <div className="grid w-full min-w-0 grid-cols-[repeat(7,minmax(0,1fr))] overflow-hidden rounded-lg border border-[#344050] bg-[#0d131d]">
                                 {ranks.map((rank, index) => {
                                     const selected = build.rank === rank;
                                     const visual = rankVisuals[rank];

@@ -196,12 +196,38 @@ export function AccountMultipliers({
 
     return (
         <>
-            <section className="rounded-lg border border-[#3b4759] bg-[#0f1620] px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.16)]">
-                <div className="grid gap-3 lg:grid-cols-[minmax(230px,0.9fr)_repeat(3,minmax(190px,1fr))] lg:items-stretch">
-                    <div className="flex items-center justify-between gap-3 lg:pr-3">
+            <section className="min-w-0 rounded-lg border border-[#3b4759] bg-[#0f1620] px-2.5 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.16)] sm:px-4 sm:py-3">
+                <div className="min-w-0 lg:hidden">
+                    <div className="flex min-w-0 items-start justify-between gap-2">
+                        <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-1.5">
+                                <h2 className="text-sm font-semibold text-[#e3e8f1]">Account Multipliers</h2>
+                                <span className="rounded border border-[#344050] bg-[#141c28] px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-[#7f8b9e]">Account-wide</span>
+                            </div>
+                            <p className="mt-1 text-[10px] leading-4 text-[#7f8b9e]">Saved when you switch monsters or reset a build.</p>
+                        </div>
+                        <button type="button" onClick={() => { setExpandedCategory(null); setIsOpen(true); }} className="shrink-0 rounded-md border border-[#344050] bg-[#141c28] px-2.5 py-1.5 text-[10px] font-semibold text-[#8e99ad]">
+                            Manage
+                        </button>
+                    </div>
+
+                    <div className="mt-2 grid w-full min-w-0 grid-cols-[repeat(2,minmax(0,1fr))] gap-2">
+                        <button type="button" onClick={() => { setExpandedCategory(null); setIsOpen(true); }} className="min-w-0 rounded-lg border border-[#344050] bg-[#141c28] px-3 py-2 text-left">
+                            <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-[#8e99ad]">Damage</span>
+                            <strong className="mt-1 block truncate text-base text-[#ff517e]">+{bonuses.damagePercent}%</strong>
+                        </button>
+                        <button type="button" onClick={() => { setExpandedCategory(null); setIsOpen(true); }} className="min-w-0 rounded-lg border border-[#344050] bg-[#141c28] px-3 py-2 text-left">
+                            <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-[#8e99ad]">Health</span>
+                            <strong className="mt-1 block truncate text-base text-[#39ef64]">+{bonuses.healthPercent}%</strong>
+                        </button>
+                    </div>
+                </div>
+
+                <div className="hidden gap-3 lg:grid lg:grid-cols-[minmax(230px,0.9fr)_repeat(3,minmax(190px,1fr))] lg:items-stretch">
+                    <div className="flex min-w-0 items-start justify-between gap-3 lg:items-center lg:pr-3">
                         <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-2">
-                                <h2 className="text-sm font-semibold text-[#e3e8f1]">Account Multipliers</h2>
+                                <h2 className="text-sm font-semibold text-[#e3e8f1] sm:whitespace-nowrap">Account Multipliers</h2>
                                 <span className="rounded border border-[#344050] bg-[#141c28] px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Account-wide</span>
                             </div>
                             <p className="mt-1 text-[11px] text-[#7f8b9e]">Saved when you switch monsters or reset a build.</p>

@@ -2,7 +2,7 @@ export function SiteHeading() {
     return (
         <section
             aria-labelledby="calculator-heading"
-            className="relative overflow-hidden border-b border-[#293140] bg-[#0b0e14]"
+            className="relative hidden overflow-hidden border-b border-[#293140] bg-[#0b0e14] sm:block"
         >
             <div
                 aria-hidden="true"
@@ -17,11 +17,11 @@ export function SiteHeading() {
                 <div className="min-w-0 border-l-2 border-[#7182ff]/75 pl-3">
                     <h1
                         id="calculator-heading"
-                        className="text-[17px] font-bold tracking-tight text-[#f6f8fc]"
+                        className="break-words text-[17px] font-bold tracking-tight text-[#f6f8fc]"
                     >
                         Catch a Monster Build Calculator
                     </h1>
-                    <p className="mt-0.5 text-xs leading-4 text-[#9ca6b8]">
+                    <p className="mt-0.5 max-w-3xl text-xs leading-4 text-[#9ca6b8]">
                         Calculate monster stats and skill damage using reverse-engineered in-game formulas.
                     </p>
                 </div>

@@ -1841,11 +1841,11 @@ export function CalculatorResults({
                 ) : null
             }
         >
-            <div className="flex min-h-0 flex-1 flex-col overflow-hidden p-5">
+            <div className="flex min-h-0 flex-1 flex-col overflow-visible p-3 sm:p-5 lg:overflow-hidden">
                 {!monster ? (
                     <EmptyCalculatorState/>
                 ) : (
-                    <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain pr-2 pb-5">
+                    <div className="min-h-0 flex-1 space-y-4 overflow-visible pb-5 lg:overflow-y-auto lg:overscroll-contain lg:pr-2">
                         <MonsterOverviewCard
                             monster={monster}
                             isFavorite={isFavorite}

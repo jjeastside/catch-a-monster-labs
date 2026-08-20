@@ -228,10 +228,10 @@ export function MonsterOverviewCard({
                     : undefined;
 
     return (
-        <section className="relative flex gap-6 overflow-hidden rounded-xl border border-[#344050] bg-[#141c28] p-5 sm:p-6">
+        <section className="relative flex min-w-0 flex-col gap-4 overflow-hidden rounded-xl border border-[#344050] bg-[#141c28] p-4 sm:flex-row sm:gap-6 sm:p-6">
             <div className="pointer-events-none absolute inset-y-0 left-0 w-64 bg-[radial-gradient(circle_at_left,rgba(117,133,255,0.09),transparent_70%)]" />
             <div
-                className={`relative grid size-40 shrink-0 place-items-center overflow-hidden rounded-2xl border-2 p-[3px] shadow-[0_12px_30px_rgba(0,0,0,0.28)] xl:size-44 ${
+                className={`relative grid size-28 shrink-0 place-items-center overflow-hidden rounded-2xl border-2 p-[3px] shadow-[0_12px_30px_rgba(0,0,0,0.28)] sm:size-40 xl:size-44 ${
                     rarityImageClasses[monster.rarity]
                 }`}
                 style={portraitFrameStyle}
@@ -261,7 +261,7 @@ export function MonsterOverviewCard({
                             Monster Overview
                         </p>
 
-                        <h2 className="mt-1 text-3xl font-bold tracking-tight text-[#f6f8fc]">
+                        <h2 className="mt-1 break-words text-2xl font-bold tracking-tight text-[#f6f8fc] sm:text-3xl">
                             {monster.name}
                         </h2>
                     </div>

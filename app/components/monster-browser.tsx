@@ -200,7 +200,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
         {selectedMonster ? "1 selected" : "0 selected"}
       </span>}
             >
-                <div className="flex min-h-0 flex-1 flex-col gap-4 p-5">
+                <div className="flex w-full min-w-0 max-w-full flex-1 flex-col gap-4 overflow-x-hidden p-4 sm:p-5">
                     <label className="relative block">
                         <span className="sr-only">Search monsters</span>
                         <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#7f8b9e]">⌕</span>
@@ -213,7 +213,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
                         />
                     </label>
 
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid w-full min-w-0 grid-cols-[repeat(2,minmax(0,1fr))] gap-2">
                         <label className="sr-only" htmlFor="source-filter">Source</label>
                         <select id="source-filter" value={sourceFilter} onChange={(event) => setSourceFilter(event.target.value)} className={selectClassName}>
                             <option value="all">All sources</option>

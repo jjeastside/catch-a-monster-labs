@@ -47,6 +47,7 @@ export function AppShell() {
     const hasInitializedFavoriteStorage = useRef(false);
     const [hasLoadedActiveBuild, setHasLoadedActiveBuild] = useState(false);
     const [savedBuildsMode, setSavedBuildsMode] = useState<"save" | "load" | null>(null);
+    const [mobilePanel, setMobilePanel] = useState<"monster" | "results" | "build">("monster");
     const [savedBuildSlots, setSavedBuildSlots] = useState<Array<SavedBuildSlot | null>>(emptySaveSlots);
     const [build, setBuild] = useState<Build>(() => {
         const defaultMonster = monsters[0];
@@ -413,16 +414,41 @@ export function AppShell() {
     }
 
     return (
-        <div className="min-h-screen bg-[#0b111a] text-[#f6f8fc]">
+        <div className="min-h-screen min-w-0 overflow-x-hidden bg-[#0b111a] text-[#f6f8fc]">
             <TopNavigation />
             <SiteHeading />
 
-            <div className="mx-auto w-full max-w-[1800px] px-4 pt-3 sm:px-5 xl:px-7 2xl:px-8">
+            <div className="mx-auto w-full max-w-[1800px] px-3 pt-2 sm:px-5 sm:pt-3 xl:px-7 2xl:px-8">
                 <AccountMultipliers
                     build={build}
                     onBuildChangeAction={setBuild}
                 />
             </div>
+
+            <nav
+                aria-label="Calculator sections"
+                className="sticky top-0 z-40 mx-3 mt-2 grid grid-cols-3 overflow-hidden rounded-lg border border-[#3b4759] bg-[#0d131d]/95 p-1 shadow-lg backdrop-blur sm:mx-5 sm:mt-3 lg:hidden"
+            >
+                {([
+                    ["monster", "Monster"],
+                    ["results", "Results"],
+                    ["build", "Build"],
+                ] as const).map(([panel, label]) => (
+                    <button
+                        key={panel}
+                        type="button"
+                        aria-current={mobilePanel === panel ? "page" : undefined}
+                        onClick={() => setMobilePanel(panel)}
+                        className={`min-w-0 rounded-md px-1 py-2 text-xs font-semibold transition ${
+                            mobilePanel === panel
+                                ? "bg-[#7182ff] text-white shadow-[0_4px_16px_rgba(113,130,255,0.28)]"
+                                : "text-[#8e99ad] hover:bg-[#141c28] hover:text-white"
+                        }`}
+                    >
+                        {label}
+                    </button>
+                ))}
+            </nav>
 
             <main
                 className="
@@ -431,9 +457,9 @@ export function AppShell() {
                     w-full
                     max-w-[1800px]
                     gap-4
-                    px-4
+                    px-3
                     pb-5
-                    pt-3
+                    pt-2
                     sm:px-5
                     lg:h-[calc(100vh-233px)]
                     lg:grid-cols-[minmax(250px,0.85fr)_minmax(420px,1.65fr)_minmax(280px,1fr)]
@@ -443,31 +469,40 @@ export function AppShell() {
                     2xl:px-8
                 "
             >
-                <MonsterBrowser
-                    monsters={monsters}
-                    selectedMonster={selectedMonster}
-                    onSelectAction={selectMonster}
-                />
+                <div className={`${mobilePanel === "monster" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-hidden lg:block`}>
+                    <MonsterBrowser
+                        monsters={monsters}
+                        selectedMonster={selectedMonster}
+                        onSelectAction={(monster) => {
+                            selectMonster(monster);
+                            setMobilePanel("results");
+                        }}
+                    />
+                </div>
 
-                <CalculatorResults
-                    monster={selectedMonster}
-                    build={build}
-                    isFavorite={
-                        selectedMonster
-                            ? favoriteMonsterIds.includes(selectedMonster.id)
-                            : false
-                    }
-                    onToggleFavorite={toggleSelectedMonsterFavorite}
-                />
+                <div className={`${mobilePanel === "results" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-hidden lg:block`}>
+                    <CalculatorResults
+                        monster={selectedMonster}
+                        build={build}
+                        isFavorite={
+                            selectedMonster
+                                ? favoriteMonsterIds.includes(selectedMonster.id)
+                                : false
+                        }
+                        onToggleFavorite={toggleSelectedMonsterFavorite}
+                    />
+                </div>
 
-                <BuildEditor
-                    monster={selectedMonster}
-                    build={build}
-                    onBuildChangeAction={setBuild}
-                    onResetAction={resetBuild}
-                    onOpenSaveBuildsAction={() => setSavedBuildsMode("save")}
-                    onOpenLoadBuildsAction={() => setSavedBuildsMode("load")}
-                />
+                <div className={`${mobilePanel === "build" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-hidden lg:block`}>
+                    <BuildEditor
+                        monster={selectedMonster}
+                        build={build}
+                        onBuildChangeAction={setBuild}
+                        onResetAction={resetBuild}
+                        onOpenSaveBuildsAction={() => setSavedBuildsMode("save")}
+                        onOpenLoadBuildsAction={() => setSavedBuildsMode("load")}
+                    />
+                </div>
             </main>
 
             <SiteFooter />
