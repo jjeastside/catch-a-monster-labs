@@ -175,7 +175,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       },
       {
         "type": "Chest",
-        "name": "Memory Chest 1",
+        "name": "Memory Chest 2",
         "location": "Abyss Shop",
         "status": "Current"
       }
@@ -420,7 +420,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       },
       {
         "type": "Chest",
-        "name": "Memory Chest 2",
+        "name": "Memory Chest 1",
         "location": "Abyss Shop",
         "status": "Current"
       }
@@ -1173,7 +1173,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       },
       {
         "type": "Chest",
-        "name": "Memory Chest 1",
+        "name": "Memory Chest 2",
         "location": "Abyss Shop",
         "status": "Current"
       }
@@ -1227,6 +1227,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Egg",
         "name": "Fire Egg",
         "location": "Volcano",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -1442,6 +1448,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Sand Egg",
         "location": "Duneveil Isle",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -1551,6 +1563,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Island Spawn",
         "name": "Natural Spawn",
         "location": "Duneveil Isle",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -1721,6 +1739,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Giant Tree Egg",
         "location": "Spirit Grove",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -1779,6 +1803,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Ancient Egg",
         "location": "Dragon's Breath",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -1830,6 +1860,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Island Spawn",
         "name": "Natural Spawn",
         "location": "Blossom Haven",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -1939,6 +1975,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Rexie's Egg",
         "location": "Mobius Circus",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -1964,6 +2006,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Chest",
         "name": "Rift Chest",
         "location": "Abyss Shop",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -2335,9 +2383,9 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       },
       {
         "type": "Chest",
-        "name": "Memory Chest 1",
-        "location": "Abyss Shop",
-        "status": "Unavailable"
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -2775,6 +2823,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Duneveil Isle Rift 3",
         "location": "Duneveil Isle",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -2819,6 +2873,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Rift",
         "name": "Tideland Rift 3",
         "location": "Tideland",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -2872,6 +2932,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Rift Chest",
         "location": "Abyss Shop",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -2910,6 +2976,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Rift",
         "name": "Tideland Rift 3",
         "location": "Tideland",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -2955,6 +3027,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Rift",
         "name": "Spirit Grove Rift 3",
         "location": "Spirit Grove",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -3072,6 +3150,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Rift Chest",
         "location": "Abyss Shop",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3110,6 +3194,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Rift",
         "name": "Spirit Grove Rift 3",
         "location": "Spirit Grove",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -3203,6 +3293,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Rift Chest",
         "location": "Abyss Shop",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3242,6 +3338,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Dragon's Breath Rift 3",
         "location": "Dragon's Breath",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3280,6 +3382,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Rift",
         "name": "Dragon's Breath Rift 3",
         "location": "Dragon's Breath",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -3321,6 +3429,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "location": "Cinderclaw Castle",
         "status": "Current",
         "notes": "Normal Difficulty and Hard Difficulty"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3348,6 +3462,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "location": "Cinderclaw Castle",
         "status": "Current",
         "notes": "Normal Difficulty"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3444,6 +3564,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Special Spawn",
         "location": "Blossom Haven",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3535,6 +3661,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Blossom Haven Rift 3",
         "location": "Blossom Haven",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3615,6 +3747,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "location": "Cinderclaw Castle",
         "status": "Current",
         "notes": "Nightmare Difficulty"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3653,6 +3791,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Island Special Spawn",
         "name": "Special Spawn",
         "location": "Mobius Circus",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -3706,6 +3850,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Mobius Rift 3",
         "location": "Mobius Circus",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3744,6 +3894,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Rift",
         "name": "Mobius Rift 3",
         "location": "Mobius Circus",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -3784,6 +3940,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Jokaire's Egg",
         "location": "Mobius Circus",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3823,6 +3985,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Special Spawn",
         "location": "Specter Shallows",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3849,6 +4017,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Scareaper's Egg",
         "location": "Specter Shallows",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3874,6 +4048,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Rift",
         "name": "Specter Shallows Rift 3",
         "location": "Specter Shallows",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -3913,6 +4093,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Rift",
         "name": "Specter Shallows Rift 3",
         "location": "Specter Shallows",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -3954,6 +4140,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "location": "Cinderclaw Castle",
         "status": "Current",
         "notes": "Inferno Difficulty"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3992,6 +4184,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Island Special Spawn",
         "name": "Special Spawn",
         "location": "Nova Coast",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -4036,6 +4234,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Island Special Spawn",
         "name": "Special Spawn",
         "location": "Nova Coast",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -4102,6 +4306,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Nova Coast Rift 3",
         "location": "Nova Coast",
         "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -4140,6 +4350,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Rift",
         "name": "Nova Coast Rift 3",
         "location": "Nova Coast",
+        "status": "Current"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
         "status": "Current"
       }
     ],
@@ -4290,7 +4506,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "sources": [
       {
         "type": "Rift",
-        "name": "Rift 3",
+        "name": "Splash Isle Rift 3",
         "location": "Splash Isle",
         "status": "Current"
       },
@@ -4335,7 +4551,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "sources": [
       {
         "type": "Rift",
-        "name": "Rift 3",
+        "name": "Splash Isle Rift 3",
         "location": "Splash Isle",
         "status": "Current"
       },
@@ -6195,6 +6411,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "location": "Cinderclaw Castle",
         "status": "Current",
         "notes": "Normal and Hard Difficulty"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -6235,6 +6457,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "location": "Cinderclaw Castle",
         "status": "Current",
         "notes": "Nightmare Difficulty"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -6439,6 +6667,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "location": "Cinderclaw Castle",
         "status": "Current",
         "notes": "Nightmare Difficulty"
+      },
+      {
+        "type": "Chest",
+        "name": "Mythical Chest",
+        "location": "Limited Events",
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -6628,8 +6862,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "lampyr",
-    "baseDamageELevel1": 5020000,
-    "baseHealthELevel1": 37270000,
+    "baseDamageELevel1": 5016000,
+    "baseHealthELevel1": 37271000,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 213
@@ -6820,7 +7054,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Chest",
         "name": "Memory Chest 2",
         "location": "Abyss Shop",
-        "status": "Legacy"
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -6865,7 +7099,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Chest",
         "name": "Memory Chest 2",
         "location": "Abyss Shop",
-        "status": "Legacy"
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -6910,7 +7144,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Chest",
         "name": "Memory Chest 2",
         "location": "Abyss Shop",
-        "status": "Legacy"
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -6943,7 +7177,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Chest",
         "name": "Memory Chest 2",
         "location": "Abyss Shop",
-        "status": "Legacy"
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -6988,7 +7222,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Chest",
         "name": "Memory Chest 2",
         "location": "Abyss Shop",
-        "status": "Legacy"
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -7010,20 +7244,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/void-shadecloak.png",
     "element": "Common",
     "rarity": "Void",
-    "sources": [
-      {
-        "type": "Event",
-        "name": "Void Jars",
-        "location": "Void Event 2025",
-        "status": "Legacy"
-      },
-      {
-        "type": "Chest",
-        "name": "Memory Chest 2",
-        "location": "Abyss Shop",
-        "status": "Current"
-      }
-    ],
+    "sources": [],
     "skillIds": [
       "barrier",
       "soul-reap-chain"
@@ -7042,14 +7263,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/void-strum-bones.png",
     "element": "Common",
     "rarity": "Void",
-    "sources": [
-      {
-        "type": "Chest",
-        "name": "Memory Chest 2",
-        "location": "Abyss Shop",
-        "status": "Current"
-      }
-    ],
+    "sources": [],
     "skillIds": [
       "demonic-lullaby",
       "healing-pulse"
