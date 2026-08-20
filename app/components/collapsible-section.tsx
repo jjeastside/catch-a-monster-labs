@@ -16,7 +16,7 @@ export function CollapsibleSection({
     const [isOpen, setIsOpen] = useState(true);
 
     return (
-        <section className="w-full min-w-0 max-w-full overflow-hidden rounded-lg border border-[#344050] bg-[#0d131d]/55">
+        <section className="w-full min-w-0 max-w-full rounded-lg border border-[#344050] bg-[#0d131d]/55">
             <button
                 type="button"
                 onClick={() => setIsOpen((current) => !current)}
@@ -40,7 +40,7 @@ export function CollapsibleSection({
             </button>
 
             {isOpen && (
-                <div className="w-full min-w-0 max-w-full overflow-hidden border-t border-[#3b4759] p-3">
+                <div className="w-full min-w-0 max-w-full border-t border-[#3b4759] p-3">
                     {children}
                 </div>
             )}

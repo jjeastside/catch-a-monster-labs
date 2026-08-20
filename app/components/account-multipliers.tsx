@@ -54,6 +54,7 @@ export function AccountMultipliers({
                                    }: AccountMultipliersProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [expandedCategory, setExpandedCategory] = useState<AchievementCategory | null>(null);
+    const [indexScoreInput, setIndexScoreInput] = useState("");
     const closeButtonRef = useRef<HTMLButtonElement>(null);
     const selectedIds = build.accountMultipliers.completedAchievementIds;
     const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
@@ -117,10 +118,25 @@ export function AccountMultipliers({
         ]);
     };
 
+    const setIndexScore = (rawScore: string) => {
+        setIndexScoreInput(rawScore);
+        if (rawScore.trim() === "") return;
+
+        const score = Math.max(0, Math.trunc(Number(rawScore) || 0));
+        const indexAchievements = achievementsByCategory["index-mania"];
+        const indexIds = new Set(indexAchievements.map(({ id }) => id));
+        const otherIds = selectedIds.filter((id) => !indexIds.has(id));
+        const completedIds = indexAchievements
+            .filter(({ goalAmount }) => goalAmount !== null && score >= goalAmount)
+            .map(({ id }) => id);
+
+        updateSelectedIds([...otherIds, ...completedIds]);
+    };
+
     const toggleAchievement = (achievement: Achievement) => {
         const categoryAchievements = achievementsByCategory[achievement.category];
 
-        if (achievement.category === "pet-quest") {
+        if (achievement.category === "pet-quest" || achievement.category === "index-mania") {
             const clickedIndex = categoryAchievements.findIndex(({ id }) => id === achievement.id);
             const categoryIds = new Set(categoryAchievements.map(({ id }) => id));
             const otherIds = selectedIds.filter((id) => !categoryIds.has(id));
@@ -139,7 +155,10 @@ export function AccountMultipliers({
         );
     };
 
-    const reset = () => updateSelectedIds([]);
+    const reset = () => {
+        setIndexScoreInput("");
+        updateSelectedIds([]);
+    };
 
     const progressCards = [
         {
@@ -211,15 +230,27 @@ export function AccountMultipliers({
                         </button>
                     </div>
 
-                    <div className="mt-2 grid w-full min-w-0 grid-cols-[repeat(2,minmax(0,1fr))] gap-2">
-                        <button type="button" onClick={() => { setExpandedCategory(null); setIsOpen(true); }} className="min-w-0 rounded-lg border border-[#344050] bg-[#141c28] px-3 py-2 text-left">
-                            <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-[#8e99ad]">Damage</span>
-                            <strong className="mt-1 block truncate text-base text-[#ff517e]">+{bonuses.damagePercent}%</strong>
-                        </button>
-                        <button type="button" onClick={() => { setExpandedCategory(null); setIsOpen(true); }} className="min-w-0 rounded-lg border border-[#344050] bg-[#141c28] px-3 py-2 text-left">
-                            <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-[#8e99ad]">Health</span>
-                            <strong className="mt-1 block truncate text-base text-[#39ef64]">+{bonuses.healthPercent}%</strong>
-                        </button>
+                    <div className="mt-2 grid w-full min-w-0 grid-cols-[repeat(3,minmax(0,1fr))] gap-1.5">
+                        {PRIMARY_ACCOUNT_MULTIPLIER_CATEGORIES.map((category) => {
+                            const progress = progressByCategory[category];
+                            const categoryIcon = category === "path-of-progress"
+                                ? "/account-icons/path-of-progress.png"
+                                : category === "index-mania"
+                                    ? "/account-icons/index-mania.png"
+                                    : "/account-icons/health-up.png";
+                            const mobileLabel = category === "path-of-progress" ? "Path" : category === "index-mania" ? "Index" : "Pet Quests";
+
+                            return (
+                                <button key={category} type="button" onClick={() => { setExpandedCategory(category); setIsOpen(true); }} className="group min-w-0 rounded-lg border border-[#344050] bg-[#141c28] px-1.5 py-2 text-center transition hover:border-[#7182ff]">
+                                    <span className="relative mx-auto grid size-9 place-items-center">
+                                        <img src={assetPath(categoryIcon)} alt="" className={`${category === "pet-quest" ? "absolute left-0 top-0 size-7" : "max-h-9 max-w-9"} object-contain`} />
+                                        {category === "pet-quest" && <img src={assetPath("/account-icons/damage-up.png")} alt="" className="absolute bottom-0 right-0 size-6 object-contain" />}
+                                    </span>
+                                    <span className="mt-1 block truncate text-[10px] font-bold text-[#e7ebf2]">{mobileLabel}</span>
+                                    <span className={`mt-1 inline-flex rounded border px-1 py-0.5 text-[8px] font-black tabular-nums ${categoryStyles[category]}`}>{progress.completed}/{progress.total}</span>
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
 
@@ -271,21 +302,30 @@ export function AccountMultipliers({
             </section>
 
             {isOpen && (
-                <div className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-4" onMouseDown={(event) => {
+                <div className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-2 sm:p-4" onMouseDown={(event) => {
                     if (event.target === event.currentTarget) setIsOpen(false);
                 }}>
                     <section role="dialog" aria-modal="true" aria-labelledby="account-multipliers-title" className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-xl border border-[#344050] bg-[#0f1620] shadow-2xl">
-                        <header className="sticky top-0 z-20 flex items-start justify-between gap-4 border-b border-[#3b4759] bg-[#0f1620] px-5 py-4">
+                        <header className="sticky top-0 z-20 flex items-start justify-between gap-3 border-b border-[#3b4759] bg-[#0f1620] px-4 py-3 sm:px-5 sm:py-4">
                             <div>
+                                {expandedCategory && (
+                                    <button type="button" onClick={() => setExpandedCategory(null)} className="mb-2 text-xs font-bold text-[#7182ff] hover:text-white">
+                                        ← Back to account bonuses
+                                    </button>
+                                )}
                                 <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#7182ff]">Account Progress</p>
-                                <h2 id="account-multipliers-title" className="mt-1 text-lg font-semibold text-[#f6f8fc]">Account Multipliers</h2>
-                                <p className="mt-1 text-xs text-[#8e99ad]">Enter a completed total or check achievements individually.</p>
+                                <h2 id="account-multipliers-title" className="mt-1 text-lg font-semibold text-[#f6f8fc]">
+                                    {expandedCategory ? `${ACCOUNT_MULTIPLIER_DETAILS[expandedCategory].label} Achievements` : "Account Multipliers"}
+                                </h2>
+                                <p className="mt-1 text-xs text-[#8e99ad]">
+                                    {expandedCategory ? "Select your completed achievements or enter the completed total." : "Choose a bonus category to update your account progress."}
+                                </p>
                             </div>
                             <button ref={closeButtonRef} type="button" onClick={() => setIsOpen(false)} aria-label="Close account multipliers" className="grid size-9 shrink-0 place-items-center rounded-md border border-[#344050] bg-[#141c28] text-lg text-[#8e99ad] hover:border-[#7182ff] hover:text-[#7182ff]">×</button>
                         </header>
 
-                        <div className="space-y-4 p-4 sm:p-5">
-                            <div className="grid gap-3 sm:grid-cols-2">
+                        <div className="space-y-4 p-3 sm:p-5">
+                            <div className={`${expandedCategory ? "hidden" : "grid"} gap-3 sm:grid-cols-2`}>
                                 {progressCards.map((card) => {
                                     const isGreen = card.tone === "green";
                                     const isGold = card.tone === "gold";
@@ -299,7 +339,7 @@ export function AccountMultipliers({
                                         <button
                                             key={card.key}
                                             type="button"
-                                            onClick={() => setExpandedCategory(isExpanded ? null : card.category)}
+                                            onClick={() => setExpandedCategory(card.category)}
                                             aria-expanded={isExpanded}
                                             className={`group relative overflow-hidden rounded-2xl border-2 p-1 text-left shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition hover:-translate-y-0.5 hover:brightness-110 ${frame} ${isExpanded ? "ring-2 ring-[#7182ff]/60" : ""}`}
                                         >
@@ -328,7 +368,7 @@ export function AccountMultipliers({
                                 })}
                             </div>
 
-                            <section className="rounded-xl border border-[#344050] bg-[#0d1118] p-3">
+                            <section className={`${expandedCategory ? "hidden" : "block"} rounded-xl border border-[#344050] bg-[#0d1118] p-3`}>
                                 <div className="mb-3 px-1">
                                     <div>
                                         <h3 className="text-sm font-black text-white">Additional Bonuses</h3>
@@ -382,8 +422,8 @@ export function AccountMultipliers({
 
                                 return (
                                     <section className="overflow-hidden rounded-xl border border-[#3a4353] bg-[#121722] shadow-xl">
-                                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#344050] bg-[#171d28] p-4">
-                                            <div className="min-w-0 flex-1">
+                                        <div className="border-b border-[#344050] bg-[#171d28] p-3 sm:p-4">
+                                            <div className="min-w-0">
                                                 <div className="flex flex-wrap items-center gap-2">
                                                     <h3 className="text-sm font-black text-white">{details.label} Achievements</h3>
                                                     <span className={`flex items-center gap-1 rounded border px-2 py-0.5 text-[10px] font-bold ${categoryStyles[category]}`}>
@@ -393,12 +433,30 @@ export function AccountMultipliers({
                                                 </div>
                                                 <p className="mt-1 text-[11px] text-[#8f9aae]">{details.description}</p>
                                             </div>
-                                            <label className="flex items-center gap-2 rounded-lg border border-[#5c6a80] bg-[#090c12] px-3 py-2">
-                                                <span className="text-[9px] font-bold uppercase tracking-wide text-[#7f8b9e]">Completed</span>
-                                                <input type="number" min={0} max={categoryAchievements.length} value={progress.completed} onChange={(event) => setCategoryCount(category, Number(event.target.value))} className="w-12 bg-transparent text-right text-sm font-black text-white outline-none" aria-label={`${details.label} completed`} />
-                                                <span className="text-sm font-black text-[#7f8b9e]">/{categoryAchievements.length}</span>
-                                            </label>
-                                            <button type="button" onClick={() => setExpandedCategory(null)} className="text-xs font-bold text-[#7182ff] hover:text-white">Hide ↑</button>
+                                            <div className="mt-3 grid w-full gap-2 sm:grid-cols-2">
+                                                <label className="flex min-w-0 items-center gap-2 rounded-lg border border-[#5c6a80] bg-[#090c12] px-3 py-2">
+                                                    <span className="shrink-0 text-[9px] font-bold uppercase tracking-wide text-[#7f8b9e]">Completed</span>
+                                                    <input type="number" min={0} max={categoryAchievements.length} value={progress.completed} onChange={(event) => setCategoryCount(category, Number(event.target.value))} className="min-w-0 flex-1 bg-transparent text-right text-sm font-black text-white outline-none" aria-label={`${details.label} completed`} />
+                                                    <span className="shrink-0 text-sm font-black text-[#7f8b9e]">/{categoryAchievements.length}</span>
+                                                </label>
+                                                {category === "index-mania" && (
+                                                    <label className="flex min-w-0 items-center gap-2 rounded-lg border border-[#b87512] bg-[#211506] px-3 py-2">
+                                                        <span className="shrink-0 text-[9px] font-bold uppercase tracking-wide text-[#d89b3a]">Index Score</span>
+                                                        <input
+                                                            type="number"
+                                                            inputMode="numeric"
+                                                            min={0}
+                                                            step={1}
+                                                            value={indexScoreInput}
+                                                            onChange={(event) => setIndexScore(event.target.value)}
+                                                            placeholder="e.g. 2700"
+                                                            className="min-w-0 flex-1 bg-transparent text-right text-sm font-black text-white outline-none placeholder:text-[#6f6252]"
+                                                            aria-label="Current index score"
+                                                        />
+                                                    </label>
+                                                )}
+                                            </div>
+                                            <button type="button" onClick={() => setExpandedCategory(null)} className="mt-3 text-xs font-bold text-[#7182ff] hover:text-white">← Back to account bonuses</button>
                                         </div>
                                         <div className={category === "index-mania" ? "max-h-80 overflow-y-auto" : ""}>
                                             {categoryAchievements.map((achievement) => {
@@ -422,7 +480,7 @@ export function AccountMultipliers({
                                 );
                             })()}
 
-                            <section className="overflow-hidden rounded-2xl border-2 border-[#5a4a45] bg-[#071015] p-1 shadow-[0_12px_35px_rgba(0,0,0,0.45)]">
+                            <section className={`${expandedCategory ? "hidden" : "block"} overflow-hidden rounded-2xl border-2 border-[#5a4a45] bg-[#071015] p-1 shadow-[0_12px_35px_rgba(0,0,0,0.45)]`}>
                                 <div className="rounded-xl bg-gradient-to-b from-[#0d2025] to-[#080d12] px-4 py-4 sm:px-6">
                                     <div className="mb-4 flex items-center gap-3">
                                         <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[#42505b]" />
@@ -462,7 +520,11 @@ export function AccountMultipliers({
                         </div>
 
                         <footer className="sticky bottom-0 z-20 flex justify-between gap-3 border-t border-[#3b4759] bg-[#0f1620] px-5 py-4">
-                            <button type="button" onClick={reset} disabled={selectedIds.length === 0} className="rounded-md px-3 py-2 text-xs font-semibold text-[#8e99ad] hover:text-[#e3e8f1] disabled:cursor-not-allowed disabled:opacity-40">Reset All</button>
+                            {expandedCategory ? (
+                                <button type="button" onClick={() => setExpandedCategory(null)} className="rounded-md px-3 py-2 text-xs font-semibold text-[#7182ff] hover:text-white">← Back</button>
+                            ) : (
+                                <button type="button" onClick={reset} disabled={selectedIds.length === 0} className="rounded-md px-3 py-2 text-xs font-semibold text-[#8e99ad] hover:text-[#e3e8f1] disabled:cursor-not-allowed disabled:opacity-40">Reset All</button>
+                            )}
                             <button type="button" onClick={() => setIsOpen(false)} className="rounded-md bg-[#7182ff] px-5 py-2 text-sm font-bold text-[#0b1510] hover:bg-[#8f9cff]">Done</button>
                         </footer>
                     </section>

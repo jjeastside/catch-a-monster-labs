@@ -227,7 +227,7 @@ function HelpTooltip({
             </span>
             <span
                 role="tooltip"
-                className={`pointer-events-none absolute bottom-full z-[70] mb-2 w-64 max-w-[calc(100vw-2rem)] translate-y-1 rounded-lg border border-[#344050] bg-[#0f1620] p-3 text-left text-xs font-normal leading-5 text-[#bfc7d5] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100 ${align === "right" ? "right-0" : align === "left" ? "left-0" : "left-1/2 -translate-x-1/2"}`}
+                className={`pointer-events-none absolute bottom-full z-[70] mb-2 w-64 max-w-[calc(100vw-2rem)] translate-y-1 rounded-lg border border-[#344050] bg-[#0f1620] p-3 text-left text-xs font-normal leading-5 text-[#bfc7d5] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100 ${align === "right" ? "right-0" : align === "left" ? "left-0" : "left-0 sm:left-1/2 sm:-translate-x-1/2"}`}
             >
                 <strong className="block font-semibold text-[#e3e8f1]">{title}</strong>
                 <span className="mt-1 block">{text}</span>
@@ -691,7 +691,7 @@ function TeamPassiveSelect({
     const selected = options.find((option) => option.id === value) ?? null;
 
     return (
-        <div className="relative">
+        <div className="relative min-w-0">
             <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">
                 {label}
             </span>
@@ -731,7 +731,7 @@ function TeamPassiveSelect({
             </button>
 
             {open && (
-                <div className="absolute z-[90] mt-1 max-h-72 w-full overflow-y-auto rounded-md border border-[#344050] bg-[#0f1620] p-1 shadow-2xl">
+                <div className="absolute z-[90] mt-1 max-h-72 w-full min-w-0 max-w-full overflow-y-auto rounded-md border border-[#344050] bg-[#0f1620] p-1 shadow-2xl">
                     <button
                         type="button"
                         onClick={() => {
@@ -967,7 +967,7 @@ export function BuildEditor({
                 </button>
             }
         >
-            <div className="flex w-full min-w-0 max-w-full flex-1 flex-col gap-2 overflow-x-hidden overflow-y-auto p-3">
+            <div className="flex w-full min-w-0 max-w-full flex-1 flex-col gap-2 overflow-visible p-3 lg:overflow-x-hidden lg:overflow-y-auto">
                 {!monster && (
                     <div className="rounded-lg border border-dashed border-[#344050] bg-[#0d131d]/45 p-4 text-center">
                         <p className="text-sm font-medium text-[#e3e8f1]">

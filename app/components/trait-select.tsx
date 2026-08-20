@@ -120,7 +120,7 @@ export function TraitSelect({ value, onChangeAction }: TraitSelectProps) {
                     role="listbox"
                     aria-label="Trait"
                     style={{ maxHeight: `${menuMaxHeight}px` }}
-                    className={`absolute left-0 z-50 w-full min-w-[18rem] overflow-y-auto rounded-lg border border-[#344050] bg-[#0f1620] p-1 shadow-2xl ${opensUpward ? "bottom-full mb-1" : "top-full mt-1"}`}
+                    className={`absolute left-0 z-50 w-full min-w-0 max-w-full overflow-y-auto rounded-lg border border-[#344050] bg-[#0f1620] p-1 shadow-2xl ${opensUpward ? "bottom-full mb-1" : "top-full mt-1"}`}
                 >
                     <button
                         type="button"

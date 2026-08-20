@@ -469,7 +469,7 @@ export function AppShell() {
                     2xl:px-8
                 "
             >
-                <div className={`${mobilePanel === "monster" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-hidden lg:block`}>
+                <div className={`${mobilePanel === "monster" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-visible lg:block lg:overflow-hidden`}>
                     <MonsterBrowser
                         monsters={monsters}
                         selectedMonster={selectedMonster}
@@ -480,7 +480,7 @@ export function AppShell() {
                     />
                 </div>
 
-                <div className={`${mobilePanel === "results" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-hidden lg:block`}>
+                <div className={`${mobilePanel === "results" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-visible lg:block lg:overflow-hidden`}>
                     <CalculatorResults
                         monster={selectedMonster}
                         build={build}
@@ -493,7 +493,7 @@ export function AppShell() {
                     />
                 </div>
 
-                <div className={`${mobilePanel === "build" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-hidden lg:block`}>
+                <div className={`${mobilePanel === "build" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-visible lg:block lg:overflow-hidden`}>
                     <BuildEditor
                         monster={selectedMonster}
                         build={build}
