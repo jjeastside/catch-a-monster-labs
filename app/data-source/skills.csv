@@ -216,7 +216,7 @@ lightning-thrust,Lightning Thrust,Common,"[
 lightning-thrust-psyberion-x,Lightning Thrust (Psyberion X),Common,"[
   { multiplier: 2, hits: 1 },
 ]",8,Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for 2 secs,Ready
-lunar-heal,Lunar Heal,Common,[],8,Target: Allies. Ally effects: 20% of maximum health self heal,Ready
+lunar-heal,Lunar Heal,Common,[],8,Target: Allies. Ally effects: Heal each ally for 20% of their Max HP,Ready
 lunar-taunt,Lunar Taunt,Common,"[
   { multiplier: 0.75, hits: 1 },
 ]",8,Target: Enemy. Enemy effects: Taunt for 3 secs,Ready

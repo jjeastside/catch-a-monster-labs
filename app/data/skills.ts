@@ -5,6 +5,25 @@ export const SKILLS = GENERATED_SKILLS;
 
 export type SkillId = keyof typeof SKILLS;
 
+
+const MONSTER_DISAMBIGUATION_SUFFIXES = new Set([
+    "Djinn Lampyr",
+    "Frostvolf",
+    "Titan Tusk",
+    "Psyberion X",
+    "Scareharvest",
+]);
+
+export function getSkillDisplayName(skillName: string): string {
+    const match = skillName.match(/^(.*?) \(([^()]+)\)$/);
+
+    if (!match || !MONSTER_DISAMBIGUATION_SUFFIXES.has(match[2])) {
+        return skillName;
+    }
+
+    return match[1];
+}
+
 export function getSkill(skillId: string | null | undefined): Skill | null {
     if (!skillId) {
         return null;

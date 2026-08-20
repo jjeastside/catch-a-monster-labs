@@ -1,5 +1,5 @@
 import type {Monster} from "../types/monster";
-import {getSkill} from "../data/skills";
+import {getSkill, getSkillDisplayName} from "../data/skills";
 import {assetPath} from "../lib/asset-path";
 
 type MonsterOverviewCardProps = {
@@ -179,7 +179,10 @@ function createDescription(monster: Monster): string {
     }
 
     const skillNames = monster.skillIds
-        .map((skillId) => getSkill(skillId)?.name)
+        .map((skillId) => {
+            const skill = getSkill(skillId);
+            return skill ? getSkillDisplayName(skill.name) : null;
+        })
         .filter((name): name is string => Boolean(name));
 
     const skillText = skillNames.length

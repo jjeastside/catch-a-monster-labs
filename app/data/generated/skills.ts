@@ -1051,7 +1051,7 @@ export const GENERATED_SKILLS = {
     "element": "Common",
     "damageInstances": [],
     "cooldown": 8,
-    "notes": "Target: Allies. Ally effects: 20% of maximum health self heal",
+    "notes": "Target: Allies. Ally effects: Heal each ally for 20% of their Max HP",
     "validationStatus": "Ready"
   },
   "lunar-taunt": {

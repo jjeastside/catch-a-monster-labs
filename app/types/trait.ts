@@ -6,7 +6,7 @@ export type TraitEffectType =
     | "burnDuration"
     | "revive"
     | "mountSpeed"
-    | "healingReceived"
+    | "healingEffectiveness"
     | "attackReductionEffectiveness"
     | "vulnerabilityEffectiveness";
 

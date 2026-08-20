@@ -11,6 +11,7 @@ import {
 } from "../data/passives";
 import {
     getSkill,
+    getSkillDisplayName,
     getSkillTotalHits,
     getSkillTotalMultiplier,
 } from "../data/skills";
@@ -548,10 +549,13 @@ function SkillDamagePanel({
 
     const damageHealingPercent = getDamageHealingPercent(skill.notes);
     const healthHealingPercent = getHealthHealingPercent(skill.notes);
-    const healingEffectivenessMultiplier = 1 + attributeEffects.healEffectiveness / 100;
-    const healingDamageBase = isDamagingSkill
-        ? combatDamage.normalDamage
-        : stats.damage;
+    const traitHealingEffectiveness = getTraitEffectValue(build.traitId, "healingEffectiveness");
+    const totalHealingEffectiveness = attributeEffects.healEffectiveness + traitHealingEffectiveness;
+    const healingEffectivenessMultiplier = 1 + totalHealingEffectiveness / 100;
+    // Damage-based healing scales from the monster's base Damage stat,
+    // not the skill's post-multiplier damage result.
+    const healingDamageBase = stats.damage;
+    const criticalHealingDamageBase = stats.damage * stats.critMultiplier;
     const damageHealingAmount = damageHealingPercent === null
         ? 0
         : healingDamageBase * (damageHealingPercent / 100);
@@ -567,7 +571,7 @@ function SkillDamagePanel({
         : (
         (damageHealingPercent === null
             ? 0
-            : combatDamage.criticalDamage * (damageHealingPercent / 100)) +
+            : criticalHealingDamageBase * (damageHealingPercent / 100)) +
         healthHealingAmount
     ) * healingEffectivenessMultiplier;
     const lifeStealAmount = combatDamage.normalDamage * (attributeEffects.lifeSteal / 100);
@@ -609,6 +613,7 @@ function SkillDamagePanel({
             ? "Triggered"
             : "Unknown";
 
+    const skillDisplayName = getSkillDisplayName(skill.name);
     const skillIconPath = `/skill-icons/${skill.id}.png`;
     const elementIconPath = `/element-icons/${skill.element.toLowerCase()}.png`;
     const usesPoison = /\bpoison\b/i.test(skill.notes ?? "");
@@ -627,7 +632,7 @@ function SkillDamagePanel({
                     <div className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-lg border border-[#41506a] bg-[#0d131d] p-0.5 shadow-[0_6px_14px_rgba(0,0,0,0.2)]">
                         <img
                             src={assetPath(skillIconPath)}
-                            alt={`${skill.name} skill`}
+                            alt={`${skillDisplayName} skill`}
                             className="h-full w-full scale-[1.4] rounded-md object-cover"
                             onError={(event) => {
                                 event.currentTarget.onerror = null;
@@ -644,7 +649,7 @@ function SkillDamagePanel({
 
                         <div className="mt-0.5 flex items-center gap-1.5">
                             <h3 className="text-lg font-bold leading-tight tracking-tight text-[#f6f8fc]">
-                                {skill.name}
+                                {skillDisplayName}
                             </h3>
                             {usesPoison && (
                                 <InfoTooltip
@@ -780,6 +785,22 @@ function SkillDamagePanel({
                             </div>
                         )}
 
+                        {healingAmount !== null && (
+                            <div className="min-w-0 rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 p-3">
+                                <div className="flex items-center gap-1.5 text-[#aeb8ff]">
+                                    <img src={assetPath("/account-icons/health.png")} alt="" className="size-4 shrink-0 object-contain" />
+                                    <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Healing</p>
+                                    <InfoTooltip
+                                        label="Explain healing"
+                                        text="The amount healed by this skill using its current damage and/or Max HP healing scaling."
+                                    />
+                                </div>
+                                <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]" title={formatStatNumber(healingAmount)}>
+                                    {formatStatNumber(healingAmount)}
+                                </p>
+                            </div>
+                        )}
+
                         {hasOvervoltTempestOverload && alternateCombatDamage && alternateTotalMultiplier !== null && (
                             <>
                                 <div className="min-w-0 rounded-lg border border-[#5363a8]/45 bg-[#20263a] p-3">
@@ -822,30 +843,75 @@ function SkillDamagePanel({
             </div>
 
             {!isDamagingSkill ? (
-                <div className="mt-3 rounded-md border border-dashed border-[#344050] bg-[#0d131d]/45 p-3">
-                    <p className="text-sm text-[#8e99ad]">
-                        {skill.notes ?? "This skill does not deal damage."}
-                    </p>
-                    {healingAmount !== null && (
-                        <div className="mt-3 rounded-md border border-[#7182ff]/25 bg-[#202846]/35 p-3">
-                            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#aeb8ff]">Healing</p>
-                            <p className="mt-1 text-lg font-bold text-[#e3e8f1]">{formatStatNumber(healingAmount)}</p>
-                            <p className="mt-1 text-xs text-[#8e99ad]">
-                                {damageHealingPercent !== null && (
-                                    <>{formatStatNumber(healingDamageBase)} Damage × {formatNumber(damageHealingPercent)}%</>
-                                )}
-                                {damageHealingPercent !== null && healthHealingPercent !== null ? " + " : ""}
-                                {healthHealingPercent !== null && (
-                                    <>{formatStatNumber(stats.health)} Health × {formatNumber(healthHealingPercent)}%</>
-                                )}
-                                {attributeEffects.healEffectiveness > 0
-                                    ? ` × ${formatNumber(healingEffectivenessMultiplier)} healing effectiveness`
-                                    : ""}
-                                {" = "}{formatStatNumber(healingAmount)} healed
+                <>
+                    {healingAmount !== null ? (
+                        <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-3">
+                            <div className="min-w-0 rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 p-3">
+                                <div className="flex items-center gap-1.5 text-[#aeb8ff]">
+                                    <img
+                                        src={assetPath("/account-icons/health.png")}
+                                        alt=""
+                                        className="size-4 shrink-0 object-contain"
+                                    />
+                                    <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Healing</p>
+                                    <InfoTooltip
+                                        label="Explain healing"
+                                        text="The amount healed by this skill using its current damage and/or Max HP healing scaling."
+                                    />
+                                </div>
+                                <p
+                                    className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
+                                    title={formatStatNumber(healingAmount)}
+                                >
+                                    {formatStatNumber(healingAmount)}
+                                </p>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="mt-3 rounded-md border border-dashed border-[#344050] bg-[#0d131d]/45 p-3">
+                            <p className="text-sm text-[#8e99ad]">
+                                {skill.notes ?? "This skill does not deal damage."}
                             </p>
                         </div>
                     )}
-                </div>
+
+                    {healingAmount !== null && (
+                        <>
+                            <button
+                                type="button"
+                                onClick={() => setShowDetails((current) => !current)}
+                                className="mt-3 flex w-full items-center justify-between rounded-lg border border-[#344050] bg-[#0f1620] px-3 py-2 text-left text-xs text-[#8e99ad] transition hover:border-[#465166] hover:text-[#e3e8f1]"
+                            >
+                                <span>{showDetails ? "Hide calculation details" : "View calculation details"}</span>
+                                <span className={`text-base transition-transform ${showDetails ? "rotate-180" : ""}`}>⌄</span>
+                            </button>
+
+                            {showDetails && (
+                                <div className="mt-3 rounded-lg border border-[#344050] bg-[#0f1620] p-3">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">
+                                        Healing Calculation
+                                    </p>
+                                    <div className="mt-2 rounded-lg border border-[#7182ff]/25 bg-[#202846]/35 p-3 text-xs text-[#8e99ad]">
+                                        <p>
+                                            {damageHealingPercent !== null && (
+                                                <>{formatStatNumber(healingDamageBase)} Damage × {formatNumber(damageHealingPercent)}%</>
+                                            )}
+                                            {damageHealingPercent !== null && healthHealingPercent !== null ? " + " : ""}
+                                            {healthHealingPercent !== null && (
+                                                <>{formatStatNumber(stats.health)} Health × {formatNumber(healthHealingPercent)}%</>
+                                            )}
+                                            {totalHealingEffectiveness > 0
+                                                ? ` × ${formatNumber(healingEffectivenessMultiplier)} healing effectiveness`
+                                                : ""}
+                                            {" = "}
+                                            <strong className="text-[#aeb8ff]">{formatStatNumber(healingAmount)} healed</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+                        </>
+                    )}
+                </>
             ) : (
                 <>
                     <button
@@ -990,7 +1056,7 @@ function SkillDamagePanel({
                                             </span>
                                         )}
                                         {attributeEffects.cooldownSkipChance > 0 && <span className="rounded bg-[#201b35] px-2 py-1 text-[#c28cff]">{attributeEffects.cooldownSkipChance}% cooldown-skip chance</span>}
-                                        {attributeEffects.healEffectiveness > 0 && <span className="rounded bg-[#202846] px-2 py-1 text-[#7182ff]">+{attributeEffects.healEffectiveness}% healing</span>}
+                                        {totalHealingEffectiveness > 0 && <span className="rounded bg-[#202846] px-2 py-1 text-[#7182ff]">+{formatNumber(totalHealingEffectiveness)}% healing effectiveness</span>}
                                         {attributeEffects.shieldEffectiveness > 0 && <span className="rounded bg-[#17283a] px-2 py-1 text-[#70b7ff]">+{attributeEffects.shieldEffectiveness}% shield gain</span>}
                                         {attributeEffects.shieldDamage > 0 && <span className="rounded bg-[#342612] px-2 py-1 text-[#f4bd6a]">+{attributeEffects.shieldDamage}% damage to shields</span>}
                                         {attributeEffects.skillResistance > 0 && <span className="rounded bg-[#17283a] px-2 py-1 text-[#70b7ff]">-{attributeEffects.skillResistance}% incoming {skill.element} skill damage</span>}
@@ -1013,7 +1079,7 @@ function SkillDamagePanel({
                                             {healthHealingPercent !== null && (
                                                 <>{formatStatNumber(stats.health)} Health × {formatNumber(healthHealingPercent)}%</>
                                             )}
-                                            {attributeEffects.healEffectiveness > 0
+                                            {totalHealingEffectiveness > 0
                                                 ? ` × ${formatNumber(healingEffectivenessMultiplier)} healing effectiveness`
                                                 : ""}
                                             {" = "}<strong className="text-[#aeb8ff]">{formatStatNumber(healingAmount)} healed</strong>
@@ -1021,7 +1087,7 @@ function SkillDamagePanel({
                                         {criticalHealingAmount !== null && (
                                             <p className="mt-1">
                                                 Critical: {damageHealingPercent !== null && (
-                                                <>{formatStatNumber(combatDamage.criticalDamage)} Damage × {formatNumber(damageHealingPercent)}%</>
+                                                <>{formatStatNumber(criticalHealingDamageBase)} Damage × {formatNumber(damageHealingPercent)}%</>
                                             )}
                                                 {damageHealingPercent !== null && healthHealingPercent !== null ? " + " : ""}
                                                 {healthHealingPercent !== null && (
