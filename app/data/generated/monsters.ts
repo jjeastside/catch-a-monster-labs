@@ -1669,12 +1669,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Special Spawn",
         "location": "Tideland",
         "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Tideland Rift 1",
-        "location": "Tideland",
-        "status": "Current"
       }
     ],
     "skillIds": [
@@ -1725,12 +1719,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       {
         "type": "Egg",
         "name": "Giant Tree Egg",
-        "location": "Spirit Grove",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Spirit Grove Rift 1",
         "location": "Spirit Grove",
         "status": "Current"
       }
@@ -1791,12 +1779,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Ancient Egg",
         "location": "Dragon's Breath",
         "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Dragon's Breath Rift 1",
-        "location": "Dragon's Breath",
-        "status": "Current"
       }
     ],
     "skillIds": [
@@ -1845,8 +1827,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "rarity": "Legendary",
     "sources": [
       {
-        "type": "Egg",
-        "name": "Void Purple Egg",
+        "type": "Island Spawn",
+        "name": "Natural Spawn",
         "location": "Blossom Haven",
         "status": "Current"
       }
@@ -3462,12 +3444,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "name": "Special Spawn",
         "location": "Blossom Haven",
         "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Blossom Haven Rift 1",
-        "location": "Blossom Haven",
-        "status": "Current"
       }
     ],
     "skillIds": [
@@ -3676,12 +3652,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       {
         "type": "Island Special Spawn",
         "name": "Special Spawn",
-        "location": "Mobius Circus",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Mobius Rift 1",
         "location": "Mobius Circus",
         "status": "Current"
       }
@@ -4618,7 +4588,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "passives": [],
     "hasEvolution": false,
     "baseDamageELevel1": 41706,
-    "baseHealthELevel1": 446200,
+    "baseHealthELevel1": 446240,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 150
@@ -6572,8 +6542,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "cobaltwing",
-    "baseDamageELevel1": 862100,
-    "baseHealthELevel1": 82780000,
+    "baseDamageELevel1": 859500,
+    "baseHealthELevel1": 82776000,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 211
@@ -7073,12 +7043,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "element": "Common",
     "rarity": "Void",
     "sources": [
-      {
-        "type": "Rift",
-        "name": "Specter Shallows Rift 1",
-        "location": "Specter Shallows",
-        "status": "Current"
-      },
       {
         "type": "Chest",
         "name": "Memory Chest 2",

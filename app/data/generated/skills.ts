@@ -1335,7 +1335,7 @@ export const GENERATED_SKILLS = {
     "damageInstances": [
       {
         "multiplier": 0.3,
-        "hits": 3
+        "hits": 4
       }
     ],
     "cooldown": 6,
