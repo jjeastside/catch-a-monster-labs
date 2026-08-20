@@ -1192,8 +1192,8 @@ export const GENERATED_SKILLS = {
         "hits": 4
       }
     ],
-    "cooldown": null,
-    "notes": "Target: Enemy. Enemy effects: Cast four posion orbs at the enemy, orb applies a stack of posion. Each stack of Posion deals 0.4% of current hp per secs and reduces enemy attack by 4%.",
+    "cooldown": 6,
+    "notes": "Target: Enemy. Enemy effects: Cast four poison orbs at the enemy, each orb applies a stack of Poison. Each stack of Poison deals 0.4% of current HP per second and reduces enemy Attack by 4%, up to 10 stacks",
     "validationStatus": "Ready"
   },
   "rallying-war-cry-3-sec-50": {
@@ -1339,7 +1339,7 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
-    "notes": "Target: Enemy. Enemy effects: Burn 3 times; Burn deals .5% of targets Max HP for 8 secs",
+    "notes": "Target: Enemy. Enemy effects: Burn 3 times; Burn deals 0.5% of the target's Max HP per second for 8 seconds, up to 10 stacks",
     "validationStatus": "Ready"
   },
   "seed-grenade": {

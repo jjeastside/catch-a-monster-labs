@@ -34,7 +34,9 @@ const rarityPortraitClasses: Record<Monster["rarity"], string> = {
 type MonsterBrowserProps = {
     monsters: Monster[];
     selectedMonster: Monster | null;
+    favoriteMonsterIds: string[];
     onSelectAction: (monster: Monster) => void;
+    onToggleFavoriteAction: (monsterId: string) => void;
 };
 
 type EvolutionFilter = "all" | "can-evolve" | "evolved" | "standard";
@@ -44,11 +46,13 @@ const selectClassName = "min-w-0 rounded-md border border-[#344050] bg-[#141c28]
 type MonsterOptionProps = {
     monster: Monster;
     selected: boolean;
+    favorite: boolean;
     onSelect: () => void;
+    onToggleFavorite: () => void;
     compact?: boolean;
 };
 
-function MonsterOption({ monster, selected, onSelect, compact = false }: MonsterOptionProps) {
+function MonsterOption({ monster, selected, favorite, onSelect, onToggleFavorite, compact = false }: MonsterOptionProps) {
     const color = elementColors[monster.element] ?? "#7f8b9e";
     const elementIcon = elementIconPaths[monster.element];
     const portraitBackground = "bg-[#111722]/90";
@@ -120,20 +124,44 @@ function MonsterOption({ monster, selected, onSelect, compact = false }: Monster
                 </span>
             </span>
 
-            <span className={`grid shrink-0 place-items-center text-xl text-[#7f8b9e] ${compact ? "size-8" : "size-9"}`} aria-label={`Favorite ${monster.name}`}>
-                ☆
+            <span
+                role="button"
+                tabIndex={0}
+                aria-label={favorite ? `Remove ${monster.name} from favorites` : `Add ${monster.name} to favorites`}
+                aria-pressed={favorite}
+                onClick={(event) => {
+                    event.stopPropagation();
+                    onToggleFavorite();
+                }}
+                onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        onToggleFavorite();
+                    }
+                }}
+                className={`grid shrink-0 place-items-center rounded-md text-xl transition hover:bg-[#202846] hover:text-[#aeb8ff] ${favorite ? "text-[#7182ff]" : "text-[#7f8b9e]"} ${compact ? "size-8" : "size-9"}`}
+            >
+                {favorite ? "★" : "☆"}
             </span>
         </button>
     );
 }
 
-export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: MonsterBrowserProps) {
+export function MonsterBrowser({
+                                   monsters,
+                                   selectedMonster,
+                                   favoriteMonsterIds,
+                                   onSelectAction,
+                                   onToggleFavoriteAction,
+                               }: MonsterBrowserProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [sourceFilter, setSourceFilter] = useState("all");
     const [rarityFilter, setRarityFilter] = useState("all");
     const [elementFilter, setElementFilter] = useState("all");
     const [evolutionFilter, setEvolutionFilter] = useState<EvolutionFilter>("all");
     const [passiveFilter, setPassiveFilter] = useState<PassiveFilter>("all");
+    const [favoritesOnly, setFavoritesOnly] = useState(false);
     const [showAllMonsters, setShowAllMonsters] = useState(false);
     const [visibleMonsterCount, setVisibleMonsterCount] = useState(60);
 
@@ -174,14 +202,15 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
             );
             const matchesPassive = passiveFilter === "all" ||
                 passiveNames.includes(passiveFilter);
+            const matchesFavorite = !favoritesOnly || favoriteMonsterIds.includes(monster.id);
 
             return matchesSearch && matchesSource && matchesRarity &&
-                matchesElement && matchesEvolution && matchesPassive;
+                matchesElement && matchesEvolution && matchesPassive && matchesFavorite;
         });
-    }, [monsters, searchQuery, sourceFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter]);
+    }, [monsters, searchQuery, sourceFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, favoritesOnly, favoriteMonsterIds]);
 
     const activeFilterCount = [sourceFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter]
-        .filter((value) => value !== "all").length;
+        .filter((value) => value !== "all").length + (favoritesOnly ? 1 : 0);
 
     const clearFilters = () => {
         setSourceFilter("all");
@@ -189,6 +218,7 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
         setElementFilter("all");
         setEvolutionFilter("all");
         setPassiveFilter("all");
+        setFavoritesOnly(false);
     };
 
     return (
@@ -247,6 +277,18 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
                         </select>
                     </div>
 
+                    <div className="flex items-center justify-between gap-2">
+                        <button
+                            type="button"
+                            aria-pressed={favoritesOnly}
+                            onClick={() => setFavoritesOnly((current) => !current)}
+                            className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-xs font-semibold transition ${favoritesOnly ? "border-[#7182ff] bg-[#202846] text-[#aeb8ff]" : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"}`}
+                        >
+                            <span aria-hidden="true">★</span> Favorites
+                            <span className="font-normal">({favoriteMonsterIds.length})</span>
+                        </button>
+                    </div>
+
                     <div className="flex items-center justify-between text-xs text-[#7f8b9e]">
                         <span>{filteredMonsters.length} of {monsters.length} monsters</span>
                         {activeFilterCount > 0 && (
@@ -262,7 +304,9 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
                                 key={monster.id}
                                 monster={monster}
                                 selected={selectedMonster?.id === monster.id}
+                                favorite={favoriteMonsterIds.includes(monster.id)}
                                 onSelect={() => onSelectAction(monster)}
+                                onToggleFavorite={() => onToggleFavoriteAction(monster.id)}
                             />
                         ))}
 
@@ -362,6 +406,8 @@ export function MonsterBrowser({ monsters, selectedMonster, onSelectAction }: Mo
                                         monster={monster}
                                         compact
                                         selected={selectedMonster?.id === monster.id}
+                                        favorite={favoriteMonsterIds.includes(monster.id)}
+                                        onToggleFavorite={() => onToggleFavoriteAction(monster.id)}
                                         onSelect={() => {
                                             onSelectAction(monster);
                                             setShowAllMonsters(false);

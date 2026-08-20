@@ -338,14 +338,17 @@ export function AppShell() {
         }));
     }
 
+    function toggleMonsterFavorite(monsterId: string) {
+        setFavoriteMonsterIds((currentIds) =>
+            currentIds.includes(monsterId)
+                ? currentIds.filter((id) => id !== monsterId)
+                : [...currentIds, monsterId],
+        );
+    }
+
     function toggleSelectedMonsterFavorite() {
         if (!selectedMonster) return;
-
-        setFavoriteMonsterIds((currentIds) =>
-            currentIds.includes(selectedMonster.id)
-                ? currentIds.filter((id) => id !== selectedMonster.id)
-                : [...currentIds, selectedMonster.id],
-        );
+        toggleMonsterFavorite(selectedMonster.id);
     }
 
     function persistSavedBuildSlots(nextSlots: Array<SavedBuildSlot | null>): boolean {
@@ -469,10 +472,12 @@ export function AppShell() {
                     2xl:px-8
                 "
             >
-                <div className={`${mobilePanel === "monster" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-visible lg:block lg:overflow-hidden`}>
+                <div className={`${mobilePanel === "monster" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-visible lg:block lg:h-full lg:min-h-0 lg:overflow-hidden`}>
                     <MonsterBrowser
                         monsters={monsters}
                         selectedMonster={selectedMonster}
+                        favoriteMonsterIds={favoriteMonsterIds}
+                        onToggleFavoriteAction={toggleMonsterFavorite}
                         onSelectAction={(monster) => {
                             selectMonster(monster);
                             setMobilePanel("results");
@@ -480,7 +485,7 @@ export function AppShell() {
                     />
                 </div>
 
-                <div className={`${mobilePanel === "results" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-visible lg:block lg:overflow-hidden`}>
+                <div className={`${mobilePanel === "results" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-visible lg:block lg:h-full lg:min-h-0 lg:overflow-hidden`}>
                     <CalculatorResults
                         monster={selectedMonster}
                         build={build}
@@ -493,7 +498,7 @@ export function AppShell() {
                     />
                 </div>
 
-                <div className={`${mobilePanel === "build" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-visible lg:block lg:overflow-hidden`}>
+                <div className={`${mobilePanel === "build" ? "block" : "hidden"} w-full min-w-0 max-w-full overflow-visible lg:block lg:h-full lg:min-h-0 lg:overflow-hidden`}>
                     <BuildEditor
                         monster={selectedMonster}
                         build={build}

@@ -967,7 +967,7 @@ export function BuildEditor({
                 </button>
             }
         >
-            <div className="flex w-full min-w-0 max-w-full flex-1 flex-col gap-2 overflow-visible p-3 lg:overflow-x-hidden lg:overflow-y-auto">
+            <div className="flex min-h-0 w-full min-w-0 max-w-full flex-1 flex-col gap-2 overflow-visible p-3 lg:overflow-x-hidden lg:overflow-y-auto">
                 {!monster && (
                     <div className="rounded-lg border border-dashed border-[#344050] bg-[#0d131d]/45 p-4 text-center">
                         <p className="text-sm font-medium text-[#e3e8f1]">

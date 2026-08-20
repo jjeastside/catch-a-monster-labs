@@ -30,7 +30,7 @@ import {
 import {
     getMutationCooldownMultiplier,
 } from "../lib/calculations/mutations";
-import { getTraitCooldownMultiplier, getTraitDamageMultiplier } from "../lib/calculations/traits";
+import { getTraitCooldownMultiplier, getTraitDamageMultiplier, getTraitEffectValue } from "../lib/calculations/traits";
 
 import type { Build, MonsterPassive, Mutation, PassiveEffectStat, Rank } from "../types/build";
 import type { Monster } from "../types/monster";
@@ -611,6 +611,14 @@ function SkillDamagePanel({
 
     const skillIconPath = `/skill-icons/${skill.id}.png`;
     const elementIconPath = `/element-icons/${skill.element.toLowerCase()}.png`;
+    const usesPoison = /\bpoison\b/i.test(skill.notes ?? "");
+    const usesBurn = /\bburn\b/i.test(skill.notes ?? "");
+    const burnDurationBonus = getTraitEffectValue(build.traitId, "burnDuration");
+    const baseBurnDuration = 8;
+    const burnDuration = baseBurnDuration * (1 + burnDurationBonus / 100);
+    const burnTooltip = burnDurationBonus > 0
+        ? `Burn deals 0.5% of the target's Max HP per second for ${formatNumber(burnDuration)} seconds, up to 10 stacks. ${selectedTrait?.name ?? "The active trait"} increases Burn Duration by ${formatNumber(burnDurationBonus)}%.`
+        : "Burn deals 0.5% of the target's Max HP per second for 8 seconds, up to 10 stacks.";
 
     return (
         <section className="p-4">
@@ -634,9 +642,23 @@ function SkillDamagePanel({
                             Skill {skillNumber} of {skillCount}
                         </p>
 
-                        <h3 className="mt-0.5 text-lg font-bold leading-tight tracking-tight text-[#f6f8fc]">
-                            {skill.name}
-                        </h3>
+                        <div className="mt-0.5 flex items-center gap-1.5">
+                            <h3 className="text-lg font-bold leading-tight tracking-tight text-[#f6f8fc]">
+                                {skill.name}
+                            </h3>
+                            {usesPoison && (
+                                <InfoTooltip
+                                    label="Explain Poison"
+                                    text="Each stack of Poison deals 0.4% of current HP per second and reduces enemy Attack by 4%, up to 10 stacks."
+                                />
+                            )}
+                            {usesBurn && (
+                                <InfoTooltip
+                                    label="Explain Burn"
+                                    text={burnTooltip}
+                                />
+                            )}
+                        </div>
 
                         <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-[#7f8b9e]">
                             <span className="flex items-center gap-1">
