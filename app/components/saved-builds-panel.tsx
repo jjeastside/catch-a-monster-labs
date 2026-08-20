@@ -4,6 +4,7 @@ import { useEffect } from "react";
 
 import { getEquipment } from "../data/equipments";
 import { getMonsterStatData } from "../data/monster-stats";
+import { mergeUniquePassives } from "../data/passives";
 import { getTrait } from "../data/traits";
 import { calculateStats } from "../lib/calculations/stats";
 import { assetPath } from "../lib/asset-path";
@@ -151,17 +152,26 @@ function BuildSnapshot({
                            build,
                            monster,
                            compact = false,
+                           allMonsters,
                        }: {
     build: Build;
     monster: Monster | null;
     compact?: boolean;
+    allMonsters: Monster[];
 }) {
     const weapon = getEquipment(build.weaponId);
     const armor = getEquipment(build.armorId);
     const trait = getTrait(build.traitId);
     const statData = monster ? getMonsterStatData(monster.id) : null;
+    const teammateMonsters = (build.teammateMonsterIds ?? [null, null])
+        .map((id) => id ? allMonsters.find((candidate) => candidate.id === id) ?? null : null)
+        .filter((candidate): candidate is Monster => candidate !== null);
+    const effectivePassives = mergeUniquePassives(
+        monster?.passives,
+        ...teammateMonsters.map((teammate) => teammate.passives),
+    );
     const stats = statData && build.rank
-        ? calculateStats(statData, build, monster?.passives ?? [])
+        ? calculateStats(statData, build, effectivePassives)
         : null;
 
     return (
@@ -276,6 +286,11 @@ function BuildSnapshot({
                 <span className="flex items-center gap-1.5 whitespace-nowrap capitalize">
                     <span>Combat</span>
                     <strong className="text-[#e3e8f1]">{build.combatContext}</strong>
+                    {build.targetIsBoss && (
+                        <span className="rounded border border-[#7182ff]/35 bg-[#202846] px-1.5 py-0.5 text-[9px] font-semibold normal-case text-[#aeb8ff]">
+                            Boss Target
+                        </span>
+                    )}
                 </span>
             </div>
 
@@ -382,7 +397,7 @@ export function SavedBuildsPanel({
                             <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#aeb8ff]">
                                 Current Build — This is what will be saved
                             </p>
-                            <BuildSnapshot build={currentBuild} monster={currentMonster} compact />
+                            <BuildSnapshot build={currentBuild} monster={currentMonster} allMonsters={monsters} compact />
                         </div>
                     )}
 
@@ -410,7 +425,7 @@ export function SavedBuildsPanel({
 
                                     {slot ? (
                                         <>
-                                            <BuildSnapshot build={slot.build} monster={savedMonster} />
+                                            <BuildSnapshot build={slot.build} monster={savedMonster} allMonsters={monsters} />
                                             <div className="mt-auto pt-4">
                                                 <button
                                                     type="button"

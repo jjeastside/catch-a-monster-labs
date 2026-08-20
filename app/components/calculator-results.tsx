@@ -2,8 +2,11 @@ import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { getMonsterStatData } from "../data/monster-stats";
+import { monsters } from "../data/monsters";
 import {
     getPassiveImagePath,
+    getTransferablePassiveFromTeammate,
+    mergeUniquePassives,
     PASSIVE_DEFINITIONS,
 } from "../data/passives";
 import {
@@ -129,21 +132,37 @@ function getPassiveActivation(
                 : `Requires above ${passive.condition}% HP`,
         };
     }
-    if (passive.id === "sacredBeetle") {
+    if (
+        passive.id === "sacredBeetle" &&
+        passive.effects.some((effect) => effect.stat === "stunImmunity")
+    ) {
         const bossDamageActive =
-            build.combatContext === "boss";
+            build.targetIsBoss;
 
         return {
             active: true,
             label: bossDamageActive
                 ? "Stun Immunity always active · Boss Damage active"
-                : "Stun Immunity always active · Boss Damage requires Boss combat",
+                : "Stun Immunity always active · Boss Damage requires Boss target",
+        };
+    }
+
+    const hasBossEffect = passive.effects.some(
+        (effect) =>
+            effect.stat === "bossDamage" ||
+            effect.stat === "bossIncomingDamage",
+    );
+
+    if (hasBossEffect) {
+        return {
+            active: build.targetIsBoss,
+            label: build.targetIsBoss
+                ? "Active against Boss target"
+                : "Requires Boss target",
         };
     }
 
     const contextByStat: Partial<Record<PassiveEffectStat, Build["combatContext"]>> = {
-        bossDamage: "boss",
-        bossIncomingDamage: "boss",
         spireDamage: "spire",
         spireIncomingDamage: "spire",
         riftDamage: "rift",
@@ -376,6 +395,7 @@ function calculateSkillDps(
     skill: NonNullable<ReturnType<typeof getSkill>>,
     stats: CalculatedStats,
     build: Build,
+    effectivePassives: MonsterPassive[],
 ): number | null {
     if (skill.damageInstances.length === 0 || skill.cooldown === null || skill.cooldown <= 0) {
         return null;
@@ -410,7 +430,9 @@ function calculateSkillDps(
             accountRiftDamageMultiplier,
         critMultiplier: stats.critMultiplier,
         combatContext: build.combatContext,
+        targetIsBoss: build.targetIsBoss,
         currentHpPercent: build.currentHpPercent,
+        passives: effectivePassives,
     });
 
     const cooldownMultiplier =
@@ -441,6 +463,7 @@ type SkillDamagePanelProps = {
     skill: NonNullable<ReturnType<typeof getSkill>>;
     stats: CalculatedStats;
     build: Build;
+    effectivePassives: MonsterPassive[];
     skillNumber: number;
     skillCount: number;
 };
@@ -450,6 +473,7 @@ function SkillDamagePanel({
                               skill,
                               stats,
                               build,
+                              effectivePassives,
                               skillNumber,
                               skillCount,
                           }: SkillDamagePanelProps) {
@@ -494,7 +518,9 @@ function SkillDamagePanel({
         baseDamage: stats.damage * totalMultiplier * traitDamageMultiplier * attributeEffects.skillDamageMultiplier * accountRiftDamageMultiplier,
         critMultiplier: stats.critMultiplier,
         combatContext: build.combatContext,
+        targetIsBoss: build.targetIsBoss,
         currentHpPercent: build.currentHpPercent,
+        passives: effectivePassives,
     });
 
     // Overload replaces the normal Overvolt Tempest cast; it is not a third skill.
@@ -515,7 +541,9 @@ function SkillDamagePanel({
                 accountRiftDamageMultiplier,
             critMultiplier: stats.critMultiplier,
             combatContext: build.combatContext,
+            targetIsBoss: build.targetIsBoss,
             currentHpPercent: build.currentHpPercent,
+            passives: effectivePassives,
         });
 
     const damageHealingPercent = getDamageHealingPercent(skill.notes);
@@ -1015,7 +1043,9 @@ function SkillDamagePanel({
                                                     baseDamage: baseDamagePerHit,
                                                     critMultiplier: stats.critMultiplier,
                                                     combatContext: build.combatContext,
+                                                    targetIsBoss: build.targetIsBoss,
                                                     currentHpPercent: build.currentHpPercent,
+                                                    passives: effectivePassives,
                                                 });
 
                                             const damagePerHit =
@@ -1095,6 +1125,7 @@ type PassiveAnalysisPanelProps = {
     build: Build;
     passiveNumber: number;
     passiveCount: number;
+    sourceLabel?: string;
 };
 
 function PassiveAnalysisPanel({
@@ -1102,6 +1133,7 @@ function PassiveAnalysisPanel({
                                   build,
                                   passiveNumber,
                                   passiveCount,
+                                  sourceLabel,
                               }: PassiveAnalysisPanelProps) {
     const imagePath = getPassiveImagePath(passive);
     const definition = PASSIVE_DEFINITIONS[passive.id];
@@ -1139,24 +1171,33 @@ function PassiveAnalysisPanel({
                         <h3 className="mt-0.5 text-lg font-bold leading-tight tracking-tight text-[#f6f8fc]">
                             {definition.name}
                         </h3>
+                        {sourceLabel && (
+                            <p className="mt-0.5 text-[10px] font-semibold text-[#8e99ad]">
+                                From teammate: {sourceLabel}
+                            </p>
+                        )}
                         <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px]">
                             {passive.id === "sacredBeetle" ? (
                                 <>
-                                    <span className="rounded border border-[#41506a] bg-[#0f1620] px-1.5 py-0.5 font-semibold text-[#aeb8ff]">
-                                        Stun Immunity always active
-                                    </span>
+                                    {passive.effects.some((effect) => effect.stat === "stunImmunity") && (
+                                        <span className="rounded border border-[#41506a] bg-[#0f1620] px-1.5 py-0.5 font-semibold text-[#aeb8ff]">
+                                            Stun Immunity always active
+                                        </span>
+                                    )}
 
-                                    <span
-                                        className={`rounded border px-1.5 py-0.5 font-semibold ${
-                                            build.combatContext === "boss"
-                                                ? "border-[#41506a] bg-[#0f1620] text-[#aeb8ff]"
-                                                : "border-[#f4bd6a]/30 bg-[#342612]/45 text-[#f4bd6a]"
-                                        }`}
-                                    >
-                                        {build.combatContext === "boss"
-                                            ? "Boss Damage active"
-                                            : "Boss Damage requires Boss combat"}
-                                    </span>
+                                    {passive.effects.some((effect) => effect.stat === "bossDamage") && (
+                                        <span
+                                            className={`rounded border px-1.5 py-0.5 font-semibold ${
+                                                build.targetIsBoss
+                                                    ? "border-[#41506a] bg-[#0f1620] text-[#aeb8ff]"
+                                                    : "border-[#f4bd6a]/30 bg-[#342612]/45 text-[#f4bd6a]"
+                                            }`}
+                                        >
+                                            {build.targetIsBoss
+                                                ? "Boss Damage active"
+                                                : "Boss Damage requires Boss target"}
+                                        </span>
+                                    )}
                                 </>
                             ) : (
                                 <span
@@ -1721,12 +1762,46 @@ export function CalculatorResults({
         ? getMonsterStatData(monster.id)
         : null;
 
+    const teammateMonsters = (build.teammateMonsterIds ?? [null, null])
+        .map((id) => id ? monsters.find((candidate) => candidate.id === id) ?? null : null)
+        .filter((candidate): candidate is Monster => candidate !== null);
+
+    const effectivePassives = mergeUniquePassives(
+        monster?.passives,
+        ...teammateMonsters.map((teammate) => teammate.passives),
+    );
+
+    const ownPassiveNames = new Set(
+        (monster?.passives ?? []).map((passive) => PASSIVE_DEFINITIONS[passive.id].name.toLowerCase()),
+    );
+    const seenTeamPassiveNames = new Set(ownPassiveNames);
+    const teamPassiveEntries = teammateMonsters.flatMap((teammate) =>
+        (teammate.passives ?? []).flatMap((passive) => {
+            const transferablePassive =
+                getTransferablePassiveFromTeammate(passive);
+
+            if (!transferablePassive) return [];
+
+            const nameKey =
+                PASSIVE_DEFINITIONS[transferablePassive.id].name.toLowerCase();
+
+            if (seenTeamPassiveNames.has(nameKey)) return [];
+
+            seenTeamPassiveNames.add(nameKey);
+
+            return [{
+                passive: transferablePassive,
+                sourceName: teammate.name,
+            }];
+        }),
+    );
+
     const stats =
         build.rank && monsterStatData
             ? calculateStats(
                 monsterStatData,
                 build,
-                monster?.passives ?? [],
+                effectivePassives,
             )
             : null;
 
@@ -1739,6 +1814,7 @@ export function CalculatorResults({
                         skill,
                         stats,
                         build,
+                        effectivePassives,
                     ),
                 )
                 .filter(
@@ -1780,7 +1856,7 @@ export function CalculatorResults({
                             build={build}
                             stats={stats}
                         />
-                        {stats && (monsterSkills.length > 0 || (monster.passives?.length ?? 0) > 0) && (
+                        {stats && (monsterSkills.length > 0 || effectivePassives.length > 0) && (
                             <section className="overflow-hidden rounded-xl border border-[#344050] bg-[#141c28]">
                                 <div className="flex flex-wrap items-end justify-between gap-3 border-b border-[#344050] px-4 py-3">
                                     <div>
@@ -1793,7 +1869,7 @@ export function CalculatorResults({
                                     </div>
                                     <span className="rounded-full border border-[#344050] bg-[#0f1620] px-2.5 py-1 text-xs font-medium text-[#8e99ad]">
                                         {monsterSkills.length} {monsterSkills.length === 1 ? "skill" : "skills"}
-                                        {(monster.passives?.length ?? 0) > 0 && ` · ${monster.passives?.length} ${monster.passives?.length === 1 ? "passive" : "passives"}`}
+                                        {effectivePassives.length > 0 && ` · ${effectivePassives.length} ${effectivePassives.length === 1 ? "passive" : "passives"}`}
                                     </span>
                                 </div>
 
@@ -1805,6 +1881,7 @@ export function CalculatorResults({
                                             skill={skill}
                                             stats={stats}
                                             build={build}
+                                            effectivePassives={effectivePassives}
                                             skillNumber={index + 1}
                                             skillCount={monsterSkills.length}
                                         />
@@ -1850,23 +1927,33 @@ export function CalculatorResults({
                                         </div>
                                     )}
 
-                                    {(monster.passives?.length ?? 0) > 0 && (
+                                    {effectivePassives.length > 0 && (
                                         <>
                                             <div className="bg-[#151b24] px-4 py-3">
                                                 <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7182ff]">
                                                     Passive Analysis
                                                 </p>
                                                 <p className="mt-0.5 text-xs text-[#7f8b9e]">
-                                                    Effects and activation conditions for this monster
+                                                    Selected monster and active teammate passives · duplicate names apply once
                                                 </p>
                                             </div>
-                                            {monster.passives?.map((passive, index) => (
+                                            {(monster.passives ?? []).map((passive, index) => (
                                                 <PassiveAnalysisPanel
-                                                    key={`${passive.id}-${index}`}
+                                                    key={`own-${passive.id}-${index}`}
                                                     passive={passive}
                                                     build={build}
                                                     passiveNumber={index + 1}
-                                                    passiveCount={monster.passives?.length ?? 0}
+                                                    passiveCount={effectivePassives.length}
+                                                />
+                                            ))}
+                                            {teamPassiveEntries.map(({ passive, sourceName }, index) => (
+                                                <PassiveAnalysisPanel
+                                                    key={`team-${sourceName}-${passive.id}-${index}`}
+                                                    passive={passive}
+                                                    build={build}
+                                                    passiveNumber={(monster.passives?.length ?? 0) + index + 1}
+                                                    passiveCount={effectivePassives.length}
+                                                    sourceLabel={sourceName}
                                                 />
                                             ))}
                                         </>

@@ -9,9 +9,11 @@ import {
     clampEvolutionPercent,
     getEvolutionBarFill,
 } from "../lib/calculations/evolution";
-import type { Build, CombatContext, Mutation, Rank } from "../types/build";
+import type { Build, CombatContext, Mutation, PassiveEffect, Rank } from "../types/build";
 import type { Monster } from "../types/monster";
 import { ARMORS, WEAPONS, getEquipment } from "../data/equipments";
+import { monsters } from "../data/monsters";
+import { canSharePassiveFromTeammate, getPassiveImagePath, getTransferablePassiveFromTeammate } from "../data/passives";
 import { getAttribute, getAttributesForGear } from "../data/attributes";
 import { getActiveAttributeIds, getAttributeSlotCount, getFixedAttributeIds } from "../lib/calculations/attributes";
 import { assetPath } from "../lib/asset-path";
@@ -88,7 +90,6 @@ const mutations: {
 
 const combatContexts: Array<{ id: CombatContext; label: string }> = [
     { id: "standard", label: "Standard" },
-    { id: "boss", label: "Boss" },
     { id: "spire", label: "Spire" },
     { id: "rift", label: "Rift" },
     { id: "dungeon", label: "Dungeon" },
@@ -632,6 +633,156 @@ function EvolutionMultiplierEditor({
     );
 }
 
+type TeamPassiveContribution = {
+    icon: string | null;
+    text: string;
+};
+
+type TeamPassiveOption = {
+    id: string;
+    label: string;
+    contributions: TeamPassiveContribution[];
+};
+
+function formatTeamPassiveEffect(effect: PassiveEffect): string {
+    if (typeof effect.value !== "number") {
+        return "";
+    }
+
+    const amount = Math.abs(effect.value);
+    const sign = effect.value < 0 ? "−" : "+";
+
+    const labels: Record<PassiveEffect["stat"], string> = {
+        damage: "Damage",
+        incomingDamage: "Incoming Damage",
+        critChance: "Crit Chance",
+        critDamage: "Crit Damage",
+        bossDamage: "Boss Damage",
+        bossIncomingDamage: "Boss Incoming Damage",
+        spireDamage: "Spire Damage",
+        spireIncomingDamage: "Spire Incoming Damage",
+        riftDamage: "Rift Damage",
+        riftIncomingDamage: "Rift Incoming Damage",
+        dungeonDamage: "Dungeon Damage",
+        dungeonIncomingDamage: "Dungeon Incoming Damage",
+        coinGain: "Coins",
+        xpGain: "XP",
+        rankLuck: "Rank Luck",
+        healthRestore: "Health Restore",
+        mutationRate: "Mutation Rate",
+        stunImmunity: "Stun Immunity",
+    };
+
+    return `${sign}${amount}% ${labels[effect.stat]}`;
+}
+
+function TeamPassiveSelect({
+                               label,
+                               options,
+                               value,
+                               onChange,
+                           }: {
+    label: string;
+    options: TeamPassiveOption[];
+    value: string | null;
+    onChange: (value: string | null) => void;
+}) {
+    const [open, setOpen] = useState(false);
+    const selected = options.find((option) => option.id === value) ?? null;
+
+    return (
+        <div className="relative">
+            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">
+                {label}
+            </span>
+
+            <button
+                type="button"
+                onClick={() => setOpen((current) => !current)}
+                aria-expanded={open}
+                className="flex min-h-[42px] w-full items-center justify-between gap-2 rounded-md border border-[#344050] bg-[#141c28] px-2.5 py-2 text-left transition hover:border-[#5c6a80]"
+            >
+                {selected ? (
+                    <span className="min-w-0">
+                        <span className="block truncate text-xs font-semibold text-[#e3e8f1]">
+                            {selected.label}
+                        </span>
+                        <span className="mt-1 flex flex-wrap items-center gap-1.5">
+                            {selected.contributions.map((contribution, index) => (
+                                <span key={`${contribution.text}-${index}`} className="inline-flex items-center gap-1 text-[10px] text-[#aeb8ff]">
+                                    {contribution.icon && (
+                                        <img
+                                            src={assetPath(contribution.icon)}
+                                            alt=""
+                                            className="size-4 shrink-0 object-contain"
+                                        />
+                                    )}
+                                    <span>{contribution.text}</span>
+                                </span>
+                            ))}
+                        </span>
+                    </span>
+                ) : (
+                    <span className="text-xs text-[#7f8b9e]">None</span>
+                )}
+                <span className={`shrink-0 text-[10px] text-[#7f8b9e] transition-transform ${open ? "rotate-180" : ""}`}>
+                    ▼
+                </span>
+            </button>
+
+            {open && (
+                <div className="absolute z-[90] mt-1 max-h-72 w-full overflow-y-auto rounded-md border border-[#344050] bg-[#0f1620] p-1 shadow-2xl">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            onChange(null);
+                            setOpen(false);
+                        }}
+                        className="w-full rounded px-2.5 py-2 text-left text-xs text-[#7f8b9e] hover:bg-[#181f2b]"
+                    >
+                        None
+                    </button>
+
+                    {options.map((option) => (
+                        <button
+                            key={option.id}
+                            type="button"
+                            onClick={() => {
+                                onChange(option.id);
+                                setOpen(false);
+                            }}
+                            className={`w-full rounded px-2.5 py-2 text-left transition hover:bg-[#181f2b] ${
+                                value === option.id ? "bg-[#202846]" : ""
+                            }`}
+                        >
+                            <span className="block truncate text-xs font-semibold text-[#e3e8f1]">
+                                {option.label}
+                            </span>
+                            <span className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
+                                {option.contributions.map((contribution, index) => (
+                                    <span
+                                        key={`${option.id}-${contribution.text}-${index}`}
+                                        className="inline-flex items-center gap-1 text-[10px] font-medium text-[#aeb8ff]"
+                                    >
+                                        {contribution.icon && (
+                                            <img
+                                                src={assetPath(contribution.icon)}
+                                                alt=""
+                                                className="size-4 shrink-0 object-contain"
+                                            />
+                                        )}
+                                        <span>{contribution.text}</span>
+                                    </span>
+                                ))}
+                            </span>
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
+
 type BuildEditorProps = {
     monster: Monster | null;
     build: Build;
@@ -681,12 +832,65 @@ export function BuildEditor({
     const selectedArmor = getEquipment(build.armorId);
     const mutationHelp = mutations.find((mutation) => mutation.id === mutationHelpId) ?? null;
     const aggregatedMutationEffects = getAggregatedMutationEffects(build.mutations);
+    const teammateIds = build.teammateMonsterIds ?? [null, null];
+    const teammateOptions: TeamPassiveOption[] = monsters
+        .filter((candidate) => {
+            if (candidate.id === monster?.id) {
+                return false;
+            }
+
+            return (candidate.passives ?? []).some(canSharePassiveFromTeammate);
+        })
+        .map((candidate) => {
+            const contributions = (candidate.passives ?? [])
+                .map(getTransferablePassiveFromTeammate)
+                .filter((passive): passive is NonNullable<typeof passive> => passive !== null)
+                .flatMap((passive) =>
+                    passive.effects
+                        .map((effect) => ({
+                            icon: getPassiveImagePath(passive),
+                            text: formatTeamPassiveEffect(effect),
+                        }))
+                        .filter((contribution) => contribution.text.length > 0),
+                );
+
+            return {
+                id: candidate.id,
+                label: candidate.name,
+                contributions,
+            };
+        })
+        .filter((option) => option.contributions.length > 0);
+
+    const updateTeammate = (slot: 0 | 1, monsterId: string | null) => {
+        onBuildChangeAction((current) => {
+            const currentIds = current.teammateMonsterIds ?? [null, null];
+            const nextIds: [string | null, string | null] = [
+                currentIds[0] ?? null,
+                currentIds[1] ?? null,
+            ];
+
+            if (monsterId && nextIds[slot === 0 ? 1 : 0] === monsterId) {
+                nextIds[slot === 0 ? 1 : 0] = null;
+            }
+
+            nextIds[slot] = monsterId;
+
+            return {
+                ...current,
+                teammateMonsterIds: nextIds,
+            };
+        });
+    };
     const hasHpConditionalAttribute = getActiveAttributeIds(build)
         .map(getAttribute)
         .some((attribute) => Boolean(attribute?.hpCondition));
-    const hasHpConditionalPassive = monster?.passives?.some(
-        (passive) => typeof passive.condition === "number",
-    ) ?? false;
+    const hasHpConditionalPassive = [
+        ...(monster?.passives ?? []),
+        ...teammateIds.flatMap((id) =>
+            id ? monsters.find((candidate) => candidate.id === id)?.passives ?? [] : [],
+        ),
+    ].some((passive) => typeof passive.condition === "number");
 
     const updateAttribute = (
         key: "weaponAttributeIds" | "armorAttributeIds",
@@ -700,6 +904,8 @@ export function BuildEditor({
     };
 
     const updateLevel = (value: string) => {
+        if (build.combatContext === "dungeon") return;
+
         const level = Number(value);
 
         if (
@@ -709,6 +915,38 @@ export function BuildEditor({
         ) {
             update("level", level);
         }
+    };
+
+    const updateCombatContext = (context: CombatContext) => {
+        onBuildChangeAction((current) => {
+            const isEnteringDungeon =
+                current.combatContext !== "dungeon" && context === "dungeon";
+            const isLeavingDungeon =
+                current.combatContext === "dungeon" && context !== "dungeon";
+
+            if (isEnteringDungeon) {
+                return {
+                    ...current,
+                    combatContext: context,
+                    preDungeonLevel: current.level,
+                    level: 60,
+                };
+            }
+
+            if (isLeavingDungeon) {
+                return {
+                    ...current,
+                    combatContext: context,
+                    level: current.preDungeonLevel ?? current.level,
+                    preDungeonLevel: null,
+                };
+            }
+
+            return {
+                ...current,
+                combatContext: context,
+            };
+        });
     };
 
     const updateEnhancement = (value: number) => {
@@ -762,8 +1000,10 @@ export function BuildEditor({
                                         step="1"
                                         value={build.level}
                                         onChange={(event) => updateLevel(event.target.value)}
+                                        disabled={build.combatContext === "dungeon"}
                                         aria-label="Monster level"
-                                        className="w-[4.25rem] appearance-none rounded-md border border-[#344050] bg-[#0f1620] px-2 py-1.5 text-center text-sm font-semibold tabular-nums text-[#e3e8f1] outline-none transition focus:border-[#4d96ff] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                        title={build.combatContext === "dungeon" ? "Dungeon mode forces Level 60." : undefined}
+                                        className="w-[4.25rem] appearance-none rounded-md border border-[#344050] bg-[#0f1620] px-2 py-1.5 text-center text-sm font-semibold tabular-nums text-[#e3e8f1] outline-none transition focus:border-[#4d96ff] disabled:cursor-not-allowed disabled:opacity-60 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                     />
                                     <span className="text-xs tabular-nums text-[#7f8b9e]">/ 105</span>
                                 </div>
@@ -777,10 +1017,12 @@ export function BuildEditor({
                                 step="1"
                                 value={build.level}
                                 onChange={(event) => updateLevel(event.target.value)}
+                                disabled={build.combatContext === "dungeon"}
+                                title={build.combatContext === "dungeon" ? "Dungeon mode forces Level 60." : undefined}
                                 style={{
                                     background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((build.level - 1) / 104) * 100}%, #283140 ${((build.level - 1) / 104) * 100}%, #283140 100%)`,
                                 }}
-                                className="h-1.5 w-full cursor-pointer appearance-none rounded-full outline-none [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#3b82f6] [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#3b82f6] [&::-webkit-slider-thumb]:shadow-[0_0_0_3px_rgba(59,130,246,0.16)]"
+                                className="h-1.5 w-full cursor-pointer appearance-none rounded-full outline-none disabled:cursor-not-allowed disabled:opacity-60 [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#3b82f6] [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#3b82f6] [&::-webkit-slider-thumb]:shadow-[0_0_0_3px_rgba(59,130,246,0.16)]"
                             />
                         </div>
 
@@ -1207,16 +1449,40 @@ export function BuildEditor({
 
                 </CollapsibleSection>
 
+                <CollapsibleSection title="Team Passives">
+                    <p className="mb-2.5 text-[11px] leading-4 text-[#7f8b9e]">
+                        Add up to 2 monsters with transferable combat passives. Non-transferable progression and self-only passives are hidden.
+                    </p>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                        {([0, 1] as const).map((slot) => {
+                            const otherSlot = slot === 0 ? 1 : 0;
+                            const options = teammateOptions.filter(
+                                (option) => option.id !== teammateIds[otherSlot],
+                            );
+
+                            return (
+                                <TeamPassiveSelect
+                                    key={slot}
+                                    label={`Teammate ${slot + 1}`}
+                                    options={options}
+                                    value={teammateIds[slot]}
+                                    onChange={(value) => updateTeammate(slot, value)}
+                                />
+                            );
+                        })}
+                    </div>
+                </CollapsibleSection>
+
                 <CollapsibleSection title="Combat Conditions">
                     <p className="mb-2.5 text-[11px] leading-4 text-[#7f8b9e]">
-                        Select the encounter used by conditional damage and resistance passives.
+                        Select the encounter and target conditions used by conditional damage and resistance passives.
                     </p>
                     <div className="grid grid-cols-2 gap-2">
                         {combatContexts.map((context) => (
                             <button
                                 key={context.id}
                                 type="button"
-                                onClick={() => update("combatContext", context.id)}
+                                onClick={() => updateCombatContext(context.id)}
                                 aria-pressed={build.combatContext === context.id}
                                 className={`rounded-md border px-3 py-2 text-xs font-semibold transition ${
                                     build.combatContext === context.id
@@ -1228,6 +1494,19 @@ export function BuildEditor({
                             </button>
                         ))}
                     </div>
+                    <button
+                        type="button"
+                        onClick={() => update("targetIsBoss", !build.targetIsBoss)}
+                        aria-pressed={build.targetIsBoss}
+                        className={`mt-3 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-xs font-semibold transition ${
+                            build.targetIsBoss
+                                ? "border-[#7182ff]/55 bg-[#202846] text-[#aeb8ff]"
+                                : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"
+                        }`}
+                    >
+                        <span>Target is Boss</span>
+                        <span>{build.targetIsBoss ? "Active" : "Inactive"}</span>
+                    </button>
                     <button
                         type="button"
                         onClick={() => update("targetStatused", !build.targetStatused)}

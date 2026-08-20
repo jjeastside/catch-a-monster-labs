@@ -6,6 +6,7 @@ import type {
 
 export type PassiveCalculationContext = {
     combatContext?: CombatContext;
+    targetIsBoss?: boolean;
     currentHpPercent?: number;
 };
 
@@ -65,7 +66,7 @@ export function getPassiveEffectTotals(
         }
 
         for (const effect of passive.effects) {
-            if (!effectMatchesCombatContext(effect.stat, context.combatContext ?? "standard")) {
+            if (!effectMatchesCombatConditions(effect.stat, context.combatContext ?? "standard", context.targetIsBoss ?? false)) {
                 continue;
             }
             applyPassiveEffect(totals, effect.stat, effect.value);
@@ -103,10 +104,16 @@ function passiveConditionMatches(passive: MonsterPassive, currentHpPercent: numb
     return true;
 }
 
-function effectMatchesCombatContext(stat: PassiveEffectStat, context: CombatContext): boolean {
+function effectMatchesCombatConditions(
+    stat: PassiveEffectStat,
+    context: CombatContext,
+    targetIsBoss: boolean,
+): boolean {
+    if (stat === "bossDamage" || stat === "bossIncomingDamage") {
+        return targetIsBoss;
+    }
+
     const requiredContext: Partial<Record<PassiveEffectStat, CombatContext>> = {
-        bossDamage: "boss",
-        bossIncomingDamage: "boss",
         spireDamage: "spire",
         spireIncomingDamage: "spire",
         riftDamage: "rift",
@@ -136,7 +143,7 @@ export function getPassiveDamageMultipliers(
 
         for (const effect of passive.effects) {
             if (!damageStats.has(effect.stat) || typeof effect.value !== "number") continue;
-            if (!effectMatchesCombatContext(effect.stat, context.combatContext ?? "standard")) continue;
+            if (!effectMatchesCombatConditions(effect.stat, context.combatContext ?? "standard", context.targetIsBoss ?? false)) continue;
 
             active.push({ passive, stat: effect.stat, multiplier: 1 + effect.value / 100 });
         }

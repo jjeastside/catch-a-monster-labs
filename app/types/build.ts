@@ -1,7 +1,7 @@
 import type { SkillId } from "../data/skills";
 
 export type Rank = "SS" | "S" | "A" | "B" | "C" | "D" | "E";
-export type CombatContext = "standard" | "boss" | "spire" | "rift" | "dungeon";
+export type CombatContext = "standard" | "spire" | "rift" | "dungeon";
 export type Mutation =
     | "huge"
     | "huge-x"
@@ -77,6 +77,7 @@ export type Build = {
   mutations: Mutation[];
   traitId: string | null;
   targetStatused: boolean;
+  targetIsBoss: boolean;
 
 
   selectedSkillId: SkillId | null;
@@ -87,6 +88,8 @@ export type Build = {
   armorAttributeIds: string[];
   currentHpPercent: number;
   combatContext: CombatContext;
+  preDungeonLevel: number | null;
+  teammateMonsterIds: [string | null, string | null];
 
   accountMultipliers: {
     completedAchievementIds: string[];
@@ -111,6 +114,7 @@ export function createDefaultBuild(
     mutations: [],
     traitId: null,
     targetStatused: false,
+    targetIsBoss: false,
     selectedSkillId: null,
     weaponId: null,
     armorId: null,
@@ -118,6 +122,8 @@ export function createDefaultBuild(
     armorAttributeIds: [],
     currentHpPercent: 100,
     combatContext: "standard",
+    preDungeonLevel: null,
+    teammateMonsterIds: [null, null],
     accountMultipliers: {
       completedAchievementIds: [],
     },

@@ -1,7 +1,7 @@
 import type { Monster } from "../../types/monster";
 
 import { getPassiveDamageMultipliers } from "./passive-effects";
-import type { CombatContext, Passive, PassiveEffectStat } from "../../types/build";
+import type { CombatContext, MonsterPassive, Passive, PassiveEffectStat } from "../../types/build";
 
 export type CombatDamageResult = {
     baseDamage: number;
@@ -16,7 +16,9 @@ type CalculateCombatDamageInput = {
     baseDamage: number;
     critMultiplier: number;
     combatContext?: CombatContext;
+    targetIsBoss?: boolean;
     currentHpPercent?: number;
+    passives?: MonsterPassive[];
 };
 
 export function calculateCombatDamage({
@@ -24,10 +26,13 @@ export function calculateCombatDamage({
                                           baseDamage,
                                           critMultiplier,
                                           combatContext = "standard",
+                                          targetIsBoss = false,
                                           currentHpPercent = 100,
+                                          passives,
                                       }: CalculateCombatDamageInput): CombatDamageResult {
-    const passiveDamage = getPassiveDamageMultipliers(monster?.passives, {
+    const passiveDamage = getPassiveDamageMultipliers(passives ?? monster?.passives, {
         combatContext,
+        targetIsBoss,
         currentHpPercent,
     });
     const passiveDamageMultiplier = passiveDamage.total;

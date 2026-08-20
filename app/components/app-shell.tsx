@@ -18,16 +18,34 @@ import { SavedBuildsPanel, type SavedBuildSlot } from "./saved-builds-panel";
 
 const SAVED_BUILDS_KEY = "cam-lab-saved-builds";
 const LEGACY_SAVED_BUILD_KEY = "cam-lab-saved-build";
+const ACTIVE_BUILD_KEY = "cam-lab-active-build";
+const LEGACY_SELECTED_MONSTER_KEY = "cam-lab-selected-monster";
 const SAVE_SLOT_COUNT = 3;
 
 function emptySaveSlots(): Array<SavedBuildSlot | null> {
     return Array.from({ length: SAVE_SLOT_COUNT }, () => null);
 }
 
+function normalizeSavedBuild(saved: Partial<Build>): Build {
+    const legacyBossContext = String(saved.combatContext) === "boss";
+
+    return {
+        ...createDefaultBuild({
+            monsterId: saved.monsterId ?? null,
+            evolutionPercent: saved.evolutionPercent,
+        }),
+        ...saved,
+        targetIsBoss: saved.targetIsBoss === true || legacyBossContext,
+        combatContext: legacyBossContext
+            ? "standard"
+            : saved.combatContext ?? "standard",
+    };
+}
+
 export function AppShell() {
     const hasInitializedAccountStorage = useRef(false);
     const hasInitializedFavoriteStorage = useRef(false);
-    const hasInitializedMonsterStorage = useRef(false);
+    const [hasLoadedActiveBuild, setHasLoadedActiveBuild] = useState(false);
     const [savedBuildsMode, setSavedBuildsMode] = useState<"save" | "load" | null>(null);
     const [savedBuildSlots, setSavedBuildSlots] = useState<Array<SavedBuildSlot | null>>(emptySaveSlots);
     const [build, setBuild] = useState<Build>(() => {
@@ -140,11 +158,76 @@ export function AppShell() {
 
     useEffect(() => {
         const frameId = window.requestAnimationFrame(() => {
-            const savedMonsterId = window.localStorage.getItem("cam-lab-selected-monster");
-            const savedMonster = monsters.find(({ id }) => id === savedMonsterId);
+            try {
+                const savedActiveBuild = window.localStorage.getItem(ACTIVE_BUILD_KEY);
 
-            if (savedMonster) {
-                selectMonster(savedMonster);
+                if (savedActiveBuild) {
+                    const parsed = normalizeSavedBuild(
+                        JSON.parse(savedActiveBuild) as Partial<Build>,
+                    );
+                    const savedMonster = monsters.find(
+                        ({ id }) => id === parsed.monsterId,
+                    );
+
+                    if (savedMonster) {
+                        setBuild((current) => ({
+                            ...parsed,
+                            monsterId: savedMonster.id,
+                            selectedSkillId:
+                                parsed.selectedSkillId &&
+                                savedMonster.skillIds.includes(parsed.selectedSkillId)
+                                    ? parsed.selectedSkillId
+                                    : savedMonster.skillIds[0] ?? null,
+                            mutations: Array.isArray(parsed.mutations)
+                                ? parsed.mutations
+                                : [],
+                            traitId:
+                                typeof parsed.traitId === "string"
+                                    ? parsed.traitId
+                                    : null,
+                            teammateMonsterIds: Array.isArray(parsed.teammateMonsterIds)
+                                ? [
+                                    parsed.teammateMonsterIds[0] ?? null,
+                                    parsed.teammateMonsterIds[1] ?? null,
+                                ]
+                                : [null, null],
+                            targetStatused: parsed.targetStatused === true,
+                            targetIsBoss: parsed.targetIsBoss === true,
+                            weaponAttributeIds: Array.isArray(parsed.weaponAttributeIds)
+                                ? parsed.weaponAttributeIds
+                                : [],
+                            armorAttributeIds: Array.isArray(parsed.armorAttributeIds)
+                                ? parsed.armorAttributeIds
+                                : [],
+                            currentHpPercent:
+                                typeof parsed.currentHpPercent === "number"
+                                    ? parsed.currentHpPercent
+                                    : 100,
+                            // Account multipliers already have their own persistent key.
+                            accountMultipliers: current.accountMultipliers,
+                        }));
+                    }
+                } else {
+                    // One-time fallback for users coming from the older
+                    // selected-monster-only persistence.
+                    const savedMonsterId =
+                        window.localStorage.getItem(LEGACY_SELECTED_MONSTER_KEY);
+                    const savedMonster = monsters.find(
+                        ({ id }) => id === savedMonsterId,
+                    );
+
+                    if (savedMonster) {
+                        setBuild((current) => ({
+                            ...createDefaultBuild({ monsterId: savedMonster.id }),
+                            selectedSkillId: savedMonster.skillIds[0] ?? null,
+                            accountMultipliers: current.accountMultipliers,
+                        }));
+                    }
+                }
+            } catch {
+                window.localStorage.removeItem(ACTIVE_BUILD_KEY);
+            } finally {
+                setHasLoadedActiveBuild(true);
             }
         });
 
@@ -152,17 +235,33 @@ export function AppShell() {
     }, []);
 
     useEffect(() => {
-        if (!hasInitializedMonsterStorage.current) {
-            hasInitializedMonsterStorage.current = true;
+        if (!hasLoadedActiveBuild) {
             return;
         }
 
-        if (build.monsterId) {
-            window.localStorage.setItem("cam-lab-selected-monster", build.monsterId);
-        } else {
-            window.localStorage.removeItem("cam-lab-selected-monster");
+        try {
+            window.localStorage.setItem(
+                ACTIVE_BUILD_KEY,
+                JSON.stringify({
+                    ...build,
+                    // Stored separately; don't duplicate account state here.
+                    accountMultipliers: { completedAchievementIds: [] },
+                }),
+            );
+
+            // Keep the old key updated for backwards compatibility.
+            if (build.monsterId) {
+                window.localStorage.setItem(
+                    LEGACY_SELECTED_MONSTER_KEY,
+                    build.monsterId,
+                );
+            } else {
+                window.localStorage.removeItem(LEGACY_SELECTED_MONSTER_KEY);
+            }
+        } catch {
+            // localStorage can fail in private/restricted browser contexts.
         }
-    }, [build.monsterId]);
+    }, [build, hasLoadedActiveBuild]);
 
     useEffect(() => {
         const frameId = window.requestAnimationFrame(() => {
@@ -182,7 +281,7 @@ export function AppShell() {
                             slots[index] = {
                                 version: 1,
                                 savedAt: typeof candidate.savedAt === "number" ? candidate.savedAt : Date.now(),
-                                build: candidateBuild as Build,
+                                build: normalizeSavedBuild(candidateBuild),
                             };
                         });
                         setSavedBuildSlots(slots);
@@ -200,7 +299,7 @@ export function AppShell() {
                 const migrated: SavedBuildSlot = {
                     version: 1,
                     savedAt: Date.now(),
-                    build: legacyBuild as Build,
+                    build: normalizeSavedBuild(legacyBuild),
                 };
                 const slots = emptySaveSlots();
                 slots[0] = migrated;
@@ -279,7 +378,7 @@ export function AppShell() {
             const savedSlot = savedBuildSlots[slotIndex];
             if (!savedSlot) return false;
 
-            const parsed = savedSlot.build;
+            const parsed = normalizeSavedBuild(savedSlot.build);
             const savedMonster = monsters.find(({ id }) => id === parsed.monsterId);
             if (!savedMonster) return false;
 
@@ -293,9 +392,10 @@ export function AppShell() {
                 mutations: Array.isArray(parsed.mutations) ? parsed.mutations : [],
                 traitId: typeof parsed.traitId === "string" ? parsed.traitId : null,
                 targetStatused: parsed.targetStatused === true,
+                targetIsBoss: parsed.targetIsBoss === true,
                 weaponAttributeIds: Array.isArray(parsed.weaponAttributeIds) ? parsed.weaponAttributeIds : [],
                 armorAttributeIds: Array.isArray(parsed.armorAttributeIds) ? parsed.armorAttributeIds : [],
-                combatContext: parsed.combatContext ?? "standard",
+                combatContext: parsed.combatContext,
                 currentHpPercent: typeof parsed.currentHpPercent === "number" ? parsed.currentHpPercent : 100,
                 accountMultipliers: current.accountMultipliers,
             }));
