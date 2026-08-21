@@ -20,6 +20,13 @@ const releases = [
             "Moved All Evolution Types next to All Passive Types for a cleaner Monster Browser filter layout.",
             "Added a Patch Notes page for tracking Catch a Monster game updates separately from Cam Lab development changes.",
             "Updated Path of Progress from 12 to 13 achievements and added the new Splash Isle Path of Progress reward, increasing the maximum Path of Progress Health bonus from +24% to +26%.",
+            "Added shareable build URLs so complete Cam Lab builds can be copied and opened by other players without requiring an account or backend.",
+            "Shared build links preserve calculator-relevant build state, including monster, level, rank, enhancement, Evolution Multiplier, Genetic Potential, mutations, traits, equipment, attributes, teammates, combat conditions, and account multipliers.",
+            "Replaced Compare Builds with Share Build in the Build Editor actions.",
+            "Compressed shared build URLs using compact indexed IDs, packed achievement selections, and shortened numeric and flag encoding to keep links practical for Discord and other sharing.",
+            "Removed BigInt from shared-build achievement encoding for broader browser and TypeScript compatibility.",
+            "Added direct monster links using URL hashes, allowing links such as #lynxgear, #glacier_claw, and #glacier-claw to open the matching monster immediately.",
+            "Selecting a monster now updates the URL with its direct monster hash while #b= links remain reserved for complete shared builds.",
         ],
     },
     {

@@ -790,6 +790,7 @@ type BuildEditorProps = {
     onResetAction: () => void;
     onOpenSaveBuildsAction: () => void;
     onOpenLoadBuildsAction: () => void;
+    onShareBuildAction: () => void;
 };
 
 export function BuildEditor({
@@ -799,6 +800,7 @@ export function BuildEditor({
                                 onResetAction,
                                 onOpenSaveBuildsAction,
                                 onOpenLoadBuildsAction,
+                                onShareBuildAction,
                             }: BuildEditorProps) {
     const [experimentalLevelMode, setExperimentalLevelMode] = useState(false);
     const maxSelectableLevel = experimentalLevelMode ? 110 : 105;
@@ -1592,11 +1594,12 @@ export function BuildEditor({
 
                     <button
                         type="button"
-                        disabled
-                        title="Build comparison is planned for a future update."
-                        className="cursor-not-allowed rounded-md border border-[#344050] bg-[#141c28] px-3 py-2 text-xs font-semibold text-[#7f8b9e] opacity-60"
+                        onClick={onShareBuildAction}
+                        disabled={!monster}
+                        title={monster ? "Copy a link that recreates this build." : "Select a monster before sharing a build."}
+                        className="rounded-md border border-[#7182ff]/45 bg-[#202846] px-3 py-2 text-xs font-bold text-[#c7ceff] transition hover:border-[#7182ff]/70 hover:bg-[#263052] disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                        Compare Builds
+                        Share Build
                     </button>
 
                     <button

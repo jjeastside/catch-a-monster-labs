@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { monsters } from "../data/monsters";
 import { achievementIds, getAchievementsByCategory } from "../data/achievements";
 import { createDefaultBuild, type Build } from "../types/build";
+import { createBuildShareUrl, getSharedBuildFromLocation } from "../lib/build-sharing";
 import type { Monster } from "../types/monster";
 
 import { BuildEditor } from "./build-editor";
@@ -42,11 +43,49 @@ function normalizeSavedBuild(saved: Partial<Build>): Build {
     };
 }
 
+function normalizeMonsterHash(value: string): string {
+    let decoded = value;
+
+    try {
+        decoded = decodeURIComponent(value);
+    } catch {
+        // Keep the original hash when it contains malformed URI escapes.
+    }
+
+    return decoded.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function getMonsterFromLocationHash(): Monster | null {
+    const hash = window.location.hash.slice(1);
+
+    // #b= is reserved for full shared builds.
+    if (!hash || hash.startsWith("b=")) return null;
+
+    const normalizedHash = normalizeMonsterHash(hash);
+    if (!normalizedHash) return null;
+
+    return monsters.find((monster) =>
+        normalizeMonsterHash(monster.id) === normalizedHash ||
+        normalizeMonsterHash(monster.name) === normalizedHash
+    ) ?? null;
+}
+
+function getMonsterShareHash(monster: Monster): string {
+    const slug = monster.name
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "");
+
+    return `#${slug || monster.id}`;
+}
+
 export function AppShell() {
     const hasInitializedAccountStorage = useRef(false);
     const hasInitializedFavoriteStorage = useRef(false);
     const [hasLoadedActiveBuild, setHasLoadedActiveBuild] = useState(false);
     const [savedBuildsMode, setSavedBuildsMode] = useState<"save" | "load" | null>(null);
+    const [shareBuildStatus, setShareBuildStatus] = useState<"idle" | "copied" | "error">("idle");
     const [mobilePanel, setMobilePanel] = useState<"monster" | "results" | "build">("monster");
     const [savedBuildSlots, setSavedBuildSlots] = useState<Array<SavedBuildSlot | null>>(emptySaveSlots);
     const [build, setBuild] = useState<Build>(() => {
@@ -63,6 +102,10 @@ export function AppShell() {
 
     useEffect(() => {
         const frameId = window.requestAnimationFrame(() => {
+            // A shared build includes its own account multipliers so the result
+            // matches the sender's build exactly.
+            if (getSharedBuildFromLocation()) return;
+
             const saved = window.localStorage.getItem("monster-lab-account-multipliers");
             if (!saved) return;
 
@@ -160,6 +203,65 @@ export function AppShell() {
     useEffect(() => {
         const frameId = window.requestAnimationFrame(() => {
             try {
+                const sharedBuild = getSharedBuildFromLocation();
+
+                if (sharedBuild) {
+                    const parsed = normalizeSavedBuild(sharedBuild);
+                    const sharedMonster = monsters.find(({ id }) => id === parsed.monsterId);
+
+                    if (sharedMonster) {
+                        setBuild({
+                            ...parsed,
+                            monsterId: sharedMonster.id,
+                            selectedSkillId:
+                                parsed.selectedSkillId &&
+                                sharedMonster.skillIds.includes(parsed.selectedSkillId)
+                                    ? parsed.selectedSkillId
+                                    : sharedMonster.skillIds[0] ?? null,
+                            mutations: Array.isArray(parsed.mutations) ? parsed.mutations : [],
+                            traitId: typeof parsed.traitId === "string" ? parsed.traitId : null,
+                            teammateMonsterIds: Array.isArray(parsed.teammateMonsterIds)
+                                ? [
+                                    parsed.teammateMonsterIds[0] ?? null,
+                                    parsed.teammateMonsterIds[1] ?? null,
+                                ]
+                                : [null, null],
+                            targetStatused: parsed.targetStatused === true,
+                            targetIsBoss: parsed.targetIsBoss === true,
+                            weaponAttributeIds: Array.isArray(parsed.weaponAttributeIds)
+                                ? parsed.weaponAttributeIds
+                                : [],
+                            armorAttributeIds: Array.isArray(parsed.armorAttributeIds)
+                                ? parsed.armorAttributeIds
+                                : [],
+                            currentHpPercent:
+                                typeof parsed.currentHpPercent === "number"
+                                    ? parsed.currentHpPercent
+                                    : 100,
+                            accountMultipliers: {
+                                completedAchievementIds: Array.isArray(parsed.accountMultipliers?.completedAchievementIds)
+                                    ? parsed.accountMultipliers.completedAchievementIds.filter(
+                                        (id): id is string => typeof id === "string" && achievementIds.has(id),
+                                    )
+                                    : [],
+                            },
+                        });
+                        return;
+                    }
+                }
+
+                const linkedMonster = getMonsterFromLocationHash();
+
+                if (linkedMonster) {
+                    setBuild((current) => ({
+                        ...createDefaultBuild({ monsterId: linkedMonster.id }),
+                        selectedSkillId: linkedMonster.skillIds[0] ?? null,
+                        accountMultipliers: current.accountMultipliers,
+                    }));
+                    setMobilePanel("results");
+                    return;
+                }
+
                 const savedActiveBuild = window.localStorage.getItem(ACTIVE_BUILD_KEY);
 
                 if (savedActiveBuild) {
@@ -314,12 +416,37 @@ export function AppShell() {
         return () => window.cancelAnimationFrame(frameId);
     }, []);
 
+    useEffect(() => {
+        const handleHashChange = () => {
+            // Shared-build hashes are handled by the build-sharing loader.
+            if (getSharedBuildFromLocation()) return;
+
+            const linkedMonster = getMonsterFromLocationHash();
+            if (!linkedMonster) return;
+
+            setBuild((current) => ({
+                ...createDefaultBuild({ monsterId: linkedMonster.id }),
+                selectedSkillId: linkedMonster.skillIds[0] ?? null,
+                accountMultipliers: current.accountMultipliers,
+            }));
+            setMobilePanel("results");
+        };
+
+        window.addEventListener("hashchange", handleHashChange);
+        return () => window.removeEventListener("hashchange", handleHashChange);
+    }, []);
+
     function selectMonster(monster: Monster) {
         setBuild((current) => ({
             ...createDefaultBuild({ monsterId: monster.id }),
             selectedSkillId: monster.skillIds[0] ?? null,
             accountMultipliers: current.accountMultipliers,
         }));
+
+        // Keep the selected monster directly linkable without creating a
+        // full shared-build URL. replaceState avoids filling browser history
+        // as the user browses through monsters.
+        window.history.replaceState(null, "", getMonsterShareHash(monster));
     }
 
     function resetBuild() {
@@ -416,6 +543,35 @@ export function AppShell() {
         persistSavedBuildSlots(nextSlots);
     }
 
+    async function shareBuild() {
+        if (!selectedMonster) return;
+
+        const shareUrl = createBuildShareUrl(build);
+        window.history.replaceState(null, "", shareUrl);
+
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            setShareBuildStatus("copied");
+        } catch {
+            try {
+                const textarea = document.createElement("textarea");
+                textarea.value = shareUrl;
+                textarea.style.position = "fixed";
+                textarea.style.opacity = "0";
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+                const copied = document.execCommand("copy");
+                textarea.remove();
+                setShareBuildStatus(copied ? "copied" : "error");
+            } catch {
+                setShareBuildStatus("error");
+            }
+        }
+
+        window.setTimeout(() => setShareBuildStatus("idle"), 2200);
+    }
+
     return (
         <div className="min-h-screen min-w-0 overflow-x-hidden bg-[#0b111a] text-[#f6f8fc]">
             <TopNavigation />
@@ -426,6 +582,20 @@ export function AppShell() {
                     build={build}
                     onBuildChangeAction={setBuild}
                 />
+                {shareBuildStatus !== "idle" && (
+                    <div
+                        role="status"
+                        className={`mt-2 rounded-md border px-3 py-2 text-center text-xs font-semibold ${
+                            shareBuildStatus === "copied"
+                                ? "border-[#7182ff]/40 bg-[#202846] text-[#c7ceff]"
+                                : "border-[#ff6b6b]/35 bg-[#3a1f25] text-[#ffb0b0]"
+                        }`}
+                    >
+                        {shareBuildStatus === "copied"
+                            ? "Build link copied to clipboard."
+                            : "Build link is in the address bar. Copy it to share this build."}
+                    </div>
+                )}
             </div>
 
             <nav
@@ -506,6 +676,7 @@ export function AppShell() {
                         onResetAction={resetBuild}
                         onOpenSaveBuildsAction={() => setSavedBuildsMode("save")}
                         onOpenLoadBuildsAction={() => setSavedBuildsMode("load")}
+                        onShareBuildAction={shareBuild}
                     />
                 </div>
             </main>
