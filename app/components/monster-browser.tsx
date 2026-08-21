@@ -1,8 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { PASSIVE_DEFINITIONS } from "../data/passives";
+import { GENERATED_MONSTERS } from "../data/generated/monsters";
+import { getSkill, getSkillTotalMultiplier } from "../data/skills";
 import { assetPath } from "../lib/asset-path";
+import { EVOLUTION_STEP, MAX_EVOLUTION_PERCENT, MIN_EVOLUTION_PERCENT, clampEvolutionPercent, getEvolutionBarFill } from "../lib/calculations/evolution";
 import { ISLANDS, type Monster } from "../types/monster";
 import { Panel } from "./panel";
 
@@ -41,7 +45,488 @@ type MonsterBrowserProps = {
 
 type EvolutionFilter = "all" | "can-evolve" | "evolved" | "standard";
 type PassiveFilter = "all" | string;
+type SortMode = "index" | "dps" | "damage" | "health";
+type PassiveCompareMode = "none" | "always" | "conditional";
 const selectClassName = "min-w-0 rounded-md border border-[#344050] bg-[#141c28] px-3 py-2 text-xs text-[#bfc7d5] outline-none focus:border-[#7182ff]";
+
+const generatedMonsterById = new Map(
+    GENERATED_MONSTERS.map((monster) => [monster.id, monster]),
+);
+
+function getBrowserComparisonValue(
+    monster: Monster,
+    sortMode: SortMode,
+    evolutionPercent: number,
+    passiveMode: PassiveCompareMode,
+): number {
+    const data = generatedMonsterById.get(monster.id);
+
+    if (!data) return 0;
+    if (sortMode === "index") return data.indexPosition;
+
+    const evolutionMultiplier = monster.isEvolved ? evolutionPercent / 100 : 1;
+    const baseDamage = data.baseDamageELevel1 * evolutionMultiplier;
+    const health = data.baseHealthELevel1 * evolutionMultiplier;
+
+    // Passive comparison modes:
+    // - none: raw stats/skills only.
+    // - always: only unconditional self passives.
+    // - conditional: unconditional self passives plus Vital Surge, assuming its HP condition is active.
+    // Context-specific passives (Boss/Spire/Rift/Dungeon) remain excluded.
+    const includedPassiveEffects = passiveMode === "none"
+        ? []
+        : (monster.passives ?? [])
+            .filter((passive) =>
+                passive.condition == null ||
+                (passiveMode === "conditional" && passive.id === "vitalSurge")
+            )
+            .flatMap((passive) => passive.effects);
+
+    const passiveDamageBonus = includedPassiveEffects.reduce(
+        (total, effect) =>
+            effect.stat === "damage" && typeof effect.value === "number"
+                ? total + effect.value
+                : total,
+        0,
+    );
+    const passiveCritChanceBonus = includedPassiveEffects.reduce(
+        (total, effect) =>
+            effect.stat === "critChance" && typeof effect.value === "number"
+                ? total + effect.value
+                : total,
+        0,
+    );
+    const passiveCritDamageBonus = includedPassiveEffects.reduce(
+        (total, effect) =>
+            effect.stat === "critDamage" && typeof effect.value === "number"
+                ? total + effect.value
+                : total,
+        0,
+    );
+
+    const damage = baseDamage * (1 + passiveDamageBonus / 100);
+
+    if (sortMode === "damage") return damage;
+    if (sortMode === "health") return health;
+
+    const critChance = Math.max(0, data.baseCritChance + passiveCritChanceBonus) / 100;
+    const critDamageMultiplier = 2 + passiveCritDamageBonus / 100;
+    const expectedCritMultiplier = 1 + critChance * (critDamageMultiplier - 1);
+
+    return monster.skillIds.reduce((total, skillId) => {
+        const skill = getSkill(skillId);
+        if (!skill || skill.cooldown === null || skill.cooldown <= 0 || skill.damageInstances.length === 0) {
+            return total;
+        }
+
+        return total + (damage * getSkillTotalMultiplier(skill) * expectedCritMultiplier) / skill.cooldown;
+    }, 0);
+}
+
+
+function InfoTooltip({ label, children }: { label: string; children: string }) {
+    const buttonRef = useRef<HTMLButtonElement | null>(null);
+    const [open, setOpen] = useState(false);
+    const [position, setPosition] = useState({ top: 0, left: 0 });
+
+    const showTooltip = () => {
+        const button = buttonRef.current;
+        if (!button) return;
+
+        const rect = button.getBoundingClientRect();
+        const tooltipWidth = 256;
+        const tooltipHeight = 120;
+        const gap = 8;
+
+        let left = rect.left + rect.width / 2 - tooltipWidth / 2;
+        let top = rect.bottom + gap;
+
+        if (left < 8) left = 8;
+        if (left + tooltipWidth > window.innerWidth - 8) {
+            left = window.innerWidth - tooltipWidth - 8;
+        }
+        if (top + tooltipHeight > window.innerHeight - 8) {
+            top = rect.top - tooltipHeight - gap;
+        }
+
+        setPosition({ top, left });
+        setOpen(true);
+    };
+
+    return (
+        <>
+            <button
+                ref={buttonRef}
+                type="button"
+                aria-label={label}
+                onMouseEnter={showTooltip}
+                onMouseLeave={() => setOpen(false)}
+                onFocus={showTooltip}
+                onBlur={() => setOpen(false)}
+                className="grid size-5 shrink-0 place-items-center rounded-full border border-[#5c6a80] bg-[#141c28] text-[11px] font-black leading-none text-[#8e99ad] outline-none transition hover:border-[#7182ff] hover:text-[#7182ff] focus:border-[#7182ff] focus:text-[#7182ff]"
+            >
+                ?
+            </button>
+
+            {open &&
+                typeof document !== "undefined" &&
+                createPortal(
+                    <div
+                        role="tooltip"
+                        style={{
+                            position: "fixed",
+                            top: position.top,
+                            left: position.left,
+                            width: 256,
+                            zIndex: 9999,
+                        }}
+                        className="pointer-events-none rounded-lg border border-[#41506a] bg-[#0d131d] px-3 py-2 text-left text-xs font-normal normal-case leading-5 tracking-normal text-[#bfc7d5] shadow-2xl"
+                    >
+                        {children}
+                    </div>,
+                    document.body,
+                )}
+        </>
+    );
+}
+
+function HoverInfo({ text, children }: { text: string; children: React.ReactNode }) {
+    const anchorRef = useRef<HTMLSpanElement | null>(null);
+    const [open, setOpen] = useState(false);
+    const [position, setPosition] = useState({ top: 0, left: 0 });
+
+    const showTooltip = () => {
+        const anchor = anchorRef.current;
+        if (!anchor) return;
+
+        const rect = anchor.getBoundingClientRect();
+        const tooltipWidth = 250;
+        const tooltipHeight = 76;
+        const gap = 8;
+
+        let left = rect.left + rect.width / 2 - tooltipWidth / 2;
+        let top = rect.bottom + gap;
+
+        if (left < 8) left = 8;
+        if (left + tooltipWidth > window.innerWidth - 8) {
+            left = window.innerWidth - tooltipWidth - 8;
+        }
+        if (top + tooltipHeight > window.innerHeight - 8) {
+            top = rect.top - tooltipHeight - gap;
+        }
+
+        setPosition({ top, left });
+        setOpen(true);
+    };
+
+    return (
+        <span
+            ref={anchorRef}
+            className="inline-flex shrink-0"
+            onMouseEnter={showTooltip}
+            onMouseLeave={() => setOpen(false)}
+            onFocusCapture={showTooltip}
+            onBlurCapture={() => setOpen(false)}
+        >
+            {children}
+            {open && typeof document !== "undefined" && createPortal(
+                <div
+                    role="tooltip"
+                    style={{
+                        position: "fixed",
+                        top: position.top,
+                        left: position.left,
+                        width: 250,
+                        zIndex: 9999,
+                    }}
+                    className="pointer-events-none rounded-lg border border-[#41506a] bg-[#0d131d] px-3 py-2 text-left text-[11px] font-normal leading-4 text-[#bfc7d5] shadow-2xl"
+                >
+                    {text}
+                </div>,
+                document.body,
+            )}
+        </span>
+    );
+}
+
+
+type BrowserEvolutionMultiplierEditorProps = {
+    value: number;
+    onChange: (value: number) => void;
+};
+
+function BrowserEvolutionMultiplierEditor({ value, onChange }: BrowserEvolutionMultiplierEditorProps) {
+    const [inputDraft, setInputDraft] = useState<string | null>(null);
+    const [dragPreview, setDragPreview] = useState<number | null>(null);
+    const [precisionRange, setPrecisionRange] = useState<{ min: number; max: number } | null>(null);
+    const [precisionOverlay, setPrecisionOverlay] = useState<{ left: number; top: number; width: number } | null>(null);
+    const dragState = useRef<{
+        pointerId: number;
+        left: number;
+        top: number;
+        width: number;
+        overlayLeft: number;
+        overlayWidth: number;
+        startY: number;
+        preview: number;
+        precisionRange: { min: number; max: number } | null;
+        precisionStartX: number | null;
+        precisionStartValue: number | null;
+    } | null>(null);
+
+    const inputValue = inputDraft ?? (dragPreview ?? value).toFixed(2);
+    const displayedValue = dragPreview ?? value;
+    const parsedValue = Number(inputValue);
+    const isNumeric = inputValue.trim() !== "" && Number.isFinite(parsedValue);
+    const isOutOfRange = isNumeric && (parsedValue < MIN_EVOLUTION_PERCENT || parsedValue > MAX_EVOLUTION_PERCENT);
+
+    const commitInputValue = () => {
+        const normalizedValue = isNumeric ? clampEvolutionPercent(parsedValue) : value;
+        onChange(normalizedValue);
+        setInputDraft(null);
+    };
+
+    const evolutionBarFill = getEvolutionBarFill(displayedValue);
+    const precisionFill = precisionRange
+        ? ((displayedValue - precisionRange.min) / (precisionRange.max - precisionRange.min)) * 100
+        : 0;
+
+    return (
+        <div className="mt-2 border-t border-[#273242] pt-2">
+            <div className="mb-1.5 flex items-center justify-between gap-2">
+                <div className="inline-flex min-w-0 items-center gap-1.5 leading-none">
+                    <span className="inline-flex h-5 items-center text-[10px] font-medium uppercase tracking-[0.08em] leading-none text-[#8e99ad]">EM</span>
+                    <span className="relative -top-px inline-flex h-5 items-center">
+                        <InfoTooltip label="About evolution multiplier">
+                            Applied only to evolved forms when comparing DPS, Damage, and Health. Drag the bar normally for quick changes, or drag upward while adjusting to open the 0.01% precision slider. It does not affect Index sorting.
+                        </InfoTooltip>
+                    </span>
+                </div>
+
+                <label className="relative w-[4.75rem] shrink-0">
+                    <input
+                        type="number"
+                        min={MIN_EVOLUTION_PERCENT}
+                        max={MAX_EVOLUTION_PERCENT}
+                        step={EVOLUTION_STEP}
+                        value={inputValue}
+                        onChange={(event) => {
+                            const nextInput = event.target.value;
+                            const nextValue = Number(nextInput);
+                            setInputDraft(nextInput);
+                            if (
+                                nextInput.trim() !== "" &&
+                                Number.isFinite(nextValue) &&
+                                nextValue >= MIN_EVOLUTION_PERCENT &&
+                                nextValue <= MAX_EVOLUTION_PERCENT
+                            ) {
+                                onChange(nextValue);
+                            }
+                        }}
+                        onBlur={commitInputValue}
+                        onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                                commitInputValue();
+                                event.currentTarget.blur();
+                            }
+                        }}
+                        aria-label="Exact browser evolution multiplier percentage"
+                        aria-invalid={!isNumeric || isOutOfRange}
+                        className={`w-full appearance-none rounded-md border bg-[#141c28] px-1.5 py-1 pr-4 text-right text-[10px] font-semibold tabular-nums text-[#c7ccff] outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+                            !isNumeric || isOutOfRange
+                                ? "border-[#ff7657] focus:border-[#ff7657]"
+                                : "border-[#344050] focus:border-[#7182ff]"
+                        }`}
+                    />
+                    <span className="pointer-events-none absolute inset-y-0 right-1.5 flex items-center text-[8px] text-[#69768a]">%</span>
+                </label>
+            </div>
+
+            <div className="relative">
+                {precisionRange &&
+                    typeof document !== "undefined" &&
+                    createPortal(
+                        <div
+                            className="fixed z-[9999] max-w-[calc(100vw-1rem)] -translate-x-1/2 -translate-y-full rounded-lg border border-[#f1a45c]/70 bg-[#0d131d]/95 px-3 py-2 shadow-[0_10px_28px_rgba(0,0,0,0.48),0_0_18px_rgba(255,157,66,0.10)] backdrop-blur-sm"
+                            style={{
+                                left: precisionOverlay?.left ?? 0,
+                                top: precisionOverlay?.top ?? 0,
+                                width: precisionOverlay?.width,
+                            }}
+                        >
+                            <div className="mb-1.5 text-center text-[9px] font-semibold uppercase tracking-[0.12em] text-[#f3b170]">
+                                Precision · 0.01%
+                            </div>
+                            <div className="mb-1.5 flex items-center justify-between gap-2 text-[9px] font-semibold tabular-nums text-[#8e99ad]">
+                                <span>{precisionRange.min.toFixed(2)}%</span>
+                                <strong className="rounded border border-[#f1a45c]/50 bg-[#342313] px-2 py-0.5 text-xs font-black text-white">
+                                    {displayedValue.toFixed(2)}%
+                                </strong>
+                                <span>{precisionRange.max.toFixed(2)}%</span>
+                            </div>
+                            <div className="relative h-1.5 rounded-full bg-[#283140]">
+                                <div
+                                    className="absolute inset-y-0 left-0 rounded-full bg-[#ff9d42]"
+                                    style={{ width: `${precisionFill}%` }}
+                                />
+                                <span
+                                    className="absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-[#ff9d42] shadow-[0_0_0_3px_rgba(255,157,66,0.16)]"
+                                    style={{ left: `${precisionFill}%` }}
+                                />
+                            </div>
+                        </div>,
+                        document.body,
+                    )}
+
+                <div className="relative rounded-md border border-[#f4d4b3]/75 bg-[#343434] p-[2px] shadow-inner">
+                    <div className="relative h-4 overflow-hidden rounded-[4px] bg-[#3a3a3a]">
+                        <div
+                            className="pointer-events-none absolute inset-y-0 left-0 bg-gradient-to-r from-[#ffd2a3] via-[#ffb160] to-[#ff8a24]"
+                            style={{ width: `${evolutionBarFill}%` }}
+                        />
+                        <span className="pointer-events-none absolute inset-0 z-10 grid place-items-center text-[7px] font-semibold tabular-nums text-white [text-shadow:0_1px_0_#111,1px_0_0_#111,-1px_0_0_#111,0_-1px_0_#111]">
+                            EM: {displayedValue.toFixed(2)}%
+                        </span>
+                        <input
+                            type="range"
+                            min={MIN_EVOLUTION_PERCENT}
+                            max={MAX_EVOLUTION_PERCENT}
+                            step={EVOLUTION_STEP}
+                            value={value}
+                            onPointerDown={(event) => {
+                                event.preventDefault();
+                                const track = event.currentTarget.parentElement?.getBoundingClientRect();
+                                if (!track) return;
+
+                                const mainProgress = Math.min(
+                                    1,
+                                    Math.max(0, (event.clientX - (track.left + track.width / 2)) / (track.width / 2)),
+                                );
+                                const preview = clampEvolutionPercent(
+                                    MIN_EVOLUTION_PERCENT + mainProgress * (MAX_EVOLUTION_PERCENT - MIN_EVOLUTION_PERCENT),
+                                );
+                                const overlayWidth = Math.min(
+                                    Math.max(track.width + 96, track.width * 1.3),
+                                    window.innerWidth - 16,
+                                );
+
+                                dragState.current = {
+                                    pointerId: event.pointerId,
+                                    left: track.left,
+                                    top: track.top,
+                                    width: track.width,
+                                    overlayLeft: track.left + track.width / 2,
+                                    overlayWidth,
+                                    startY: event.clientY,
+                                    preview,
+                                    precisionRange: null,
+                                    precisionStartX: null,
+                                    precisionStartValue: null,
+                                };
+                                event.currentTarget.setPointerCapture(event.pointerId);
+                                setPrecisionRange(null);
+                                setPrecisionOverlay(null);
+                                setDragPreview(preview);
+                            }}
+                            onPointerMove={(event) => {
+                                const drag = dragState.current;
+                                if (!drag || drag.pointerId !== event.pointerId) return;
+
+                                if (!drag.precisionRange && drag.startY - event.clientY >= 24) {
+                                    const desiredWidth = Math.max(drag.width + 96, drag.width * 1.3);
+                                    const availableHalfWidth = Math.max(
+                                        0,
+                                        Math.min(event.clientX - 8, window.innerWidth - event.clientX - 8),
+                                    );
+                                    drag.overlayLeft = event.clientX;
+                                    drag.overlayWidth = Math.min(desiredWidth, availableHalfWidth * 2);
+                                    drag.precisionRange = {
+                                        min: Math.max(MIN_EVOLUTION_PERCENT, drag.preview - 1),
+                                        max: Math.min(MAX_EVOLUTION_PERCENT, drag.preview + 1),
+                                    };
+                                    drag.precisionStartX = event.clientX;
+                                    drag.precisionStartValue = drag.preview;
+                                    setPrecisionRange(drag.precisionRange);
+                                    setPrecisionOverlay({
+                                        left: drag.overlayLeft,
+                                        top: drag.top - 8,
+                                        width: drag.overlayWidth,
+                                    });
+                                    setDragPreview(drag.preview);
+                                    return;
+                                }
+
+                                if (
+                                    drag.precisionRange &&
+                                    drag.precisionStartX !== null &&
+                                    drag.precisionStartValue !== null
+                                ) {
+                                    const precisionSpan = drag.precisionRange.max - drag.precisionRange.min;
+                                    drag.preview = clampEvolutionPercent(
+                                        Math.min(
+                                            drag.precisionRange.max,
+                                            Math.max(
+                                                drag.precisionRange.min,
+                                                drag.precisionStartValue +
+                                                ((event.clientX - drag.precisionStartX) / drag.overlayWidth) * precisionSpan,
+                                            ),
+                                        ),
+                                    );
+                                } else {
+                                    const progress = Math.min(
+                                        1,
+                                        Math.max(0, (event.clientX - (drag.left + drag.width / 2)) / (drag.width / 2)),
+                                    );
+                                    drag.preview = clampEvolutionPercent(
+                                        MIN_EVOLUTION_PERCENT + progress * (MAX_EVOLUTION_PERCENT - MIN_EVOLUTION_PERCENT),
+                                    );
+                                }
+
+                                setDragPreview(drag.preview);
+                            }}
+                            onPointerUp={(event) => {
+                                const drag = dragState.current;
+                                if (!drag || drag.pointerId !== event.pointerId) return;
+                                onChange(drag.preview);
+                                setInputDraft(null);
+                                setDragPreview(null);
+                                setPrecisionRange(null);
+                                setPrecisionOverlay(null);
+                                dragState.current = null;
+                                event.currentTarget.releasePointerCapture(event.pointerId);
+                            }}
+                            onPointerCancel={() => {
+                                dragState.current = null;
+                                setDragPreview(null);
+                                setPrecisionRange(null);
+                                setPrecisionOverlay(null);
+                            }}
+                            onChange={(event) => {
+                                if (dragState.current) return;
+                                const nextValue = clampEvolutionPercent(
+                                    Math.max(MIN_EVOLUTION_PERCENT, Number(event.target.value)),
+                                );
+                                onChange(nextValue);
+                                setInputDraft(null);
+                            }}
+                            aria-label="Browser EM percentage"
+                            aria-valuemin={MIN_EVOLUTION_PERCENT}
+                            aria-valuemax={MAX_EVOLUTION_PERCENT}
+                            aria-valuenow={displayedValue}
+                            title="Drag upward while adjusting to open the precision slider."
+                            className="absolute inset-0 z-20 h-full w-full cursor-ew-resize touch-none appearance-none bg-transparent opacity-0"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div className="mt-1 flex justify-between text-[9px] tabular-nums text-[#69768a]">
+                <span>{MIN_EVOLUTION_PERCENT.toFixed(0)}%</span>
+                <span>{MAX_EVOLUTION_PERCENT.toFixed(0)}%</span>
+            </div>
+        </div>
+    );
+}
 
 type MonsterOptionProps = {
     monster: Monster;
@@ -163,6 +648,12 @@ export function MonsterBrowser({
     const [evolutionFilter, setEvolutionFilter] = useState<EvolutionFilter>("all");
     const [passiveFilter, setPassiveFilter] = useState<PassiveFilter>("all");
     const [favoritesOnly, setFavoritesOnly] = useState(false);
+    const [advancedFilterOpen, setAdvancedFilterOpen] = useState(false);
+    const [browseFilterOpen, setBrowseFilterOpen] = useState(false);
+    const [sortMode, setSortMode] = useState<SortMode>("index");
+    const [sortDescending, setSortDescending] = useState(false);
+    const [browserEvolutionPercent, setBrowserEvolutionPercent] = useState(100);
+    const [passiveCompareMode, setPassiveCompareMode] = useState<PassiveCompareMode>("always");
     const [showAllMonsters, setShowAllMonsters] = useState(false);
     const [visibleMonsterCount, setVisibleMonsterCount] = useState(60);
 
@@ -182,7 +673,7 @@ export function MonsterBrowser({
 
     const filteredMonsters = useMemo(() => {
         const query = searchQuery.trim().toLowerCase();
-        return monsters.filter((monster) => {
+        const matchingMonsters = monsters.filter((monster) => {
             const searchableValues = [
                 monster.name, monster.id, monster.element, monster.rarity,
                 ...monster.sources.flatMap((source) => [
@@ -213,7 +704,19 @@ export function MonsterBrowser({
             return matchesSearch && matchesSource && matchesIsland && matchesRarity &&
                 matchesElement && matchesEvolution && matchesPassive && matchesFavorite;
         });
-    }, [monsters, searchQuery, sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, favoritesOnly, favoriteMonsterIds]);
+
+        return matchingMonsters.sort((a, b) => {
+            const aValue = getBrowserComparisonValue(a, sortMode, browserEvolutionPercent, passiveCompareMode);
+            const bValue = getBrowserComparisonValue(b, sortMode, browserEvolutionPercent, passiveCompareMode);
+            const direction = sortDescending ? -1 : 1;
+
+            if (aValue === bValue) {
+                return a.name.localeCompare(b.name);
+            }
+
+            return (aValue - bValue) * direction;
+        });
+    }, [monsters, searchQuery, sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, favoritesOnly, favoriteMonsterIds, sortMode, sortDescending, browserEvolutionPercent, passiveCompareMode]);
 
     const activeFilterCount = [sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter]
         .filter((value) => value !== "all").length + (favoritesOnly ? 1 : 0);
@@ -238,69 +741,234 @@ export function MonsterBrowser({
       </span>}
             >
                 <div className="flex w-full min-w-0 max-w-full flex-1 flex-col gap-4 overflow-x-hidden p-4 sm:p-5">
-                    <label className="relative block">
-                        <span className="sr-only">Search monsters</span>
-                        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#7f8b9e]">⌕</span>
-                        <input
-                            type="search"
-                            value={searchQuery}
-                            onChange={(event) => setSearchQuery(event.target.value)}
-                            placeholder="Search monsters"
-                            className="w-full rounded-lg border border-[#344050] bg-[#0d131d] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#69768a] focus:border-[#7182ff]"
-                        />
-                    </label>
+                    <div className="flex items-stretch gap-2">
+                        <label className="relative min-w-0 flex-1">
+                            <span className="sr-only">Search monsters</span>
+                            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#7f8b9e]">⌕</span>
+                            <input
+                                type="search"
+                                value={searchQuery}
+                                onChange={(event) => setSearchQuery(event.target.value)}
+                                placeholder="Search monsters"
+                                className="h-full w-full rounded-lg border border-[#344050] bg-[#0d131d] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#69768a] focus:border-[#7182ff]"
+                            />
+                        </label>
 
-                    <div className="grid w-full min-w-0 grid-cols-[repeat(2,minmax(0,1fr))] gap-2">
-                        <label className="sr-only" htmlFor="island-filter">Island</label>
-                        <select id="island-filter" value={islandFilter} onChange={(event) => setIslandFilter(event.target.value)} className={selectClassName}>
-                            <option value="all">All Islands</option>
-                            {filterOptions.islands.map((island) => <option key={island} value={island}>{island}</option>)}
-                        </select>
+                        <HoverInfo text="Stats Filter — Sort monsters by Index, DPS, Damage, or Health. Choose whether comparisons use no passives, always-active self passives, or conditional self passives (currently Vital Surge). The EM bar adjusts evolved-monster comparisons.">
+                            <button
+                                type="button"
+                                aria-label="Open monster stat filters: Index, DPS, Damage, Health, and Evolution Multiplier"
+                                aria-expanded={advancedFilterOpen}
+                                onClick={() => setAdvancedFilterOpen((open) => !open)}
+                                className={`grid w-11 shrink-0 place-items-center rounded-lg border transition ${advancedFilterOpen ? "border-[#7182ff] bg-[#202846] text-[#aeb8ff]" : "border-[#344050] bg-[#0d131d] text-[#8e99ad] hover:border-[#5c6a80] hover:text-white"}`}
+                            >
+                                <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M4 6h16" />
+                                    <path d="M7 12h10" />
+                                    <path d="M10 18h4" />
+                                </svg>
+                            </button>
+                        </HoverInfo>
 
-                        <label className="sr-only" htmlFor="source-filter">Source</label>
-                        <select id="source-filter" value={sourceFilter} onChange={(event) => setSourceFilter(event.target.value)} className={selectClassName}>
-                            <option value="all">All sources</option>
-                            {filterOptions.sources.map((source) => <option key={source} value={source}>{source}</option>)}
-                        </select>
-
-                        <label className="sr-only" htmlFor="rarity-filter">Rarity</label>
-                        <select id="rarity-filter" value={rarityFilter} onChange={(event) => setRarityFilter(event.target.value)} className={selectClassName}>
-                            <option value="all">All rarities</option>
-                            {filterOptions.rarities.map((rarity) => <option key={rarity} value={rarity}>{rarity}</option>)}
-                        </select>
-
-                        <label className="sr-only" htmlFor="element-filter">Element</label>
-                        <select id="element-filter" value={elementFilter} onChange={(event) => setElementFilter(event.target.value)} className={selectClassName}>
-                            <option value="all">All elements</option>
-                            {filterOptions.elements.map((element) => <option key={element} value={element}>{element}</option>)}
-                        </select>
-
-                        <label className="sr-only" htmlFor="evolution-filter">Evolution</label>
-                        <select id="evolution-filter" value={evolutionFilter} onChange={(event) => setEvolutionFilter(event.target.value as EvolutionFilter)} className={selectClassName}>
-                            <option value="all">All Evolution Types</option>
-                            <option value="can-evolve">Can evolve</option>
-                            <option value="evolved">Evolved forms</option>
-                            <option value="standard">No evolution</option>
-                        </select>
-
-                        <label className="sr-only" htmlFor="passive-filter">Passive</label>
-                        <select id="passive-filter" value={passiveFilter} onChange={(event) => setPassiveFilter(event.target.value)} className={selectClassName}>
-                            <option value="all">All Passive Types</option>
-                            {filterOptions.passives.map((passive) => <option key={passive} value={passive}>{passive}</option>)}
-                        </select>
+                        <HoverInfo text="Browse Filters — Narrow the monster list by island, source, rarity, element, evolution status, or passive. You can also show only monsters you have starred as Favorites.">
+                            <button
+                                type="button"
+                                aria-label="Open browse filters for island, source, rarity, element, evolution, passive, and favorites"
+                                aria-expanded={browseFilterOpen}
+                                onClick={() => setBrowseFilterOpen((open) => !open)}
+                                className={`relative grid w-11 shrink-0 place-items-center rounded-lg border transition ${browseFilterOpen || activeFilterCount > 0 ? "border-[#7182ff] bg-[#202846] text-[#aeb8ff]" : "border-[#344050] bg-[#0d131d] text-[#8e99ad] hover:border-[#5c6a80] hover:text-white"}`}
+                            >
+                                <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M4 5h16l-6.5 7.2V18l-3 1.5v-7.3L4 5Z" />
+                                </svg>
+                                {activeFilterCount > 0 && (
+                                    <span className="absolute -right-1 -top-1 grid size-4 place-items-center rounded-full border border-[#0d131d] bg-[#7182ff] text-[8px] font-black text-white">
+                                        {activeFilterCount}
+                                    </span>
+                                )}
+                            </button>
+                        </HoverInfo>
                     </div>
 
-                    <div className="flex items-center justify-between gap-2">
-                        <button
-                            type="button"
-                            aria-pressed={favoritesOnly}
-                            onClick={() => setFavoritesOnly((current) => !current)}
-                            className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-xs font-semibold transition ${favoritesOnly ? "border-[#7182ff] bg-[#202846] text-[#aeb8ff]" : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"}`}
-                        >
-                            <span aria-hidden="true">★</span> Favorites
-                            <span className="font-normal">({favoriteMonsterIds.length})</span>
-                        </button>
-                    </div>
+                    {advancedFilterOpen && (
+                        <div className="rounded-xl border border-[#344050] bg-[#0d131d] p-2.5 shadow-[0_12px_30px_rgba(0,0,0,0.2)]">
+                            <div className="mb-2 flex items-center justify-between gap-2">
+                                <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#69768a]">Sort by</span>
+                            </div>
+                            <div className="flex items-center justify-between gap-2">
+                                <div className="grid flex-1 grid-cols-4 gap-1">
+                                    {([
+                                        ["index", "Index", "/icons/index.png"],
+                                        ["dps", "Dps", "/icons/dps.png"],
+                                        ["damage", "Dmg", "/account-icons/damage.png"],
+                                        ["health", "Hp", "/account-icons/health.png"],
+                                    ] as const).map(([value, label, icon]) => (
+                                        <button
+                                            key={value}
+                                            type="button"
+                                            aria-label={`Sort by ${label}`}
+                                            title={`Sort by ${label}`}
+                                            onClick={() => {
+                                                setSortMode(value);
+                                                setSortDescending(value !== "index");
+                                            }}
+                                            className={`flex h-8 min-w-0 items-center justify-center gap-1 rounded-md border px-1.5 transition ${sortMode === value ? "border-[#7182ff] bg-[#202846] text-[#c7ccff] shadow-[inset_0_0_0_1px_rgba(113,130,255,0.10)]" : "border-[#344050] bg-[#141c28] text-[#9aa5b8] hover:border-[#5c6a80] hover:bg-[#181f2b] hover:text-[#e3e8f1]"}`}
+                                        >
+                                            <img
+                                                src={assetPath(icon)}
+                                                alt=""
+                                                aria-hidden="true"
+                                                className="size-4 shrink-0 object-contain"
+                                            />
+                                            <span className="truncate text-[9px] font-bold uppercase leading-none tracking-[0.04em]">
+                                                {label}
+                                            </span>
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <button
+                                    type="button"
+                                    aria-label={sortDescending ? "Sort highest to lowest" : "Sort lowest to highest"}
+                                    onClick={() => setSortDescending((current) => !current)}
+                                    className="grid size-8 shrink-0 place-items-center rounded-md border border-[#344050] bg-[#141c28] text-sm font-medium leading-none text-[#bfc7d5] transition hover:border-[#5c6a80] hover:bg-[#181f2b] hover:text-white"
+                                    title={sortDescending ? "Highest to lowest" : "Lowest to highest"}
+                                >
+                                    {sortDescending ? "↓" : "↑"}
+                                </button>
+                            </div>
+
+                            {sortMode === "index" ? (
+                                <div className="mt-2 border-t border-[#273242] pt-2">
+                                    <div className="flex items-center gap-1.5 text-[9px] font-medium text-[#69768a]">
+                                        <img src={assetPath("/icons/index.png")} alt="" aria-hidden="true" className="size-3.5 shrink-0 object-contain opacity-70" />
+                                        <span>Index uses database order only — EM and passives do not apply.</span>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="mt-2 border-t border-[#273242] pt-2">
+                                        <div className="mb-1.5 inline-flex h-5 items-center gap-1.5 leading-none">
+                                            <span className="inline-flex h-5 items-center text-[9px] font-bold uppercase leading-none tracking-[0.08em] text-[#7f8b9e]">Passives</span>
+                                            <span className="relative -top-px inline-flex h-5 items-center">
+                                                <InfoTooltip label="About passive comparison">
+                                                    None compares raw stats and skills. Always adds unconditional self passives such as Hard Carapace and crit passives. Conditional also treats Vital Surge as active. Boss, Spire, Rift, and Dungeon-specific passives stay excluded.
+                                                </InfoTooltip>
+                                            </span>
+                                        </div>
+                                        <div className="grid grid-cols-3 gap-1">
+                                            <button
+                                                type="button"
+                                                onClick={() => setPassiveCompareMode("none")}
+                                                aria-pressed={passiveCompareMode === "none"}
+                                                title="No passives"
+                                                className={`flex h-7 min-w-0 items-center justify-center gap-1 rounded-md border px-1 text-[9px] font-bold transition ${passiveCompareMode === "none" ? "border-[#7182ff] bg-[#202846] text-[#c7ccff] shadow-[inset_0_0_0_1px_rgba(113,130,255,0.12)]" : "border-[#344050] bg-[#141c28] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-[#e3e8f1]"}`}
+                                            >
+                                                <svg aria-hidden="true" viewBox="0 0 20 20" className="size-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.7">
+                                                    <circle cx="10" cy="10" r="6.5" />
+                                                    <path d="M5.4 5.4l9.2 9.2" />
+                                                </svg>
+                                                <span className="truncate text-[9px] font-bold uppercase leading-none tracking-[0.04em]">None</span>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setPassiveCompareMode("always")}
+                                                aria-pressed={passiveCompareMode === "always"}
+                                                title="Always-active self passives"
+                                                className={`flex h-7 min-w-0 items-center justify-center gap-1 rounded-md border px-1 text-[9px] font-bold transition ${passiveCompareMode === "always" ? "border-[#7182ff] bg-[#202846] text-[#c7ccff] shadow-[inset_0_0_0_1px_rgba(113,130,255,0.12)]" : "border-[#344050] bg-[#141c28] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-[#e3e8f1]"}`}
+                                            >
+                                                <img src={assetPath("/passive-images/hard-carapace.png")} alt="" aria-hidden="true" className="size-4 shrink-0 object-contain" />
+                                                <span className="truncate text-[9px] font-bold uppercase leading-none tracking-[0.04em]">Always</span>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setPassiveCompareMode("conditional")}
+                                                aria-pressed={passiveCompareMode === "conditional"}
+                                                title="Conditional self passive: Vital Surge active"
+                                                className={`flex h-7 min-w-0 items-center justify-center gap-1 rounded-md border px-1 text-[9px] font-bold transition ${passiveCompareMode === "conditional" ? "border-[#7182ff] bg-[#202846] text-[#c7ccff] shadow-[inset_0_0_0_1px_rgba(113,130,255,0.12)]" : "border-[#344050] bg-[#141c28] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-[#e3e8f1]"}`}
+                                            >
+                                                <img src={assetPath("/passive-images/vital-surge.png")} alt="" aria-hidden="true" className="size-3.5 shrink-0 object-contain" />
+                                                <span className="truncate text-[9px] font-bold uppercase leading-none tracking-[0.04em]">Conditional</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <BrowserEvolutionMultiplierEditor
+                                        value={browserEvolutionPercent}
+                                        onChange={setBrowserEvolutionPercent}
+                                    />
+                                </>
+                            )}
+                        </div>
+                    )}
+
+                    {browseFilterOpen && (
+                        <div className="rounded-xl border border-[#344050] bg-[#0d131d] p-2.5 shadow-[0_12px_30px_rgba(0,0,0,0.2)]">
+                            <div className="grid w-full min-w-0 grid-cols-[repeat(2,minmax(0,1fr))] gap-2">
+                                <label className="sr-only" htmlFor="island-filter">Island</label>
+                                <select id="island-filter" value={islandFilter} onChange={(event) => setIslandFilter(event.target.value)} className={selectClassName}>
+                                    <option value="all">All Islands</option>
+                                    {filterOptions.islands.map((island) => <option key={island} value={island}>{island}</option>)}
+                                </select>
+
+                                <label className="sr-only" htmlFor="source-filter">Source</label>
+                                <select id="source-filter" value={sourceFilter} onChange={(event) => setSourceFilter(event.target.value)} className={selectClassName}>
+                                    <option value="all">All sources</option>
+                                    {filterOptions.sources.map((source) => <option key={source} value={source}>{source}</option>)}
+                                </select>
+
+                                <label className="sr-only" htmlFor="rarity-filter">Rarity</label>
+                                <select id="rarity-filter" value={rarityFilter} onChange={(event) => setRarityFilter(event.target.value)} className={selectClassName}>
+                                    <option value="all">All rarities</option>
+                                    {filterOptions.rarities.map((rarity) => <option key={rarity} value={rarity}>{rarity}</option>)}
+                                </select>
+
+                                <label className="sr-only" htmlFor="element-filter">Element</label>
+                                <select id="element-filter" value={elementFilter} onChange={(event) => setElementFilter(event.target.value)} className={selectClassName}>
+                                    <option value="all">All elements</option>
+                                    {filterOptions.elements.map((element) => <option key={element} value={element}>{element}</option>)}
+                                </select>
+
+                                <label className="sr-only" htmlFor="evolution-filter">Evolution</label>
+                                <select id="evolution-filter" value={evolutionFilter} onChange={(event) => setEvolutionFilter(event.target.value as EvolutionFilter)} className={selectClassName}>
+                                    <option value="all">All Evolution Types</option>
+                                    <option value="can-evolve">Can evolve</option>
+                                    <option value="evolved">Evolved forms</option>
+                                    <option value="standard">No evolution</option>
+                                </select>
+
+                                <label className="sr-only" htmlFor="passive-filter">Passive</label>
+                                <select id="passive-filter" value={passiveFilter} onChange={(event) => setPassiveFilter(event.target.value)} className={selectClassName}>
+                                    <option value="all">All Passive Types</option>
+                                    {filterOptions.passives.map((passive) => <option key={passive} value={passive}>{passive}</option>)}
+                                </select>
+                            </div>
+
+                            <div className="mt-2 flex items-center gap-2 border-t border-[#273242] pt-2">
+                                <button
+                                    type="button"
+                                    aria-pressed={favoritesOnly}
+                                    onClick={() => setFavoritesOnly((current) => !current)}
+                                    className={`flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md border px-2 text-xs font-semibold transition ${favoritesOnly ? "border-[#7182ff] bg-[#202846] text-[#aeb8ff]" : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"}`}
+                                >
+                                    <span aria-hidden="true">★</span>
+                                    <span>Favorites</span>
+                                    <span className="font-normal">({favoriteMonsterIds.length})</span>
+                                </button>
+
+                                {activeFilterCount > 0 && (
+                                    <button
+                                        type="button"
+                                        onClick={clearFilters}
+                                        className="h-8 shrink-0 rounded-md border border-[#344050] bg-[#141c28] px-2.5 text-[10px] font-semibold text-[#8e99ad] transition hover:border-[#5c6a80] hover:text-white"
+                                        title="Clear browse filters"
+                                    >
+                                        Clear
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    )}
 
                     <div className="flex items-center justify-between text-xs text-[#7f8b9e]">
                         <span>{filteredMonsters.length} of {monsters.length} monsters</span>
