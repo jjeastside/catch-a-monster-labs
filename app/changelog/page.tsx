@@ -9,9 +9,22 @@ export const metadata: Metadata = {
 
 const releases = [
     {
+        version: "v1.0.1",
+        date: "August 21, 2026",
+        label: "Latest",
+        changes: [
+            "Updated monster and skill data for the Catch a Monster 0.45 update.",
+            "Added Coilwork City as a supported island and added its new monsters to the calculator data.",
+            "Added an All Islands filter to the Monster Browser so monsters can be filtered by island.",
+            "Restricted the island filter to actual islands so event locations, shops, and other source locations do not appear in the list.",
+            "Moved All Evolution Types next to All Passive Types for a cleaner Monster Browser filter layout.",
+            "Added a Patch Notes page for tracking Catch a Monster game updates separately from Cam Lab development changes.",
+            "Updated Path of Progress from 12 to 13 achievements and added the new Splash Isle Path of Progress reward, increasing the maximum Path of Progress Health bonus from +24% to +26%.",
+        ],
+    },
+    {
         version: "v1.0.0",
         date: "August 20, 2026",
-        label: "Latest",
         changes: [
             "Added persistent monster favorites. Favorite monsters directly from the browser or Monster Overview and filter the browser to favorites only.",
             "Added the Changelog page and linked it from the site header.",
@@ -73,7 +86,7 @@ export default function ChangelogPage() {
                 </div>
 
                 <div className="space-y-5">
-                    {releases.map((release, releaseIndex) => (
+                    {releases.map((release) => (
                         <section
                             key={`${release.version}-${release.date}`}
                             className="overflow-hidden rounded-xl border border-[#344050] bg-[#141c28]"
@@ -106,7 +119,7 @@ export default function ChangelogPage() {
                                 ))}
                             </ul>
 
-                            {releaseIndex === 0 && (
+                            {release.version === "v1.0.0" && (
                                 <div className="border-t border-[#344050] bg-[#0f1620]/60 px-4 py-3 text-xs text-[#7f8b9e] sm:px-5">
                                     Favorites are stored locally in your browser, so they remain selected after refreshes on the same device and browser.
                                 </div>

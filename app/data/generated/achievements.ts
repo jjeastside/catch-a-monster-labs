@@ -898,5 +898,18 @@ export const GENERATED_ACHIEVEMENTS: Achievement[] = [
     "rewardPercent": 5,
     "requiresPrevious": false,
     "description": "Complete all Strive for Perfection goals and claim the group reward."
+  },
+  {
+    "id": "splash-isle",
+    "category": "path-of-progress",
+    "order": 13,
+    "name": "Splash Isle",
+    "island": "Splash Isle",
+    "goalType": "Reward Claimed",
+    "goalAmount": null,
+    "rewardStat": "health",
+    "rewardPercent": 2,
+    "requiresPrevious": false,
+    "description": "Complete Splash Isle and claim its Path of Progress reward."
   }
 ];

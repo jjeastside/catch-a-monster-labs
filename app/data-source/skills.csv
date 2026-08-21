@@ -287,7 +287,10 @@ solar-breath,Solar Breath,Grass,"[
 ]",8,Target: Enemy. Enemy effects: Knockback,Ready
 soul-reap-chain,Soul Reap Chain,Common,"[
   { multiplier: 1.5, hits: 1 },
-]",6,Target: Enemy. Enemy effects: Stun 2 secs; Vulnerability (20%) incoming damage for 10 secs,Ready
+]",6,Target: Enemy. Enemy effects: Stun 2 secs;,Ready
+soul-reap-chain-vulnerability,Soul Reap Chain (Vulnerability),Common,"[
+  { multiplier: 1.5, hits: 1 },
+]",,Target: Enemy. Enemy effects: Stun 2 secs; Vulnerability (20%) incoming damage for 10 secs,
 soul-reap-chain-scareharvest,Soul Reap Chain (Scareharvest),Common,"[
   { multiplier: 2.5, hits: 1 },
 ]",6,Target: Enemy. Enemy effects: 1 stack of Poison,Ready

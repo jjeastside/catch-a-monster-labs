@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { PASSIVE_DEFINITIONS } from "../data/passives";
 import { assetPath } from "../lib/asset-path";
-import type { Monster } from "../types/monster";
+import { ISLANDS, type Monster } from "../types/monster";
 import { Panel } from "./panel";
 
 const elementColors: Record<string, string> = {
@@ -157,6 +157,7 @@ export function MonsterBrowser({
                                }: MonsterBrowserProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [sourceFilter, setSourceFilter] = useState("all");
+    const [islandFilter, setIslandFilter] = useState("all");
     const [rarityFilter, setRarityFilter] = useState("all");
     const [elementFilter, setElementFilter] = useState("all");
     const [evolutionFilter, setEvolutionFilter] = useState<EvolutionFilter>("all");
@@ -166,6 +167,9 @@ export function MonsterBrowser({
     const [visibleMonsterCount, setVisibleMonsterCount] = useState(60);
 
     const filterOptions = useMemo(() => ({
+        islands: ISLANDS.filter((island) =>
+            monsters.some((monster) => monster.sources.some((source) => source.location === island)),
+        ),
         sources: [...new Set(monsters.flatMap((monster) =>
             monster.sources.map((source) => source.type),
         ))].filter((source) => source !== "Evolution").sort(),
@@ -191,6 +195,8 @@ export function MonsterBrowser({
             );
             const matchesSource = sourceFilter === "all" ||
                 monster.sources.some((source) => source.type === sourceFilter);
+            const matchesIsland = islandFilter === "all" ||
+                monster.sources.some((source) => source.location === islandFilter);
             const matchesRarity = rarityFilter === "all" || monster.rarity === rarityFilter;
             const matchesElement = elementFilter === "all" || monster.element === elementFilter;
             const matchesEvolution = evolutionFilter === "all" ||
@@ -204,16 +210,17 @@ export function MonsterBrowser({
                 passiveNames.includes(passiveFilter);
             const matchesFavorite = !favoritesOnly || favoriteMonsterIds.includes(monster.id);
 
-            return matchesSearch && matchesSource && matchesRarity &&
+            return matchesSearch && matchesSource && matchesIsland && matchesRarity &&
                 matchesElement && matchesEvolution && matchesPassive && matchesFavorite;
         });
-    }, [monsters, searchQuery, sourceFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, favoritesOnly, favoriteMonsterIds]);
+    }, [monsters, searchQuery, sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, favoritesOnly, favoriteMonsterIds]);
 
-    const activeFilterCount = [sourceFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter]
+    const activeFilterCount = [sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter]
         .filter((value) => value !== "all").length + (favoritesOnly ? 1 : 0);
 
     const clearFilters = () => {
         setSourceFilter("all");
+        setIslandFilter("all");
         setRarityFilter("all");
         setElementFilter("all");
         setEvolutionFilter("all");
@@ -244,6 +251,12 @@ export function MonsterBrowser({
                     </label>
 
                     <div className="grid w-full min-w-0 grid-cols-[repeat(2,minmax(0,1fr))] gap-2">
+                        <label className="sr-only" htmlFor="island-filter">Island</label>
+                        <select id="island-filter" value={islandFilter} onChange={(event) => setIslandFilter(event.target.value)} className={selectClassName}>
+                            <option value="all">All Islands</option>
+                            {filterOptions.islands.map((island) => <option key={island} value={island}>{island}</option>)}
+                        </select>
+
                         <label className="sr-only" htmlFor="source-filter">Source</label>
                         <select id="source-filter" value={sourceFilter} onChange={(event) => setSourceFilter(event.target.value)} className={selectClassName}>
                             <option value="all">All sources</option>
@@ -271,7 +284,7 @@ export function MonsterBrowser({
                         </select>
 
                         <label className="sr-only" htmlFor="passive-filter">Passive</label>
-                        <select id="passive-filter" value={passiveFilter} onChange={(event) => setPassiveFilter(event.target.value)} className={`${selectClassName} col-span-2`}>
+                        <select id="passive-filter" value={passiveFilter} onChange={(event) => setPassiveFilter(event.target.value)} className={selectClassName}>
                             <option value="all">All Passive Types</option>
                             {filterOptions.passives.map((passive) => <option key={passive} value={passive}>{passive}</option>)}
                         </select>

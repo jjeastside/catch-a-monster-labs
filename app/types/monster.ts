@@ -52,20 +52,24 @@ export type Rarity =
     | "Secret"
     | "Void";
 
-export type Island =
-    | "Starter Island"
-    | "Volcano"
-    | "Frost Isle"
-    | "Neverland"
-    | "Duneveil Isle"
-    | "Tideland"
-    | "Spirit Grove"
-    | "Dragon's Breath"
-    | "Blossom Haven"
-    | "Mobius Circus"
-    | "Specter Shallows"
-    | "Nova Coast"
-    | "Splash Isle";
+export const ISLANDS = [
+  "Starter Island",
+  "Volcano",
+  "Frost Isle",
+  "Neverland",
+  "Duneveil Isle",
+  "Tideland",
+  "Spirit Grove",
+  "Dragon's Breath",
+  "Blossom Haven",
+  "Mobius Circus",
+  "Specter Shallows",
+  "Nova Coast",
+  "Splash Isle",
+  "Coilwork City",
+] as const;
+
+export type Island = (typeof ISLANDS)[number];
 
 export type SourceType =
     | "First-Time Reward"

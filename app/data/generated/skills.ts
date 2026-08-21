@@ -1395,8 +1395,22 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
-    "notes": "Target: Enemy. Enemy effects: Stun 2 secs; Vulnerability (20%) incoming damage for 10 secs",
+    "notes": "Target: Enemy. Enemy effects: Stun 2 secs;",
     "validationStatus": "Ready"
+  },
+  "soul-reap-chain-vulnerability": {
+    "id": "soul-reap-chain-vulnerability",
+    "name": "Soul Reap Chain (Vulnerability)",
+    "element": "Common",
+    "damageInstances": [
+      {
+        "multiplier": 1.5,
+        "hits": 1
+      }
+    ],
+    "cooldown": null,
+    "notes": "Target: Enemy. Enemy effects: Stun 2 secs; Vulnerability (20%) incoming damage for 10 secs",
+    "validationStatus": ""
   },
   "soul-reap-chain-scareharvest": {
     "id": "soul-reap-chain-scareharvest",
