@@ -36,6 +36,11 @@ const releases = [
             "Added hover help for both Monster Browser filter buttons and portal-based help tooltips that can render outside panel boundaries without clipping.",
             "Moved Favorites into the Browse Filters panel and added an active-filter count badge plus a compact Clear action.",
             "Polished the Stats Filter layout with smaller labels, clearer selected states, compact EM typography, and dedicated Index, DPS, Damage, Health, Hard Carapace, and Vital Surge icons.",
+            "Fixed self-only passives such as Vital Surge so they no longer appear as or contribute through teammate passives.",
+            "Updated Skill Analysis trait handling so traits only appear on skills they actually affect, such as damage traits on damaging skills, Grace on healing skills, and vulnerability traits on vulnerability-applying skills.",
+            "Simplified Skill Analysis trait indicators to compact icon-and-name labels and moved them into the skill metadata row for a cleaner layout.",
+            "Improved cooldown modifier presentation: Fairy and Hasten now use compact icons while the cooldown value changes color to show the active modifier.",
+            "Added tier-aware Hasten cooldown colors: Hasten I uses blue, Hasten II uses purple, and Hasten III uses orange, with combined styling when Fairy and Hasten are active together.",
         ],
     },
     {

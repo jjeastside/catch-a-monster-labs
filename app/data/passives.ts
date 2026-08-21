@@ -114,6 +114,7 @@ const TEAM_EXCLUDED_PASSIVE_IDS = new Set<Passive>([
     "lastBlessing",
     "dragonsCurse",
     "hardCarapace",
+    "vitalSurge",
 
     // Progression/luck passives that should not be inherited from teammates.
     "fortuneSpirit",

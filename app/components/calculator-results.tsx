@@ -495,24 +495,63 @@ function SkillDamagePanel({
     const traitCooldownMultiplier = getTraitCooldownMultiplier(build.traitId);
     const cooldownMultiplier = mutationCooldownMultiplier * traitCooldownMultiplier;
     const hasFairy = mutationCooldownMultiplier < 1;
-    const fairyLabel = build.mutations.includes("fairy-x") ? "Fairy X" : "Fairy";
+    const hasFairyX = build.mutations.includes("fairy-x");
+    const fairyIconPath = hasFairyX ? "/icons/fairy-x.png" : "/icons/Fairy.png";
     const selectedTrait = getTrait(build.traitId);
     const traitDamageMultiplier = getTraitDamageMultiplier(build.traitId, {
         targetStatused: build.targetStatused,
     });
-    const traitSkillEffects = selectedTrait?.effects.map((effect) => {
-        const notes = skill.notes?.toLowerCase() ?? "";
-        const active = effect.condition === "targetStatused"
-            ? build.targetStatused
-            : effect.type === "attackReductionEffectiveness"
-                ? /attack.{0,20}(reduc|lower)|(?:reduc|lower).{0,20}attack/.test(notes)
-                : effect.type === "vulnerabilityEffectiveness"
-                    ? notes.includes("vulnerab") || skill.id === "root-spike"
-                    : effect.type === "burnDuration"
-                        ? notes.includes("burn")
-                        : true;
-        return { ...effect, active };
-    }) ?? [];
+    const notes = skill.notes?.toLowerCase() ?? "";
+    const skillHasHealing = getDamageHealingPercent(skill.notes) !== null || getHealthHealingPercent(skill.notes) !== null;
+    const skillHasCooldown = skill.cooldown !== null && skill.cooldown > 0;
+    const appliesAttackReduction = /attack.{0,20}(reduc|lower)|(?:reduc|lower).{0,20}attack/.test(notes);
+    const appliesVulnerability = notes.includes("vulnerab") || skill.id === "root-spike";
+    const appliesBurn = notes.includes("burn");
+    const traitSkillEffects = selectedTrait?.effects
+        .filter((effect) => {
+            switch (effect.type) {
+                case "damage":
+                    return isDamagingSkill;
+                case "healingEffectiveness":
+                    return skillHasHealing;
+                case "cooldownReduction":
+                    return skillHasCooldown;
+                case "attackReductionEffectiveness":
+                    return appliesAttackReduction;
+                case "vulnerabilityEffectiveness":
+                    return appliesVulnerability;
+                case "burnDuration":
+                    return appliesBurn;
+                default:
+                    return false;
+            }
+        })
+        .map((effect) => ({
+            ...effect,
+            active: effect.condition === "targetStatused" ? build.targetStatused : true,
+        })) ?? [];
+    const traitAffectsSkill = traitSkillEffects.length > 0;
+    const isTraitEffectActive = traitSkillEffects.some((effect) => effect.active);
+    const hasHasten = traitSkillEffects.some((effect) => effect.type === "cooldownReduction");
+    const showTraitMetadataLabel = traitAffectsSkill && !hasHasten;
+    const fairyCooldownColor = hasFairyX ? "#a970ff" : "#d8b7ff";
+    const hastenCooldownColor = selectedTrait?.id === "hasten-3"
+        ? "#f2a04b"
+        : selectedTrait?.id === "hasten-2"
+            ? "#c28cff"
+            : "#70a7ff";
+    const cooldownValueStyle = hasFairy && hasHasten
+        ? {
+            backgroundImage: `linear-gradient(to right, ${fairyCooldownColor}, ${hastenCooldownColor})`,
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+            color: "transparent",
+        }
+        : hasFairy
+            ? { color: fairyCooldownColor }
+            : hasHasten
+                ? { color: hastenCooldownColor }
+                : { color: "#e3e8f1" };
 
     const combatDamage = calculateCombatDamage({
         monster,
@@ -679,19 +718,45 @@ function SkillDamagePanel({
                                 </>
                             )}
                             <span aria-hidden="true" className="text-[#5c6a80]">•</span>
-                            <span>
-                                <strong className="text-[#e3e8f1]">{cooldownLabel}</strong>
+                            <span style={cooldownValueStyle}>
+                                <strong>{cooldownLabel}</strong>
                                 {!isTriggeredSkill && " cooldown"}
                             </span>
-                            {hasFairy && (
-                                <span className="rounded border border-[#c28cff]/30 bg-[#201b35] px-1.5 py-0.5 font-semibold text-[#d8b7ff]">
-                                    {fairyLabel}
+                            {(hasFairy || (hasHasten && selectedTrait)) && (
+                                <span
+                                    className="inline-flex items-center -space-x-0.5"
+                                    title={[hasFairy ? (hasFairyX ? "Fairy X" : "Fairy") : null, hasHasten ? selectedTrait?.name : null]
+                                        .filter(Boolean)
+                                        .join(" + ")}
+                                >
+                                    {hasFairy && (
+                                        <img
+                                            src={assetPath(fairyIconPath)}
+                                            alt={hasFairyX ? "Fairy X" : "Fairy"}
+                                            className="size-[17px] shrink-0 object-contain"
+                                        />
+                                    )}
+                                    {hasHasten && selectedTrait && (
+                                        <span className="inline-flex scale-[0.62] origin-center -mx-1">
+                                            <TraitIcon trait={selectedTrait} size="combat" />
+                                        </span>
+                                    )}
                                 </span>
                             )}
-                            {traitCooldownMultiplier < 1 && selectedTrait && (
-                                <span className="rounded border border-[#7182ff]/30 bg-[#202846] px-1.5 py-0.5 font-semibold text-[#aeb8ff]">
-                                    {selectedTrait.name}
-                                </span>
+                            {showTraitMetadataLabel && selectedTrait && (
+                                <>
+                                    <span aria-hidden="true" className="text-[#5c6a80]">•</span>
+                                    <span
+                                        className={`inline-flex items-center gap-1.5 font-semibold ${
+                                            isTraitEffectActive ? "text-[#d8e0ee]" : "text-[#f4bd6a]"
+                                        }`}
+                                    >
+                                        <span className="inline-flex scale-[0.78] origin-center -mx-0.5">
+                                            <TraitIcon trait={selectedTrait} size="combat" />
+                                        </span>
+                                        <span>{selectedTrait.name}</span>
+                                    </span>
+                                </>
                             )}
                         </div>
 
@@ -701,22 +766,6 @@ function SkillDamagePanel({
                             </p>
                         )}
 
-                        {traitSkillEffects.length > 0 && (
-                            <div className="mt-2 flex flex-wrap gap-1.5">
-                                {traitSkillEffects.map((effect) => (
-                                    <span
-                                        key={`${effect.type}-${effect.description}`}
-                                        className={`rounded border px-1.5 py-0.5 text-[10px] font-semibold ${
-                                            effect.active
-                                                ? "border-[#7182ff]/30 bg-[#202846] text-[#aeb8ff]"
-                                                : "border-[#f4bd6a]/30 bg-[#342612]/45 text-[#f4bd6a]"
-                                        }`}
-                                    >
-                                        {effect.description}{effect.active ? "" : " · inactive"}
-                                    </span>
-                                ))}
-                            </div>
-                        )}
                     </div>
                 </div>
 
