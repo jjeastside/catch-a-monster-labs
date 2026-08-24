@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": false,
+    "jsx": "react-jsx",
+    "jsxImportSource": "cf-workers-og",
+    "types": [
+      "@cloudflare/workers-types"
+    ],
+    "skipLibCheck": true
+  }
+}

@@ -1,24 +1,31 @@
-# CAM Lab Discord PNG preview fix
+# CAM Lab browserless OG worker
 
-This version changes the Open Graph image from SVG to a real 1200x630 PNG.
+This version removes Browser Run from `/card.png` generation.
 
-## Important Cloudflare setup
+## What changed
+- `/share` still stores preview data in Cloudflare KV
+- `/b/<shortId>` still resolves short IDs from KV
+- `/card.png` is now rendered directly in the Worker using `cf-cf-workers-og`
+- Browser Run is only used as an optional fallback for older links that were never primed
 
-This Worker uses Cloudflare Browser Run to turn the stat-card HTML into a PNG.
+## Deploy
 
-Before testing `/card.png`, add a Browser Run binding named exactly:
+Because this worker now depends on npm packages / WASM, deploy it as a small Wrangler project instead of pasting a single file.
 
-BROWSER
+1. Install dependencies:
+   npm install
 
-Also make sure the Worker's compatibility date is 2026-03-24 or newer.
+2. Make sure your existing Cloudflare Worker still has the `PREVIEWS` KV binding attached in the dashboard.
 
-If you deploy with Wrangler, this config is included in `wrangler.toml`.
+3. Deploy:
+   npx wrangler deploy
 
-If you are using Cloudflare's dashboard editor, replace the existing Worker code with
-`src/index.js`, then add the Browser Run binding in the Worker's bindings/settings area.
+If you want to keep the old fallback for unprimed C1 links, also keep the `BROWSER` binding.
+If you do not care about old unprimed links anymore, you can remove the `BROWSER` binding after this version is live.
 
-## Free tier
 
-Cloudflare Browser Run currently includes 10 minutes of browser usage per day on Workers Free.
-The Worker caches each generated PNG for 7 days, so repeated Discord requests for the same
-build should normally reuse the cached image rather than render it again.
+## Bound KV namespace
+- PREVIEWS -> cb036440dbbc4a8cae2c8876cd2da8c9
+
+
+Pinned renderer version: cf-workers-og 3.0.1

@@ -1,6 +1,10 @@
 name = "cam-lab-share"
-main = "src/index.js"
-compatibility_date = "2026-08-23"
+main = "src/index.tsx"
+compatibility_date = "2026-08-24"
 
-[browser]
-binding = "BROWSER"
+[[kv_namespaces]]
+binding = "PREVIEWS"
+id = "cb036440dbbc4a8cae2c8876cd2da8c9"
+
+# Keep the optional Browser Run binding configured in the Cloudflare dashboard
+# only if you still want fallback support for older unprimed links.
