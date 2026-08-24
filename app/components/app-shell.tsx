@@ -425,8 +425,15 @@ export function AppShell() {
 
     useEffect(() => {
         const handleHashChange = () => {
-            // Shared-build hashes are handled by the build-sharing loader.
-            if (getSharedBuildFromLocation()) return;
+            // A short share-link redirect can resolve back to this exact page
+            // with only the #b= hash changed. Browsers may treat that as a
+            // same-document navigation, so the initial shared-build loader
+            // does not run again. Reload once so the #b= build is decoded and
+            // applied during the normal startup path.
+            if (getSharedBuildFromLocation()) {
+                window.location.reload();
+                return;
+            }
 
             const linkedMonster = getMonsterFromLocationHash();
             if (!linkedMonster) return;
