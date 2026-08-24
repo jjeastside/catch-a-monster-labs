@@ -1,12 +1,12 @@
 const SITE_URL = "https://jjeastside.github.io/catch-a-monster-labs/";
-const PREVIEW_SELECTOR = "#cam-lab-share-preview-data";
+const PREVIEW_SELECTOR = '#cam-lab-share-preview-data[data-ready="true"]';
 
 function escapeHtml(value) {
   return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
+      .replaceAll("&", "&amp;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
 }
 
 function absoluteAssetUrl(path) {
@@ -47,13 +47,13 @@ function camLabBuildUrl(buildCode) {
 }
 
 function cacheKeyForPreview(origin, buildCode) {
-  const url = new URL("/_preview-data", origin);
+  const url = new URL("/_preview-data-v2", origin);
   url.searchParams.set("b", buildCode);
   return new Request(url.toString(), { method: "GET" });
 }
 
 function cacheKeyForPng(origin, buildCode) {
-  const url = new URL("/card.png", origin);
+  const url = new URL("/card-v2.png", origin);
   url.searchParams.set("b", buildCode);
   return new Request(url.toString(), { method: "GET" });
 }
@@ -93,7 +93,7 @@ async function readPreviewFromCamLab(env, buildCode) {
 
   const payload = await response.json();
   const selectorResult = payload?.result?.find(
-    (entry) => entry?.selector === PREVIEW_SELECTOR
+      (entry) => entry?.selector === PREVIEW_SELECTOR
   );
   const element = selectorResult?.results?.[0];
 
@@ -101,16 +101,27 @@ async function readPreviewFromCamLab(env, buildCode) {
     throw new Error("CAM Lab loaded, but no share preview data was found.");
   }
 
-  const encodedPreview = findAttribute(element.attributes, "data-preview");
-  if (!encodedPreview) {
+  const textPreview =
+      element.text ??
+      element.textContent ??
+      element.innerText ??
+      element.innerHTML ??
+      "";
+
+  const attributePreview = findAttribute(element.attributes, "data-preview");
+  const rawPreview =
+      (typeof textPreview === "string" ? textPreview.trim() : "") ||
+      (typeof attributePreview === "string" ? attributePreview.trim() : "");
+
+  if (!rawPreview) {
     throw new Error("CAM Lab share preview data was empty.");
   }
 
   let preview;
   try {
-    preview = JSON.parse(encodedPreview);
+    preview = JSON.parse(rawPreview);
   } catch {
-    throw new Error("CAM Lab returned invalid share preview JSON.");
+    throw new Error(`CAM Lab returned invalid share preview JSON: ${rawPreview.slice(0, 200)}`);
   }
 
   return {
@@ -344,11 +355,11 @@ export default {
       data = await getPreviewData(env, url.origin, buildCode, ctx);
     } catch (error) {
       return new Response(
-        `CAM Lab preview error: ${error instanceof Error ? error.message : String(error)}`,
-        {
-          status: 500,
-          headers: { "content-type": "text/plain; charset=UTF-8" },
-        },
+          `CAM Lab preview error: ${error instanceof Error ? error.message : String(error)}`,
+          {
+            status: 500,
+            headers: { "content-type": "text/plain; charset=UTF-8" },
+          },
       );
     }
 
@@ -405,9 +416,9 @@ export default {
     const title = `${data.name} — CAM Lab Build`;
     const classification = [data.element, data.rarity].filter(Boolean).join(" · ");
     const description =
-      `${classification}${classification ? " | " : ""}` +
-      `${data.damage} DMG · ${data.health} HP · ` +
-      `${data.critChance} Crit · ${data.critMultiplier} Crit Multiplier`;
+        `${classification}${classification ? " | " : ""}` +
+        `${data.damage} DMG · ${data.health} HP · ` +
+        `${data.critChance} Crit · ${data.critMultiplier} Crit Multiplier`;
 
     const imageUrl = cardUrl(url.origin, buildCode, "/card.png");
 
