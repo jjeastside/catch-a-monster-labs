@@ -216,6 +216,30 @@ async function getPreviewData(env, origin, buildCode, ctx) {
   return preview;
 }
 
+
+function rarityBorderBackground(rarity) {
+  switch (rarity) {
+    case "Common":
+      return "#707070";
+    case "Uncommon":
+      return "#28a745";
+    case "Rare":
+      return "#299ddd";
+    case "Epic":
+      return "#bd45d8";
+    case "Legendary":
+      return "#f28a22";
+    case "Mythical":
+      return "linear-gradient(to right,#ff3347,#ff8a1f,#ffe13b,#35e56f,#22bde8,#b43cff)";
+    case "Secret":
+      return "#ff2738";
+    case "Void":
+      return "linear-gradient(135deg,#84ff00,#4cff8f,#00f2ff,#0096c7)";
+    default:
+      return "#3b4759";
+  }
+}
+
 function buildCardHtml(data) {
   const classification = [data.element, data.rarity].filter(Boolean).join(" • ");
 
@@ -281,7 +305,7 @@ function buildCardHtml(data) {
     height: 320px;
     padding: 6px;
     border-radius: 32px;
-    background: linear-gradient(135deg,#ff3b30,#ff9f0a,#ffd60a,#32d74b,#0a84ff,#bf5af2);
+    background: ${rarityBorderBackground(data.rarity)};
   }
 
   .portrait {

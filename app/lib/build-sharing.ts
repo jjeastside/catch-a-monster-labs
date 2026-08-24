@@ -470,7 +470,7 @@ export type BuildSharePreview = {
 
 const SHARE_PREVIEW_BASE_URL =
     process.env.NEXT_PUBLIC_SHARE_PREVIEW_URL?.trim() ||
-    "https://cam-lab-share.jjeastside711.workers.dev";
+    "https://cam-lab-share.camlab.workers.dev";
 
 /**
  * The public share link contains only the normal C1 build code.
