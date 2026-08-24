@@ -1,13 +1,13 @@
 const SITE_URL = "https://jjeastside.github.io/catch-a-monster-labs/";
 const PREVIEW_SELECTOR = '#cam-lab-share-preview-data[data-ready="true"]';
-const CACHE_VERSION = "v4";
+const CACHE_VERSION = "v5";
 
 function escapeHtml(value) {
   return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
+      .replaceAll("&", "&amp;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
 }
 
 function absoluteAssetUrl(path) {
@@ -52,11 +52,6 @@ function camLabBuildUrl(buildCode) {
   return `${SITE_URL}#b=${encodeURIComponent(buildCode)}`;
 }
 
-function cacheKeyForPreview(origin, buildCode) {
-  const url = new URL(`/_preview-data-${CACHE_VERSION}`, origin);
-  url.searchParams.set("b", buildCode);
-  return new Request(url.toString(), { method: "GET" });
-}
 
 function cacheKeyForPng(origin, buildCode) {
   const url = new URL(`/card-${CACHE_VERSION}.png`, origin);
@@ -89,7 +84,7 @@ function normalizePreview(preview) {
 
 function previewLooksValid(preview) {
   return Boolean(
-    preview &&
+      preview &&
       preview.name &&
       preview.name !== "Shared Build" &&
       preview.damage &&
@@ -99,25 +94,25 @@ function previewLooksValid(preview) {
   );
 }
 
-async function cachePreview(origin, buildCode, preview, ctx) {
-  const cache = caches.default;
-  const key = cacheKeyForPreview(origin, buildCode);
-
-  const body = JSON.stringify(preview);
-  const response = new Response(body, {
-    headers: {
-      "content-type": "application/json; charset=UTF-8",
-      "cache-control": "public, max-age=604800",
-    },
-  });
-
-  if (previewLooksValid(preview)) {
-    await cache.put(key, response.clone());
+async function storePreview(env, origin, buildCode, preview) {
+  if (!env.PREVIEWS) {
+    throw new Error("Missing Cloudflare KV binding named PREVIEWS.");
   }
 
-  // Clear any existing PNG for this build so the next request regenerates from
-  // the newly primed preview data.
-  await cache.delete(cacheKeyForPng(origin, buildCode));
+  if (!previewLooksValid(preview)) {
+    throw new Error("Invalid preview payload.");
+  }
+
+  await env.PREVIEWS.put(
+      buildCode,
+      JSON.stringify(preview),
+      {
+        expirationTtl: 60 * 60 * 24 * 30,
+      },
+  );
+
+  // If this build was rendered before, invalidate only the edge PNG cache.
+  await caches.default.delete(cacheKeyForPng(origin, buildCode));
 }
 
 async function readPreviewFromCamLab(env, buildCode) {
@@ -145,7 +140,7 @@ async function readPreviewFromCamLab(env, buildCode) {
 
   const payload = await response.json();
   const selectorResult = payload?.result?.find(
-    (entry) => entry?.selector === PREVIEW_SELECTOR
+      (entry) => entry?.selector === PREVIEW_SELECTOR
   );
   const element = selectorResult?.results?.[0];
 
@@ -154,16 +149,16 @@ async function readPreviewFromCamLab(env, buildCode) {
   }
 
   const textPreview =
-    element.text ??
-    element.textContent ??
-    element.innerText ??
-    element.innerHTML ??
-    "";
+      element.text ??
+      element.textContent ??
+      element.innerText ??
+      element.innerHTML ??
+      "";
 
   const attributePreview = findAttribute(element.attributes, "data-preview");
   const rawPreview =
-    (typeof textPreview === "string" ? textPreview.trim() : "") ||
-    (typeof attributePreview === "string" ? attributePreview.trim() : "");
+      (typeof textPreview === "string" ? textPreview.trim() : "") ||
+      (typeof attributePreview === "string" ? attributePreview.trim() : "");
 
   if (!rawPreview) {
     throw new Error("CAM Lab share preview data was empty.");
@@ -179,20 +174,20 @@ async function readPreviewFromCamLab(env, buildCode) {
   return normalizePreview(preview);
 }
 
-async function getPreviewData(env, origin, buildCode, ctx) {
-  const cache = caches.default;
-  const key = cacheKeyForPreview(origin, buildCode);
-  const cached = await cache.match(key);
-
-  if (cached) {
-    const cachedPreview = await cached.json();
-    if (previewLooksValid(cachedPreview)) {
-      return cachedPreview;
-    }
+async function getPreviewData(env, origin, buildCode) {
+  if (!env.PREVIEWS) {
+    throw new Error("Missing Cloudflare KV binding named PREVIEWS.");
   }
 
+  const stored = await env.PREVIEWS.get(buildCode, { type: "json" });
+  if (previewLooksValid(stored)) {
+    return stored;
+  }
+
+  // Backwards-compatible fallback for links created before KV priming existed.
+  // New Share Build links should normally never reach this branch.
   const preview = await readPreviewFromCamLab(env, buildCode);
-  await cachePreview(origin, buildCode, preview, ctx);
+  await storePreview(env, origin, buildCode, preview);
   return preview;
 }
 
@@ -447,7 +442,7 @@ export default {
         });
       }
 
-      await cachePreview(url.origin, buildCode, preview, ctx);
+      await storePreview(env, url.origin, buildCode, preview);
 
       return new Response(JSON.stringify({ ok: true }), {
         headers: {
@@ -466,14 +461,14 @@ export default {
 
     let data;
     try {
-      data = await getPreviewData(env, url.origin, buildCode, ctx);
+      data = await getPreviewData(env, url.origin, buildCode);
     } catch (error) {
       return new Response(
-        `CAM Lab preview error: ${error instanceof Error ? error.message : String(error)}`,
-        {
-          status: 500,
-          headers: { "content-type": "text/plain; charset=UTF-8" },
-        },
+          `CAM Lab preview error: ${error instanceof Error ? error.message : String(error)}`,
+          {
+            status: 500,
+            headers: { "content-type": "text/plain; charset=UTF-8" },
+          },
       );
     }
 
@@ -495,8 +490,8 @@ export default {
 
       if (!env.BROWSER) {
         return new Response(
-          "Missing Cloudflare Browser Run binding named BROWSER.",
-          { status: 500 }
+            "Missing Cloudflare Browser Run binding named BROWSER.",
+            { status: 500 }
         );
       }
 
@@ -536,9 +531,9 @@ export default {
     const title = `${data.name} — CAM Lab Build`;
     const classification = [data.element, data.rarity].filter(Boolean).join(" · ");
     const description =
-      `${classification}${classification ? " | " : ""}` +
-      `${data.damage} DMG · ${data.health} HP · ` +
-      `${data.critChance} Crit · ${data.critMultiplier} Crit Multiplier`;
+        `${classification}${classification ? " | " : ""}` +
+        `${data.damage} DMG · ${data.health} HP · ` +
+        `${data.critChance} Crit · ${data.critMultiplier} Crit Multiplier`;
 
     const imageUrl = cardUrl(url.origin, buildCode, "/card.png");
 
