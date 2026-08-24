@@ -322,9 +322,12 @@ export function encodeBuildForShare(build: Build): string {
     if (build.preDungeonLevel !== null) parts.push(`q${encodeInt(build.preDungeonLevel)}`);
 
     if (build.teammateMonsterIds.some((id) => id !== null)) {
+        // Team-passive monsters are stored by stable monster ID rather than
+        // by their position in the monsters array. Adding/reordering monsters
+        // must never change which teammate an existing share code points to.
         parts.push(
-            `n${build.teammateMonsterIds
-                .map((id) => (id === null ? "" : encodeIndexedId(id, MONSTER_SHARE_IDS)))
+            `N${build.teammateMonsterIds
+                .map((id) => (id === null ? "" : encodeValue(id)))
                 .join(",")}`,
         );
     }
@@ -417,7 +420,23 @@ function decodeBuildCode(code: string): Partial<Build> | null {
                 case "q":
                     build.preDungeonLevel = decodeInt(value);
                     break;
+                case "N": {
+                    const teammateIds = value.split(",");
+                    const decodeTeammateId = (encodedId: string | undefined): string | null => {
+                        if (!encodedId) return null;
+
+                        const monsterId = decodeValue(encodedId);
+                        return monsters.some(({ id }) => id === monsterId) ? monsterId : null;
+                    };
+
+                    build.teammateMonsterIds = [
+                        decodeTeammateId(teammateIds[0]),
+                        decodeTeammateId(teammateIds[1]),
+                    ];
+                    break;
+                }
                 case "n": {
+                    // Legacy indexed teammate encoding for older shared links.
                     const teammateIds = value.split(",");
                     build.teammateMonsterIds = [
                         teammateIds[0] ? decodeIndexedId(teammateIds[0], MONSTER_SHARE_IDS) : null,
