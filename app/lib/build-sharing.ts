@@ -472,14 +472,50 @@ const SHARE_PREVIEW_BASE_URL =
     process.env.NEXT_PUBLIC_SHARE_PREVIEW_URL?.trim() ||
     "https://cam-lab-share.camlab.workers.dev";
 
-/**
- * The public share link contains only the normal C1 build code.
- *
- * Cloudflare loads that build in CAM Lab with Browser Run, reads the hidden
- * preview bridge rendered by the calculator, and uses those exact calculated
- * values to build the social card.
- */
+function getSharePreviewBaseUrl(): string {
+    return SHARE_PREVIEW_BASE_URL.replace(/\/+$/, "");
+}
+
+export function createBuildShareCode(build: Build): string {
+    return encodeBuildForShare(build);
+}
+
 export function createBuildShareUrl(build: Build, _preview?: BuildSharePreview): string {
-    const code = encodeBuildForShare(build);
-    return `${SHARE_PREVIEW_BASE_URL.replace(/\/+$/, "")}/b/${encodeURIComponent(code)}`;
+    const code = createBuildShareCode(build);
+    return `${getSharePreviewBaseUrl()}/b/${encodeURIComponent(code)}`;
+}
+
+export async function primeBuildSharePreview(
+    build: Build,
+    preview: BuildSharePreview,
+): Promise<void> {
+    const buildCode = createBuildShareCode(build);
+    const baseUrl = getSharePreviewBaseUrl();
+
+    const response = await fetch(`${baseUrl}/prime`, {
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+        },
+        body: JSON.stringify({
+            buildCode,
+            preview,
+        }),
+        keepalive: true,
+        mode: "cors",
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to prime share preview (${response.status})`);
+    }
+
+    // Fire-and-forget image warm-up so Discord is more likely to hit cached PNG.
+    void fetch(`${baseUrl}/card.png?b=${encodeURIComponent(buildCode)}`, {
+        method: "GET",
+        mode: "no-cors",
+        cache: "no-store",
+        keepalive: true,
+    }).catch(() => {
+        // Best-effort warm-up only.
+    });
 }

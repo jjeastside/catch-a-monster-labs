@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { monsters } from "../data/monsters";
 import { achievementIds, getAchievementsByCategory } from "../data/achievements";
 import { createDefaultBuild, type Build } from "../types/build";
-import { createBuildShareUrl, getSharedBuildFromLocation, type BuildSharePreview } from "../lib/build-sharing";
+import { createBuildShareUrl, getSharedBuildFromLocation, primeBuildSharePreview, type BuildSharePreview } from "../lib/build-sharing";
 import type { Monster } from "../types/monster";
 
 import { BuildEditor } from "./build-editor";
@@ -554,6 +554,14 @@ export function AppShell() {
         if (!selectedMonster) return;
 
         const shareUrl = createBuildShareUrl(build, sharePreview ?? undefined);
+
+        if (sharePreview) {
+            try {
+                await primeBuildSharePreview(build, sharePreview);
+            } catch {
+                // The share link still works even when priming fails.
+            }
+        }
 
         try {
             await navigator.clipboard.writeText(shareUrl);

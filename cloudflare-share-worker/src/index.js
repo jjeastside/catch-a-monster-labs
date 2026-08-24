@@ -1,26 +1,23 @@
 const SITE_URL = "https://jjeastside.github.io/catch-a-monster-labs/";
-const PREVIEW_SELECTOR = "#cam-lab-share-preview-data";
-const CACHE_VERSION = "v3";
+const PREVIEW_SELECTOR = '#cam-lab-share-preview-data[data-ready="true"]';
+const CACHE_VERSION = "v4";
 
 function escapeHtml(value) {
   return String(value ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;");
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 function absoluteAssetUrl(path) {
   if (!path) return `${SITE_URL}preview.png`;
 
   try {
-    // Production assetPath may already include /catch-a-monster-labs/.
     if (path.startsWith("/catch-a-monster-labs/")) {
       return new URL(path, new URL(SITE_URL).origin).toString();
     }
 
-    // A raw public-folder path such as /monster-artwork/dumplorer.png
-    // should remain under the GitHub Pages repository base path.
     if (path.startsWith("/")) {
       return new URL(`.${path}`, SITE_URL).toString();
     }
@@ -29,6 +26,14 @@ function absoluteAssetUrl(path) {
   } catch {
     return `${SITE_URL}preview.png`;
   }
+}
+
+function corsHeaders() {
+  return {
+    "access-control-allow-origin": "*",
+    "access-control-allow-methods": "POST, OPTIONS",
+    "access-control-allow-headers": "content-type",
+  };
 }
 
 function getBuildCode(url) {
@@ -69,45 +74,50 @@ function findAttribute(attributes, name) {
   return (attributes ?? []).find((attribute) => attribute?.name === name)?.value ?? "";
 }
 
-async function rawScrapeDebug(env, buildCode) {
-  if (!env.BROWSER) {
-    return {
-      ok: false,
-      error: "Missing Cloudflare Browser Run binding named BROWSER.",
-    };
-  }
+function normalizePreview(preview) {
+  return {
+    name: preview?.monsterName || preview?.name || "Shared Build",
+    rarity: preview?.rarity || "",
+    element: preview?.element || "",
+    damage: preview?.damage || "—",
+    health: preview?.health || "—",
+    critChance: preview?.critChance || "—",
+    critMultiplier: preview?.critMultiplier || "—",
+    image: absoluteAssetUrl(preview?.imagePath || preview?.image || ""),
+  };
+}
 
-  const response = await env.BROWSER.quickAction("scrape", {
-    url: camLabBuildUrl(buildCode),
-    elements: [{ selector: PREVIEW_SELECTOR }],
-    waitForSelector: {
-      selector: PREVIEW_SELECTOR,
-      timeout: 30000,
-    },
-    gotoOptions: {
-      waitUntil: "networkidle2",
-      timeout: 60000,
+function previewLooksValid(preview) {
+  return Boolean(
+    preview &&
+      preview.name &&
+      preview.name !== "Shared Build" &&
+      preview.damage &&
+      preview.damage !== "—" &&
+      preview.health &&
+      preview.health !== "—"
+  );
+}
+
+async function cachePreview(origin, buildCode, preview, ctx) {
+  const cache = caches.default;
+  const key = cacheKeyForPreview(origin, buildCode);
+
+  const body = JSON.stringify(preview);
+  const response = new Response(body, {
+    headers: {
+      "content-type": "application/json; charset=UTF-8",
+      "cache-control": "public, max-age=604800",
     },
   });
 
-  const bodyText = await response.text();
-
-  let parsedBody = bodyText;
-  try {
-    parsedBody = JSON.parse(bodyText);
-  } catch {
-    // Keep raw text when the response is not JSON.
+  if (previewLooksValid(preview)) {
+    await cache.put(key, response.clone());
   }
 
-  return {
-    ok: response.ok,
-    status: response.status,
-    statusText: response.statusText,
-    headers: Object.fromEntries(response.headers.entries()),
-    requestedBuildUrl: camLabBuildUrl(buildCode),
-    selector: PREVIEW_SELECTOR,
-    body: parsedBody,
-  };
+  // Clear any existing PNG for this build so the next request regenerates from
+  // the newly primed preview data.
+  await cache.delete(cacheKeyForPng(origin, buildCode));
 }
 
 async function readPreviewFromCamLab(env, buildCode) {
@@ -135,7 +145,7 @@ async function readPreviewFromCamLab(env, buildCode) {
 
   const payload = await response.json();
   const selectorResult = payload?.result?.find(
-      (entry) => entry?.selector === PREVIEW_SELECTOR
+    (entry) => entry?.selector === PREVIEW_SELECTOR
   );
   const element = selectorResult?.results?.[0];
 
@@ -143,28 +153,30 @@ async function readPreviewFromCamLab(env, buildCode) {
     throw new Error("CAM Lab loaded, but no share preview data was found.");
   }
 
-  const encodedPreview = findAttribute(element.attributes, "data-preview");
-  if (!encodedPreview) {
+  const textPreview =
+    element.text ??
+    element.textContent ??
+    element.innerText ??
+    element.innerHTML ??
+    "";
+
+  const attributePreview = findAttribute(element.attributes, "data-preview");
+  const rawPreview =
+    (typeof textPreview === "string" ? textPreview.trim() : "") ||
+    (typeof attributePreview === "string" ? attributePreview.trim() : "");
+
+  if (!rawPreview) {
     throw new Error("CAM Lab share preview data was empty.");
   }
 
   let preview;
   try {
-    preview = JSON.parse(encodedPreview);
+    preview = JSON.parse(rawPreview);
   } catch {
-    throw new Error("CAM Lab returned invalid share preview JSON.");
+    throw new Error(`CAM Lab returned invalid share preview JSON: ${rawPreview.slice(0, 200)}`);
   }
 
-  return {
-    name: preview.monsterName || "Shared Build",
-    rarity: preview.rarity || "",
-    element: preview.element || "",
-    damage: preview.damage || "—",
-    health: preview.health || "—",
-    critChance: preview.critChance || "—",
-    critMultiplier: preview.critMultiplier || "—",
-    image: absoluteAssetUrl(preview.imagePath),
-  };
+  return normalizePreview(preview);
 }
 
 async function getPreviewData(env, origin, buildCode, ctx) {
@@ -174,48 +186,15 @@ async function getPreviewData(env, origin, buildCode, ctx) {
 
   if (cached) {
     const cachedPreview = await cached.json();
-
-    const looksValid =
-        cachedPreview &&
-        cachedPreview.name &&
-        cachedPreview.name !== "Shared Build" &&
-        cachedPreview.damage &&
-        cachedPreview.damage !== "—" &&
-        cachedPreview.health &&
-        cachedPreview.health !== "—";
-
-    if (looksValid) {
+    if (previewLooksValid(cachedPreview)) {
       return cachedPreview;
     }
   }
 
   const preview = await readPreviewFromCamLab(env, buildCode);
-
-  const cachedResponse = new Response(JSON.stringify(preview), {
-    headers: {
-      "content-type": "application/json; charset=UTF-8",
-      // Reuse exact build results so Discord fetching the page and image
-      // normally costs only one calculator scrape.
-      "cache-control": "public, max-age=604800",
-    },
-  });
-
-  const looksValid =
-      preview &&
-      preview.name &&
-      preview.name !== "Shared Build" &&
-      preview.damage &&
-      preview.damage !== "—" &&
-      preview.health &&
-      preview.health !== "—";
-
-  if (looksValid) {
-    ctx.waitUntil(cache.put(key, cachedResponse));
-  }
-
+  await cachePreview(origin, buildCode, preview, ctx);
   return preview;
 }
-
 
 function rarityBorderBackground(rarity) {
   switch (rarity) {
@@ -424,23 +403,65 @@ function buildCardHtml(data) {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: corsHeaders(),
+      });
+    }
+
+    if (url.pathname === "/prime" && request.method === "POST") {
+      let body;
+      try {
+        body = await request.json();
+      } catch {
+        return new Response("Invalid JSON body.", {
+          status: 400,
+          headers: {
+            "content-type": "text/plain; charset=UTF-8",
+            ...corsHeaders(),
+          },
+        });
+      }
+
+      const buildCode = String(body?.buildCode ?? "");
+      if (!buildCode.startsWith("C1")) {
+        return new Response("Invalid build code.", {
+          status: 400,
+          headers: {
+            "content-type": "text/plain; charset=UTF-8",
+            ...corsHeaders(),
+          },
+        });
+      }
+
+      const preview = normalizePreview(body?.preview ?? {});
+      if (!previewLooksValid(preview)) {
+        return new Response("Invalid preview payload.", {
+          status: 400,
+          headers: {
+            "content-type": "text/plain; charset=UTF-8",
+            ...corsHeaders(),
+          },
+        });
+      }
+
+      await cachePreview(url.origin, buildCode, preview, ctx);
+
+      return new Response(JSON.stringify({ ok: true }), {
+        headers: {
+          "content-type": "application/json; charset=UTF-8",
+          "cache-control": "no-store",
+          ...corsHeaders(),
+        },
+      });
+    }
+
     const buildCode = getBuildCode(url);
 
     if (!buildCode.startsWith("C1")) {
       return Response.redirect(SITE_URL, 302);
-    }
-
-    if (url.pathname === "/debug") {
-      const debug = await rawScrapeDebug(env, buildCode);
-
-      return new Response(JSON.stringify(debug, null, 2), {
-        status: debug.ok ? 200 : 500,
-        headers: {
-          "content-type": "application/json; charset=UTF-8",
-          "cache-control": "no-store",
-          "x-robots-tag": "noindex",
-        },
-      });
     }
 
     let data;
@@ -448,15 +469,14 @@ export default {
       data = await getPreviewData(env, url.origin, buildCode, ctx);
     } catch (error) {
       return new Response(
-          `CAM Lab preview error: ${error instanceof Error ? error.message : String(error)}`,
-          {
-            status: 500,
-            headers: { "content-type": "text/plain; charset=UTF-8" },
-          },
+        `CAM Lab preview error: ${error instanceof Error ? error.message : String(error)}`,
+        {
+          status: 500,
+          headers: { "content-type": "text/plain; charset=UTF-8" },
+        },
       );
     }
 
-    // Hidden HTML page Browser Run turns into the final social PNG.
     if (url.pathname === "/card") {
       return new Response(buildCardHtml(data), {
         headers: {
@@ -472,6 +492,13 @@ export default {
       const cacheKey = cacheKeyForPng(url.origin, buildCode);
       const cached = await cache.match(cacheKey);
       if (cached) return cached;
+
+      if (!env.BROWSER) {
+        return new Response(
+          "Missing Cloudflare Browser Run binding named BROWSER.",
+          { status: 500 }
+        );
+      }
 
       const screenshot = await env.BROWSER.quickAction("screenshot", {
         url: cardUrl(url.origin, buildCode, "/card"),
@@ -509,9 +536,9 @@ export default {
     const title = `${data.name} — CAM Lab Build`;
     const classification = [data.element, data.rarity].filter(Boolean).join(" · ");
     const description =
-        `${classification}${classification ? " | " : ""}` +
-        `${data.damage} DMG · ${data.health} HP · ` +
-        `${data.critChance} Crit · ${data.critMultiplier} Crit Multiplier`;
+      `${classification}${classification ? " | " : ""}` +
+      `${data.damage} DMG · ${data.health} HP · ` +
+      `${data.critChance} Crit · ${data.critMultiplier} Crit Multiplier`;
 
     const imageUrl = cardUrl(url.origin, buildCode, "/card.png");
 
