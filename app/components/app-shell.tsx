@@ -578,9 +578,21 @@ export function AppShell() {
                 <div
                     id="cam-lab-share-preview-data"
                     data-preview={JSON.stringify(sharePreview)}
-                    hidden
+                    data-ready="true"
                     aria-hidden="true"
-                />
+                    style={{
+                        position: "fixed",
+                        left: "-10000px",
+                        top: "-10000px",
+                        width: "1px",
+                        height: "1px",
+                        overflow: "hidden",
+                        pointerEvents: "none",
+                        opacity: 0,
+                    }}
+                >
+                    {JSON.stringify(sharePreview)}
+                </div>
             )}
             <TopNavigation />
             <SiteHeading />
