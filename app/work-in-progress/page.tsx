@@ -1,9 +1,10 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 import camLabLogo from "../assets/cam-lab-logo.png";
 
-export const metadata = {
+export const metadata: Metadata = {
     title: "Work in Progress | Cam Lab",
 };
 

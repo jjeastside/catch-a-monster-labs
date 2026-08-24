@@ -3159,6 +3159,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "rarity": "Mythical",
     "sources": [
       {
+        "type": "Chest",
+        "name": "Memory Chest 2",
+        "location": "Abyss Shop",
+        "status": "Current"
+      },
+      {
         "type": "Event",
         "name": "Valentine's Egg",
         "location": "Valentine's Event 2026",
@@ -3190,6 +3196,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "element": "Fire",
     "rarity": "Mythical",
     "sources": [
+      {
+        "type": "Chest",
+        "name": "Memory Chest 2",
+        "location": "Abyss Shop",
+        "status": "Current"
+      },
       {
         "type": "Event",
         "name": "Valentine's Egg",
@@ -4701,7 +4713,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Shop",
         "name": "99 Robux Purachase",
         "location": "Skyheart Isle",
-        "status": "Legacy"
+        "status": "Current"
       }
     ],
     "skillIds": [
@@ -4891,6 +4903,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "element": "Ice",
     "rarity": "Mythical",
     "sources": [
+      {
+        "type": "Chest",
+        "name": "Memory Chest 2",
+        "location": "Abyss Shop",
+        "status": "Current"
+      },
       {
         "type": "Event",
         "name": "New Year Event Task",

@@ -5,7 +5,7 @@ import camLabLogo from "../assets/cam-lab-logo.png";
 
 const exploreLinks = [
     { label: "Calculator", href: "/" },
-    { label: "Monster Database", href: "/work-in-progress" },
+    { label: "Monster Database", href: "/monster-database" },
     { label: "Guides", href: "/work-in-progress" },
     { label: "Compare Builds", href: "/work-in-progress" },
 ];

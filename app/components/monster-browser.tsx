@@ -3,9 +3,8 @@
 import { useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { PASSIVE_DEFINITIONS } from "../data/passives";
-import { GENERATED_MONSTERS } from "../data/generated/monsters";
-import { getSkill, getSkillTotalMultiplier } from "../data/skills";
 import { assetPath } from "../lib/asset-path";
+import { getMonsterComparisonValue, type PassiveCompareMode } from "../lib/monster-comparison";
 import { EVOLUTION_STEP, MAX_EVOLUTION_PERCENT, MIN_EVOLUTION_PERCENT, clampEvolutionPercent, getEvolutionBarFill } from "../lib/calculations/evolution";
 import { ISLANDS, type Monster } from "../types/monster";
 import { Panel } from "./panel";
@@ -46,83 +45,7 @@ type MonsterBrowserProps = {
 type EvolutionFilter = "all" | "can-evolve" | "evolved" | "standard";
 type PassiveFilter = "all" | string;
 type SortMode = "index" | "dps" | "damage" | "health";
-type PassiveCompareMode = "none" | "always" | "conditional";
 const selectClassName = "min-w-0 rounded-md border border-[#344050] bg-[#141c28] px-3 py-2 text-xs text-[#bfc7d5] outline-none focus:border-[#7182ff]";
-
-const generatedMonsterById = new Map(
-    GENERATED_MONSTERS.map((monster) => [monster.id, monster]),
-);
-
-function getBrowserComparisonValue(
-    monster: Monster,
-    sortMode: SortMode,
-    evolutionPercent: number,
-    passiveMode: PassiveCompareMode,
-): number {
-    const data = generatedMonsterById.get(monster.id);
-
-    if (!data) return 0;
-    if (sortMode === "index") return data.indexPosition;
-
-    const evolutionMultiplier = monster.isEvolved ? evolutionPercent / 100 : 1;
-    const baseDamage = data.baseDamageELevel1 * evolutionMultiplier;
-    const health = data.baseHealthELevel1 * evolutionMultiplier;
-
-    // Passive comparison modes:
-    // - none: raw stats/skills only.
-    // - always: only unconditional self passives.
-    // - conditional: unconditional self passives plus Vital Surge, assuming its HP condition is active.
-    // Context-specific passives (Boss/Spire/Rift/Dungeon) remain excluded.
-    const includedPassiveEffects = passiveMode === "none"
-        ? []
-        : (monster.passives ?? [])
-            .filter((passive) =>
-                passive.condition == null ||
-                (passiveMode === "conditional" && passive.id === "vitalSurge")
-            )
-            .flatMap((passive) => passive.effects);
-
-    const passiveDamageBonus = includedPassiveEffects.reduce(
-        (total, effect) =>
-            effect.stat === "damage" && typeof effect.value === "number"
-                ? total + effect.value
-                : total,
-        0,
-    );
-    const passiveCritChanceBonus = includedPassiveEffects.reduce(
-        (total, effect) =>
-            effect.stat === "critChance" && typeof effect.value === "number"
-                ? total + effect.value
-                : total,
-        0,
-    );
-    const passiveCritDamageBonus = includedPassiveEffects.reduce(
-        (total, effect) =>
-            effect.stat === "critDamage" && typeof effect.value === "number"
-                ? total + effect.value
-                : total,
-        0,
-    );
-
-    const damage = baseDamage * (1 + passiveDamageBonus / 100);
-
-    if (sortMode === "damage") return damage;
-    if (sortMode === "health") return health;
-
-    const critChance = Math.max(0, data.baseCritChance + passiveCritChanceBonus) / 100;
-    const critDamageMultiplier = 2 + passiveCritDamageBonus / 100;
-    const expectedCritMultiplier = 1 + critChance * (critDamageMultiplier - 1);
-
-    return monster.skillIds.reduce((total, skillId) => {
-        const skill = getSkill(skillId);
-        if (!skill || skill.cooldown === null || skill.cooldown <= 0 || skill.damageInstances.length === 0) {
-            return total;
-        }
-
-        return total + (damage * getSkillTotalMultiplier(skill) * expectedCritMultiplier) / skill.cooldown;
-    }, 0);
-}
-
 
 function InfoTooltip({ label, children }: { label: string; children: string }) {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -706,8 +629,8 @@ export function MonsterBrowser({
         });
 
         return matchingMonsters.sort((a, b) => {
-            const aValue = getBrowserComparisonValue(a, sortMode, browserEvolutionPercent, passiveCompareMode);
-            const bValue = getBrowserComparisonValue(b, sortMode, browserEvolutionPercent, passiveCompareMode);
+            const aValue = getMonsterComparisonValue(a, sortMode, browserEvolutionPercent, passiveCompareMode);
+            const bValue = getMonsterComparisonValue(b, sortMode, browserEvolutionPercent, passiveCompareMode);
             const direction = sortDescending ? -1 : 1;
 
             if (aValue === bValue) {
