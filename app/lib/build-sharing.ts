@@ -457,8 +457,29 @@ export function getSharedBuildFromLocation(): Partial<Build> | null {
     return decodeSharedBuildCode(hash.slice(BUILD_HASH_PREFIX.length));
 }
 
-export function createBuildShareUrl(build: Build): string {
-    const url = new URL(window.location.href);
-    url.hash = `b=${encodeBuildForShare(build)}`;
-    return url.toString();
+export type BuildSharePreview = {
+    monsterName: string;
+    rarity: string;
+    element: string;
+    damage: string;
+    health: string;
+    critChance: string;
+    critMultiplier: string;
+    imagePath?: string;
+};
+
+const SHARE_PREVIEW_BASE_URL =
+    process.env.NEXT_PUBLIC_SHARE_PREVIEW_URL?.trim() ||
+    "https://cam-lab-share.jjeastside711.workers.dev";
+
+/**
+ * The public share link contains only the normal C1 build code.
+ *
+ * Cloudflare loads that build in CAM Lab with Browser Run, reads the hidden
+ * preview bridge rendered by the calculator, and uses those exact calculated
+ * values to build the social card.
+ */
+export function createBuildShareUrl(build: Build, _preview?: BuildSharePreview): string {
+    const code = encodeBuildForShare(build);
+    return `${SHARE_PREVIEW_BASE_URL.replace(/\/+$/, "")}/b/${encodeURIComponent(code)}`;
 }

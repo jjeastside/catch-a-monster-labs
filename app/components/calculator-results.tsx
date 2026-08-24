@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { getMonsterStatData } from "../data/monster-stats";
@@ -19,6 +19,7 @@ import { getEquipment } from "../data/equipments";
 import { getTrait } from "../data/traits";
 import { calculateSkillAttributeEffects } from "../lib/calculations/attributes";
 import { assetPath } from "../lib/asset-path";
+import type { BuildSharePreview } from "../lib/build-sharing";
 
 import {
     calculateStats,
@@ -1880,6 +1881,7 @@ type CalculatorResultsProps = {
     build: Build;
     isFavorite: boolean;
     onToggleFavorite: () => void;
+    onSharePreviewChange?: (preview: BuildSharePreview | null) => void;
 };
 
 export function CalculatorResults({
@@ -1887,6 +1889,7 @@ export function CalculatorResults({
                                       build,
                                       isFavorite,
                                       onToggleFavorite,
+                                      onSharePreviewChange,
                                   }: CalculatorResultsProps) {
     const monsterSkills =
         monster?.skillIds
@@ -1942,6 +1945,46 @@ export function CalculatorResults({
                 effectivePassives,
             )
             : null;
+
+    const lastSharePreviewSignatureRef = useRef("");
+
+    useEffect(() => {
+        if (!onSharePreviewChange) return;
+
+        if (!monster || !stats) {
+            if (lastSharePreviewSignatureRef.current !== "") {
+                lastSharePreviewSignatureRef.current = "";
+                onSharePreviewChange(null);
+            }
+            return;
+        }
+
+        const preview = {
+            monsterName: monster.name,
+            rarity: monster.rarity,
+            element: monster.element,
+            damage: formatStatNumber(stats.damage),
+            health: formatStatNumber(stats.health),
+            critChance: `${formatNumber(stats.critChance)}%`,
+            critMultiplier: `${formatNumber(stats.critMultiplier)}×`,
+            imagePath: monster.image ? assetPath(monster.image) : undefined,
+        };
+
+        const signature = JSON.stringify(preview);
+
+        // calculateStats() returns a fresh object during render. Without this
+        // guard, the effect sees a new `stats` reference every render and sends
+        // a fresh object back to AppShell, causing an infinite parent/child
+        // update loop.
+        if (signature === lastSharePreviewSignatureRef.current) return;
+
+        lastSharePreviewSignatureRef.current = signature;
+        onSharePreviewChange(preview);
+    }, [
+        monster,
+        stats,
+        onSharePreviewChange,
+    ]);
 
     const skillDpsValues =
         monster && stats

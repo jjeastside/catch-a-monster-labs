@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { monsters } from "../data/monsters";
 import { achievementIds, getAchievementsByCategory } from "../data/achievements";
 import { createDefaultBuild, type Build } from "../types/build";
-import { createBuildShareUrl, getSharedBuildFromLocation } from "../lib/build-sharing";
+import { createBuildShareUrl, getSharedBuildFromLocation, type BuildSharePreview } from "../lib/build-sharing";
 import type { Monster } from "../types/monster";
 
 import { BuildEditor } from "./build-editor";
@@ -86,6 +86,7 @@ export function AppShell() {
     const [hasLoadedActiveBuild, setHasLoadedActiveBuild] = useState(false);
     const [savedBuildsMode, setSavedBuildsMode] = useState<"save" | "load" | null>(null);
     const [shareBuildStatus, setShareBuildStatus] = useState<"idle" | "copied" | "error">("idle");
+    const [sharePreview, setSharePreview] = useState<BuildSharePreview | null>(null);
     const [mobilePanel, setMobilePanel] = useState<"monster" | "results" | "build">("monster");
     const [savedBuildSlots, setSavedBuildSlots] = useState<Array<SavedBuildSlot | null>>(emptySaveSlots);
     const [build, setBuild] = useState<Build>(() => {
@@ -546,8 +547,7 @@ export function AppShell() {
     async function shareBuild() {
         if (!selectedMonster) return;
 
-        const shareUrl = createBuildShareUrl(build);
-        window.history.replaceState(null, "", shareUrl);
+        const shareUrl = createBuildShareUrl(build, sharePreview ?? undefined);
 
         try {
             await navigator.clipboard.writeText(shareUrl);
@@ -574,6 +574,14 @@ export function AppShell() {
 
     return (
         <div className="min-h-screen min-w-0 overflow-x-hidden bg-[#0b111a] text-[#f6f8fc]">
+            {sharePreview && (
+                <div
+                    id="cam-lab-share-preview-data"
+                    data-preview={JSON.stringify(sharePreview)}
+                    hidden
+                    aria-hidden="true"
+                />
+            )}
             <TopNavigation />
             <SiteHeading />
 
@@ -665,6 +673,7 @@ export function AppShell() {
                                 : false
                         }
                         onToggleFavorite={toggleSelectedMonsterFavorite}
+                        onSharePreviewChange={setSharePreview}
                     />
                 </div>
 
