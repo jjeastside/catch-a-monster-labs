@@ -231,7 +231,11 @@ function encodeIndexedList(values: string[], ids: readonly string[]): string {
 
 function decodeIndexedList(value: string, ids: readonly string[]): string[] {
     if (!value) return [];
-    return value
+
+    // The Worker URI-encodes the full C1 code in the redirect URL, so commas
+    // inside list fields can arrive as "%2C". Decode the list container before
+    // splitting it into individual IDs.
+    return decodeValue(value)
         .split(",")
         .map((item) => decodeIndexedId(item, ids))
         .filter((item): item is string => item !== null);
@@ -421,11 +425,11 @@ function decodeBuildCode(code: string): Partial<Build> | null {
                     build.preDungeonLevel = decodeInt(value);
                     break;
                 case "N": {
-                    const teammateIds = value.split(",");
-                    const decodeTeammateId = (encodedId: string | undefined): string | null => {
-                        if (!encodedId) return null;
-
-                        const monsterId = decodeValue(encodedId);
+                    // Decode the whole teammate list before splitting because
+                    // the redirect URL encodes the comma as "%2C".
+                    const teammateIds = decodeValue(value).split(",");
+                    const decodeTeammateId = (monsterId: string | undefined): string | null => {
+                        if (!monsterId) return null;
                         return monsters.some(({ id }) => id === monsterId) ? monsterId : null;
                     };
 
@@ -437,7 +441,8 @@ function decodeBuildCode(code: string): Partial<Build> | null {
                 }
                 case "n": {
                     // Legacy indexed teammate encoding for older shared links.
-                    const teammateIds = value.split(",");
+                    // These commas can also arrive URI-encoded by the Worker.
+                    const teammateIds = decodeValue(value).split(",");
                     build.teammateMonsterIds = [
                         teammateIds[0] ? decodeIndexedId(teammateIds[0], MONSTER_SHARE_IDS) : null,
                         teammateIds[1] ? decodeIndexedId(teammateIds[1], MONSTER_SHARE_IDS) : null,
@@ -473,23 +478,7 @@ export function decodeSharedBuildCode(code: string): Partial<Build> | null {
 export function getSharedBuildFromLocation(): Partial<Build> | null {
     const hash = window.location.hash;
     if (!hash.startsWith(BUILD_HASH_PREFIX)) return null;
-
-    const encodedCode = hash.slice(BUILD_HASH_PREFIX.length);
-
-    // The short-link Worker redirects to CAM Lab with the entire build code
-    // URI-encoded inside the hash. That means list delimiters such as the
-    // teammate comma arrive as "%2C". Decode the outer URL encoding once
-    // before parsing the C1 fields; individual field values can still perform
-    // their own decoding afterward.
-    let buildCode = encodedCode;
-    try {
-        buildCode = decodeURIComponent(encodedCode);
-    } catch {
-        // If the hash is already decoded (or malformed), fall back to the raw
-        // value so direct/self-contained #b= links still get a chance to load.
-    }
-
-    return decodeSharedBuildCode(buildCode);
+    return decodeSharedBuildCode(hash.slice(BUILD_HASH_PREFIX.length));
 }
 
 export type BuildSharePreview = {
