@@ -277,12 +277,12 @@ function MonsterCard({
                 selected ? "ring-2 ring-[#7182ff] ring-offset-2 ring-offset-[#0d131d]" : ""
             }`}
         >
-            <div className="relative aspect-[4/3] overflow-hidden bg-[radial-gradient(circle_at_50%_35%,rgba(113,130,255,0.14),transparent_58%)]">
+            <div className="relative aspect-square overflow-hidden bg-[radial-gradient(circle_at_50%_35%,rgba(113,130,255,0.14),transparent_58%)] sm:aspect-[4/3]">
                 {monster.image ? (
                     <img
                         src={assetPath(monster.image)}
                         alt={monster.name}
-                        className="h-full w-full object-contain p-3 transition duration-200 group-hover:scale-[1.035]"
+                        className="h-full w-full object-contain p-2 transition duration-200 group-hover:scale-[1.035] sm:p-3"
                     />
                 ) : null}
                 <span className="absolute right-2 top-2 rounded-full border border-[#344050] bg-[#0d131d]/90 px-2 py-1 text-[10px] font-bold text-[#aeb9cb]">
@@ -295,38 +295,38 @@ function MonsterCard({
                 ) : null}
             </div>
 
-            <div className="p-3">
+            <div className="p-2.5 sm:p-3">
                 <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                        <h3 className="truncate text-sm font-bold text-[#f4f7fb]">{monster.name}</h3>
-                        <p className="mt-0.5 text-[11px] font-semibold text-[#9da9bb]">
+                        <h3 className="truncate text-xs font-bold text-[#f4f7fb] sm:text-sm">{monster.name}</h3>
+                        <p className="mt-0.5 truncate text-[9px] font-semibold text-[#9da9bb] sm:text-[11px]">
                             {monster.rarity} · {monster.element}
                         </p>
                     </div>
                 </div>
 
-                <div className="mt-3 grid grid-cols-3 gap-1.5 text-[10px]">
-                    <div className="rounded-md border border-[#293443] bg-[#0e151f] px-2 py-1.5">
+                <div className="mt-2 grid grid-cols-3 gap-1 text-[9px] sm:mt-3 sm:gap-1.5 sm:text-[10px]">
+                    <div className="min-w-0 rounded-md border border-[#293443] bg-[#0e151f] px-1 py-1.5 sm:px-2">
                         <span className="block text-[8px] font-bold uppercase tracking-[0.06em] text-[#6f7c90]">DMG</span>
                         <span className="mt-0.5 block truncate font-bold text-[#dbe2ee]">{compactNumber(comparisonStats.damage)}</span>
                     </div>
-                    <div className="rounded-md border border-[#293443] bg-[#0e151f] px-2 py-1.5">
+                    <div className="min-w-0 rounded-md border border-[#293443] bg-[#0e151f] px-1 py-1.5 sm:px-2">
                         <span className="block text-[8px] font-bold uppercase tracking-[0.06em] text-[#6f7c90]">HP</span>
                         <span className="mt-0.5 block truncate font-bold text-[#dbe2ee]">{compactNumber(comparisonStats.health)}</span>
                     </div>
-                    <div className="rounded-md border border-[#293443] bg-[#0e151f] px-2 py-1.5">
+                    <div className="min-w-0 rounded-md border border-[#293443] bg-[#0e151f] px-1 py-1.5 sm:px-2">
                         <span className="block text-[8px] font-bold uppercase tracking-[0.06em] text-[#7182ff]">DPS</span>
                         <span className="mt-0.5 block truncate font-bold text-[#dbe2ee]">{compactNumber(comparisonStats.dps)}</span>
                     </div>
                 </div>
 
-                <div className="mt-3 flex min-h-7 items-center gap-1.5">
+                <div className="mt-2 flex min-h-6 items-center gap-1 sm:mt-3 sm:min-h-7 sm:gap-1.5">
                     {passive && passiveImage ? (
                         <img
                             src={assetPath(passiveImage)}
                             alt={getPassiveDisplayName(passive)}
                             title={getPassiveDisplayName(passive)}
-                            className="size-7 rounded-md border border-[#344050] bg-[#0d131d] object-contain p-0.5"
+                            className="size-6 rounded-md border border-[#344050] bg-[#0d131d] object-contain p-0.5 sm:size-7"
                         />
                     ) : null}
                     {skills.map((skill, skillIndex) =>
@@ -336,13 +336,13 @@ function MonsterCard({
                                 src={assetPath(getDatabaseSkillIconPath(skill.id))}
                                 alt={getSkillDisplayName(skill.name)}
                                 title={getSkillDisplayName(skill.name)}
-                                className="size-7 rounded-md border border-[#344050] bg-[#0d131d] object-cover"
+                                className="size-6 rounded-md border border-[#344050] bg-[#0d131d] object-cover sm:size-7"
                             />
                         ) : null,
                     )}
                 </div>
 
-                <p className="mt-3 truncate border-t border-[#293443] pt-2 text-[10px] font-medium text-[#7f8b9e]">
+                <p className="mt-3 hidden truncate border-t border-[#293443] pt-2 text-[10px] font-medium text-[#7f8b9e] sm:block">
                     {sourceLabel(monster)}
                 </p>
             </div>
@@ -603,12 +603,13 @@ export function MonsterDatabase() {
     const evolutionBarFill = getEvolutionBarFill(evolutionPercent);
     const [sortBy, setSortBy] = useState<SortKey>("index");
     const [selectedId, setSelectedId] = useState("");
+    const [filtersOpen, setFiltersOpen] = useState(false);
     const drawerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (!selectedId) return;
+        if (!selectedId && !filtersOpen) return;
 
-        drawerRef.current?.scrollTo({ top: 0 });
+        if (selectedId) drawerRef.current?.scrollTo({ top: 0 });
 
         const previousOverflow = document.body.style.overflow;
         const previousPaddingRight = document.body.style.paddingRight;
@@ -617,7 +618,9 @@ export function MonsterDatabase() {
         if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
 
         const closeOnEscape = (event: KeyboardEvent) => {
-            if (event.key === "Escape") setSelectedId("");
+            if (event.key !== "Escape") return;
+            if (selectedId) setSelectedId("");
+            else setFiltersOpen(false);
         };
         window.addEventListener("keydown", closeOnEscape);
 
@@ -626,7 +629,7 @@ export function MonsterDatabase() {
             document.body.style.overflow = previousOverflow;
             document.body.style.paddingRight = previousPaddingRight;
         };
-    }, [selectedId]);
+    }, [selectedId, filtersOpen]);
 
     const sourceTypes = useMemo(
         () =>
@@ -707,6 +710,18 @@ export function MonsterDatabase() {
     const selectedMonster = selectedId
         ? GENERATED_MONSTERS.find((monster) => monster.id === selectedId) ?? null
         : null;
+    const activeFilterCount = [
+        search.trim() !== "",
+        rarity !== "All",
+        element !== "All",
+        sourceType !== "All",
+        location !== "All",
+        obtainability !== "all",
+        passiveFilter !== "all",
+        skillEffectFilter !== "all",
+        evolutionFilter !== "all",
+        sortBy !== "index",
+    ].filter(Boolean).length;
 
     return (
         <main className="min-h-screen bg-[#0d131d] text-white">
@@ -715,7 +730,7 @@ export function MonsterDatabase() {
                     <div>
                         <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#7182ff]">CAM Lab</p>
                         <h1 className="mt-1 text-3xl font-black tracking-tight text-[#f5f7fb]">Monster Database</h1>
-                        <p className="mt-2 max-w-3xl text-sm leading-6 text-[#8f9aae]">
+                        <p className="mt-2 hidden max-w-3xl text-sm leading-6 text-[#8f9aae] sm:block">
                             Browse every monster, discover what it does, see where it comes from, and open it directly in the build calculator.
                         </p>
                     </div>
@@ -724,9 +739,60 @@ export function MonsterDatabase() {
                     </div>
                 </div>
 
-                <section className="mt-5 rounded-xl border border-[#344050] bg-[#111925] p-3">
+                <div className="sticky top-0 z-30 -mx-4 mt-4 border-y border-[#293443] bg-[#0d131d]/95 px-4 py-3 backdrop-blur md:hidden">
+                    <div className="flex gap-2">
+                        <label className="relative min-w-0 flex-1">
+                            <span className="sr-only">Search monsters</span>
+                            <input
+                                value={search}
+                                onChange={(event) => setSearch(event.target.value)}
+                                placeholder="Search monsters..."
+                                className="h-11 w-full rounded-lg border border-[#344050] bg-[#111925] px-3 text-sm text-white outline-none placeholder:text-[#566376] focus:border-[#7182ff]"
+                            />
+                        </label>
+                        <button
+                            type="button"
+                            onClick={() => setFiltersOpen(true)}
+                            className="relative flex h-11 shrink-0 items-center gap-2 rounded-lg border border-[#46546a] bg-[#151e2b] px-3 text-xs font-bold text-[#dbe2ee] transition active:scale-[0.98]"
+                            aria-label={`Open filters${activeFilterCount ? `, ${activeFilterCount} active` : ""}`}
+                        >
+                            <span aria-hidden="true">☰</span>
+                            Filters
+                            {activeFilterCount ? (
+                                <span className="grid size-5 place-items-center rounded-full bg-[#7182ff] text-[10px] text-white">
+                                    {activeFilterCount}
+                                </span>
+                            ) : null}
+                        </button>
+                    </div>
+                </div>
+
+                {filtersOpen ? (
+                    <button
+                        type="button"
+                        aria-label="Close filters"
+                        onClick={() => setFiltersOpen(false)}
+                        className="fixed inset-0 z-40 bg-black/70 backdrop-blur-[2px] md:hidden"
+                    />
+                ) : null}
+
+                <section className={`${filtersOpen ? "fixed" : "hidden"} bottom-0 right-0 top-0 z-50 w-[min(360px,calc(100vw-24px))] overflow-y-auto border-l border-[#344050] bg-[#111925] p-4 shadow-[-18px_0_50px_rgba(0,0,0,0.5)] md:static md:mt-5 md:block md:w-auto md:overflow-visible md:rounded-xl md:border md:p-3 md:shadow-none`}>
+                    <div className="mb-4 flex items-center justify-between md:hidden">
+                        <div>
+                            <p className="text-base font-black text-white">Filters & Sorting</p>
+                            <p className="mt-0.5 text-[10px] font-semibold text-[#7f8b9e]">{filteredMonsters.length} monsters shown</p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setFiltersOpen(false)}
+                            aria-label="Close filters"
+                            className="grid size-10 place-items-center rounded-full border border-[#46546a] bg-[#0d141e] text-2xl leading-none text-white"
+                        >
+                            ×
+                        </button>
+                    </div>
                     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-[minmax(260px,1.6fr)_repeat(9,minmax(118px,0.7fr))]">
-                        <label className="grid gap-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#69768a]">
+                        <label className="hidden gap-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#69768a] md:grid">
                             <span>Search</span>
                             <input
                                 value={search}
@@ -930,18 +996,51 @@ export function MonsterDatabase() {
                             </div>
                         </div>
                     ) : null}
+
+                    <div className="sticky bottom-0 -mx-4 mt-5 flex gap-2 border-t border-[#293443] bg-[#111925] px-4 py-3 md:hidden">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setSearch("");
+                                setRarity("All");
+                                setElement("All");
+                                setSourceType("All");
+                                setLocation("All");
+                                setObtainability("all");
+                                setPassiveFilter("all");
+                                setSkillEffectFilter("all");
+                                setEvolutionFilter("all");
+                                setSortBy("index");
+                                setEvolutionPercent(MIN_EVOLUTION_PERCENT);
+                                setPassiveCompareMode("always");
+                            }}
+                            className="h-11 flex-1 rounded-lg border border-[#46546a] bg-[#141c28] text-xs font-bold text-[#aeb9cb]"
+                        >
+                            Clear All
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setFiltersOpen(false)}
+                            className="h-11 flex-[1.35] rounded-lg bg-[#7182ff] text-xs font-black text-white shadow-[0_8px_24px_rgba(113,130,255,0.25)]"
+                        >
+                            Show {filteredMonsters.length} Monsters
+                        </button>
+                    </div>
                 </section>
 
                 <div className="mt-5">
                     <section>
                         {filteredMonsters.length ? (
-                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 2xl:grid-cols-4">
+                            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 2xl:grid-cols-4">
                                 {filteredMonsters.map((monster) => (
                                     <MonsterCard
                                         key={monster.id}
                                         monster={monster}
                                         selected={selectedMonster?.id === monster.id}
-                                        onSelect={() => setSelectedId(monster.id)}
+                                        onSelect={() => {
+                                            setFiltersOpen(false);
+                                            setSelectedId(monster.id);
+                                        }}
                                         evolutionPercent={evolutionPercent}
                                         passiveCompareMode={passiveCompareMode}
                                     />
