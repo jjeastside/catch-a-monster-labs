@@ -1,5 +1,5 @@
 const SITE_URL = "https://jjeastside.github.io/catch-a-monster-labs/";
-const PREVIEW_SELECTOR = '#cam-lab-share-preview-data[data-ready="true"]';
+const PREVIEW_SELECTOR = "#cam-lab-share-preview-data";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -47,13 +47,13 @@ function camLabBuildUrl(buildCode) {
 }
 
 function cacheKeyForPreview(origin, buildCode) {
-  const url = new URL("/_preview-data-v2", origin);
+  const url = new URL("/_preview-data", origin);
   url.searchParams.set("b", buildCode);
   return new Request(url.toString(), { method: "GET" });
 }
 
 function cacheKeyForPng(origin, buildCode) {
-  const url = new URL("/card-v2.png", origin);
+  const url = new URL("/card.png", origin);
   url.searchParams.set("b", buildCode);
   return new Request(url.toString(), { method: "GET" });
 }
@@ -66,6 +66,47 @@ function cardUrl(origin, buildCode, pathname) {
 
 function findAttribute(attributes, name) {
   return (attributes ?? []).find((attribute) => attribute?.name === name)?.value ?? "";
+}
+
+async function rawScrapeDebug(env, buildCode) {
+  if (!env.BROWSER) {
+    return {
+      ok: false,
+      error: "Missing Cloudflare Browser Run binding named BROWSER.",
+    };
+  }
+
+  const response = await env.BROWSER.quickAction("scrape", {
+    url: camLabBuildUrl(buildCode),
+    elements: [{ selector: PREVIEW_SELECTOR }],
+    waitForSelector: {
+      selector: PREVIEW_SELECTOR,
+      timeout: 30000,
+    },
+    gotoOptions: {
+      waitUntil: "networkidle2",
+      timeout: 60000,
+    },
+  });
+
+  const bodyText = await response.text();
+
+  let parsedBody = bodyText;
+  try {
+    parsedBody = JSON.parse(bodyText);
+  } catch {
+    // Keep raw text when the response is not JSON.
+  }
+
+  return {
+    ok: response.ok,
+    status: response.status,
+    statusText: response.statusText,
+    headers: Object.fromEntries(response.headers.entries()),
+    requestedBuildUrl: camLabBuildUrl(buildCode),
+    selector: PREVIEW_SELECTOR,
+    body: parsedBody,
+  };
 }
 
 async function readPreviewFromCamLab(env, buildCode) {
@@ -101,27 +142,16 @@ async function readPreviewFromCamLab(env, buildCode) {
     throw new Error("CAM Lab loaded, but no share preview data was found.");
   }
 
-  const textPreview =
-      element.text ??
-      element.textContent ??
-      element.innerText ??
-      element.innerHTML ??
-      "";
-
-  const attributePreview = findAttribute(element.attributes, "data-preview");
-  const rawPreview =
-      (typeof textPreview === "string" ? textPreview.trim() : "") ||
-      (typeof attributePreview === "string" ? attributePreview.trim() : "");
-
-  if (!rawPreview) {
+  const encodedPreview = findAttribute(element.attributes, "data-preview");
+  if (!encodedPreview) {
     throw new Error("CAM Lab share preview data was empty.");
   }
 
   let preview;
   try {
-    preview = JSON.parse(rawPreview);
+    preview = JSON.parse(encodedPreview);
   } catch {
-    throw new Error(`CAM Lab returned invalid share preview JSON: ${rawPreview.slice(0, 200)}`);
+    throw new Error("CAM Lab returned invalid share preview JSON.");
   }
 
   return {
@@ -348,6 +378,19 @@ export default {
 
     if (!buildCode.startsWith("C1")) {
       return Response.redirect(SITE_URL, 302);
+    }
+
+    if (url.pathname === "/debug") {
+      const debug = await rawScrapeDebug(env, buildCode);
+
+      return new Response(JSON.stringify(debug, null, 2), {
+        status: debug.ok ? 200 : 500,
+        headers: {
+          "content-type": "application/json; charset=UTF-8",
+          "cache-control": "no-store",
+          "x-robots-tag": "noindex",
+        },
+      });
     }
 
     let data;
