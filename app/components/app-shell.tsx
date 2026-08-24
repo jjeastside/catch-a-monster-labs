@@ -553,13 +553,13 @@ export function AppShell() {
     async function shareBuild() {
         if (!selectedMonster) return;
 
-        const shareUrl = createBuildShareUrl(build, sharePreview ?? undefined);
+        let shareUrl = createBuildShareUrl(build, sharePreview ?? undefined);
 
         if (sharePreview) {
             try {
-                await primeBuildSharePreview(build, sharePreview);
+                shareUrl = await primeBuildSharePreview(build, sharePreview);
             } catch {
-                // The share link still works even when priming fails.
+                // Fall back to the full C1 link if the short-link service fails.
             }
         }
 

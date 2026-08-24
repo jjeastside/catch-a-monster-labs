@@ -485,14 +485,20 @@ export function createBuildShareUrl(build: Build, _preview?: BuildSharePreview):
     return `${getSharePreviewBaseUrl()}/b/${encodeURIComponent(code)}`;
 }
 
+type PrimedShareResponse = {
+    ok: boolean;
+    shortId?: string;
+    shareUrl?: string;
+};
+
 export async function primeBuildSharePreview(
     build: Build,
     preview: BuildSharePreview,
-): Promise<void> {
+): Promise<string> {
     const buildCode = createBuildShareCode(build);
     const baseUrl = getSharePreviewBaseUrl();
 
-    const response = await fetch(`${baseUrl}/prime`, {
+    const response = await fetch(`${baseUrl}/share`, {
         method: "POST",
         headers: {
             "content-type": "application/json",
@@ -509,8 +515,15 @@ export async function primeBuildSharePreview(
         throw new Error(`Failed to prime share preview (${response.status})`);
     }
 
-    // Fire-and-forget image warm-up so Discord is more likely to hit cached PNG.
-    void fetch(`${baseUrl}/card.png?b=${encodeURIComponent(buildCode)}`, {
+    const data = (await response.json()) as PrimedShareResponse;
+    const shortToken = data.shortId?.trim();
+    const shareUrl =
+        data.shareUrl?.trim() ||
+        (shortToken
+            ? `${baseUrl}/b/${encodeURIComponent(shortToken)}`
+            : `${baseUrl}/b/${encodeURIComponent(buildCode)}`);
+
+    void fetch(`${baseUrl}/card.png?b=${encodeURIComponent(shortToken || buildCode)}`, {
         method: "GET",
         mode: "no-cors",
         cache: "no-store",
@@ -518,4 +531,6 @@ export async function primeBuildSharePreview(
     }).catch(() => {
         // Best-effort warm-up only.
     });
+
+    return shareUrl;
 }

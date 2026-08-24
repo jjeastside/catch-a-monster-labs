@@ -1,13 +1,15 @@
 const SITE_URL = "https://jjeastside.github.io/catch-a-monster-labs/";
 const PREVIEW_SELECTOR = '#cam-lab-share-preview-data[data-ready="true"]';
-const CACHE_VERSION = "v5";
+const CACHE_VERSION = "v6";
+const PREVIEW_TTL_SECONDS = 60 * 60 * 24 * 30;
+const SHORT_ID_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 function escapeHtml(value) {
   return String(value ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;");
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 function absoluteAssetUrl(path) {
@@ -36,7 +38,11 @@ function corsHeaders() {
   };
 }
 
-function getBuildCode(url) {
+function isBuildCode(value) {
+  return typeof value === "string" && value.startsWith("C1");
+}
+
+function getRouteToken(url) {
   if (url.pathname.startsWith("/b/")) {
     try {
       return decodeURIComponent(url.pathname.slice(3));
@@ -48,10 +54,36 @@ function getBuildCode(url) {
   return url.searchParams.get("b") ?? "";
 }
 
+async function resolveBuildCode(env, token) {
+  if (isBuildCode(token)) return token;
+
+  if (!env.PREVIEWS) {
+    throw new Error("Missing Cloudflare KV binding named PREVIEWS.");
+  }
+
+  const buildCode = await env.PREVIEWS.get(`short:${token}`);
+  if (!buildCode) {
+    throw new Error("Shared build was not found.");
+  }
+
+  return buildCode;
+}
+
 function camLabBuildUrl(buildCode) {
   return `${SITE_URL}#b=${encodeURIComponent(buildCode)}`;
 }
 
+function previewStorageKey(buildCode) {
+  return `preview:${buildCode}`;
+}
+
+function buildToShortKey(buildCode) {
+  return `build:${buildCode}`;
+}
+
+function shortToBuildKey(shortId) {
+  return `short:${shortId}`;
+}
 
 function cacheKeyForPng(origin, buildCode) {
   const url = new URL(`/card-${CACHE_VERSION}.png`, origin);
@@ -59,9 +91,9 @@ function cacheKeyForPng(origin, buildCode) {
   return new Request(url.toString(), { method: "GET" });
 }
 
-function cardUrl(origin, buildCode, pathname) {
+function cardUrl(origin, token, pathname) {
   const url = new URL(pathname, origin);
-  url.searchParams.set("b", buildCode);
+  url.searchParams.set("b", token);
   return url.toString();
 }
 
@@ -84,7 +116,7 @@ function normalizePreview(preview) {
 
 function previewLooksValid(preview) {
   return Boolean(
-      preview &&
+    preview &&
       preview.name &&
       preview.name !== "Shared Build" &&
       preview.damage &&
@@ -92,6 +124,39 @@ function previewLooksValid(preview) {
       preview.health &&
       preview.health !== "—"
   );
+}
+
+function randomShortId(length = 6) {
+  const bytes = crypto.getRandomValues(new Uint8Array(length));
+  let output = "";
+
+  for (const byte of bytes) {
+    output += SHORT_ID_CHARS[byte % SHORT_ID_CHARS.length];
+  }
+
+  return output;
+}
+
+async function getOrCreateShortId(env, buildCode) {
+  if (!env.PREVIEWS) {
+    throw new Error("Missing Cloudflare KV binding named PREVIEWS.");
+  }
+
+  const existing = await env.PREVIEWS.get(buildToShortKey(buildCode));
+  if (existing) return existing;
+
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const shortId = randomShortId(6);
+    const collision = await env.PREVIEWS.get(shortToBuildKey(shortId));
+
+    if (collision) continue;
+
+    await env.PREVIEWS.put(shortToBuildKey(shortId), buildCode);
+    await env.PREVIEWS.put(buildToShortKey(buildCode), shortId);
+    return shortId;
+  }
+
+  throw new Error("Unable to allocate a short share ID.");
 }
 
 async function storePreview(env, origin, buildCode, preview) {
@@ -104,14 +169,13 @@ async function storePreview(env, origin, buildCode, preview) {
   }
 
   await env.PREVIEWS.put(
-      buildCode,
-      JSON.stringify(preview),
-      {
-        expirationTtl: 60 * 60 * 24 * 30,
-      },
+    previewStorageKey(buildCode),
+    JSON.stringify(preview),
+    {
+      expirationTtl: PREVIEW_TTL_SECONDS,
+    },
   );
 
-  // If this build was rendered before, invalidate only the edge PNG cache.
   await caches.default.delete(cacheKeyForPng(origin, buildCode));
 }
 
@@ -140,7 +204,7 @@ async function readPreviewFromCamLab(env, buildCode) {
 
   const payload = await response.json();
   const selectorResult = payload?.result?.find(
-      (entry) => entry?.selector === PREVIEW_SELECTOR
+    (entry) => entry?.selector === PREVIEW_SELECTOR
   );
   const element = selectorResult?.results?.[0];
 
@@ -149,16 +213,16 @@ async function readPreviewFromCamLab(env, buildCode) {
   }
 
   const textPreview =
-      element.text ??
-      element.textContent ??
-      element.innerText ??
-      element.innerHTML ??
-      "";
+    element.text ??
+    element.textContent ??
+    element.innerText ??
+    element.innerHTML ??
+    "";
 
   const attributePreview = findAttribute(element.attributes, "data-preview");
   const rawPreview =
-      (typeof textPreview === "string" ? textPreview.trim() : "") ||
-      (typeof attributePreview === "string" ? attributePreview.trim() : "");
+    (typeof textPreview === "string" ? textPreview.trim() : "") ||
+    (typeof attributePreview === "string" ? attributePreview.trim() : "");
 
   if (!rawPreview) {
     throw new Error("CAM Lab share preview data was empty.");
@@ -179,13 +243,11 @@ async function getPreviewData(env, origin, buildCode) {
     throw new Error("Missing Cloudflare KV binding named PREVIEWS.");
   }
 
-  const stored = await env.PREVIEWS.get(buildCode, { type: "json" });
+  const stored = await env.PREVIEWS.get(previewStorageKey(buildCode), { type: "json" });
   if (previewLooksValid(stored)) {
     return stored;
   }
 
-  // Backwards-compatible fallback for links created before KV priming existed.
-  // New Share Build links should normally never reach this branch.
   const preview = await readPreviewFromCamLab(env, buildCode);
   await storePreview(env, origin, buildCode, preview);
   return preview;
@@ -396,7 +458,7 @@ function buildCardHtml(data) {
 }
 
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request, env) {
     const url = new URL(request.url);
 
     if (request.method === "OPTIONS") {
@@ -406,7 +468,7 @@ export default {
       });
     }
 
-    if (url.pathname === "/prime" && request.method === "POST") {
+    if (url.pathname === "/share" && request.method === "POST") {
       let body;
       try {
         body = await request.json();
@@ -421,7 +483,7 @@ export default {
       }
 
       const buildCode = String(body?.buildCode ?? "");
-      if (!buildCode.startsWith("C1")) {
+      if (!isBuildCode(buildCode)) {
         return new Response("Invalid build code.", {
           status: 400,
           headers: {
@@ -443,20 +505,37 @@ export default {
       }
 
       await storePreview(env, url.origin, buildCode, preview);
+      const shortId = await getOrCreateShortId(env, buildCode);
 
-      return new Response(JSON.stringify({ ok: true }), {
-        headers: {
-          "content-type": "application/json; charset=UTF-8",
-          "cache-control": "no-store",
-          ...corsHeaders(),
+      return new Response(
+        JSON.stringify({
+          ok: true,
+          shortId,
+          shareUrl: `${url.origin}/b/${shortId}`,
+        }),
+        {
+          headers: {
+            "content-type": "application/json; charset=UTF-8",
+            "cache-control": "no-store",
+            ...corsHeaders(),
+          },
         },
-      });
+      );
     }
 
-    const buildCode = getBuildCode(url);
+    const rawToken = getRouteToken(url);
+    let buildCode;
 
-    if (!buildCode.startsWith("C1")) {
-      return Response.redirect(SITE_URL, 302);
+    try {
+      buildCode = await resolveBuildCode(env, rawToken);
+    } catch (error) {
+      return new Response(
+        `CAM Lab preview error: ${error instanceof Error ? error.message : String(error)}`,
+        {
+          status: 404,
+          headers: { "content-type": "text/plain; charset=UTF-8" },
+        },
+      );
     }
 
     let data;
@@ -464,11 +543,11 @@ export default {
       data = await getPreviewData(env, url.origin, buildCode);
     } catch (error) {
       return new Response(
-          `CAM Lab preview error: ${error instanceof Error ? error.message : String(error)}`,
-          {
-            status: 500,
-            headers: { "content-type": "text/plain; charset=UTF-8" },
-          },
+        `CAM Lab preview error: ${error instanceof Error ? error.message : String(error)}`,
+        {
+          status: 500,
+          headers: { "content-type": "text/plain; charset=UTF-8" },
+        },
       );
     }
 
@@ -490,8 +569,8 @@ export default {
 
       if (!env.BROWSER) {
         return new Response(
-            "Missing Cloudflare Browser Run binding named BROWSER.",
-            { status: 500 }
+          "Missing Cloudflare Browser Run binding named BROWSER.",
+          { status: 500 }
         );
       }
 
@@ -523,7 +602,7 @@ export default {
         },
       });
 
-      ctx.waitUntil(cache.put(cacheKey, png.clone()));
+      await cache.put(cacheKey, png.clone());
       return png;
     }
 
@@ -531,11 +610,11 @@ export default {
     const title = `${data.name} — CAM Lab Build`;
     const classification = [data.element, data.rarity].filter(Boolean).join(" · ");
     const description =
-        `${classification}${classification ? " | " : ""}` +
-        `${data.damage} DMG · ${data.health} HP · ` +
-        `${data.critChance} Crit · ${data.critMultiplier} Crit Multiplier`;
+      `${classification}${classification ? " | " : ""}` +
+      `${data.damage} DMG · ${data.health} HP · ` +
+      `${data.critChance} Crit · ${data.critMultiplier} Crit Multiplier`;
 
-    const imageUrl = cardUrl(url.origin, buildCode, "/card.png");
+    const imageUrl = cardUrl(url.origin, rawToken, "/card.png");
 
     const html = `<!doctype html>
 <html lang="en">
