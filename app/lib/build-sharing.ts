@@ -473,7 +473,23 @@ export function decodeSharedBuildCode(code: string): Partial<Build> | null {
 export function getSharedBuildFromLocation(): Partial<Build> | null {
     const hash = window.location.hash;
     if (!hash.startsWith(BUILD_HASH_PREFIX)) return null;
-    return decodeSharedBuildCode(hash.slice(BUILD_HASH_PREFIX.length));
+
+    const encodedCode = hash.slice(BUILD_HASH_PREFIX.length);
+
+    // The short-link Worker redirects to CAM Lab with the entire build code
+    // URI-encoded inside the hash. That means list delimiters such as the
+    // teammate comma arrive as "%2C". Decode the outer URL encoding once
+    // before parsing the C1 fields; individual field values can still perform
+    // their own decoding afterward.
+    let buildCode = encodedCode;
+    try {
+        buildCode = decodeURIComponent(encodedCode);
+    } catch {
+        // If the hash is already decoded (or malformed), fall back to the raw
+        // value so direct/self-contained #b= links still get a chance to load.
+    }
+
+    return decodeSharedBuildCode(buildCode);
 }
 
 export type BuildSharePreview = {
