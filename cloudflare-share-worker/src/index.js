@@ -1,5 +1,6 @@
 const SITE_URL = "https://jjeastside.github.io/catch-a-monster-labs/";
 const PREVIEW_SELECTOR = "#cam-lab-share-preview-data";
+const CACHE_VERSION = "v3";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -47,13 +48,13 @@ function camLabBuildUrl(buildCode) {
 }
 
 function cacheKeyForPreview(origin, buildCode) {
-  const url = new URL("/_preview-data", origin);
+  const url = new URL(`/_preview-data-${CACHE_VERSION}`, origin);
   url.searchParams.set("b", buildCode);
   return new Request(url.toString(), { method: "GET" });
 }
 
 function cacheKeyForPng(origin, buildCode) {
-  const url = new URL("/card.png", origin);
+  const url = new URL(`/card-${CACHE_VERSION}.png`, origin);
   url.searchParams.set("b", buildCode);
   return new Request(url.toString(), { method: "GET" });
 }
@@ -172,7 +173,20 @@ async function getPreviewData(env, origin, buildCode, ctx) {
   const cached = await cache.match(key);
 
   if (cached) {
-    return await cached.json();
+    const cachedPreview = await cached.json();
+
+    const looksValid =
+        cachedPreview &&
+        cachedPreview.name &&
+        cachedPreview.name !== "Shared Build" &&
+        cachedPreview.damage &&
+        cachedPreview.damage !== "—" &&
+        cachedPreview.health &&
+        cachedPreview.health !== "—";
+
+    if (looksValid) {
+      return cachedPreview;
+    }
   }
 
   const preview = await readPreviewFromCamLab(env, buildCode);
@@ -186,7 +200,19 @@ async function getPreviewData(env, origin, buildCode, ctx) {
     },
   });
 
-  ctx.waitUntil(cache.put(key, cachedResponse));
+  const looksValid =
+      preview &&
+      preview.name &&
+      preview.name !== "Shared Build" &&
+      preview.damage &&
+      preview.damage !== "—" &&
+      preview.health &&
+      preview.health !== "—";
+
+  if (looksValid) {
+    ctx.waitUntil(cache.put(key, cachedResponse));
+  }
+
   return preview;
 }
 
