@@ -354,12 +354,10 @@ function DetailPanel({
                          monster,
                          evolutionPercent,
                          passiveCompareMode,
-                         docked,
                      }: {
     monster: GeneratedMonster;
     evolutionPercent: number;
     passiveCompareMode: PassiveCompareMode;
-    docked: boolean;
 }) {
     const skills = monster.skillIds.map((id) => getSkill(id)).filter(Boolean);
     const passive = monster.passives?.[0] ?? null;
@@ -372,8 +370,8 @@ function DetailPanel({
     }
 
     return (
-        <div className={`monster-database-detail min-w-0 ${docked ? "monster-database-detail--docked" : ""}`}>
-            <aside className="overflow-hidden rounded-2xl border border-[#344050] bg-[#111925] lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto">
+        <div className="min-w-0">
+            <aside className="overflow-hidden rounded-2xl border border-[#344050] bg-[#111925]">
                 <div className="relative aspect-[16/9] overflow-hidden border-b border-[#344050] bg-[radial-gradient(circle_at_50%_45%,rgba(113,130,255,0.17),transparent_62%)]">
                     {monster.image ? (
                         <img src={assetPath(monster.image)} alt={monster.name} className="h-full w-full object-contain p-6" />
@@ -604,26 +602,31 @@ export function MonsterDatabase() {
     const [passiveCompareMode, setPassiveCompareMode] = useState<PassiveCompareMode>("always");
     const evolutionBarFill = getEvolutionBarFill(evolutionPercent);
     const [sortBy, setSortBy] = useState<SortKey>("index");
-    const [selectedId, setSelectedId] = useState(GENERATED_MONSTERS[0]?.id ?? "");
-    const resultsRef = useRef<HTMLDivElement>(null);
-    const [detailDocked, setDetailDocked] = useState(false);
+    const [selectedId, setSelectedId] = useState("");
+    const drawerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const updateDockedState = () => {
-            const results = resultsRef.current;
-            const desktopLayout = window.matchMedia("(min-width: 1024px)").matches;
-            setDetailDocked(Boolean(results && desktopLayout && results.getBoundingClientRect().top <= 16));
-        };
+        if (!selectedId) return;
 
-        updateDockedState();
-        window.addEventListener("scroll", updateDockedState, { passive: true });
-        window.addEventListener("resize", updateDockedState);
+        drawerRef.current?.scrollTo({ top: 0 });
+
+        const previousOverflow = document.body.style.overflow;
+        const previousPaddingRight = document.body.style.paddingRight;
+        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        document.body.style.overflow = "hidden";
+        if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
+
+        const closeOnEscape = (event: KeyboardEvent) => {
+            if (event.key === "Escape") setSelectedId("");
+        };
+        window.addEventListener("keydown", closeOnEscape);
 
         return () => {
-            window.removeEventListener("scroll", updateDockedState);
-            window.removeEventListener("resize", updateDockedState);
+            window.removeEventListener("keydown", closeOnEscape);
+            document.body.style.overflow = previousOverflow;
+            document.body.style.paddingRight = previousPaddingRight;
         };
-    }, []);
+    }, [selectedId]);
 
     const sourceTypes = useMemo(
         () =>
@@ -701,8 +704,9 @@ export function MonsterDatabase() {
             });
     }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, skillEffectFilter, evolutionFilter, sortBy, evolutionPercent, passiveCompareMode]);
 
-    const selectedMonster =
-        GENERATED_MONSTERS.find((monster) => monster.id === selectedId) ?? filteredMonsters[0] ?? GENERATED_MONSTERS[0];
+    const selectedMonster = selectedId
+        ? GENERATED_MONSTERS.find((monster) => monster.id === selectedId) ?? null
+        : null;
 
     return (
         <main className="min-h-screen bg-[#0d131d] text-white">
@@ -928,10 +932,7 @@ export function MonsterDatabase() {
                     ) : null}
                 </section>
 
-                <div
-                    ref={resultsRef}
-                    className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_430px]"
-                >
+                <div className="mt-5">
                     <section>
                         {filteredMonsters.length ? (
                             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 2xl:grid-cols-4">
@@ -973,17 +974,43 @@ export function MonsterDatabase() {
                         )}
                     </section>
 
-                    {selectedMonster ? (
+                </div>
+            </div>
+
+            {selectedMonster ? (
+                <div className="fixed inset-0 z-[99]" role="presentation">
+                    <button
+                        type="button"
+                        aria-label="Close monster details"
+                        className="absolute inset-0 h-full w-full cursor-default bg-black/70 backdrop-blur-[2px]"
+                        onClick={() => setSelectedId("")}
+                    />
+                    <div
+                        ref={drawerRef}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={`${selectedMonster.name} details`}
+                        className="fixed bottom-4 right-4 top-4 z-[100] w-[min(430px,calc(100vw-32px))] overflow-y-auto overscroll-contain rounded-2xl shadow-[-18px_0_50px_rgba(0,0,0,0.45)]"
+                    >
+                        <div className="pointer-events-none sticky top-3 z-20 flex h-0 justify-end pr-3">
+                            <button
+                                type="button"
+                                aria-label="Close monster details"
+                                onClick={() => setSelectedId("")}
+                                className="pointer-events-auto grid size-10 place-items-center rounded-full border border-[#59677a] bg-[#0b111a]/95 text-2xl font-bold leading-none text-white shadow-lg transition hover:border-[#7182ff] hover:bg-[#182235] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7182ff]"
+                            >
+                                ×
+                            </button>
+                        </div>
                         <DetailPanel
                             key={selectedMonster.id}
                             monster={selectedMonster}
                             evolutionPercent={evolutionPercent}
                             passiveCompareMode={passiveCompareMode}
-                            docked={detailDocked}
                         />
-                    ) : null}
+                    </div>
                 </div>
-            </div>
+            ) : null}
         </main>
     );
 }

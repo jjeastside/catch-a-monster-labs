@@ -23,6 +23,16 @@ No installation is required. The current build is hosted on GitHub Pages and is 
 - Detailed monster overview with skills and availability requirements
 - Persistent selected monster after refreshing the page
 
+### Monster Database
+
+- Dedicated visual database for the complete monster roster
+- Search, sorting, and filters for rarity, element, source, location, availability, passives, skill effects, and evolution status
+- Damage, Health, DPS, and Index comparison modes
+- Evolution Multiplier and passive-aware stat comparisons
+- Monster profiles with artwork, skills, passives, reference stats, obtainment details, and calculator links
+- Fixed profile drawer that preserves the user's place in the monster grid
+- Direct links to individual monster profiles
+
 ### Build Editor
 
 - Level and rank configuration
@@ -78,7 +88,8 @@ No installation is required. The current build is hosted on GitHub Pages and is 
 - CAM Lab navy visual theme
 - Rarity-specific Legendary, Mythical, Secret, and Void presentation
 - Persistent build state in browser storage
-- Work-in-progress pages for upcoming navigation destinations
+- Compact shareable build links and direct monster links
+- Changelog, patch-notes, and work-in-progress pages
 - Static Next.js export deployed automatically through GitHub Actions
 - GitHub Pages subpath-aware routing and public assets
 
@@ -166,6 +177,9 @@ app/
 ├── lib/              # Asset helpers and calculation modules
 ├── scripts/          # Data-import and asset-validation scripts
 ├── types/            # Shared TypeScript interfaces
+├── monster-database/ # Visual database and direct monster profile routes
+├── changelog/        # Development changelog
+├── updates/          # Game patch notes
 ├── work-in-progress/ # Placeholder route for upcoming pages
 ├── layout.tsx
 └── page.tsx
@@ -216,18 +230,22 @@ npm run build
 - [x] Skill, critical-hit, healing, shielding, and cooldown analysis
 - [x] Advanced formula breakdowns and growth visualization
 - [x] Browser-based build and monster persistence
+- [x] Dedicated visual Monster Database
+- [x] Sortable monster stat comparisons and advanced database filters
+- [x] Direct monster profile links
+- [x] Compact shareable build links
+- [x] Changelog and patch-notes pages
 - [x] GitHub Pages static deployment
 
 ### Planned
 
-- [ ] Dedicated visual Monster Database
 - [ ] Favorites management
-- [ ] Named build slots and build sharing
+- [ ] Named build slots
 - [ ] Total DPS and rotation comparisons
 - [ ] Equipment optimization tools
 - [ ] Reverse base-stat solver
 - [ ] Account synchronization across devices
-- [ ] Complete Guides, Compare, Changelog, Feedback, About, and Privacy pages
+- [ ] Complete Guides, Compare, Feedback, About, and Privacy pages
 - [ ] Additional automated calculation tests
 
 ## Why I Built This
@@ -242,7 +260,7 @@ CAM Lab is an independent, fan-made companion site. It is not affiliated with, e
 
 ## License and Usage
 
-Copyright © 2026 Juan Jimenez. All rights reserved.
+Copyright © 2026 @jjeastside. All rights reserved.
 
 The source code and original CAM Lab materials in this repository are publicly available for viewing, educational review, and portfolio evaluation only. No permission is granted to copy, reproduce, redistribute, publish, sell, sublicense, or create derivative projects from this repository without prior written authorization from the copyright owner.
 
