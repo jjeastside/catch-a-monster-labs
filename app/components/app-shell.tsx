@@ -201,6 +201,12 @@ export function AppShell() {
     const selectedMonster =
         monsters.find((monster) => monster.id === build.monsterId) ?? null;
 
+    const isSharePreviewReady =
+        hasLoadedActiveBuild &&
+        !!sharePreview &&
+        !!selectedMonster &&
+        sharePreview.monsterName === selectedMonster.name;
+
     useEffect(() => {
         const frameId = window.requestAnimationFrame(() => {
             try {
@@ -574,7 +580,7 @@ export function AppShell() {
 
     return (
         <div className="min-h-screen min-w-0 overflow-x-hidden bg-[#0b111a] text-[#f6f8fc]">
-            {sharePreview && (
+            {isSharePreviewReady && sharePreview && (
                 <div
                     id="cam-lab-share-preview-data"
                     data-preview={JSON.stringify(sharePreview)}
