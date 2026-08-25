@@ -595,7 +595,6 @@ function SkillDamagePanel({
     // Damage-based healing scales from the monster's base Damage stat,
     // not the skill's post-multiplier damage result.
     const healingDamageBase = stats.damage;
-    const criticalHealingDamageBase = stats.damage * stats.critMultiplier;
     const damageHealingAmount = damageHealingPercent === null
         ? 0
         : healingDamageBase * (damageHealingPercent / 100);
@@ -606,14 +605,6 @@ function SkillDamagePanel({
     const healingAmount = hasCalculatedHealing
         ? (damageHealingAmount + healthHealingAmount) * healingEffectivenessMultiplier
         : null;
-    const criticalHealingAmount = !hasCalculatedHealing || !isDamagingSkill
-        ? null
-        : (
-        (damageHealingPercent === null
-            ? 0
-            : criticalHealingDamageBase * (damageHealingPercent / 100)) +
-        healthHealingAmount
-    ) * healingEffectivenessMultiplier;
     const lifeStealAmount = combatDamage.normalDamage * (attributeEffects.lifeSteal / 100);
     const criticalLifeStealAmount = combatDamage.criticalDamage * (attributeEffects.lifeSteal / 100);
 
@@ -643,6 +634,20 @@ function SkillDamagePanel({
         displayedCooldown !== null &&
         displayedCooldown > 0
             ? expectedDamage / displayedCooldown
+            : null;
+
+    // Healing per second applies to any calculated heal that is not purely
+    // Max-HP-percentage based. Mixed heals (for example, damage + % Max HP)
+    // still produce a concrete healing amount and should receive HPS.
+    const expectedHealing = healingAmount;
+    const isPurePercentHealing =
+        damageHealingPercent === null && healthHealingPercent !== null;
+    const healingPerSecond =
+        expectedHealing !== null &&
+        !isPurePercentHealing &&
+        displayedCooldown !== null &&
+        displayedCooldown > 0
+            ? expectedHealing / displayedCooldown
             : null;
     const isTriggeredSkill =
         skill.cooldown === null &&
@@ -851,6 +856,23 @@ function SkillDamagePanel({
                             </div>
                         )}
 
+                        {healingPerSecond !== null && (
+                            <div className="min-w-0 rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 p-3">
+                                <div className="flex items-center gap-1.5 text-[#aeb8ff]">
+                                    <img src={assetPath("/account-icons/health.png")} alt="" className="size-4 shrink-0 object-contain" />
+                                    <p className="text-[9px] font-bold uppercase tracking-[0.1em]">HPS</p>
+                                    <InfoTooltip
+                                        label="Explain healing per second"
+                                        text="Healing per second from this skill using its adjusted cooldown. Healing cannot critically heal. Pure Max-HP percentage heals do not receive an HPS value; mixed damage + Max-HP heals do."
+                                    />
+                                </div>
+                                <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]" title={`${formatStatNumber(healingPerSecond)} HPS`}>
+                                    {formatStatNumber(healingPerSecond)}
+                                    <span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
+                                </p>
+                            </div>
+                        )}
+
                         {hasOvervoltTempestOverload && alternateCombatDamage && alternateTotalMultiplier !== null && (
                             <>
                                 <div className="min-w-0 rounded-lg border border-[#5363a8]/45 bg-[#20263a] p-3">
@@ -916,6 +938,30 @@ function SkillDamagePanel({
                                     {formatStatNumber(healingAmount)}
                                 </p>
                             </div>
+
+                            {healingPerSecond !== null && (
+                                <div className="min-w-0 rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 p-3">
+                                    <div className="flex items-center gap-1.5 text-[#aeb8ff]">
+                                        <img
+                                            src={assetPath("/account-icons/health.png")}
+                                            alt=""
+                                            className="size-4 shrink-0 object-contain"
+                                        />
+                                        <p className="text-[9px] font-bold uppercase tracking-[0.1em]">HPS</p>
+                                        <InfoTooltip
+                                            label="Explain healing per second"
+                                            text="Healing per second from this skill using its adjusted cooldown. Pure Max-HP percentage heals do not receive an HPS value; mixed damage + Max-HP heals do."
+                                        />
+                                    </div>
+                                    <p
+                                        className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
+                                        title={`${formatStatNumber(healingPerSecond)} HPS`}
+                                    >
+                                        {formatStatNumber(healingPerSecond)}
+                                        <span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
+                                    </p>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <div className="mt-3 rounded-md border border-dashed border-[#344050] bg-[#0d131d]/45 p-3">
@@ -956,6 +1002,12 @@ function SkillDamagePanel({
                                             {" = "}
                                             <strong className="text-[#aeb8ff]">{formatStatNumber(healingAmount)} healed</strong>
                                         </p>
+                                        {healingPerSecond !== null && displayedCooldown !== null && expectedHealing !== null && (
+                                            <p className="mt-1.5">
+                                                {formatStatNumber(healingAmount)} Healing ÷ {formatNumber(displayedCooldown)}s cooldown =
+                                                <strong className="text-[#aeb8ff]">{formatStatNumber(healingPerSecond)} HPS</strong>
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -1134,21 +1186,6 @@ function SkillDamagePanel({
                                                 : ""}
                                             {" = "}<strong className="text-[#aeb8ff]">{formatStatNumber(healingAmount)} healed</strong>
                                         </p>
-                                        {criticalHealingAmount !== null && (
-                                            <p className="mt-1">
-                                                Critical: {damageHealingPercent !== null && (
-                                                <>{formatStatNumber(criticalHealingDamageBase)} Damage × {formatNumber(damageHealingPercent)}%</>
-                                            )}
-                                                {damageHealingPercent !== null && healthHealingPercent !== null ? " + " : ""}
-                                                {healthHealingPercent !== null && (
-                                                    <>{formatStatNumber(stats.health)} Health × {formatNumber(healthHealingPercent)}%</>
-                                                )}
-                                                {attributeEffects.healEffectiveness > 0
-                                                    ? ` × ${formatNumber(healingEffectivenessMultiplier)}`
-                                                    : ""}
-                                                {" = "}<strong className="text-[#ff936d]">{formatStatNumber(criticalHealingAmount)} healed</strong>
-                                            </p>
-                                        )}
                                     </div>
                                 </div>
                             )}
@@ -1937,9 +1974,6 @@ export function CalculatorResults({
         }),
     );
 
-    const passiveAnalysisCount =
-        (monster?.passives?.length ?? 0) + teamPassiveEntries.length;
-
     const stats =
         build.rank && monsterStatData
             ? calculateStats(
@@ -2040,7 +2074,7 @@ export function CalculatorResults({
                             build={build}
                             stats={stats}
                         />
-                        {stats && (monsterSkills.length > 0 || passiveAnalysisCount > 0) && (
+                        {stats && (monsterSkills.length > 0 || effectivePassives.length > 0) && (
                             <section className="overflow-hidden rounded-xl border border-[#344050] bg-[#141c28]">
                                 <div className="flex flex-wrap items-end justify-between gap-3 border-b border-[#344050] px-4 py-3">
                                     <div>
@@ -2053,7 +2087,7 @@ export function CalculatorResults({
                                     </div>
                                     <span className="rounded-full border border-[#344050] bg-[#0f1620] px-2.5 py-1 text-xs font-medium text-[#8e99ad]">
                                         {monsterSkills.length} {monsterSkills.length === 1 ? "skill" : "skills"}
-                                        {passiveAnalysisCount > 0 && ` · ${passiveAnalysisCount} ${passiveAnalysisCount === 1 ? "passive" : "passives"}`}
+                                        {effectivePassives.length > 0 && ` · ${effectivePassives.length} ${effectivePassives.length === 1 ? "passive" : "passives"}`}
                                     </span>
                                 </div>
 
@@ -2111,7 +2145,7 @@ export function CalculatorResults({
                                         </div>
                                     )}
 
-                                    {passiveAnalysisCount > 0 && (
+                                    {effectivePassives.length > 0 && (
                                         <>
                                             <div className="bg-[#151b24] px-4 py-3">
                                                 <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7182ff]">
@@ -2127,7 +2161,7 @@ export function CalculatorResults({
                                                     passive={passive}
                                                     build={build}
                                                     passiveNumber={index + 1}
-                                                    passiveCount={passiveAnalysisCount}
+                                                    passiveCount={effectivePassives.length}
                                                 />
                                             ))}
                                             {teamPassiveEntries.map(({ passive, sourceName }, index) => (
@@ -2136,7 +2170,7 @@ export function CalculatorResults({
                                                     passive={passive}
                                                     build={build}
                                                     passiveNumber={(monster.passives?.length ?? 0) + index + 1}
-                                                    passiveCount={passiveAnalysisCount}
+                                                    passiveCount={effectivePassives.length}
                                                     sourceLabel={sourceName}
                                                 />
                                             ))}

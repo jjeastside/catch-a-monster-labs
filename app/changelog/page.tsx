@@ -32,6 +32,10 @@ const releases = [
             "Shared builds now reload correctly when navigating between build hashes without requiring a full page refresh.",
             "Fixed teammate passive sharing by using stable monster IDs in shared build data.",
             "Updated the project README with the completed Monster Database features and current site capabilities.",
+            "Fixed Passive Analysis counts so teammate passives are included in the displayed total instead of allowing rows such as 4 of 3.",
+            "Added Healing Per Second (HPS) to Skill Analysis for skills with calculated non-percentage healing amounts, using healing divided by the adjusted skill cooldown.",
+            "Updated HPS handling for mixed healing skills so damage-based healing still contributes even when the skill also includes a percentage-based Health heal.",
+            "Corrected healing calculations so healing never benefits from critical chance or critical damage.",
         ],
     },
     {
