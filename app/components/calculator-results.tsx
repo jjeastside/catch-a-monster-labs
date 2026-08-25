@@ -1937,6 +1937,9 @@ export function CalculatorResults({
         }),
     );
 
+    const passiveAnalysisCount =
+        (monster?.passives?.length ?? 0) + teamPassiveEntries.length;
+
     const stats =
         build.rank && monsterStatData
             ? calculateStats(
@@ -2037,7 +2040,7 @@ export function CalculatorResults({
                             build={build}
                             stats={stats}
                         />
-                        {stats && (monsterSkills.length > 0 || effectivePassives.length > 0) && (
+                        {stats && (monsterSkills.length > 0 || passiveAnalysisCount > 0) && (
                             <section className="overflow-hidden rounded-xl border border-[#344050] bg-[#141c28]">
                                 <div className="flex flex-wrap items-end justify-between gap-3 border-b border-[#344050] px-4 py-3">
                                     <div>
@@ -2050,7 +2053,7 @@ export function CalculatorResults({
                                     </div>
                                     <span className="rounded-full border border-[#344050] bg-[#0f1620] px-2.5 py-1 text-xs font-medium text-[#8e99ad]">
                                         {monsterSkills.length} {monsterSkills.length === 1 ? "skill" : "skills"}
-                                        {effectivePassives.length > 0 && ` · ${effectivePassives.length} ${effectivePassives.length === 1 ? "passive" : "passives"}`}
+                                        {passiveAnalysisCount > 0 && ` · ${passiveAnalysisCount} ${passiveAnalysisCount === 1 ? "passive" : "passives"}`}
                                     </span>
                                 </div>
 
@@ -2108,7 +2111,7 @@ export function CalculatorResults({
                                         </div>
                                     )}
 
-                                    {effectivePassives.length > 0 && (
+                                    {passiveAnalysisCount > 0 && (
                                         <>
                                             <div className="bg-[#151b24] px-4 py-3">
                                                 <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7182ff]">
@@ -2124,7 +2127,7 @@ export function CalculatorResults({
                                                     passive={passive}
                                                     build={build}
                                                     passiveNumber={index + 1}
-                                                    passiveCount={effectivePassives.length}
+                                                    passiveCount={passiveAnalysisCount}
                                                 />
                                             ))}
                                             {teamPassiveEntries.map(({ passive, sourceName }, index) => (
@@ -2133,7 +2136,7 @@ export function CalculatorResults({
                                                     passive={passive}
                                                     build={build}
                                                     passiveNumber={(monster.passives?.length ?? 0) + index + 1}
-                                                    passiveCount={effectivePassives.length}
+                                                    passiveCount={passiveAnalysisCount}
                                                     sourceLabel={sourceName}
                                                 />
                                             ))}
