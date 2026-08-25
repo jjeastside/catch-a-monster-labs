@@ -9,9 +9,34 @@ export const metadata: Metadata = {
 
 const releases = [
     {
+        version: "v1.0.2",
+        date: "August 25, 2026",
+        label: "Latest",
+        changes: [
+            "Added the complete Monster Database with visual cards for all 231 monsters, including artwork, rarity, element, reference stats, skills, passives, index position, and acquisition source.",
+            "Added Monster Database search and filters for rarity, element, source type, island, obtainability, passive, skill effect, and evolution status.",
+            "Added database sorting by Index, DPS, Damage, and Health using the same comparison calculations as the main calculator.",
+            "Added passive comparison modes and an Evolution Multiplier control for more accurate Damage, Health, and DPS rankings.",
+            "Added detailed monster profiles with reference stats, skill information, passive effects, acquisition methods, evolution families, and direct calculator links.",
+            "Added dedicated shareable Monster Database profile routes and a Copy Link action for individual monsters.",
+            "Replaced the original in-grid selected-monster panel with a fixed detail drawer so profiles can be opened from anywhere in the database without losing the current grid position.",
+            "The monster detail drawer now resets to the top for every selection and supports backdrop click, a close button, and the Escape key.",
+            "Locked background scrolling while database drawers are open and preserved the page position when returning to the monster grid.",
+            "Added a compact mobile Monster Database layout with responsive monster cards and a sticky mobile results toolbar.",
+            "Added a dedicated mobile filter drawer with clear and apply controls so the full database remains practical on smaller screens.",
+            "Improved database card sizing, artwork presentation, source visibility, selected states, and responsive stat layouts across desktop and mobile.",
+            "Added shorter share IDs for build links so shared calculator URLs are easier to post and preview.",
+            "Added Cloudflare-powered rich previews for shared builds, with preview data stored in KV and prepared before a build link is copied.",
+            "Updated shared-build previews with the correct hostname, dynamic monster rarity borders, and more reliable cache and readiness handling.",
+            "Fixed encoded list fields and URL-decoding when loading shared builds so equipment, attributes, achievements, teammates, and other packed selections restore correctly.",
+            "Shared builds now reload correctly when navigating between build hashes without requiring a full page refresh.",
+            "Fixed teammate passive sharing by using stable monster IDs in shared build data.",
+            "Updated the project README with the completed Monster Database features and current site capabilities.",
+        ],
+    },
+    {
         version: "v1.0.1",
         date: "August 21, 2026",
-        label: "Latest",
         changes: [
             "Updated monster and skill data for the Catch a Monster 0.45 update.",
             "Added Coilwork City as a supported island and added its new monsters to the calculator data.",
