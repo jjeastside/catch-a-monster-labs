@@ -11,6 +11,8 @@ import {
 } from "../data/passives";
 import {
     getSkill,
+    getActiveRallyingWarCryDamageIncrease,
+    getMonsterDamageIncrease,
     getSkillDisplayName,
     getSkillTotalHits,
     getSkillTotalMultiplier,
@@ -37,6 +39,7 @@ import { getTraitCooldownMultiplier, getTraitDamageMultiplier, getTraitEffectVal
 import type { Build, MonsterPassive, Mutation, PassiveEffectStat, Rank } from "../types/build";
 import type { Monster } from "../types/monster";
 import type { MonsterStatData } from "../types/monster-stats";
+import type { SkillStatusEffect } from "../types/skill";
 
 import { MonsterOverviewCard } from "./monster-overview-card";
 import { Panel } from "./panel";
@@ -87,6 +90,48 @@ function formatStatNumber(value: number): string {
     return `${new Intl.NumberFormat("en-US", {
         maximumFractionDigits: Math.max(0, 4 - scaledMagnitude - 1),
     }).format(scaledValue)}${unit.suffix}`;
+}
+
+function DamageIncreaseEffect({ effect }: { effect: SkillStatusEffect }) {
+    const targetLabel = effect.target === "Team" ? "Team" : "Self";
+    const durationLabel = effect.durationSeconds !== undefined
+        ? `${formatNumber(effect.durationSeconds)}s`
+        : null;
+    const tooltip = [
+        `Increases ${targetLabel.toLowerCase()} damage by ${formatNumber(effect.amountPercent ?? 0)}%.`,
+        durationLabel ? `Lasts ${durationLabel}.` : null,
+        effect.condition ? `Requires: ${effect.condition}.` : null,
+    ].filter(Boolean).join(" ");
+
+    return (
+        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#f0a14a]/35 bg-[#3a2818]/45 px-3 py-2">
+            <img
+                src={assetPath("/icons/damage-increase.png")}
+                alt=""
+                className="size-8 shrink-0 object-contain"
+            />
+            <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#f3b767]">
+                        Damage Increase
+                    </p>
+                    <InfoTooltip label="Explain Damage Increase" text={tooltip} />
+                </div>
+                <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
+                    +{formatNumber(effect.amountPercent ?? 0)}%
+                    <span className="ml-1.5 text-xs font-semibold text-[#c9a879]">{targetLabel}</span>
+                    {durationLabel && (
+                        <span className="ml-1.5 text-xs font-semibold text-[#8e99ad]">• {durationLabel}</span>
+                    )}
+                </p>
+                {effect.condition && (
+                    <p className="mt-0.5 truncate text-[10px] text-[#b7a58e]" title={effect.condition}>
+                        {effect.condition}
+                    </p>
+                )}
+            </div>
+        </div>
+    );
 }
 
 const passiveEffectLabels: Record<PassiveEffectStat, string> = {
@@ -421,6 +466,17 @@ function calculateSkillDps(
             targetStatused: build.targetStatused,
         },
     );
+    const teammateSkillIdGroups = build.teammateMonsterIds.flatMap((monsterId) => {
+        const teammate = monsters.find((candidate) => candidate.id === monsterId);
+        return teammate ? [teammate.skillIds] : [];
+    });
+    const rallyingWarCryDamageIncrease = getActiveRallyingWarCryDamageIncrease(
+        monster.skillIds,
+        teammateSkillIdGroups,
+    );
+    const rallyingWarCryMultiplier = build.rallyingWarCryActive
+        ? 1 + rallyingWarCryDamageIncrease / 100
+        : 1;
 
     const combatDamage = calculateCombatDamage({
         monster,
@@ -428,6 +484,7 @@ function calculateSkillDps(
             stats.damage *
             totalMultiplier *
             traitDamageMultiplier *
+            rallyingWarCryMultiplier *
             attributeEffects.skillDamageMultiplier *
             accountRiftDamageMultiplier,
         critMultiplier: stats.critMultiplier,
@@ -502,6 +559,17 @@ function SkillDamagePanel({
     const traitDamageMultiplier = getTraitDamageMultiplier(build.traitId, {
         targetStatused: build.targetStatused,
     });
+    const teammateSkillIdGroups = build.teammateMonsterIds.flatMap((monsterId) => {
+        const teammate = monsters.find((candidate) => candidate.id === monsterId);
+        return teammate ? [teammate.skillIds] : [];
+    });
+    const rallyingWarCryDamageIncrease = getActiveRallyingWarCryDamageIncrease(
+        monster.skillIds,
+        teammateSkillIdGroups,
+    );
+    const rallyingWarCryMultiplier = build.rallyingWarCryActive
+        ? 1 + rallyingWarCryDamageIncrease / 100
+        : 1;
     const notes = skill.notes?.toLowerCase() ?? "";
     const skillHasHealing = getDamageHealingPercent(skill.notes) !== null || getHealthHealingPercent(skill.notes) !== null;
     const skillHasCooldown = skill.cooldown !== null && skill.cooldown > 0;
@@ -556,13 +624,31 @@ function SkillDamagePanel({
 
     const combatDamage = calculateCombatDamage({
         monster,
-        baseDamage: stats.damage * totalMultiplier * traitDamageMultiplier * attributeEffects.skillDamageMultiplier * accountRiftDamageMultiplier,
+        baseDamage: stats.damage * totalMultiplier * traitDamageMultiplier * rallyingWarCryMultiplier * attributeEffects.skillDamageMultiplier * accountRiftDamageMultiplier,
         critMultiplier: stats.critMultiplier,
         combatContext: build.combatContext,
         targetIsBoss: build.targetIsBoss,
         currentHpPercent: build.currentHpPercent,
         passives: effectivePassives,
     });
+    const monsterDamageIncrease = getMonsterDamageIncrease(monster.skillIds);
+    const damageIncreaseCombatDamage = isDamagingSkill && monsterDamageIncrease > 0
+        ? calculateCombatDamage({
+            monster,
+            baseDamage:
+                stats.damage *
+                totalMultiplier *
+                traitDamageMultiplier *
+                (1 + monsterDamageIncrease / 100) *
+                attributeEffects.skillDamageMultiplier *
+                accountRiftDamageMultiplier,
+            critMultiplier: stats.critMultiplier,
+            combatContext: build.combatContext,
+            targetIsBoss: build.targetIsBoss,
+            currentHpPercent: build.currentHpPercent,
+            passives: effectivePassives,
+        })
+        : null;
 
     // Overload replaces the normal Overvolt Tempest cast; it is not a third skill.
     const hasOvervoltTempestOverload =
@@ -578,6 +664,7 @@ function SkillDamagePanel({
                 stats.damage *
                 alternateTotalMultiplier *
                 traitDamageMultiplier *
+                rallyingWarCryMultiplier *
                 attributeEffects.skillDamageMultiplier *
                 accountRiftDamageMultiplier,
             critMultiplier: stats.critMultiplier,
@@ -635,6 +722,15 @@ function SkillDamagePanel({
         displayedCooldown > 0
             ? expectedDamage / displayedCooldown
             : null;
+    const damageIncreaseDps =
+        damageIncreaseCombatDamage !== null &&
+        displayedCooldown !== null &&
+        displayedCooldown > 0
+            ? (
+                damageIncreaseCombatDamage.normalDamage * (1 - critChance) +
+                damageIncreaseCombatDamage.criticalDamage * critChance
+            ) / displayedCooldown
+            : null;
 
     // Healing per second applies to any calculated heal that is not purely
     // Max-HP-percentage based. Mixed heals (for example, damage + % Max HP)
@@ -669,6 +765,9 @@ function SkillDamagePanel({
     const burnTooltip = burnDurationBonus > 0
         ? `Burn deals 0.5% of the target's Max HP per second for ${formatNumber(burnDuration)} seconds, up to 10 stacks. ${selectedTrait?.name ?? "The active trait"} increases Burn Duration by ${formatNumber(burnDurationBonus)}%.`
         : "Burn deals 0.5% of the target's Max HP per second for 8 seconds, up to 10 stacks.";
+    const damageIncreaseEffects = (skill.statusEffects ?? []).filter(
+        (effect) => effect.type === "damageIncrease",
+    );
 
     return (
         <section className="p-4">
@@ -873,6 +972,68 @@ function SkillDamagePanel({
                             </div>
                         )}
 
+                        {damageIncreaseCombatDamage && (
+                            <>
+                                <div className="min-w-0 rounded-lg border border-[#5363a8]/45 bg-[#20263a] p-3">
+                                    <div className="flex items-center gap-1.5 text-[#aeb8ff]">
+                                        <img src={assetPath("/icons/damage-increase.png")} alt="Damage Increase"
+                                             title={`+${formatNumber(monsterDamageIncrease)}% Damage Increase`}
+                                             className="size-4 shrink-0 object-contain"/>
+                                        <p className="text-[9px] font-bold uppercase tracking-[0.1em]">
+                                            Normal
+                                        </p>
+                                        <InfoTooltip
+                                            label="Explain increased skill damage"
+                                            text={`${skillDisplayName} with +${formatNumber(monsterDamageIncrease)}% Damage Increase. If the same effect is active under Combat Conditions, it is not stacked twice.`}
+                                        />
+                                    </div>
+                                    <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
+                                       title={formatStatNumber(damageIncreaseCombatDamage.normalDamage)}>
+                                        {formatStatNumber(damageIncreaseCombatDamage.normalDamage)}
+                                    </p>
+                                </div>
+
+                                <div className="min-w-0 rounded-lg border border-[#ff7448]/45 bg-[#43231f]/45 p-3">
+                                    <div className="flex items-center gap-1.5 text-[#ff936d]">
+                                        <img src={assetPath("/icons/damage-increase.png")} alt="Damage Increase"
+                                             title={`+${formatNumber(monsterDamageIncrease)}% Damage Increase`}
+                                             className="size-4 shrink-0 object-contain"/>
+                                        <p className="text-[9px] font-bold uppercase tracking-[0.1em]">
+                                            Critical
+                                        </p>
+                                        <InfoTooltip
+                                            label="Explain critical increased skill damage"
+                                            text={`The critical ${skillDisplayName} result with +${formatNumber(monsterDamageIncrease)}% Damage Increase and the current ${formatNumber(stats.critMultiplier)}× critical multiplier.`}
+                                        />
+                                    </div>
+                                    <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
+                                       title={formatStatNumber(damageIncreaseCombatDamage.criticalDamage)}>
+                                        {formatStatNumber(damageIncreaseCombatDamage.criticalDamage)}
+                                    </p>
+                                </div>
+
+                                {damageIncreaseDps !== null && (
+                                    <div className="min-w-0 rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 p-3">
+                                        <div className="flex items-center gap-1.5 text-[#aeb8ff]">
+                                            <img src={assetPath("/icons/damage-increase.png")} alt="Damage Increase"
+                                                 title={`+${formatNumber(monsterDamageIncrease)}% Damage Increase`}
+                                                 className="size-4 shrink-0 object-contain"/>
+                                            <p className="text-[9px] font-bold uppercase tracking-[0.1em]">DPS</p>
+                                            <InfoTooltip
+                                                label="Explain increased skill DPS"
+                                                text={`Expected DPS for ${skillDisplayName} with +${formatNumber(monsterDamageIncrease)}% Damage Increase.`}
+                                            />
+                                        </div>
+                                        <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
+                                           title={`${formatStatNumber(damageIncreaseDps)} DPS`}>
+                                            {formatStatNumber(damageIncreaseDps)}
+                                            <span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
+                                        </p>
+                                    </div>
+                                )}
+                            </>
+                        )}
+
                         {hasOvervoltTempestOverload && alternateCombatDamage && alternateTotalMultiplier !== null && (
                             <>
                                 <div className="min-w-0 rounded-lg border border-[#5363a8]/45 bg-[#20263a] p-3">
@@ -913,6 +1074,17 @@ function SkillDamagePanel({
                     </div>
                 )}
             </div>
+
+            {damageIncreaseEffects.length > 0 && (
+                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                    {damageIncreaseEffects.map((effect, index) => (
+                        <DamageIncreaseEffect
+                            key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.durationSeconds}-${index}`}
+                            effect={effect}
+                        />
+                    ))}
+                </div>
+            )}
 
             {!isDamagingSkill ? (
                 <>
@@ -963,13 +1135,13 @@ function SkillDamagePanel({
                                 </div>
                             )}
                         </div>
-                    ) : (
+                    ) : damageIncreaseEffects.length === 0 ? (
                         <div className="mt-3 rounded-md border border-dashed border-[#344050] bg-[#0d131d]/45 p-3">
                             <p className="text-sm text-[#8e99ad]">
                                 {skill.notes ?? "This skill does not deal damage."}
                             </p>
                         </div>
-                    )}
+                    ) : null}
 
                     {healingAmount !== null && (
                         <>
@@ -1209,6 +1381,7 @@ function SkillDamagePanel({
                                                 stats.damage *
                                                 instance.multiplier *
                                                 traitDamageMultiplier *
+                                                rallyingWarCryMultiplier *
                                                 attributeEffects.skillDamageMultiplier *
                                                 accountRiftDamageMultiplier;
 

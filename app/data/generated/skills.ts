@@ -27,6 +27,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Team",
+        "amountPercent": 50,
+        "durationSeconds": 4
+      }
+    ],
     "notes": "Target: Enemy | Allies. Ally effects: 50% Team Damage for 4 secs",
     "validationStatus": "Ready"
   },
@@ -59,6 +67,14 @@ export const GENERATED_SKILLS = {
     "element": "Common",
     "damageInstances": [],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Team",
+        "amountPercent": 25,
+        "durationSeconds": 6
+      }
+    ],
     "notes": "Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs",
     "validationStatus": "Ready"
   },
@@ -255,6 +271,29 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 3,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Self",
+        "amountPercent": 100,
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      },
+      {
+        "type": "damageIncrease",
+        "target": "Self",
+        "amountPercent": 50,
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      },
+      {
+        "type": "damageIncrease",
+        "target": "Self",
+        "amountPercent": 25,
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      }
+    ],
     "notes": "Target: Enemy | Self. Ally effects: Chance for one of the following to activate:; 20% vulnerability on self for 3 secs; 100% self damage for 2 secs; 50% self damage for 2 secs; 25% self damage for 2 secs; 25% Max Hp self shield for 2 secs; 60% Damage reflection for 2 secs",
     "validationStatus": "Ready"
   },
@@ -334,6 +373,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Self",
+        "amountPercent": 25,
+        "durationSeconds": 6
+      }
+    ],
     "notes": "Target: Enemy | Self. Ally effects: 25% self Damage for 6 secs",
     "validationStatus": "Ready"
   },
@@ -670,6 +717,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Team",
+        "amountPercent": 50,
+        "durationSeconds": 4
+      }
+    ],
     "notes": "Target: Enemy | Allies. Ally effects: 50% Team Damage for 4 secs",
     "validationStatus": "Ready"
   },
@@ -800,6 +855,14 @@ export const GENERATED_SKILLS = {
     "element": "Common",
     "damageInstances": [],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Team",
+        "amountPercent": 25,
+        "durationSeconds": 6
+      }
+    ],
     "notes": "Target: Allies. Ally effects: 25% Team Damage for 6 secs; 160% of damage + 5% of health team heal",
     "validationStatus": "Ready"
   },
@@ -809,6 +872,14 @@ export const GENERATED_SKILLS = {
     "element": "Common",
     "damageInstances": [],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Team",
+        "amountPercent": 25,
+        "durationSeconds": 6
+      }
+    ],
     "notes": "Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs",
     "validationStatus": "Ready"
   },
@@ -818,6 +889,14 @@ export const GENERATED_SKILLS = {
     "element": "Common",
     "damageInstances": [],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Team",
+        "amountPercent": 25,
+        "durationSeconds": 6
+      }
+    ],
     "notes": "Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs",
     "validationStatus": "Ready"
   },
@@ -916,6 +995,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Self",
+        "amountPercent": 25,
+        "durationSeconds": 6
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Knockback Ally effects: 25% self damage for 6 secs",
     "validationStatus": "Ready"
   },
@@ -930,6 +1017,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Self",
+        "amountPercent": 25,
+        "durationSeconds": 6
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Knockback Ally effects: 25% self damage for 6 secs",
     "validationStatus": "Ready"
   },
@@ -958,6 +1053,15 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 3,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Self",
+        "amountPercent": 25,
+        "durationSeconds": 5,
+        "condition": "Red Card result"
+      }
+    ],
     "notes": "Target: Enemy | Self. Ally effects: Black Card:; -15% damage for 5 secs; Red Card:; 25% damage for 5 secs",
     "validationStatus": "Ready"
   },
@@ -1014,6 +1118,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Self",
+        "amountPercent": 25,
+        "durationSeconds": 6
+      }
+    ],
     "notes": "Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 25% self damage for 6 secs",
     "validationStatus": "Ready"
   },
@@ -1202,6 +1314,14 @@ export const GENERATED_SKILLS = {
     "element": "Fire",
     "damageInstances": [],
     "cooldown": 3,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Team",
+        "amountPercent": 50,
+        "durationSeconds": 3
+      }
+    ],
     "notes": "Target: Allies. Ally effects: 50% team damage for 3 secs",
     "validationStatus": "Ready"
   },
@@ -1211,6 +1331,20 @@ export const GENERATED_SKILLS = {
     "element": "Ground",
     "damageInstances": [],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Team",
+        "amountPercent": 40,
+        "durationSeconds": 6
+      },
+      {
+        "type": "damageIncrease",
+        "target": "Self",
+        "amountPercent": 70,
+        "durationSeconds": 6
+      }
+    ],
     "notes": "Target: Allies | Self. Ally effects: 40% team damage for 6 secs; 70% self damage for 6 secs",
     "validationStatus": "Ready"
   },
@@ -1220,6 +1354,14 @@ export const GENERATED_SKILLS = {
     "element": "Fire",
     "damageInstances": [],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Team",
+        "amountPercent": 50,
+        "durationSeconds": 6
+      }
+    ],
     "notes": "Target: Allies. Ally effects: 50% team damage for 6 secs",
     "validationStatus": "Ready"
   },
@@ -1530,6 +1672,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Team",
+        "amountPercent": 25,
+        "durationSeconds": 6
+      }
+    ],
     "notes": "Target: Enemy | Allies. Ally effects: 25% team damage for 6 secs; 15% team shield for 6 secs",
     "validationStatus": "Ready"
   },

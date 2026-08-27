@@ -11,6 +11,25 @@ export type SkillDamageInstance = {
     hits: number;
 };
 
+export type SkillEffectTarget = "Self" | "Team" | "Enemy";
+
+export type SkillStatusEffect = {
+    type:
+        | "damageIncrease"
+        | "poison"
+        | "burn"
+        | "damageDecrease"
+        | "knockback"
+        | "damageReduction"
+        | "damageReflection"
+        | "stun";
+    target: SkillEffectTarget;
+    amountPercent?: number;
+    durationSeconds?: number;
+    stacks?: number;
+    condition?: string;
+};
+
 export type Skill = {
     id: string;
     name: string;
@@ -18,6 +37,7 @@ export type Skill = {
 
     damageInstances: SkillDamageInstance[];
     cooldown: number | null;
+    statusEffects?: SkillStatusEffect[];
 
     /**
      * Notes for missing values, unusual behavior, buffs, healing,

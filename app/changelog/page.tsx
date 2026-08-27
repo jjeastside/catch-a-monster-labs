@@ -9,9 +9,24 @@ export const metadata: Metadata = {
 
 const releases = [
     {
+        version: "v1.0.3",
+        date: "August 26, 2026",
+        label: "Latest",
+        changes: [
+            "Added structured skill status-effect data and the first complete effect type: Damage Increase.",
+            "Added Damage Increase cards showing the buff amount, target, duration, and conditional requirements for supported skills.",
+            "Added boosted Normal, Critical, and DPS results for damaging skills on monsters with Howl or another Damage Increase skill.",
+            "Added Rallying War Cry to Combat Conditions and applied its correct Self or Team Damage Increase without double stacking.",
+            "Rallying War Cry now appears when the viewed monster or either selected teammate has the skill, using the strongest applicable non-stacking effect.",
+            "Expanded teammate selection to include monsters that provide transferable team skill effects in addition to team passives.",
+            "Cleaned up Rallying War Cry display names and removed duplicate raw effect descriptions after structured effect cards are shown.",
+            "Updated shared and saved builds to preserve the Rallying War Cry combat condition.",
+            "Polished boosted-damage cards with compact Damage Increase icons and responsive sizing that stays within each result card.",
+        ],
+    },
+    {
         version: "v1.0.2",
         date: "August 25, 2026",
-        label: "Latest",
         changes: [
             "Added the complete Monster Database with visual cards for all 231 monsters, including artwork, rarity, element, reference stats, skills, passives, index position, and acquisition source.",
             "Added Monster Database search and filters for rarity, element, source type, island, obtainability, passive, skill effect, and evolution status.",

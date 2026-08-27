@@ -162,6 +162,53 @@ function parseDamageInstances(value, skillId) {
     return instances;
 }
 
+function parseDamageIncreaseEffects(notes) {
+    const effects = [];
+    const isRandomOutcome = /chance for one of the following to activate/i.test(notes);
+    const matches = notes.matchAll(
+        /(\d+(?:\.\d+)?)%\s+(self|team)\s+damage\s+for\s+(\d+(?:\.\d+)?)\s*(?:secs?|seconds?)/gi,
+    );
+
+    for (const match of matches) {
+        effects.push({
+            type: "damageIncrease",
+            target: match[2].toLowerCase() === "team" ? "Team" : "Self",
+            amountPercent: Number(match[1]),
+            durationSeconds: Number(match[3]),
+            ...(isRandomOutcome
+                ? { condition: "Random Egg Blast result" }
+                : {}),
+        });
+    }
+
+    // Joker's Trick omits the target in its source description. The positive
+    // Red Card result is a temporary self buff; the Black Card penalty will be
+    // handled with Damage Decrease.
+    if (/red card:/i.test(notes)) {
+        const redCard = notes.match(
+            /red card:\s*;?\s*(\d+(?:\.\d+)?)%\s+damage\s+for\s+(\d+(?:\.\d+)?)\s*(?:secs?|seconds?)/i,
+        );
+
+        if (redCard) {
+            effects.push({
+                type: "damageIncrease",
+                target: "Self",
+                amountPercent: Number(redCard[1]),
+                durationSeconds: Number(redCard[2]),
+                condition: "Red Card result",
+            });
+        }
+    }
+
+    return effects;
+}
+
+function parseSkillStatusEffects(notes) {
+    return [
+        ...parseDamageIncreaseEffects(notes),
+    ];
+}
+
 const passiveEffects = {
     fortuneSpirit: (a) => [
         { stat: "coinGain", value: a },
@@ -446,9 +493,12 @@ const sourcesByMonster = Map.groupBy(
 );
 
 const generatedSkills = Object.fromEntries(
-    skills.map((skill) => [
-        skill.id,
-        {
+    skills.map((skill) => {
+        const statusEffects = parseSkillStatusEffects(skill.notes);
+
+        return [
+            skill.id,
+            {
             id: skill.id,
             name: skill.name,
             element: titleCase(skill.element),
@@ -458,14 +508,19 @@ const generatedSkills = Object.fromEntries(
             ),
             cooldown: number(skill.cooldown),
 
+            ...(statusEffects.length > 0
+                ? { statusEffects }
+                : {}),
+
             ...(skill.notes
                 ? { notes: skill.notes }
                 : {}),
 
             validationStatus:
             skill.validation_status,
-        },
-    ]),
+            },
+        ];
+    }),
 );
 
 const generatedMonsters = monsters.map(

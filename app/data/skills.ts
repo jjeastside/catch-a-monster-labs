@@ -15,6 +15,10 @@ const MONSTER_DISAMBIGUATION_SUFFIXES = new Set([
 ]);
 
 export function getSkillDisplayName(skillName: string): string {
+    if (skillName.startsWith("Rallying War Cry")) {
+        return "Rallying War Cry";
+    }
+
     const match = skillName.match(/^(.*?) \(([^()]+)\)$/);
 
     if (!match || !MONSTER_DISAMBIGUATION_SUFFIXES.has(match[2])) {
@@ -22,6 +26,68 @@ export function getSkillDisplayName(skillName: string): string {
     }
 
     return match[1];
+}
+
+export function getRallyingWarCryDamageIncrease(skillIds: readonly string[]): number {
+    const effects = skillIds
+        .map((skillId) => getSkill(skillId))
+        .filter((skill): skill is Skill => skill !== null)
+        .filter((skill) => getSkillDisplayName(skill.name) === "Rallying War Cry")
+        .flatMap((skill) => skill.statusEffects ?? [])
+        .filter((effect) => effect.type === "damageIncrease");
+
+    const selfIncrease = Math.max(
+        0,
+        ...effects
+            .filter((effect) => effect.target === "Self")
+            .map((effect) => effect.amountPercent ?? 0),
+    );
+
+    return selfIncrease > 0
+        ? selfIncrease
+        : Math.max(0, ...effects.map((effect) => effect.amountPercent ?? 0));
+}
+
+export function getMonsterDamageIncrease(skillIds: readonly string[]): number {
+    const effects = skillIds
+        .map((skillId) => getSkill(skillId))
+        .filter((skill): skill is Skill => skill !== null)
+        .flatMap((skill) => skill.statusEffects ?? [])
+        .filter((effect) => effect.type === "damageIncrease");
+
+    const selfIncrease = Math.max(
+        0,
+        ...effects
+            .filter((effect) => effect.target === "Self")
+            .map((effect) => effect.amountPercent ?? 0),
+    );
+
+    return selfIncrease > 0
+        ? selfIncrease
+        : Math.max(0, ...effects.map((effect) => effect.amountPercent ?? 0));
+}
+
+export function getRallyingWarCryTeamDamageIncrease(skillIds: readonly string[]): number {
+    return Math.max(
+        0,
+        ...skillIds
+            .map((skillId) => getSkill(skillId))
+            .filter((skill): skill is Skill => skill !== null)
+            .filter((skill) => getSkillDisplayName(skill.name) === "Rallying War Cry")
+            .flatMap((skill) => skill.statusEffects ?? [])
+            .filter((effect) => effect.type === "damageIncrease" && effect.target === "Team")
+            .map((effect) => effect.amountPercent ?? 0),
+    );
+}
+
+export function getActiveRallyingWarCryDamageIncrease(
+    monsterSkillIds: readonly string[],
+    teammateSkillIdGroups: readonly (readonly string[])[],
+): number {
+    return Math.max(
+        getRallyingWarCryDamageIncrease(monsterSkillIds),
+        ...teammateSkillIdGroups.map(getRallyingWarCryTeamDamageIncrease),
+    );
 }
 
 export function getSkill(skillId: string | null | undefined): Skill | null {

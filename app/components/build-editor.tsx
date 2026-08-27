@@ -17,6 +17,10 @@ import { canSharePassiveFromTeammate, getPassiveImagePath, getTransferablePassiv
 import { getAttribute, getAttributesForGear } from "../data/attributes";
 import { getActiveAttributeIds, getAttributeSlotCount, getFixedAttributeIds } from "../lib/calculations/attributes";
 import { assetPath } from "../lib/asset-path";
+import {
+    getActiveRallyingWarCryDamageIncrease,
+    getRallyingWarCryTeamDamageIncrease,
+} from "../data/skills";
 
 import { CollapsibleSection } from "./collapsible-section";
 import { EquipmentSelect } from "./equipment-select";
@@ -838,16 +842,25 @@ export function BuildEditor({
     const mutationHelp = mutations.find((mutation) => mutation.id === mutationHelpId) ?? null;
     const aggregatedMutationEffects = getAggregatedMutationEffects(build.mutations);
     const teammateIds = build.teammateMonsterIds ?? [null, null];
+    const teammateMonsters = teammateIds.flatMap((monsterId) => {
+        const teammate = monsters.find((candidate) => candidate.id === monsterId);
+        return teammate ? [teammate] : [];
+    });
+    const rallyingWarCryDamageIncrease = getActiveRallyingWarCryDamageIncrease(
+        monster?.skillIds ?? [],
+        teammateMonsters.map((teammate) => teammate.skillIds),
+    );
     const teammateOptions: TeamPassiveOption[] = monsters
         .filter((candidate) => {
             if (candidate.id === monster?.id) {
                 return false;
             }
 
-            return (candidate.passives ?? []).some(canSharePassiveFromTeammate);
+            return (candidate.passives ?? []).some(canSharePassiveFromTeammate) ||
+                getRallyingWarCryTeamDamageIncrease(candidate.skillIds) > 0;
         })
         .map((candidate) => {
-            const contributions = (candidate.passives ?? [])
+            const passiveContributions = (candidate.passives ?? [])
                 .map(getTransferablePassiveFromTeammate)
                 .filter((passive): passive is NonNullable<typeof passive> => passive !== null)
                 .flatMap((passive) =>
@@ -858,6 +871,16 @@ export function BuildEditor({
                         }))
                         .filter((contribution) => contribution.text.length > 0),
                 );
+            const rallyingWarCryTeamIncrease = getRallyingWarCryTeamDamageIncrease(candidate.skillIds);
+            const contributions = rallyingWarCryTeamIncrease > 0
+                ? [
+                    ...passiveContributions,
+                    {
+                        icon: "/icons/damage-increase.png",
+                        text: `Rallying War Cry: +${rallyingWarCryTeamIncrease}% Team Damage`,
+                    },
+                ]
+                : passiveContributions;
 
             return {
                 id: candidate.id,
@@ -1454,9 +1477,9 @@ export function BuildEditor({
 
                 </CollapsibleSection>
 
-                <CollapsibleSection title="Team Passives">
+                <CollapsibleSection title="Team Effects">
                     <p className="mb-2.5 text-[11px] leading-4 text-[#7f8b9e]">
-                        Add up to 2 monsters with transferable combat passives. Non-transferable progression and self-only passives are hidden.
+                        Add up to 2 monsters with transferable combat passives or team skill effects. Non-transferable progression and self-only passives are hidden.
                     </p>
                     <div className="grid gap-2 sm:grid-cols-2">
                         {([0, 1] as const).map((slot) => {
@@ -1480,7 +1503,7 @@ export function BuildEditor({
 
                 <CollapsibleSection title="Combat Conditions">
                     <p className="mb-2.5 text-[11px] leading-4 text-[#7f8b9e]">
-                        Select the encounter and target conditions used by conditional damage and resistance passives.
+                        Select encounter, target, and active skill effects used by damage and resistance calculations.
                     </p>
                     <div className="grid grid-cols-2 gap-2">
                         {combatContexts.map((context) => (
@@ -1525,6 +1548,24 @@ export function BuildEditor({
                         <span>Target is Burning or Poisoned</span>
                         <span>{build.targetStatused ? "Active" : "Inactive"}</span>
                     </button>
+                    {rallyingWarCryDamageIncrease > 0 && (
+                        <button
+                            type="button"
+                            onClick={() => update("rallyingWarCryActive", !build.rallyingWarCryActive)}
+                            aria-pressed={build.rallyingWarCryActive}
+                            className={`mt-3 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-xs font-semibold transition ${
+                                build.rallyingWarCryActive
+                                    ? "border-[#f0a14a]/55 bg-[#3a2818]/45 text-[#f3b767]"
+                                    : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"
+                            }`}
+                        >
+                            <span className="flex items-center gap-2">
+                                <img src={assetPath("/icons/damage-increase.png")} alt="" className="size-5 object-contain" />
+                                Rallying War Cry (+{rallyingWarCryDamageIncrease}% Damage)
+                            </span>
+                            <span>{build.rallyingWarCryActive ? "Active" : "Inactive"}</span>
+                        </button>
+                    )}
                     {(hasHpConditionalAttribute || hasHpConditionalPassive) && (
                         <label className="mt-3 block">
                             <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Current HP for conditional effects</span>

@@ -311,6 +311,7 @@ export function encodeBuildForShare(build: Build): string {
     if (build.combatContext === "spire") flags |= 4;
     if (build.combatContext === "rift") flags |= 8;
     if (build.combatContext === "dungeon") flags |= 12;
+    if (build.rallyingWarCryActive) flags |= 16;
     if (flags !== 0) parts.push(`f${encodeInt(flags)}`);
 
     const defaultSkillId = firstSkillIdForMonster(build.monsterId);
@@ -395,6 +396,7 @@ function decodeBuildCode(code: string): Partial<Build> | null {
                     const flags = decodeInt(value);
                     build.targetStatused = (flags & 1) !== 0;
                     build.targetIsBoss = (flags & 2) !== 0;
+                    build.rallyingWarCryActive = (flags & 16) !== 0;
                     const contextBits = flags & 12;
                     build.combatContext =
                         contextBits === 4 ? "spire" :
