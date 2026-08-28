@@ -19,6 +19,12 @@ import { getActiveAttributeIds, getAttributeSlotCount, getFixedAttributeIds } fr
 import { getTraitEffectValue } from "../lib/calculations/traits";
 import { assetPath } from "../lib/asset-path";
 import {
+    CURRENT_MAX_LEVEL,
+    EXPERIMENTAL_MAX_LEVEL,
+    MIN_LEVEL,
+    getMaxLevel,
+} from "../lib/level-config";
+import {
     getActiveEnemyVulnerability,
     getActiveRallyingWarCryDamageIncrease,
     getEnemyVulnerability,
@@ -810,7 +816,7 @@ export function BuildEditor({
                                 onShareBuildAction,
                             }: BuildEditorProps) {
     const [experimentalLevelMode, setExperimentalLevelMode] = useState(false);
-    const maxSelectableLevel = experimentalLevelMode ? 110 : 105;
+    const maxSelectableLevel = getMaxLevel(experimentalLevelMode);
 
     const [mutationHelpId, setMutationHelpId] = useState<string | null>(null);
     const [mutationEffectsOpen, setMutationEffectsOpen] = useState(false);
@@ -958,7 +964,7 @@ export function BuildEditor({
 
         if (
             Number.isInteger(level) &&
-            level >= 1 &&
+            level >= MIN_LEVEL &&
             level <= maxSelectableLevel
         ) {
             update("level", level);
@@ -1043,7 +1049,7 @@ export function BuildEditor({
                                 <div className="flex items-center gap-2">
                                     <input
                                         type="number"
-                                        min="1"
+                                        min={MIN_LEVEL}
                                         max={maxSelectableLevel}
                                         step="1"
                                         value={build.level}
@@ -1060,7 +1066,7 @@ export function BuildEditor({
                             <input
                                 id="build-level-slider"
                                 type="range"
-                                min="1"
+                                min={MIN_LEVEL}
                                 max={maxSelectableLevel}
                                 step="1"
                                 value={build.level}
@@ -1068,7 +1074,7 @@ export function BuildEditor({
                                 disabled={build.combatContext === "dungeon"}
                                 title={build.combatContext === "dungeon" ? "Dungeon mode forces Level 60." : undefined}
                                 style={{
-                                    background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((build.level - 1) / (maxSelectableLevel - 1)) * 100}%, #283140 ${((build.level - 1) / (maxSelectableLevel - 1)) * 100}%, #283140 100%)`,
+                                    background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((build.level - MIN_LEVEL) / (maxSelectableLevel - MIN_LEVEL)) * 100}%, #283140 ${((build.level - MIN_LEVEL) / (maxSelectableLevel - MIN_LEVEL)) * 100}%, #283140 100%)`,
                                 }}
                                 className="h-1.5 w-full cursor-pointer appearance-none rounded-full outline-none disabled:cursor-not-allowed disabled:opacity-60 [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#3b82f6] [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#3b82f6] [&::-webkit-slider-thumb]:shadow-[0_0_0_3px_rgba(59,130,246,0.16)]"
                             />
@@ -1623,22 +1629,19 @@ export function BuildEditor({
                                     Experimental Levels
                                 </p>
                                 <p className="mt-1 text-[10px] leading-4 text-[#7f8b9e]">
-                                    Level 105 is currently the in-game maximum. Enable this to preview levels 106–110 for the next update.
+                                    Level {CURRENT_MAX_LEVEL} is currently the in-game maximum. Enable this to preview levels {CURRENT_MAX_LEVEL + 1}–{EXPERIMENTAL_MAX_LEVEL} for the next update.
                                 </p>
                             </div>
 
                             <button
                                 type="button"
                                 onClick={() => {
-                                    setExperimentalLevelMode((current) => {
-                                        const next = !current;
+                                    const next = !experimentalLevelMode;
+                                    setExperimentalLevelMode(next);
 
-                                        if (!next && build.level > 105) {
-                                            update("level", 105);
-                                        }
-
-                                        return next;
-                                    });
+                                    if (!next && build.level > CURRENT_MAX_LEVEL) {
+                                        update("level", CURRENT_MAX_LEVEL);
+                                    }
                                 }}
                                 disabled={build.combatContext === "dungeon"}
                                 aria-pressed={experimentalLevelMode}

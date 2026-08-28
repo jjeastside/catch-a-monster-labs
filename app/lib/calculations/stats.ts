@@ -17,6 +17,7 @@ import {
 } from "./multiplier-context";
 import { getPassiveEffectTotals } from "./passive-effects";
 import { calculateSkillAttributeEffects } from "./attributes";
+import { EXPERIMENTAL_MAX_LEVEL, MIN_LEVEL } from "../level-config";
 
 export type CalculatedStats = {
     health: number;
@@ -76,9 +77,13 @@ type StatsBuild = Pick<
 >;
 
 function validateLevel(level: number): void {
-    if (!Number.isInteger(level) || level < 1 || level > 110) {
+    if (
+        !Number.isInteger(level) ||
+        level < MIN_LEVEL ||
+        level > EXPERIMENTAL_MAX_LEVEL
+    ) {
         throw new RangeError(
-            "Level must be an integer from 1 through 110.",
+            `Level must be an integer from ${MIN_LEVEL} through ${EXPERIMENTAL_MAX_LEVEL}.`,
         );
     }
 }

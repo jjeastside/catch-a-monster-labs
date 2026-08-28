@@ -295,6 +295,27 @@ export const GENERATED_SKILLS = {
     "notes": "Target: Enemy.",
     "validationStatus": "Ready"
   },
+  "earth-shatter": {
+    "id": "earth-shatter",
+    "name": "Earthshatter",
+    "element": "Ground",
+    "damageInstances": [
+      {
+        "multiplier": 2,
+        "hits": 1
+      }
+    ],
+    "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
+      }
+    ],
+    "notes": "Target: Enemy. Enemy effects: Knockback + Stun for 2 Second",
+    "validationStatus": ""
+  },
   "egg-blast": {
     "id": "egg-blast",
     "name": "Egg Blast",
@@ -567,6 +588,20 @@ export const GENERATED_SKILLS = {
     "notes": "Target: Enemy | Self. Enemy effects: 95% damage reduction + knockback",
     "validationStatus": "Ready"
   },
+  "fire-dash-oblivion-drake": {
+    "id": "fire-dash-oblivion-drake",
+    "name": "Fire Dash (Oblivion Drake)",
+    "element": "Fire",
+    "damageInstances": [
+      {
+        "multiplier": 2,
+        "hits": 1
+      }
+    ],
+    "cooldown": 8,
+    "notes": "Target: Enemy | Self. Enemy effects: 95% damage reduction + knockback",
+    "validationStatus": ""
+  },
   "fire-dragon-flame-blast": {
     "id": "fire-dragon-flame-blast",
     "name": "Fire Dragon Flame Blast",
@@ -650,6 +685,24 @@ export const GENERATED_SKILLS = {
     "cooldown": 8,
     "notes": "Target: Enemy. Enemy effects: Stagger",
     "validationStatus": "Ready"
+  },
+  "flame-detonation": {
+    "id": "flame-detonation",
+    "name": "Flame Detonation",
+    "element": "Fire",
+    "damageInstances": [
+      {
+        "multiplier": 0.2,
+        "hits": 7
+      },
+      {
+        "multiplier": 1.5,
+        "hits": 1
+      }
+    ],
+    "cooldown": 8,
+    "notes": "Target: Enemy.",
+    "validationStatus": ""
   },
   "flame-jet": {
     "id": "flame-jet",

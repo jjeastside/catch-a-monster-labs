@@ -440,6 +440,10 @@ const monsters = monsterRows.map((monster, index) => {
     };
 });
 
+const skillIdsByName = new Map(
+    skills.map((skill) => [skill.name.trim().toLowerCase(), skill.id]),
+);
+
 const monsterSkills = monsterRows.flatMap(
     (monster) =>
         ["Skill 1", "Skill 2", "Skill 3"].flatMap(
@@ -447,19 +451,29 @@ const monsterSkills = monsterRows.flatMap(
                 const skillName =
                     monster[column].trim();
 
-                return skillName
-                    ? [
-                        {
-                            monster_id: slug(
-                                monster.Monster,
-                            ),
-                            skill_id: slug(skillName),
-                            skill_slot: String(
-                                index + 1,
-                            ),
-                        },
-                    ]
-                    : [];
+                if (!skillName) {
+                    return [];
+                }
+
+                return [
+                    {
+                        monster_id: slug(
+                            monster.Monster,
+                        ),
+                        // Resolve from the canonical skill name first. This
+                        // supports display names whose slug differs from the
+                        // explicit CSV id (for example Earthshatter ->
+                        // earth-shatter), while preserving the existing slug
+                        // fallback for older data.
+                        skill_id:
+                            skillIdsByName.get(
+                                skillName.toLowerCase(),
+                            ) ?? slug(skillName),
+                        skill_slot: String(
+                            index + 1,
+                        ),
+                    },
+                ];
             },
         ),
 );

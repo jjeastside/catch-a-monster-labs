@@ -49,6 +49,9 @@ dragons-rage,Dragon's Rage,Fire,"[
 earth-smash,Earth Smash,Ground,"[
   { multiplier: 1.2, hits: 1 },
 ]",8,Target: Enemy.,Ready
+earth-shatter,Earthshatter,Ground,"[
+  { multiplier: 2, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Knockback + Stun for 2 Second,
 egg-blast,Egg Blast,Common,"[
   { multiplier: 1.5, hits: 1 },
 ]",3,Target: Enemy | Self. Ally effects: Chance for one of the following to activate:; 20% vulnerability on self for 3 secs; 100% self damage for 2 secs; 50% self damage for 2 secs; 25% self damage for 2 secs; 25% Max Hp self shield for 2 secs; 60% Damage reflection for 2 secs,Ready
@@ -95,6 +98,9 @@ fear-taunt,Fear Taunt,Common,"[
 fire-dash,Fire Dash,Fire,"[
   { multiplier: 1.2, hits: 1 },
 ]",8,Target: Enemy | Self. Enemy effects: 95% damage reduction + knockback,Ready
+fire-dash-oblivion-drake,Fire Dash (Oblivion Drake),Fire,"[
+  { multiplier: 2, hits: 1 },
+]",8,Target: Enemy | Self. Enemy effects: 95% damage reduction + knockback,
 fire-dragon-flame-blast,Fire Dragon Flame Blast,Fire,"[
   { multiplier: 2.5, hits: 1 },
 ]",6,Target: Enemy. Enemy effects: Knockback,Ready
@@ -113,6 +119,10 @@ firecracker-pop,Firecracker Pop,Fire,"[
 flame-breath,Flame Breath,Fire,"[
   { multiplier: 0.4, hits: 5 },
 ]",8,Target: Enemy. Enemy effects: Stagger,Ready
+flame-detonation,Flame Detonation,Fire,"[
+  { multiplier: 0.2, hits: 7 },
+  { multiplier: 1.5, hits: 1 },
+]",8,Target: Enemy.,
 flame-jet,Flame Jet,Fire,"[
   { multiplier: 0.4, hits: 5 },
 ]",8,Target: Enemy. Enemy effects: Stagger,Ready

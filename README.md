@@ -114,7 +114,7 @@ No installation is required. The current build is hosted on GitHub Pages and is 
 ## Tech Stack
 
 | Technology                        | Purpose                                                             |
-| --------------------------------- | ------------------------------------------------------------------- |
+|-----------------------------------|---------------------------------------------------------------------|
 | React                             | Interactive component-based interface and state updates             |
 | Next.js                           | Application structure, routing, static export, and deployment build |
 | TypeScript                        | Type-safe data models and calculation logic                         |

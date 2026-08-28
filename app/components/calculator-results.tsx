@@ -24,6 +24,7 @@ import { getTrait } from "../data/traits";
 import { calculateSkillAttributeEffects } from "../lib/calculations/attributes";
 import { assetPath } from "../lib/asset-path";
 import type { BuildSharePreview } from "../lib/build-sharing";
+import { CURRENT_MAX_LEVEL, EXPERIMENTAL_MAX_LEVEL, MIN_LEVEL } from "../lib/level-config";
 
 import {
     calculateStats,
@@ -2048,8 +2049,13 @@ function GrowthPreview({ build, statData, activeStat }: GrowthPreviewProps) {
     const width = 440;
     const height = 230;
     const padding = { top: 16, right: 18, bottom: 34, left: 52 };
-    const graphMaxLevel = build.level > 105 ? 110 : 105;
-    const levels = Array.from({ length: graphMaxLevel }, (_, index) => index + 1);
+    const graphMaxLevel = build.level > CURRENT_MAX_LEVEL
+        ? EXPERIMENTAL_MAX_LEVEL
+        : CURRENT_MAX_LEVEL;
+    const levels = Array.from(
+        { length: graphMaxLevel - MIN_LEVEL + 1 },
+        (_, index) => index + MIN_LEVEL,
+    );
     const points = statData
         ? levels.map((level) => {
             const levelStats = calculateStats(statData, { ...build, level });
@@ -2064,23 +2070,28 @@ function GrowthPreview({ build, statData, activeStat }: GrowthPreviewProps) {
     const plotWidth = width - padding.left - padding.right;
     const plotHeight = height - padding.top - padding.bottom;
     const xForLevel = (level: number) =>
-        padding.left + ((level - 1) / 104) * plotWidth;
+        padding.left +
+        ((level - MIN_LEVEL) / (graphMaxLevel - MIN_LEVEL)) * plotWidth;
     const yForValue = (value: number) =>
         padding.top + plotHeight - (value / maxValue) * plotHeight;
     const path = points
         .map((value, index) =>
-            `${index === 0 ? "M" : "L"} ${xForLevel(index + 1).toFixed(2)} ${yForValue(value).toFixed(2)}`,
+            `${index === 0 ? "M" : "L"} ${xForLevel(levels[index]).toFixed(2)} ${yForValue(value).toFixed(2)}`,
         )
         .join(" ");
-    const currentValue = points[build.level - 1] ?? 0;
+    const currentValue = points[build.level - MIN_LEVEL] ?? 0;
     const accent = activeStat === "health" ? "#72df79" : "#ff7568";
+    const graphTickLevels = [MIN_LEVEL, 20, 40, 60, 80, 100, graphMaxLevel]
+        .filter((level, index, values) =>
+            level <= graphMaxLevel && values.indexOf(level) === index,
+        );
 
     return (
         <section className="min-w-0 rounded-xl border border-[#344050] bg-[#0f1620] p-4 sm:p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                     <h3 className="text-sm font-semibold text-[#e3e8f1]">Growth Preview</h3>
-                    <p className="mt-1 text-xs text-[#7f8b9e]">Current build bonuses · Levels 1–{graphMaxLevel}</p>
+                    <p className="mt-1 text-xs text-[#7f8b9e]">Current build bonuses · Levels {MIN_LEVEL}–{graphMaxLevel}</p>
                 </div>
                 <div className="text-right">
                     <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">
@@ -2097,7 +2108,7 @@ function GrowthPreview({ build, statData, activeStat }: GrowthPreviewProps) {
                     viewBox={`0 0 ${width} ${height}`}
                     className="mt-3 h-auto w-full"
                     role="img"
-                    aria-label={`${activeStat} growth from level 1 to ${graphMaxLevel}`}
+                    aria-label={`${activeStat} growth from level ${MIN_LEVEL} to ${graphMaxLevel}`}
                 >
                     <defs>
                         <linearGradient id={`growth-fill-${activeStat}`} x1="0" y1="0" x2="0" y2="1">
@@ -2118,7 +2129,7 @@ function GrowthPreview({ build, statData, activeStat }: GrowthPreviewProps) {
                         );
                     })}
 
-                    {(graphMaxLevel === 110 ? [1, 20, 40, 60, 80, 100, 110] : [1, 20, 40, 60, 80, 105]).map((level) => (
+                    {graphTickLevels.map((level) => (
                         <g key={level}>
                             <line x1={xForLevel(level)} x2={xForLevel(level)} y1={padding.top} y2={padding.top + plotHeight} stroke="#222a36"/>
                             <text x={xForLevel(level)} y={height - 12} textAnchor="middle" fill="#7f8b9e" fontSize="10">
@@ -2128,7 +2139,7 @@ function GrowthPreview({ build, statData, activeStat }: GrowthPreviewProps) {
                     ))}
 
                     <path
-                        d={`${path} L ${xForLevel(graphMaxLevel)} ${padding.top + plotHeight} L ${xForLevel(1)} ${padding.top + plotHeight} Z`}
+                        d={`${path} L ${xForLevel(graphMaxLevel)} ${padding.top + plotHeight} L ${xForLevel(MIN_LEVEL)} ${padding.top + plotHeight} Z`}
                         fill={`url(#growth-fill-${activeStat})`}
                     />
                     <path d={path} fill="none" stroke={accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
