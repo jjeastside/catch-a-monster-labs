@@ -6157,7 +6157,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "vivisdrake",
     "name": "VivisDrake",
     "image": "/monster-artwork/vivisdrake.png",
-    "element": "Leaf",
+    "element": "Grass",
     "rarity": "Mythical",
     "sources": [
       {
