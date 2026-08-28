@@ -17,7 +17,7 @@ No installation is required. The current build is hosted on GitHub Pages and is 
 ### Monster Browser
 
 - Search and browse the complete roster of 231 monsters
-- Filter by source, island, rarity, element, obtainability, evolution status, and passive
+- Filter by source, island, rarity, element, availability, evolution status, and passive
 - Sort by Index, DPS, Damage, or Health with passive-aware comparison modes and Evolution Multiplier control
 - Compact and expanded browser views
 - Monster artwork, element icons, rarity styling, and source information
@@ -49,7 +49,7 @@ No installation is required. The current build is hosted on GitHub Pages and is 
 - Trait selection with rarity-specific visuals
 - Teammate selection for transferable passives and skill effects
 - Combat-condition controls for contextual passives, target types, and active skill effects
-- Optional Experimental Mode for level 106â€“110 previews
+- Optional Experimental Mode for level 106–110 previews
 
 ### Calculation Engine
 
@@ -89,7 +89,7 @@ No installation is required. The current build is hosted on GitHub Pages and is 
 - Index Mania tracking
 - Sequential Pet Quest tracking
 - Rift Challenger support
-- Striver for Perfection support
+- `Striver for Perfection` support
 - Automatic combined Health, Damage, Rift Damage, and Critical Chance bonuses
 
 ### Sharing and Persistence
@@ -109,21 +109,21 @@ No installation is required. The current build is hosted on GitHub Pages and is 
 - Rarity-specific Legendary, Mythical, Secret, and Void presentation
 - Changelog, patch-notes, and work-in-progress pages
 - Static Next.js export deployed automatically through GitHub Actions
-- GitHub Pages subpath-aware routing and public assets
+- Routing and public assets configured for the GitHub Pages repository path
 
 ## Tech Stack
 
-| Technology | Purpose |
-|---|---|
-| React | Interactive component-based interface and state updates |
-| Next.js | Application structure, routing, static export, and deployment build |
-| TypeScript | Type-safe data models and calculation logic |
-| Tailwind CSS | Responsive styling and reusable visual patterns |
-| CSV and JavaScript import scripts | Maintainable source data and generated TypeScript records |
-| Browser local storage | Build slots, favorites, and selected-monster persistence |
-| Cloudflare Workers and KV | Short build links, stored preview data, and dynamic social cards |
-| GitHub Actions | Automated build and GitHub Pages deployment |
-| Git and GitHub | Version control, project history, and hosting |
+| Technology                        | Purpose                                                             |
+| --------------------------------- | ------------------------------------------------------------------- |
+| React                             | Interactive component-based interface and state updates             |
+| Next.js                           | Application structure, routing, static export, and deployment build |
+| TypeScript                        | Type-safe data models and calculation logic                         |
+| Tailwind CSS                      | Responsive styling and reusable visual patterns                     |
+| CSV and JavaScript import scripts | Maintainable source data and generated TypeScript records           |
+| Browser local storage             | Build slots, favorites, and selected-monster persistence            |
+| Cloudflare Workers and KV         | Short build links, stored preview data, and dynamic social cards    |
+| GitHub Actions                    | Automated build and GitHub Pages deployment                         |
+| Git and GitHub                    | Version control, project history, and hosting                       |
 
 ## How It Works
 
@@ -153,7 +153,7 @@ This project demonstrates more than a finished interface. It documents the proce
 
 - UI components collect input and display results.
 - Shared TypeScript types define the data contracts between systems.
-- Calculation modules contain game formulas independently from visual components.
+- Calculation modules contain game formulas independently of visual components.
 - Generated data files keep large monster, skill, and skill-effect datasets separate from hand-written logic.
 
 ### Data-Driven Design
@@ -180,20 +180,20 @@ CAM Lab is exported as static HTML, CSS, and JavaScript. A shared asset-path uti
 
 ```text
 .github/
-â””â”€â”€ workflows/              # Automated GitHub Pages deployment
+└── workflows/              # Automated GitHub Pages deployment
 app/
-â”œâ”€â”€ components/             # Browser, editor, result, navigation, and shared UI
-â”œâ”€â”€ data/                   # Equipment, traits, passives, and generated game data
-â”œâ”€â”€ data-source/            # Maintainable CSV source files
-â”œâ”€â”€ lib/                    # Asset helpers and calculation modules
-â”œâ”€â”€ scripts/                # Data-import and asset-validation scripts
-â”œâ”€â”€ types/                  # Shared TypeScript interfaces
-â”œâ”€â”€ monster-database/       # Visual database and direct monster profile routes
-â”œâ”€â”€ changelog/              # Development changelog
-â”œâ”€â”€ updates/                # Game patch notes
-â”œâ”€â”€ work-in-progress/       # Placeholder route for upcoming pages
-â”œâ”€â”€ layout.tsx
-â””â”€â”€ page.tsx
+├── components/             # Browser, editor, result, navigation, and shared UI
+├── data/                   # Equipment, traits, passives, and generated game data
+├── data-source/            # Maintainable CSV source files
+├── lib/                    # Asset helpers and calculation modules
+├── scripts/                # Data-import and asset-validation scripts
+├── types/                  # Shared TypeScript interfaces
+├── monster-database/       # Visual database and direct monster profile routes
+├── changelog/              # Development changelog
+├── updates/                # Game patch notes
+├── work-in-progress/       # Placeholder route for upcoming pages
+├── layout.tsx
+└── page.tsx
 cloudflare-share-worker/    # Short links and dynamic shared-build previews
 public/                     # Monster artwork and interface icons
 ```
@@ -279,7 +279,7 @@ CAM Lab is an independent, fan-made companion site. It is not affiliated with, e
 
 ## License and Usage
 
-Copyright Â© 2026 @jjeastside. All rights reserved.
+Copyright © 2026 `@jjeastside`. All rights reserved.
 
 The source code and original CAM Lab materials in this repository are publicly available for viewing, educational review, and portfolio evaluation only. No permission is granted to copy, reproduce, redistribute, publish, sell, sublicense, or create derivative projects from this repository without prior written authorization from the copyright owner.
 
