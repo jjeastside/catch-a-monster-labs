@@ -80,7 +80,7 @@ export function SiteFooter() {
                             <span>ROBLOX FAN-SITE</span>
                             <span aria-hidden="true" className="text-[#41506a]">•</span>
                             <span className="rounded-full border border-[#344050] bg-[#0f1620] px-2 py-0.5 font-medium text-[#8e99ad]">
-                                v1.0.0
+                                v1.0.5
                             </span>
                             <span aria-hidden="true" className="text-[#41506a]">•</span>
                             <span>
