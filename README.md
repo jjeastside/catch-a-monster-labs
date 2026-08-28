@@ -1,174 +1,286 @@
-import type { Metadata } from "next";
-import { SiteFooter } from "../components/site-footer";
-import { TopNavigation } from "../components/top-navigation";
+# CAM Lab
 
-export const metadata: Metadata = {
-title: "Changelog — Cam Lab",
-description: "Recent Cam Lab updates, fixes, and new Catch a Monster calculator features.",
-};
+CAM Lab is a modern build planner and stat calculator for **Catch a Monster**, built with **React**, **Next.js**, **TypeScript**, and **Tailwind CSS**.
 
-const releases = [
-{
-version: "v1.0.2",
-date: "August 25, 2026",
-label: "Latest",
-changes: [
-"Added the complete Monster Database with visual cards for all 231 monsters, including artwork, rarity, element, reference stats, skills, passives, index position, and acquisition source.",
-"Added Monster Database search and filters for rarity, element, source type, island, obtainability, passive, skill effect, and evolution status.",
-"Added database sorting by Index, DPS, Damage, and Health using the same comparison calculations as the main calculator.",
-"Added passive comparison modes and an Evolution Multiplier control for more accurate Damage, Health, and DPS rankings.",
-"Added detailed monster profiles with reference stats, skill information, passive effects, acquisition methods, evolution families, and direct calculator links.",
-"Added dedicated shareable Monster Database profile routes and a Copy Link action for individual monsters.",
-"Replaced the original in-grid selected-monster panel with a fixed detail drawer so profiles can be opened from anywhere in the database without losing the current grid position.",
-"The monster detail drawer now resets to the top for every selection and supports backdrop click, a close button, and the Escape key.",
-"Locked background scrolling while database drawers are open and preserved the page position when returning to the monster grid.",
-"Added a compact mobile Monster Database layout with responsive monster cards and a sticky mobile results toolbar.",
-"Added a dedicated mobile filter drawer with clear and apply controls so the full database remains practical on smaller screens.",
-"Improved database card sizing, artwork presentation, source visibility, selected states, and responsive stat layouts across desktop and mobile.",
-],
-},
-{
-version: "v1.0.1",
-date: "August 21, 2026",
-changes: [
-"Updated monster and skill data for the Catch a Monster 0.45 update.",
-"Added Coilwork City as a supported island and added its new monsters to the calculator data.",
-"Added an All Islands filter to the Monster Browser so monsters can be filtered by island.",
-"Restricted the island filter to actual islands so event locations, shops, and other source locations do not appear in the list.",
-"Moved All Evolution Types next to All Passive Types for a cleaner Monster Browser filter layout.",
-"Added a Patch Notes page for tracking Catch a Monster game updates separately from Cam Lab development changes.",
-"Updated Path of Progress from 12 to 13 achievements and added the new Splash Isle Path of Progress reward, increasing the maximum Path of Progress Health bonus from +24% to +26%.",
-"Added shareable build URLs so complete Cam Lab builds can be copied and opened by other players without requiring an account or backend.",
-"Shared build links preserve calculator-relevant build state, including monster, level, rank, enhancement, Evolution Multiplier, Genetic Potential, mutations, traits, equipment, attributes, teammates, combat conditions, and account multipliers.",
-"Replaced Compare Builds with Share Build in the Build Editor actions.",
-"Compressed shared build URLs using compact indexed IDs, packed achievement selections, and shortened numeric and flag encoding to keep links practical for Discord and other sharing.",
-"Removed BigInt from shared-build achievement encoding for broader browser and TypeScript compatibility.",
-"Added direct monster links using URL hashes, allowing links such as #lynxgear, #glacier_claw, and #glacier-claw to open the matching monster immediately.",
-"Selecting a monster now updates the URL with its direct monster hash while #b= links remain reserved for complete shared builds.",
-"Redesigned Monster Browser filtering with separate Stats and Browse filter panels to reduce clutter around the search bar.",
-"Added stat sorting by Index, DPS, Damage, and Health with compact icon-based controls and ascending/descending ordering.",
-"Added an Evolution Multiplier control to stat comparisons, including the same drag-up 0.01% precision behavior used by the Build Editor.",
-"Added passive comparison modes for stat sorting: No Passives, Always-Active Passives, and Conditional Passives with Vital Surge treated as active.",
-"Always-active personal damage and critical passives now contribute to Damage and DPS browser comparisons while context-specific Boss, Spire, Rift, and Dungeon passives remain excluded.",
-"Index sorting now hides passive and Evolution Multiplier controls because they do not affect index order.",
-"Added hover help for both Monster Browser filter buttons and portal-based help tooltips that can render outside panel boundaries without clipping.",
-"Moved Favorites into the Browse Filters panel and added an active-filter count badge plus a compact Clear action.",
-"Polished the Stats Filter layout with smaller labels, clearer selected states, compact EM typography, and dedicated Index, DPS, Damage, Health, Hard Carapace, and Vital Surge icons.",
-"Fixed self-only passives such as Vital Surge so they no longer appear as or contribute through teammate passives.",
-"Updated Skill Analysis trait handling so traits only appear on skills they actually affect, such as damage traits on damaging skills, Grace on healing skills, and vulnerability traits on vulnerability-applying skills.",
-"Simplified Skill Analysis trait indicators to compact icon-and-name labels and moved them into the skill metadata row for a cleaner layout.",
-"Improved cooldown modifier presentation: Fairy and Hasten now use compact icons while the cooldown value changes color to show the active modifier.",
-"Added tier-aware Hasten cooldown colors: Hasten I uses blue, Hasten II uses purple, and Hasten III uses orange, with combined styling when Fairy and Hasten are active together.",
-],
-},
-{
-version: "v1.0.0",
-date: "August 20, 2026",
-changes: [
-"Added persistent monster favorites. Favorite monsters directly from the browser or Monster Overview and filter the browser to favorites only.",
-"Added the Changelog page and linked it from the site header.",
-"Added in-game Poison effect info tooltips to skills that apply Poison, including the 0.4% current HP damage, 4% Attack reduction per stack, and 10-stack limit.",
-"Added Burn effect info tooltips showing 0.5% of target Max HP per second for 8 seconds, up to 10 stacks.",
-"Updated Burn duration handling so the Scorch trait's +50% Burn Duration increases Burn from 8 seconds to 12 seconds in Skill Analysis.",
-"Fixed the Poison Volley source-data typo so Poison detection works normally without special-case misspelling handling.",
-"Fixed desktop scrolling for Calculator Results and Build Editor.",
-"Improved healing skill presentation so healing results are shown prominently while detailed formulas remain under calculation details.",
-"Corrected damage-based healing to scale from base Damage instead of post-skill-multiplier damage, including critical healing.",
-"Updated Grace to provide +30% Healing Effectiveness to outgoing skill healing.",
-"Clarified ally healing behavior for Lunar Heal and Holy Aura.",
-"Cleaned up skill display names by hiding internal monster-disambiguation suffixes while preserving meaningful skill variants.",
-"Fixed follow-up TypeScript errors caused by the skill display-name cleanup.",
-"Added Experimental Mode to the bottom of Build Editor, collapsed by default.",
-"Added optional experimental level support for levels 106–110 while keeping level 105 as the normal in-game maximum.",
-"Updated the level selector and growth graph to extend to 110 only when experimental levels are enabled.",
-"Completed mobile layout and account multiplier formatting improvements.",
-"Improved Index Mania score entry and sequential achievement selection behavior.",
-"Restored Pet Quest achievements and icons to Account Multipliers.",
-],
-},
-{
-version: "Development Update",
-date: "August 19, 2026",
-changes: [
-"Added basic expected skill DPS using normal damage, critical damage, critical chance, and cooldown.",
-"Expanded Skill Analysis for monsters with multiple skills and added Total Skill DPS.",
-"Improved site metadata and social preview support.",
-],
-},
-{
-version: "Development Update",
-date: "August 18, 2026",
-changes: [
-"Implemented the trait system and trait symbols throughout the calculator.",
-"Added persistent active builds and save/load build slots.",
-"Expanded equipment attributes, passives, mutations, Genetic Potential, and Evolution Multiplier calculations.",
-],
-},
-];
+The project turns game data and player-tested formulas into an interactive tool for exploring monsters, creating builds, and understanding how each modifier affects combat statistics. Its interface is inspired by detailed planning tools such as Path of Building and PCPartPicker while remaining approachable for regular players.
 
-export default function ChangelogPage() {
-return (
-<div className="min-h-screen bg-[#0b111a] text-[#f6f8fc]">
-<TopNavigation />
+## Access the Site
 
-            <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-                <div className="mb-8 max-w-2xl">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7182ff]">
-                        Cam Lab Updates
-                    </p>
-                    <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-                        Changelog
-                    </h1>
-                    <p className="mt-3 text-sm leading-6 text-[#8e99ad] sm:text-base">
-                        New features, calculator improvements, data updates, and bug fixes added to Cam Lab.
-                    </p>
-                </div>
+Use CAM Lab directly in your browser:
 
-                <div className="space-y-5">
-                    {releases.map((release) => (
-                        <section
-                            key={`${release.version}-${release.date}`}
-                            className="overflow-hidden rounded-xl border border-[#344050] bg-[#141c28]"
-                        >
-                            <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[#344050] px-4 py-4 sm:px-5">
-                                <div>
-                                    <div className="flex flex-wrap items-center gap-2">
-                                        <h2 className="text-lg font-bold text-[#e3e8f1]">
-                                            {release.version}
-                                        </h2>
-                                        {release.label && (
-                                            <span className="rounded-full border border-[#7182ff]/40 bg-[#202846] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#aeb8ff]">
-                                                {release.label}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <p className="mt-1 text-xs text-[#7f8b9e]">{release.date}</p>
-                                </div>
-                                <span className="text-xs font-medium text-[#7182ff]">
-                                    {release.changes.length} {release.changes.length === 1 ? "change" : "changes"}
-                                </span>
-                            </div>
+**[Open CAM Lab](https://jjeastside.github.io/catch-a-monster-labs/)**
 
-                            <ul className="divide-y divide-[#293140]">
-                                {release.changes.map((change) => (
-                                    <li key={change} className="flex gap-3 px-4 py-3.5 text-sm leading-6 text-[#bfc7d5] sm:px-5">
-                                        <span aria-hidden="true" className="mt-[9px] size-1.5 shrink-0 rounded-full bg-[#7182ff]" />
-                                        <span>{change}</span>
-                                    </li>
-                                ))}
-                            </ul>
+No installation is required. The current build is hosted on GitHub Pages and is automatically redeployed from the `main` branch. Development updates through **v1.0.5** are documented in the [CAM Lab Changelog](https://jjeastside.github.io/catch-a-monster-labs/changelog/).
 
-                            {release.version === "v1.0.0" && (
-                                <div className="border-t border-[#344050] bg-[#0f1620]/60 px-4 py-3 text-xs text-[#7f8b9e] sm:px-5">
-                                    Favorites are stored locally in your browser, so they remain selected after refreshes on the same device and browser.
-                                </div>
-                            )}
-                        </section>
-                    ))}
-                </div>
-            </main>
+## Current Features
 
-            <SiteFooter />
-        </div>
-    );
-}
+### Monster Browser
+
+- Search and browse the complete roster of 231 monsters
+- Filter by source, island, rarity, element, obtainability, evolution status, and passive
+- Sort by Index, DPS, Damage, or Health with passive-aware comparison modes and Evolution Multiplier control
+- Compact and expanded browser views
+- Monster artwork, element icons, rarity styling, and source information
+- Detailed monster overview with skills and availability requirements
+- Persistent favorites and selected-monster state after refreshing the page
+- Direct monster links using URL hashes
+
+### Monster Database
+
+- Dedicated visual database for the complete monster roster
+- Search, sorting, and filters for rarity, element, source, location, availability, passives, skill effects, and evolution status
+- Damage, Health, DPS, and Index comparison modes
+- Evolution Multiplier and passive-aware stat comparisons
+- Monster profiles with artwork, skills, passives, reference stats, obtainment details, evolution families, and calculator links
+- Fixed profile drawer that preserves the user's place in the monster grid and resets each selected profile to the top
+- Shareable profile routes with a Copy Link action
+- Compact mobile cards, a sticky results toolbar, and a dedicated mobile filter drawer
+
+### Build Editor
+
+- Level and rank configuration
+- Enhancements from `+0` through `+10`
+- Genetic Potential for Damage and Health
+- Breed Attack and Breed Health values
+- Evolution Multiplier with `0.01%` precision
+- Standard and X mutation variants
+- Weapon and armor selection
+- Rarity-based equipment attribute slots
+- Trait selection with rarity-specific visuals
+- Teammate selection for transferable passives and skill effects
+- Combat-condition controls for contextual passives, target types, and active skill effects
+- Optional Experimental Mode for level 106â€“110 previews
+
+### Calculation Engine
+
+- Base Health and Damage calculations
+- Piecewise level-growth formulas
+- Rank, enhancement, Genetic Potential, breed, and evolution scaling
+- Mutation and X-mutation modifiers
+- Equipment and attribute multipliers
+- Trait effects
+- Account achievement multipliers
+- Conditional personal and teammate passive effects
+- Normal, critical, and expected skill-damage previews
+- Multi-hit, chance-based, cooldown-adjusted, and total skill DPS calculations
+- Healing, Healing Per Second, shielding, cooldown, resistance, and damage-reduction effects
+- Healing calculations that remain independent of critical chance and critical damage
+- Structured Damage Increase, Vulnerability, Stun, Poison, and Burn effects
+- Vulnerability- and Damage Increase-boosted damage results without double stacking
+- Boss, Rift, Spire, dungeon, and HP-threshold conditions
+
+### Calculator Results
+
+- Combined combat-stat summary
+- Skill analysis for every monster skill
+- Normal, Critical, DPS, Healing, and HPS result comparisons where applicable
+- Structured effect cards for buff amount, target, duration, stack count, and activation requirements
+- Compact help tooltips for detailed Poison and Burn behavior
+- Passive-effect breakdown with accurate personal and teammate counts
+- Equipment, attribute, mutation, and trait summaries
+- Advanced Health and Damage formula breakdowns
+- Growth preview graph
+- Copyable calculation values
+- Consistent large-number formatting
+
+### Account Multipliers
+
+- Path of Progress tracking
+- Index Mania tracking
+- Sequential Pet Quest tracking
+- Rift Challenger support
+- Striver for Perfection support
+- Automatic combined Health, Damage, Rift Damage, and Critical Chance bonuses
+
+### Sharing and Persistence
+
+- Persistent active build, favorites, and selected monster in browser storage
+- Three local build save/load slots
+- Compact shared-build URLs that preserve calculator-relevant build state
+- Short share IDs for links that are easier to post in Discord and other communities
+- Cloudflare-powered rich previews with monster artwork, rarity styling, and calculated build stats
+- Stable restoration of equipment, attributes, achievements, teammates, combat conditions, and other packed selections
+
+### Interface and Deployment
+
+- Responsive three-panel desktop interface
+- Mobile Monster, Results, and Build views
+- CAM Lab navy visual theme
+- Rarity-specific Legendary, Mythical, Secret, and Void presentation
+- Changelog, patch-notes, and work-in-progress pages
+- Static Next.js export deployed automatically through GitHub Actions
+- GitHub Pages subpath-aware routing and public assets
+
+## Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| React | Interactive component-based interface and state updates |
+| Next.js | Application structure, routing, static export, and deployment build |
+| TypeScript | Type-safe data models and calculation logic |
+| Tailwind CSS | Responsive styling and reusable visual patterns |
+| CSV and JavaScript import scripts | Maintainable source data and generated TypeScript records |
+| Browser local storage | Build slots, favorites, and selected-monster persistence |
+| Cloudflare Workers and KV | Short build links, stored preview data, and dynamic social cards |
+| GitHub Actions | Automated build and GitHub Pages deployment |
+| Git and GitHub | Version control, project history, and hosting |
+
+## How It Works
+
+CAM Lab uses a centralized calculation pipeline:
+
+```mermaid
+flowchart TD
+    A[User input] --> B[Typed build state]
+    B --> C[Calculation modules]
+    C --> D[Calculated stats and effects]
+    D --> E[React presentation components]
+```
+
+1. The user selects a monster and modifies its build.
+2. React updates the typed build state.
+3. Independent calculation modules apply growth, rank, enhancement, mutation, equipment, trait, passive, achievement, combat-context, and structured skill-effect modifiers.
+4. The engine returns calculated statistics, skill results, and effect summaries.
+5. React renders the results immediately and saves the build state locally.
+
+Keeping the calculation engine separate from the presentation layer makes individual formulas easier to test, explain, and update without rewriting the interface.
+
+## Architecture and Interview Talking Points
+
+This project demonstrates more than a finished interface. It documents the process of converting uncertain game behavior into a maintainable software model.
+
+### Separation of Concerns
+
+- UI components collect input and display results.
+- Shared TypeScript types define the data contracts between systems.
+- Calculation modules contain game formulas independently from visual components.
+- Generated data files keep large monster, skill, and skill-effect datasets separate from hand-written logic.
+
+### Data-Driven Design
+
+Monsters, skills, skill effects, equipment, attributes, traits, achievements, and passives are represented as structured data. Adding content usually requires a data entry rather than a new custom component or calculation path.
+
+### Modifier Composition
+
+The calculation pipeline distinguishes additive bonuses, multiplicative modifiers, conditional effects, and context-dependent rules. This is important because combining every percentage in the same way would produce incorrect results. Active Damage Increase and Vulnerability effects are also resolved without applying the same source twice.
+
+### State and Persistence
+
+The editor uses one typed build state as its source of truth. Derived results are recalculated from that state, while browser storage restores the active build, saved slots, favorites, and selected monster after a refresh. The same state model is serialized into compact shared-build links.
+
+### Validation Through Testing
+
+Many formulas were determined by controlled in-game comparisons. Baseline values were recorded, one variable was changed at a time, and competing formulas were checked against observed results before implementation.
+
+### Static Deployment
+
+CAM Lab is exported as static HTML, CSS, and JavaScript. A shared asset-path utility allows the same codebase to work at `localhost:3000` and under GitHub Pages' `/catch-a-monster-labs` repository path. A separate Cloudflare Worker handles short links and dynamic social-preview cards without requiring a traditional application server.
+
+## Project Structure
+
+```text
+.github/
+â””â”€â”€ workflows/              # Automated GitHub Pages deployment
+app/
+â”œâ”€â”€ components/             # Browser, editor, result, navigation, and shared UI
+â”œâ”€â”€ data/                   # Equipment, traits, passives, and generated game data
+â”œâ”€â”€ data-source/            # Maintainable CSV source files
+â”œâ”€â”€ lib/                    # Asset helpers and calculation modules
+â”œâ”€â”€ scripts/                # Data-import and asset-validation scripts
+â”œâ”€â”€ types/                  # Shared TypeScript interfaces
+â”œâ”€â”€ monster-database/       # Visual database and direct monster profile routes
+â”œâ”€â”€ changelog/              # Development changelog
+â”œâ”€â”€ updates/                # Game patch notes
+â”œâ”€â”€ work-in-progress/       # Placeholder route for upcoming pages
+â”œâ”€â”€ layout.tsx
+â””â”€â”€ page.tsx
+cloudflare-share-worker/    # Short links and dynamic shared-build previews
+public/                     # Monster artwork and interface icons
+```
+
+## Local Development
+
+Clone the repository:
+
+```bash
+git clone https://github.com/jjeastside/catch-a-monster-labs.git
+cd catch-a-monster-labs
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+Create a production build:
+
+```bash
+npm run build
+```
+
+Run the automated tests:
+
+```bash
+npm test
+```
+
+## Progress and Roadmap
+
+### Completed
+
+- [x] Monster browser, search, advanced filters, favorites, and stat sorting
+- [x] Responsive desktop and mobile calculator layouts
+- [x] Growth, rank, enhancement, GP, breed, and evolution formulas
+- [x] Mutation and X-mutation calculations
+- [x] Equipment and attribute system
+- [x] Achievement-based account multipliers
+- [x] Conditional personal and teammate passive multipliers
+- [x] Trait system
+- [x] Skill, critical-hit, healing, HPS, shielding, cooldown, and total DPS analysis
+- [x] Structured Damage Increase, Vulnerability, Stun, Poison, and Burn effects
+- [x] Advanced formula breakdowns and growth visualization
+- [x] Browser-based active-build, save-slot, favorite, and monster persistence
+- [x] Dedicated visual Monster Database with mobile support
+- [x] Sortable monster stat comparisons and advanced database filters
+- [x] Direct monster profile links
+- [x] Compact shared builds, short IDs, and rich preview cards
+- [x] Changelog and patch-notes pages
+- [x] GitHub Pages static deployment
+
+### Planned
+
+- [ ] Expanded favorites management
+- [ ] Named build slots
+- [ ] Full skill-rotation and sustained-DPS comparisons
+- [ ] Equipment optimization tools
+- [ ] Reverse base-stat solver
+- [ ] Account synchronization across devices
+- [ ] Complete Guides, Compare, Feedback, About, and Privacy pages
+- [ ] Additional automated calculation tests
+
+## Why I Built This
+
+I built CAM Lab to create a genuinely useful community tool while strengthening my ability to design and explain a real application. The project combines UI design, data modeling, TypeScript architecture, reverse engineering, controlled testing, formula validation, and automated deployment.
+
+Instead of treating the calculator as a collection of unrelated inputs, I designed it around a centralized build model and composable calculation pipeline. This makes the project easier to extend and gives me concrete engineering decisions to discuss in interviews, including state management, separation of concerns, data-driven design, validation strategy, static-hosting constraints, and tradeoffs between accuracy and maintainability.
+
+## Fan-Site Notice
+
+CAM Lab is an independent, fan-made companion site. It is not affiliated with, endorsed by, or sponsored by Roblox Corporation or LDS II. Game names, trademarks, characters, and related game assets remain the property of their respective owners.
+
+## License and Usage
+
+Copyright Â© 2026 @jjeastside. All rights reserved.
+
+The source code and original CAM Lab materials in this repository are publicly available for viewing, educational review, and portfolio evaluation only. No permission is granted to copy, reproduce, redistribute, publish, sell, sublicense, or create derivative projects from this repository without prior written authorization from the copyright owner.
+
+Third-party trademarks, game artwork, names, and other referenced assets are excluded from this copyright claim and remain subject to the rights of their respective owners.
