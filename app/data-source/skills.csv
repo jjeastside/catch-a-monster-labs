@@ -140,6 +140,9 @@ ghost-fireball,Ghost Fireball,Fire,"[
 ghost-impact,Ghost Impact,Common,"[
   { multiplier: 0.2, hits: 4 },
 ]",6,Target: Enemy | Allies. Ally effects: 50% Team Damage for 4 secs,Ready
+ghost-impact-vulnerability,Ghost Impact (Vulnerability),Common,"[
+  { multiplier: 0.2, hits: 4 },
+]",6,Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs; Stagger,Ready
 gift-delivery,Gift Delivery,Common,"[
   { multiplier: 1, hits: 1 },
 ]",6,Target: Enemy.,Ready
@@ -290,7 +293,7 @@ soul-reap-chain,Soul Reap Chain,Common,"[
 ]",6,Target: Enemy. Enemy effects: Stun 2 secs;,Ready
 soul-reap-chain-vulnerability,Soul Reap Chain (Vulnerability),Common,"[
   { multiplier: 1.5, hits: 1 },
-]",,Target: Enemy. Enemy effects: Stun 2 secs; Vulnerability (20%) incoming damage for 10 secs,
+]",6,Target: Enemy. Enemy effects: Stun 2 secs; Vulnerability (20%) incoming damage for 10 secs,
 soul-reap-chain-scareharvest,Soul Reap Chain (Scareharvest),Common,"[
   { multiplier: 2.5, hits: 1 },
 ]",6,Target: Enemy. Enemy effects: 1 stack of Poison,Ready

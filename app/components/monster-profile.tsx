@@ -70,6 +70,7 @@ function monsterHash(monster: GeneratedMonster): string {
 function getDatabaseSkillIconPath(skillId: string): string {
     const iconAliases: Record<string, string> = {
         "soul-reap-chain-vulnerability": "soul-reap-chain",
+        "ghost-impact-vulnerability": "ghost-impact",
     };
 
     return `/skill-icons/${iconAliases[skillId] ?? skillId}.png`;

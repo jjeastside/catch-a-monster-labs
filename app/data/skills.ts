@@ -19,6 +19,14 @@ export function getSkillDisplayName(skillName: string): string {
         return "Rallying War Cry";
     }
 
+    if (skillName === "Ghost Impact (Vulnerability)") {
+        return "Ghost Impact";
+    }
+
+    if (skillName === "Soul Reap Chain (Vulnerability)") {
+        return "Soul Reap Chain";
+    }
+
     const match = skillName.match(/^(.*?) \(([^()]+)\)$/);
 
     if (!match || !MONSTER_DISAMBIGUATION_SUFFIXES.has(match[2])) {
@@ -65,6 +73,28 @@ export function getMonsterDamageIncrease(skillIds: readonly string[]): number {
     return selfIncrease > 0
         ? selfIncrease
         : Math.max(0, ...effects.map((effect) => effect.amountPercent ?? 0));
+}
+
+export function getEnemyVulnerability(skillIds: readonly string[]): number {
+    return Math.max(
+        0,
+        ...skillIds
+            .map((skillId) => getSkill(skillId))
+            .filter((skill): skill is Skill => skill !== null)
+            .flatMap((skill) => skill.statusEffects ?? [])
+            .filter((effect) => effect.type === "vulnerability" && effect.target === "Enemy")
+            .map((effect) => effect.amountPercent ?? 0),
+    );
+}
+
+export function getActiveEnemyVulnerability(
+    monsterSkillIds: readonly string[],
+    teammateSkillIdGroups: readonly (readonly string[])[],
+): number {
+    return Math.max(
+        getEnemyVulnerability(monsterSkillIds),
+        ...teammateSkillIdGroups.map(getEnemyVulnerability),
+    );
 }
 
 export function getRallyingWarCryTeamDamageIncrease(skillIds: readonly string[]): number {

@@ -4607,7 +4607,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "skillIds": [
-      "ghost-impact",
+      "ghost-impact-vulnerability",
       "inferno-blast"
     ],
     "passives": [

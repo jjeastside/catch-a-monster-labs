@@ -16,6 +16,7 @@ export type SkillEffectTarget = "Self" | "Team" | "Enemy";
 export type SkillStatusEffect = {
     type:
         | "damageIncrease"
+        | "vulnerability"
         | "poison"
         | "burn"
         | "damageDecrease"

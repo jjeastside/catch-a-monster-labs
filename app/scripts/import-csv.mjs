@@ -203,9 +203,41 @@ function parseDamageIncreaseEffects(notes) {
     return effects;
 }
 
+function parseVulnerabilityEffects(notes) {
+    const effects = [];
+
+    for (const match of notes.matchAll(
+        /vulnerability\s*\((\d+(?:\.\d+)?)%\)\s*incoming damage\s*for\s*(\d+(?:\.\d+)?)\s*(?:secs?|seconds?)/gi,
+    )) {
+        effects.push({
+            type: "vulnerability",
+            target: "Enemy",
+            amountPercent: Number(match[1]),
+            durationSeconds: Number(match[2]),
+        });
+    }
+
+    for (const match of notes.matchAll(
+        /(\d+(?:\.\d+)?)%\s+vulnerability\s+on\s+(self|enemy)\s+for\s+(\d+(?:\.\d+)?)\s*(?:secs?|seconds?)/gi,
+    )) {
+        effects.push({
+            type: "vulnerability",
+            target: match[2].toLowerCase() === "self" ? "Self" : "Enemy",
+            amountPercent: Number(match[1]),
+            durationSeconds: Number(match[3]),
+            ...(/chance for one of the following to activate/i.test(notes)
+                ? { condition: "Random Egg Blast result" }
+                : {}),
+        });
+    }
+
+    return effects;
+}
+
 function parseSkillStatusEffects(notes) {
     return [
         ...parseDamageIncreaseEffects(notes),
+        ...parseVulnerabilityEffects(notes),
     ];
 }
 

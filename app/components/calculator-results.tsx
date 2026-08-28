@@ -11,7 +11,9 @@ import {
 } from "../data/passives";
 import {
     getSkill,
+    getActiveEnemyVulnerability,
     getActiveRallyingWarCryDamageIncrease,
+    getEnemyVulnerability,
     getMonsterDamageIncrease,
     getSkillDisplayName,
     getSkillTotalHits,
@@ -129,6 +131,46 @@ function DamageIncreaseEffect({ effect }: { effect: SkillStatusEffect }) {
                         {effect.condition}
                     </p>
                 )}
+            </div>
+        </div>
+    );
+}
+
+function VulnerabilityEffect({
+    effect,
+    effectivenessBonus = 0,
+}: {
+    effect: SkillStatusEffect;
+    effectivenessBonus?: number;
+}) {
+    const targetLabel = effect.target === "Enemy" ? "Enemy" : "Self";
+    const effectiveAmount = (effect.amountPercent ?? 0) * (1 + effectivenessBonus / 100);
+    const durationLabel = effect.durationSeconds !== undefined
+        ? `${formatNumber(effect.durationSeconds)}s`
+        : null;
+    const tooltip = [
+        `${targetLabel} takes ${formatNumber(effectiveAmount)}% more incoming damage.`,
+        effectivenessBonus > 0
+            ? `Includes +${formatNumber(effectivenessBonus)}% Vulnerability Effectiveness.`
+            : null,
+        durationLabel ? `Lasts ${durationLabel}.` : null,
+        effect.condition ? `Requires: ${effect.condition}.` : null,
+    ].filter(Boolean).join(" ");
+
+    return (
+        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#b26fff]/35 bg-[#2b2040]/45 px-3 py-2">
+            <img src={assetPath("/icons/vulnerability.png")} alt="" className="size-8 shrink-0 object-contain" />
+            <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#c99aff]">Vulnerability</p>
+                    <InfoTooltip label="Explain Vulnerability" text={tooltip} />
+                </div>
+                <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
+                    +{formatNumber(effectiveAmount)}%
+                    <span className="ml-1.5 text-xs font-semibold text-[#bda2d8]">{targetLabel}</span>
+                    {durationLabel && <span className="ml-1.5 text-xs font-semibold text-[#8e99ad]">• {durationLabel}</span>}
+                </p>
+                {effect.condition && <p className="mt-0.5 truncate text-[10px] text-[#b7a6c7]" title={effect.condition}>{effect.condition}</p>}
             </div>
         </div>
     );
@@ -477,6 +519,13 @@ function calculateSkillDps(
     const rallyingWarCryMultiplier = build.rallyingWarCryActive
         ? 1 + rallyingWarCryDamageIncrease / 100
         : 1;
+    const ownVulnerability = getEnemyVulnerability(monster.skillIds);
+    const activeVulnerability = getActiveEnemyVulnerability(monster.skillIds, teammateSkillIdGroups);
+    const vulnerabilityEffectiveness = ownVulnerability >= activeVulnerability
+        ? getTraitEffectValue(build.traitId, "vulnerabilityEffectiveness")
+        : 0;
+    const effectiveVulnerability = activeVulnerability * (1 + vulnerabilityEffectiveness / 100);
+    const vulnerabilityMultiplier = build.vulnerabilityActive ? 1 + effectiveVulnerability / 100 : 1;
 
     const combatDamage = calculateCombatDamage({
         monster,
@@ -485,6 +534,7 @@ function calculateSkillDps(
             totalMultiplier *
             traitDamageMultiplier *
             rallyingWarCryMultiplier *
+            vulnerabilityMultiplier *
             attributeEffects.skillDamageMultiplier *
             accountRiftDamageMultiplier,
         critMultiplier: stats.critMultiplier,
@@ -570,6 +620,14 @@ function SkillDamagePanel({
     const rallyingWarCryMultiplier = build.rallyingWarCryActive
         ? 1 + rallyingWarCryDamageIncrease / 100
         : 1;
+    const monsterVulnerability = getEnemyVulnerability(monster.skillIds);
+    const activeVulnerability = getActiveEnemyVulnerability(monster.skillIds, teammateSkillIdGroups);
+    const vulnerabilityEffectiveness = monsterVulnerability >= activeVulnerability
+        ? getTraitEffectValue(build.traitId, "vulnerabilityEffectiveness")
+        : 0;
+    const effectiveActiveVulnerability = activeVulnerability * (1 + vulnerabilityEffectiveness / 100);
+    const effectiveMonsterVulnerability = monsterVulnerability * (1 + getTraitEffectValue(build.traitId, "vulnerabilityEffectiveness") / 100);
+    const vulnerabilityMultiplier = build.vulnerabilityActive ? 1 + effectiveActiveVulnerability / 100 : 1;
     const notes = skill.notes?.toLowerCase() ?? "";
     const skillHasHealing = getDamageHealingPercent(skill.notes) !== null || getHealthHealingPercent(skill.notes) !== null;
     const skillHasCooldown = skill.cooldown !== null && skill.cooldown > 0;
@@ -624,7 +682,7 @@ function SkillDamagePanel({
 
     const combatDamage = calculateCombatDamage({
         monster,
-        baseDamage: stats.damage * totalMultiplier * traitDamageMultiplier * rallyingWarCryMultiplier * attributeEffects.skillDamageMultiplier * accountRiftDamageMultiplier,
+        baseDamage: stats.damage * totalMultiplier * traitDamageMultiplier * rallyingWarCryMultiplier * vulnerabilityMultiplier * attributeEffects.skillDamageMultiplier * accountRiftDamageMultiplier,
         critMultiplier: stats.critMultiplier,
         combatContext: build.combatContext,
         targetIsBoss: build.targetIsBoss,
@@ -640,6 +698,25 @@ function SkillDamagePanel({
                 totalMultiplier *
                 traitDamageMultiplier *
                 (1 + monsterDamageIncrease / 100) *
+                vulnerabilityMultiplier *
+                attributeEffects.skillDamageMultiplier *
+                accountRiftDamageMultiplier,
+            critMultiplier: stats.critMultiplier,
+            combatContext: build.combatContext,
+            targetIsBoss: build.targetIsBoss,
+            currentHpPercent: build.currentHpPercent,
+            passives: effectivePassives,
+        })
+        : null;
+    const vulnerabilityCombatDamage = isDamagingSkill && effectiveMonsterVulnerability > 0
+        ? calculateCombatDamage({
+            monster,
+            baseDamage:
+                stats.damage *
+                totalMultiplier *
+                traitDamageMultiplier *
+                rallyingWarCryMultiplier *
+                (1 + effectiveMonsterVulnerability / 100) *
                 attributeEffects.skillDamageMultiplier *
                 accountRiftDamageMultiplier,
             critMultiplier: stats.critMultiplier,
@@ -665,6 +742,7 @@ function SkillDamagePanel({
                 alternateTotalMultiplier *
                 traitDamageMultiplier *
                 rallyingWarCryMultiplier *
+                vulnerabilityMultiplier *
                 attributeEffects.skillDamageMultiplier *
                 accountRiftDamageMultiplier,
             critMultiplier: stats.critMultiplier,
@@ -731,6 +809,13 @@ function SkillDamagePanel({
                 damageIncreaseCombatDamage.criticalDamage * critChance
             ) / displayedCooldown
             : null;
+    const vulnerabilityDps =
+        vulnerabilityCombatDamage !== null && displayedCooldown !== null && displayedCooldown > 0
+            ? (
+                vulnerabilityCombatDamage.normalDamage * (1 - critChance) +
+                vulnerabilityCombatDamage.criticalDamage * critChance
+            ) / displayedCooldown
+            : null;
 
     // Healing per second applies to any calculated heal that is not purely
     // Max-HP-percentage based. Mixed heals (for example, damage + % Max HP)
@@ -755,7 +840,12 @@ function SkillDamagePanel({
             : "Unknown";
 
     const skillDisplayName = getSkillDisplayName(skill.name);
-    const skillIconPath = `/skill-icons/${skill.id}.png`;
+    const skillIconAliases: Record<string, string> = {
+        "ghost-impact-vulnerability": "ghost-impact",
+        "soul-reap-chain-vulnerability": "soul-reap-chain",
+    };
+    const skillIconId = skillIconAliases[skill.id] ?? skill.id;
+    const skillIconPath = `/skill-icons/${skillIconId}.png`;
     const elementIconPath = `/element-icons/${skill.element.toLowerCase()}.png`;
     const usesPoison = /\bpoison\b/i.test(skill.notes ?? "");
     const usesBurn = /\bburn\b/i.test(skill.notes ?? "");
@@ -767,6 +857,9 @@ function SkillDamagePanel({
         : "Burn deals 0.5% of the target's Max HP per second for 8 seconds, up to 10 stacks.";
     const damageIncreaseEffects = (skill.statusEffects ?? []).filter(
         (effect) => effect.type === "damageIncrease",
+    );
+    const vulnerabilityEffects = (skill.statusEffects ?? []).filter(
+        (effect) => effect.type === "vulnerability",
     );
 
     return (
@@ -939,39 +1032,6 @@ function SkillDamagePanel({
                             </div>
                         )}
 
-                        {healingAmount !== null && (
-                            <div className="min-w-0 rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 p-3">
-                                <div className="flex items-center gap-1.5 text-[#aeb8ff]">
-                                    <img src={assetPath("/account-icons/health.png")} alt="" className="size-4 shrink-0 object-contain" />
-                                    <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Healing</p>
-                                    <InfoTooltip
-                                        label="Explain healing"
-                                        text="The amount healed by this skill using its current damage and/or Max HP healing scaling."
-                                    />
-                                </div>
-                                <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]" title={formatStatNumber(healingAmount)}>
-                                    {formatStatNumber(healingAmount)}
-                                </p>
-                            </div>
-                        )}
-
-                        {healingPerSecond !== null && (
-                            <div className="min-w-0 rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 p-3">
-                                <div className="flex items-center gap-1.5 text-[#aeb8ff]">
-                                    <img src={assetPath("/account-icons/health.png")} alt="" className="size-4 shrink-0 object-contain" />
-                                    <p className="text-[9px] font-bold uppercase tracking-[0.1em]">HPS</p>
-                                    <InfoTooltip
-                                        label="Explain healing per second"
-                                        text="Healing per second from this skill using its adjusted cooldown. Healing cannot critically heal. Pure Max-HP percentage heals do not receive an HPS value; mixed damage + Max-HP heals do."
-                                    />
-                                </div>
-                                <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]" title={`${formatStatNumber(healingPerSecond)} HPS`}>
-                                    {formatStatNumber(healingPerSecond)}
-                                    <span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
-                                </p>
-                            </div>
-                        )}
-
                         {damageIncreaseCombatDamage && (
                             <>
                                 <div className="min-w-0 rounded-lg border border-[#5363a8]/45 bg-[#20263a] p-3">
@@ -1034,6 +1094,74 @@ function SkillDamagePanel({
                             </>
                         )}
 
+                        {vulnerabilityCombatDamage && (
+                            <>
+                                <div className="min-w-0 rounded-lg border border-[#b26fff]/45 bg-[#2b2040]/45 p-3">
+                                    <div className="flex items-center gap-1.5 text-[#c99aff]">
+                                        <img src={assetPath("/icons/vulnerability.png")} alt="Vulnerability" title={`+${formatNumber(effectiveMonsterVulnerability)}% Damage Taken`} className="size-4 shrink-0 object-contain" />
+                                        <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Normal</p>
+                                        <InfoTooltip label="Explain vulnerable skill damage" text={`${skillDisplayName} against an enemy affected by +${formatNumber(effectiveMonsterVulnerability)}% Vulnerability. If Vulnerability is active under Combat Conditions, it is not stacked twice.`} />
+                                    </div>
+                                    <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]" title={formatStatNumber(vulnerabilityCombatDamage.normalDamage)}>{formatStatNumber(vulnerabilityCombatDamage.normalDamage)}</p>
+                                </div>
+
+                                <div className="min-w-0 rounded-lg border border-[#ff7448]/45 bg-[#43231f]/45 p-3">
+                                    <div className="flex items-center gap-1.5 text-[#ff936d]">
+                                        <img src={assetPath("/icons/vulnerability.png")} alt="Vulnerability" title={`+${formatNumber(effectiveMonsterVulnerability)}% Damage Taken`} className="size-4 shrink-0 object-contain" />
+                                        <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Critical</p>
+                                        <InfoTooltip label="Explain critical vulnerable skill damage" text={`The critical ${skillDisplayName} result against an enemy with +${formatNumber(effectiveMonsterVulnerability)}% Vulnerability and the current ${formatNumber(stats.critMultiplier)}× critical multiplier.`} />
+                                    </div>
+                                    <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]" title={formatStatNumber(vulnerabilityCombatDamage.criticalDamage)}>{formatStatNumber(vulnerabilityCombatDamage.criticalDamage)}</p>
+                                </div>
+
+                                {vulnerabilityDps !== null && (
+                                    <div className="min-w-0 rounded-lg border border-[#b26fff]/35 bg-[#2b2040]/35 p-3">
+                                        <div className="flex items-center gap-1.5 text-[#c99aff]">
+                                            <img src={assetPath("/icons/vulnerability.png")} alt="Vulnerability" title={`+${formatNumber(effectiveMonsterVulnerability)}% Damage Taken`} className="size-4 shrink-0 object-contain" />
+                                            <p className="text-[9px] font-bold uppercase tracking-[0.1em]">DPS</p>
+                                            <InfoTooltip label="Explain vulnerable skill DPS" text={`Expected DPS for ${skillDisplayName} against an enemy with +${formatNumber(effectiveMonsterVulnerability)}% Vulnerability.`} />
+                                        </div>
+                                        <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]" title={`${formatStatNumber(vulnerabilityDps)} DPS`}>
+                                            {formatStatNumber(vulnerabilityDps)}<span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
+                                        </p>
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                        {healingAmount !== null && (
+                            <div className="min-w-0 rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 p-3">
+                                <div className="flex items-center gap-1.5 text-[#aeb8ff]">
+                                    <img src={assetPath("/account-icons/health.png")} alt="" className="size-4 shrink-0 object-contain" />
+                                    <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Healing</p>
+                                    <InfoTooltip
+                                        label="Explain healing"
+                                        text="The amount healed by this skill using its current damage and/or Max HP healing scaling."
+                                    />
+                                </div>
+                                <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]" title={formatStatNumber(healingAmount)}>
+                                    {formatStatNumber(healingAmount)}
+                                </p>
+                            </div>
+                        )}
+
+                        {healingPerSecond !== null && (
+                            <div className="min-w-0 rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 p-3">
+                                <div className="flex items-center gap-1.5 text-[#aeb8ff]">
+                                    <img src={assetPath("/account-icons/health.png")} alt="" className="size-4 shrink-0 object-contain" />
+                                    <p className="text-[9px] font-bold uppercase tracking-[0.1em]">HPS</p>
+                                    <InfoTooltip
+                                        label="Explain healing per second"
+                                        text="Healing per second from this skill using its adjusted cooldown. Healing cannot critically heal. Pure Max-HP percentage heals do not receive an HPS value; mixed damage + Max-HP heals do."
+                                    />
+                                </div>
+                                <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]" title={`${formatStatNumber(healingPerSecond)} HPS`}>
+                                    {formatStatNumber(healingPerSecond)}
+                                    <span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
+                                </p>
+                            </div>
+                        )}
+
                         {hasOvervoltTempestOverload && alternateCombatDamage && alternateTotalMultiplier !== null && (
                             <>
                                 <div className="min-w-0 rounded-lg border border-[#5363a8]/45 bg-[#20263a] p-3">
@@ -1081,6 +1209,20 @@ function SkillDamagePanel({
                         <DamageIncreaseEffect
                             key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.durationSeconds}-${index}`}
                             effect={effect}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {vulnerabilityEffects.length > 0 && (
+                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                    {vulnerabilityEffects.map((effect, index) => (
+                        <VulnerabilityEffect
+                            key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.durationSeconds}-${index}`}
+                            effect={effect}
+                            effectivenessBonus={effect.target === "Enemy"
+                                ? getTraitEffectValue(build.traitId, "vulnerabilityEffectiveness")
+                                : 0}
                         />
                     ))}
                 </div>
@@ -1382,6 +1524,7 @@ function SkillDamagePanel({
                                                 instance.multiplier *
                                                 traitDamageMultiplier *
                                                 rallyingWarCryMultiplier *
+                                                vulnerabilityMultiplier *
                                                 attributeEffects.skillDamageMultiplier *
                                                 accountRiftDamageMultiplier;
 

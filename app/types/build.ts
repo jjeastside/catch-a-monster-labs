@@ -79,6 +79,7 @@ export type Build = {
   targetStatused: boolean;
   targetIsBoss: boolean;
   rallyingWarCryActive: boolean;
+  vulnerabilityActive: boolean;
 
 
   selectedSkillId: SkillId | null;
@@ -117,6 +118,7 @@ export function createDefaultBuild(
     targetStatused: false,
     targetIsBoss: false,
     rallyingWarCryActive: false,
+    vulnerabilityActive: false,
     selectedSkillId: null,
     weaponId: null,
     armorId: null,

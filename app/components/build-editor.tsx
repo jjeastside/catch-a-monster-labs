@@ -16,9 +16,12 @@ import { monsters } from "../data/monsters";
 import { canSharePassiveFromTeammate, getPassiveImagePath, getTransferablePassiveFromTeammate } from "../data/passives";
 import { getAttribute, getAttributesForGear } from "../data/attributes";
 import { getActiveAttributeIds, getAttributeSlotCount, getFixedAttributeIds } from "../lib/calculations/attributes";
+import { getTraitEffectValue } from "../lib/calculations/traits";
 import { assetPath } from "../lib/asset-path";
 import {
+    getActiveEnemyVulnerability,
     getActiveRallyingWarCryDamageIncrease,
+    getEnemyVulnerability,
     getRallyingWarCryTeamDamageIncrease,
 } from "../data/skills";
 
@@ -850,6 +853,15 @@ export function BuildEditor({
         monster?.skillIds ?? [],
         teammateMonsters.map((teammate) => teammate.skillIds),
     );
+    const activeVulnerability = getActiveEnemyVulnerability(
+        monster?.skillIds ?? [],
+        teammateMonsters.map((teammate) => teammate.skillIds),
+    );
+    const monsterVulnerability = getEnemyVulnerability(monster?.skillIds ?? []);
+    const vulnerabilityEffectiveness = monsterVulnerability >= activeVulnerability
+        ? getTraitEffectValue(build.traitId, "vulnerabilityEffectiveness")
+        : 0;
+    const effectiveVulnerability = activeVulnerability * (1 + vulnerabilityEffectiveness / 100);
     const teammateOptions: TeamPassiveOption[] = monsters
         .filter((candidate) => {
             if (candidate.id === monster?.id) {
@@ -857,7 +869,8 @@ export function BuildEditor({
             }
 
             return (candidate.passives ?? []).some(canSharePassiveFromTeammate) ||
-                getRallyingWarCryTeamDamageIncrease(candidate.skillIds) > 0;
+                getRallyingWarCryTeamDamageIncrease(candidate.skillIds) > 0 ||
+                getEnemyVulnerability(candidate.skillIds) > 0;
         })
         .map((candidate) => {
             const passiveContributions = (candidate.passives ?? [])
@@ -872,15 +885,22 @@ export function BuildEditor({
                         .filter((contribution) => contribution.text.length > 0),
                 );
             const rallyingWarCryTeamIncrease = getRallyingWarCryTeamDamageIncrease(candidate.skillIds);
-            const contributions = rallyingWarCryTeamIncrease > 0
-                ? [
-                    ...passiveContributions,
+            const vulnerability = getEnemyVulnerability(candidate.skillIds);
+            const contributions = [
+                ...passiveContributions,
+                ...(rallyingWarCryTeamIncrease > 0 ? [
                     {
                         icon: "/icons/damage-increase.png",
                         text: `Rallying War Cry: +${rallyingWarCryTeamIncrease}% Team Damage`,
                     },
-                ]
-                : passiveContributions;
+                ] : []),
+                ...(vulnerability > 0 ? [
+                    {
+                        icon: "/icons/vulnerability.png",
+                        text: `Vulnerability: +${vulnerability}% Damage Taken`,
+                    },
+                ] : []),
+            ];
 
             return {
                 id: candidate.id,
@@ -1564,6 +1584,24 @@ export function BuildEditor({
                                 Rallying War Cry (+{rallyingWarCryDamageIncrease}% Damage)
                             </span>
                             <span>{build.rallyingWarCryActive ? "Active" : "Inactive"}</span>
+                        </button>
+                    )}
+                    {activeVulnerability > 0 && (
+                        <button
+                            type="button"
+                            onClick={() => update("vulnerabilityActive", !build.vulnerabilityActive)}
+                            aria-pressed={build.vulnerabilityActive}
+                            className={`mt-3 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-xs font-semibold transition ${
+                                build.vulnerabilityActive
+                                    ? "border-[#b26fff]/55 bg-[#2b2040]/45 text-[#c99aff]"
+                                    : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"
+                            }`}
+                        >
+                            <span className="flex items-center gap-2">
+                                <img src={assetPath("/icons/vulnerability.png")} alt="" className="size-5 object-contain" />
+                                Vulnerability (+{effectiveVulnerability}% Damage Taken)
+                            </span>
+                            <span>{build.vulnerabilityActive ? "Active" : "Inactive"}</span>
                         </button>
                     )}
                     {(hasHpConditionalAttribute || hasHpConditionalPassive) && (

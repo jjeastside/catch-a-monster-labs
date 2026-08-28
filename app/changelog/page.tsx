@@ -9,9 +9,24 @@ export const metadata: Metadata = {
 
 const releases = [
     {
+        version: "v1.0.4",
+        date: "August 28, 2026",
+        label: "Latest",
+        changes: [
+            "Added structured Vulnerability effects showing the damage-taken increase, target, duration, and conditional requirements.",
+            "Added Vulnerability-boosted Normal, Critical, and DPS results with the Vulnerability icon.",
+            "Added Vulnerability to Combat Conditions when the viewed monster or a selected teammate can apply it.",
+            "Applied Vulnerability to all relevant damage calculations without double stacking and included Fragility's Vulnerability Effectiveness bonus.",
+            "Updated saved and shared builds to preserve the Vulnerability combat condition.",
+            "Corrected Vorturion to use Ghost Impact with Vulnerability while displaying the regular Ghost Impact name and icon.",
+            "Corrected Soul Reap Chain with Vulnerability to use its 6-second cooldown and display the regular Soul Reap Chain name and icon.",
+            "Updated Vulnerability cards and Combat Conditions to show the effective 30% damage taken when Fragility is equipped.",
+            "Reordered mixed damage-and-healing skill results so Vulnerability damage appears before Healing and HPS.",
+        ],
+    },
+    {
         version: "v1.0.3",
         date: "August 26, 2026",
-        label: "Latest",
         changes: [
             "Added structured skill status-effect data and the first complete effect type: Damage Increase.",
             "Added Damage Increase cards showing the buff amount, target, duration, and conditional requirements for supported skills.",

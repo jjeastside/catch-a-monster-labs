@@ -38,6 +38,7 @@ function normalizeSavedBuild(saved: Partial<Build>): Build {
         ...saved,
         targetIsBoss: saved.targetIsBoss === true || legacyBossContext,
         rallyingWarCryActive: saved.rallyingWarCryActive === true,
+        vulnerabilityActive: saved.vulnerabilityActive === true,
         combatContext: legacyBossContext
             ? "standard"
             : saved.combatContext ?? "standard",
@@ -237,6 +238,7 @@ export function AppShell() {
                             targetStatused: parsed.targetStatused === true,
                             targetIsBoss: parsed.targetIsBoss === true,
                             rallyingWarCryActive: parsed.rallyingWarCryActive === true,
+                            vulnerabilityActive: parsed.vulnerabilityActive === true,
                             weaponAttributeIds: Array.isArray(parsed.weaponAttributeIds)
                                 ? parsed.weaponAttributeIds
                                 : [],
@@ -306,6 +308,7 @@ export function AppShell() {
                             targetStatused: parsed.targetStatused === true,
                             targetIsBoss: parsed.targetIsBoss === true,
                             rallyingWarCryActive: parsed.rallyingWarCryActive === true,
+                            vulnerabilityActive: parsed.vulnerabilityActive === true,
                             weaponAttributeIds: Array.isArray(parsed.weaponAttributeIds)
                                 ? parsed.weaponAttributeIds
                                 : [],
@@ -542,6 +545,7 @@ export function AppShell() {
                 targetStatused: parsed.targetStatused === true,
                 targetIsBoss: parsed.targetIsBoss === true,
                 rallyingWarCryActive: parsed.rallyingWarCryActive === true,
+                vulnerabilityActive: parsed.vulnerabilityActive === true,
                 weaponAttributeIds: Array.isArray(parsed.weaponAttributeIds) ? parsed.weaponAttributeIds : [],
                 armorAttributeIds: Array.isArray(parsed.armorAttributeIds) ? parsed.armorAttributeIds : [],
                 combatContext: parsed.combatContext,

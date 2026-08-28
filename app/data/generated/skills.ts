@@ -292,6 +292,13 @@ export const GENERATED_SKILLS = {
         "amountPercent": 25,
         "durationSeconds": 2,
         "condition": "Random Egg Blast result"
+      },
+      {
+        "type": "vulnerability",
+        "target": "Self",
+        "amountPercent": 20,
+        "durationSeconds": 3,
+        "condition": "Random Egg Blast result"
       }
     ],
     "notes": "Target: Enemy | Self. Ally effects: Chance for one of the following to activate:; 20% vulnerability on self for 3 secs; 100% self damage for 2 secs; 50% self damage for 2 secs; 25% self damage for 2 secs; 25% Max Hp self shield for 2 secs; 60% Damage reflection for 2 secs",
@@ -409,6 +416,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "vulnerability",
+        "target": "Enemy",
+        "amountPercent": 20,
+        "durationSeconds": 10
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs",
     "validationStatus": "Ready"
   },
@@ -689,6 +704,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "vulnerability",
+        "target": "Enemy",
+        "amountPercent": 20,
+        "durationSeconds": 10
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs; Stagger",
     "validationStatus": "Ready"
   },
@@ -703,6 +726,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "vulnerability",
+        "target": "Enemy",
+        "amountPercent": 20,
+        "durationSeconds": 10
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs",
     "validationStatus": "Ready"
   },
@@ -726,6 +757,28 @@ export const GENERATED_SKILLS = {
       }
     ],
     "notes": "Target: Enemy | Allies. Ally effects: 50% Team Damage for 4 secs",
+    "validationStatus": "Ready"
+  },
+  "ghost-impact-vulnerability": {
+    "id": "ghost-impact-vulnerability",
+    "name": "Ghost Impact (Vulnerability)",
+    "element": "Common",
+    "damageInstances": [
+      {
+        "multiplier": 0.2,
+        "hits": 4
+      }
+    ],
+    "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "vulnerability",
+        "target": "Enemy",
+        "amountPercent": 20,
+        "durationSeconds": 10
+      }
+    ],
+    "notes": "Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs; Stagger",
     "validationStatus": "Ready"
   },
   "gift-delivery": {
@@ -1076,6 +1129,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 3,
+    "statusEffects": [
+      {
+        "type": "vulnerability",
+        "target": "Enemy",
+        "amountPercent": 20,
+        "durationSeconds": 10
+      }
+    ],
     "notes": "Target: Enemy | Self. Enemy effects: Vulnerability (20%) incoming damage for 10 secs Ally effects: 13% of Max Health self heal",
     "validationStatus": "Ready"
   },
@@ -1249,6 +1310,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "vulnerability",
+        "target": "Enemy",
+        "amountPercent": 20,
+        "durationSeconds": 10
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs",
     "validationStatus": "Ready"
   },
@@ -1550,7 +1619,15 @@ export const GENERATED_SKILLS = {
         "hits": 1
       }
     ],
-    "cooldown": null,
+    "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "vulnerability",
+        "target": "Enemy",
+        "amountPercent": 20,
+        "durationSeconds": 10
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Stun 2 secs; Vulnerability (20%) incoming damage for 10 secs",
     "validationStatus": ""
   },
