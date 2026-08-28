@@ -71,6 +71,7 @@ function getDatabaseSkillIconPath(skillId: string): string {
     const iconAliases: Record<string, string> = {
         "soul-reap-chain-vulnerability": "soul-reap-chain",
         "ghost-impact-vulnerability": "ghost-impact",
+        "soul-reap-chain-scareharvest": "soul-reap-chain-poison",
     };
 
     return `/skill-icons/${iconAliases[skillId] ?? skillId}.png`;

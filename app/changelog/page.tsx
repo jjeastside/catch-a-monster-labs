@@ -9,9 +9,24 @@ export const metadata: Metadata = {
 
 const releases = [
     {
-        version: "v1.0.4",
+        version: "v1.0.5",
         date: "August 28, 2026",
         label: "Latest",
+        changes: [
+            "Added structured Stun effects with dedicated Skill Analysis cards showing the enemy stun duration.",
+            "Added structured Poison effects with dedicated cards showing stack count and the 20-second duration.",
+            "Added structured Burn effects with dedicated cards showing stack count and effect duration.",
+            "Moved Poison and Burn damage, tick behavior, Attack reduction, duration bonuses, and stack limits into compact help tooltips.",
+            "Updated Poison to deal one damage tick per second for 20 seconds, with each stack dealing 0.4% of current HP and reducing enemy Attack by 4%.",
+            "Updated Burn cards to respect Scorch's +50% Burn Duration bonus, increasing the displayed duration from 8 seconds to 12 seconds.",
+            "Added matching Stun, Poison, and Burn effect icons and standardized their Skill Analysis presentation.",
+            "Updated Scareharvest's Soul Reap Chain to display the Poison skill icon throughout Calculator Results and the Monster Database.",
+            "Expanded CSV import reporting to include the generated skill-effect count, now totaling 48 structured effects.",
+        ],
+    },
+    {
+        version: "v1.0.4",
+        date: "August 28, 2026",
         changes: [
             "Added structured Vulnerability effects showing the damage-taken increase, target, duration, and conditional requirements.",
             "Added Vulnerability-boosted Normal, Critical, and DPS results with the Vulnerability icon.",

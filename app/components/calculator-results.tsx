@@ -176,6 +176,95 @@ function VulnerabilityEffect({
     );
 }
 
+function StunEffect({ effect }: { effect: SkillStatusEffect }) {
+    const durationLabel = effect.durationSeconds !== undefined
+        ? `${formatNumber(effect.durationSeconds)}s`
+        : null;
+    const tooltip = durationLabel
+        ? `Prevents the enemy from acting for ${durationLabel}.`
+        : "Temporarily prevents the enemy from acting.";
+
+    return (
+        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#72b7ff]/35 bg-[#1d3048]/45 px-3 py-2">
+            <img
+                src={assetPath("/icons/stun-effect.png")}
+                alt=""
+                className="size-8 shrink-0 object-contain"
+            />
+            <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#8ac5ff]">Stun</p>
+                    <InfoTooltip label="Explain Stun" text={tooltip} />
+                </div>
+                <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
+                    {durationLabel ?? "Temporary"}
+                    <span className="ml-1.5 text-xs font-semibold text-[#a9c7e4]">Enemy</span>
+                </p>
+            </div>
+        </div>
+    );
+}
+
+function PoisonEffect({ effect }: { effect: SkillStatusEffect }) {
+    const stacks = effect.stacks ?? 1;
+    const maxStacks = effect.maxStacks ?? 10;
+    const damagePercent = effect.amountPercent ?? 0.4;
+    const attackReduction = effect.attackReductionPercent ?? 4;
+    const duration = effect.durationSeconds ?? 20;
+    const tooltip = `Applies ${formatNumber(stacks)} ${stacks === 1 ? "stack" : "stacks"} for ${formatNumber(duration)} seconds. Poison deals one damage tick per second. Each stack deals ${formatNumber(damagePercent)}% of the enemy's current HP per tick and reduces its Attack by ${formatNumber(attackReduction)}%, up to ${formatNumber(maxStacks)} stacks.`;
+
+    return (
+        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#21df6b]/35 bg-[#173626]/45 px-3 py-2">
+            <img src={assetPath("/icons/poison-effect.png")} alt="" className="size-8 shrink-0 object-contain" />
+            <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#5aee91]">Poison</p>
+                    <InfoTooltip label="Explain Poison" text={tooltip} />
+                </div>
+                <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
+                    {formatNumber(stacks)} {stacks === 1 ? "Stack" : "Stacks"}
+                    <span className="ml-1.5 text-xs font-semibold text-[#8bd2a6]">• {formatNumber(duration)}s</span>
+                </p>
+            </div>
+        </div>
+    );
+}
+
+function BurnEffect({
+    effect,
+    durationBonus = 0,
+}: {
+    effect: SkillStatusEffect;
+    durationBonus?: number;
+}) {
+    const stacks = effect.stacks ?? 1;
+    const maxStacks = effect.maxStacks ?? 10;
+    const damagePercent = effect.amountPercent ?? 0.5;
+    const baseDuration = effect.durationSeconds ?? 8;
+    const duration = baseDuration * (1 + durationBonus / 100);
+    const tooltip = [
+        `Applies ${formatNumber(stacks)} ${stacks === 1 ? "stack" : "stacks"}.`,
+        `Each stack deals ${formatNumber(damagePercent)}% of the enemy's Max HP per second for ${formatNumber(duration)} seconds, up to ${formatNumber(maxStacks)} stacks.`,
+        durationBonus > 0 ? `Includes +${formatNumber(durationBonus)}% Burn Duration.` : null,
+    ].filter(Boolean).join(" ");
+
+    return (
+        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#ef2020]/35 bg-[#401b1b]/45 px-3 py-2">
+            <img src={assetPath("/icons/burn-effect.png")} alt="" className="size-8 shrink-0 object-contain" />
+            <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#ff7777]">Burn</p>
+                    <InfoTooltip label="Explain Burn" text={tooltip} />
+                </div>
+                <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
+                    {formatNumber(stacks)} {stacks === 1 ? "Stack" : "Stacks"}
+                    <span className="ml-1.5 text-xs font-semibold text-[#e3a0a0]">• {formatNumber(duration)}s</span>
+                </p>
+            </div>
+        </div>
+    );
+}
+
 const passiveEffectLabels: Record<PassiveEffectStat, string> = {
     damage: "Combat Damage",
     incomingDamage: "Incoming Damage",
@@ -843,23 +932,26 @@ function SkillDamagePanel({
     const skillIconAliases: Record<string, string> = {
         "ghost-impact-vulnerability": "ghost-impact",
         "soul-reap-chain-vulnerability": "soul-reap-chain",
+        "soul-reap-chain-scareharvest": "soul-reap-chain-poison",
     };
     const skillIconId = skillIconAliases[skill.id] ?? skill.id;
     const skillIconPath = `/skill-icons/${skillIconId}.png`;
     const elementIconPath = `/element-icons/${skill.element.toLowerCase()}.png`;
-    const usesPoison = /\bpoison\b/i.test(skill.notes ?? "");
-    const usesBurn = /\bburn\b/i.test(skill.notes ?? "");
     const burnDurationBonus = getTraitEffectValue(build.traitId, "burnDuration");
-    const baseBurnDuration = 8;
-    const burnDuration = baseBurnDuration * (1 + burnDurationBonus / 100);
-    const burnTooltip = burnDurationBonus > 0
-        ? `Burn deals 0.5% of the target's Max HP per second for ${formatNumber(burnDuration)} seconds, up to 10 stacks. ${selectedTrait?.name ?? "The active trait"} increases Burn Duration by ${formatNumber(burnDurationBonus)}%.`
-        : "Burn deals 0.5% of the target's Max HP per second for 8 seconds, up to 10 stacks.";
     const damageIncreaseEffects = (skill.statusEffects ?? []).filter(
         (effect) => effect.type === "damageIncrease",
     );
     const vulnerabilityEffects = (skill.statusEffects ?? []).filter(
         (effect) => effect.type === "vulnerability",
+    );
+    const stunEffects = (skill.statusEffects ?? []).filter(
+        (effect) => effect.type === "stun",
+    );
+    const poisonEffects = (skill.statusEffects ?? []).filter(
+        (effect) => effect.type === "poison",
+    );
+    const burnEffects = (skill.statusEffects ?? []).filter(
+        (effect) => effect.type === "burn",
     );
 
     return (
@@ -888,18 +980,6 @@ function SkillDamagePanel({
                             <h3 className="text-lg font-bold leading-tight tracking-tight text-[#f6f8fc]">
                                 {skillDisplayName}
                             </h3>
-                            {usesPoison && (
-                                <InfoTooltip
-                                    label="Explain Poison"
-                                    text="Each stack of Poison deals 0.4% of current HP per second and reduces enemy Attack by 4%, up to 10 stacks."
-                                />
-                            )}
-                            {usesBurn && (
-                                <InfoTooltip
-                                    label="Explain Burn"
-                                    text={burnTooltip}
-                                />
-                            )}
                         </div>
 
                         <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-[#7f8b9e]">
@@ -1223,6 +1303,40 @@ function SkillDamagePanel({
                             effectivenessBonus={effect.target === "Enemy"
                                 ? getTraitEffectValue(build.traitId, "vulnerabilityEffectiveness")
                                 : 0}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {stunEffects.length > 0 && (
+                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                    {stunEffects.map((effect, index) => (
+                        <StunEffect
+                            key={`${effect.type}-${effect.target}-${effect.durationSeconds}-${index}`}
+                            effect={effect}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {poisonEffects.length > 0 && (
+                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                    {poisonEffects.map((effect, index) => (
+                        <PoisonEffect
+                            key={`${effect.type}-${effect.stacks}-${effect.durationSeconds}-${effect.amountPercent}-${index}`}
+                            effect={effect}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {burnEffects.length > 0 && (
+                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                    {burnEffects.map((effect, index) => (
+                        <BurnEffect
+                            key={`${effect.type}-${effect.stacks}-${effect.amountPercent}-${effect.durationSeconds}-${index}`}
+                            effect={effect}
+                            durationBonus={burnDurationBonus}
                         />
                     ))}
                 </div>

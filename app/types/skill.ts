@@ -28,6 +28,8 @@ export type SkillStatusEffect = {
     amountPercent?: number;
     durationSeconds?: number;
     stacks?: number;
+    maxStacks?: number;
+    attackReductionPercent?: number;
     condition?: string;
 };
 

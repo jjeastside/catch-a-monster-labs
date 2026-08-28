@@ -234,10 +234,84 @@ function parseVulnerabilityEffects(notes) {
     return effects;
 }
 
+function parseStunEffects(notes) {
+    const effects = [];
+
+    for (const match of notes.matchAll(
+        /\bstun(?:\s+for)?\s+(\d+(?:\.\d+)?)\s*(?:secs?|seconds?)\b/gi,
+    )) {
+        effects.push({
+            type: "stun",
+            target: "Enemy",
+            durationSeconds: Number(match[1]),
+        });
+    }
+
+    return effects;
+}
+
+function parsePoisonEffects(notes) {
+    if (!/\bpoison\b/i.test(notes)) {
+        return [];
+    }
+
+    const explicitStacks = notes.match(/(\d+(?:\.\d+)?)\s+stacks?\s+of\s+poison/i);
+    const orbCount = notes.match(/cast\s+(\w+)\s+poison\s+orbs?/i);
+    const numberWords = new Map([
+        ["one", 1],
+        ["two", 2],
+        ["three", 3],
+        ["four", 4],
+        ["five", 5],
+    ]);
+    const stacks = explicitStacks
+        ? Number(explicitStacks[1])
+        : orbCount
+            ? (Number(orbCount[1]) || numberWords.get(orbCount[1].toLowerCase()) || 1)
+            : 1;
+    const damage = notes.match(/poison\s+deals\s+(\d+(?:\.\d+)?)%\s+of\s+current\s+hp\s+per\s+second/i);
+    const attackReduction = notes.match(/reduces\s+enemy\s+attack\s+by\s+(\d+(?:\.\d+)?)%/i);
+    const duration = notes.match(/poison[^.;]*?for\s+(\d+(?:\.\d+)?)\s*(?:secs?|seconds?)/i);
+    const maximum = notes.match(/up\s+to\s+(\d+)\s+stacks/i);
+
+    return [{
+        type: "poison",
+        target: "Enemy",
+        amountPercent: damage ? Number(damage[1]) : 0.4,
+        durationSeconds: duration ? Number(duration[1]) : 20,
+        stacks,
+        maxStacks: maximum ? Number(maximum[1]) : 10,
+        attackReductionPercent: attackReduction ? Number(attackReduction[1]) : 4,
+    }];
+}
+
+function parseBurnEffects(notes) {
+    if (!/\bburn\b/i.test(notes)) {
+        return [];
+    }
+
+    const applications = notes.match(/burn\s+(\d+(?:\.\d+)?)\s+times/i);
+    const damage = notes.match(/burn\s+deals\s+(\d+(?:\.\d+)?)%\s+of\s+the\s+target's\s+max\s+hp\s+per\s+second/i);
+    const duration = notes.match(/for\s+(\d+(?:\.\d+)?)\s*(?:secs?|seconds?)/i);
+    const maximum = notes.match(/up\s+to\s+(\d+)\s+stacks/i);
+
+    return [{
+        type: "burn",
+        target: "Enemy",
+        amountPercent: damage ? Number(damage[1]) : 0.5,
+        durationSeconds: duration ? Number(duration[1]) : 8,
+        stacks: applications ? Number(applications[1]) : 1,
+        maxStacks: maximum ? Number(maximum[1]) : 10,
+    }];
+}
+
 function parseSkillStatusEffects(notes) {
     return [
         ...parseDamageIncreaseEffects(notes),
         ...parseVulnerabilityEffects(notes),
+        ...parseStunEffects(notes),
+        ...parsePoisonEffects(notes),
+        ...parseBurnEffects(notes),
     ];
 }
 
@@ -555,6 +629,11 @@ const generatedSkills = Object.fromEntries(
     }),
 );
 
+const skillEffectCount = Object.values(generatedSkills).reduce(
+    (total, skill) => total + (skill.statusEffects?.length ?? 0),
+    0,
+);
+
 const generatedMonsters = monsters.map(
     (monster) => ({
         id: monster.monster_id,
@@ -743,6 +822,7 @@ export const GENERATED_ACHIEVEMENTS: Achievement[] = ${JSON.stringify(
 console.log(
     `Imported ${monsters.length} monsters, ` +
     `${skills.length} skills, ` +
+    `${skillEffectCount} skill effects, ` +
     `${monsterSkills.length} monster-skill links, ` +
     `${monsterPassives.length} passives, ` +
     `${monsterSources.length} source records, and ` +

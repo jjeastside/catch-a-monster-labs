@@ -103,6 +103,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Stun 2 secs",
     "validationStatus": "Ready"
   },
@@ -131,6 +138,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 1.5
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Stun 1.5 secs; Stagger",
     "validationStatus": "Ready"
   },
@@ -173,6 +187,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Stun 2 secs",
     "validationStatus": "Ready"
   },
@@ -187,6 +208,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Stun 2 secs",
     "validationStatus": "Ready"
   },
@@ -201,6 +229,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 90% damage reduction self",
     "validationStatus": "Ready"
   },
@@ -329,6 +364,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Stun 2 secs",
     "validationStatus": "Ready"
   },
@@ -676,6 +718,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 1
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Stun 1 secs",
     "validationStatus": "Ready"
   },
@@ -765,7 +814,7 @@ export const GENERATED_SKILLS = {
     "element": "Common",
     "damageInstances": [
       {
-        "multiplier": 0.2,
+        "multiplier": 0.5,
         "hits": 4
       }
     ],
@@ -899,6 +948,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 50% of damage self heal (Instant)",
     "validationStatus": "Ready"
   },
@@ -1020,6 +1076,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 1
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Stun 1 secs",
     "validationStatus": "Ready"
   },
@@ -1092,6 +1155,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Stun 2 secs",
     "validationStatus": "Ready"
   },
@@ -1185,6 +1255,11 @@ export const GENERATED_SKILLS = {
         "target": "Self",
         "amountPercent": 25,
         "durationSeconds": 6
+      },
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
       }
     ],
     "notes": "Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 25% self damage for 6 secs",
@@ -1374,6 +1449,17 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "poison",
+        "target": "Enemy",
+        "amountPercent": 0.4,
+        "durationSeconds": 20,
+        "stacks": 4,
+        "maxStacks": 10,
+        "attackReductionPercent": 4
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Cast four poison orbs at the enemy, each orb applies a stack of Poison. Each stack of Poison deals 0.4% of current HP per second and reduces enemy Attack by 4%, up to 10 stacks",
     "validationStatus": "Ready"
   },
@@ -1508,6 +1594,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 3,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Stun 2 secs",
     "validationStatus": "Ready"
   },
@@ -1550,7 +1643,17 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
-    "notes": "Target: Enemy. Enemy effects: Burn 3 times; Burn deals 0.5% of the target's Max HP per second for 8 seconds, up to 10 stacks",
+    "statusEffects": [
+      {
+        "type": "burn",
+        "target": "Enemy",
+        "amountPercent": 0.5,
+        "durationSeconds": 8,
+        "stacks": 4,
+        "maxStacks": 10
+      }
+    ],
+    "notes": "Target: Enemy. Enemy effects: Burn 4 times; Burn deals 0.5% of the target's Max HP per second for 8 seconds, up to 10 stacks",
     "validationStatus": "Ready"
   },
   "seed-grenade": {
@@ -1606,6 +1709,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Stun 2 secs;",
     "validationStatus": "Ready"
   },
@@ -1626,6 +1736,11 @@ export const GENERATED_SKILLS = {
         "target": "Enemy",
         "amountPercent": 20,
         "durationSeconds": 10
+      },
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
       }
     ],
     "notes": "Target: Enemy. Enemy effects: Stun 2 secs; Vulnerability (20%) incoming damage for 10 secs",
@@ -1642,6 +1757,17 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "poison",
+        "target": "Enemy",
+        "amountPercent": 0.4,
+        "durationSeconds": 20,
+        "stacks": 1,
+        "maxStacks": 10,
+        "attackReductionPercent": 4
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: 1 stack of Poison",
     "validationStatus": "Ready"
   },
@@ -1721,6 +1847,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Stun 2 secs",
     "validationStatus": "Ready"
   },
@@ -1771,6 +1904,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Stun 2 secs",
     "validationStatus": "Ready"
   },
@@ -1840,6 +1980,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Stun 2 secs",
     "validationStatus": "Ready"
   },
@@ -1970,6 +2117,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "stun",
+        "target": "Enemy",
+        "durationSeconds": 1
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Knockback + Stun for 1 Second",
     "validationStatus": "Ready"
   },

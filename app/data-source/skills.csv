@@ -141,7 +141,7 @@ ghost-impact,Ghost Impact,Common,"[
   { multiplier: 0.2, hits: 4 },
 ]",6,Target: Enemy | Allies. Ally effects: 50% Team Damage for 4 secs,Ready
 ghost-impact-vulnerability,Ghost Impact (Vulnerability),Common,"[
-  { multiplier: 0.2, hits: 4 },
+  { multiplier: 0.5, hits: 4 },
 ]",6,Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs; Stagger,Ready
 gift-delivery,Gift Delivery,Common,"[
   { multiplier: 1, hits: 1 },
@@ -278,7 +278,7 @@ root-spike,Root Spike,Grass,"[
 ]",8,Target: Enemy.,Ready
 scorching-fireball,Scorching Fireball,Fire,"[
   { multiplier: 0.3, hits: 4 },
-]",6,"Target: Enemy. Enemy effects: Burn 3 times; Burn deals 0.5% of the target's Max HP per second for 8 seconds, up to 10 stacks",Ready
+]",6,"Target: Enemy. Enemy effects: Burn 4 times; Burn deals 0.5% of the target's Max HP per second for 8 seconds, up to 10 stacks",Ready
 seed-grenade,Seed Grenade,Grass,"[
   { multiplier: 1.2, hits: 1 },
 ]",3,Target: Enemy.,Ready
