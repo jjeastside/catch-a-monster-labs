@@ -9,9 +9,56 @@ export const metadata: Metadata = {
 
 const patches = [
     {
+        version: "Update 0.46",
+        date: "August 28, 2026",
+        label: "Latest",
+        sections: [
+            {
+                title: "Boss & Evolution Event",
+                changes: [
+                    "Coilwork City now features a brand-new boss.",
+                    "The Dragon Evolution Event is now live.",
+                    "Added a new evolution for AbyssalDrake.",
+                ],
+            },
+            {
+                title: "Progression & Rewards",
+                changes: [
+                    "Added time-limited titles for the top 30 players in weekly Index Points.",
+                    "Added an exclusive title for Roblox Plus users.",
+                ],
+            },
+            {
+                title: "Crafting, Drops & Shop",
+                changes: [
+                    "Added a crafting recipe for Super Breeding Fruit.",
+                    "Normal monsters now drop more items.",
+                    "Added Islands 1–5 rifts to the Spire Tower Shop.",
+                ],
+            },
+            {
+                title: "Update 0.46.1",
+                date: "August 28, 2026",
+                changes: [
+                    "Fixed some bugs.",
+                    "New Code: Achievebug",
+                    "Old Code: Turret",
+                ],
+            },
+            {
+                title: "Update 0.46.2",
+                date: "August 29, 2026",
+                changes: [
+                    "Fixed some bugs.",
+                    "New Code: mutatebug",
+                    "Old Codes: achievebug, turret",
+                ],
+            },
+        ],
+    },
+    {
         version: "Update 0.45",
         date: "August 21, 2026",
-        label: "Latest",
         sections: [
             {
                 title: "Coilwork City",
@@ -85,10 +132,15 @@ export default function UpdatesPage() {
                             <div className="divide-y divide-[#293140]">
                                 {patch.sections.map((section) => (
                                     <div key={section.title} className="px-4 py-4 sm:px-5">
-                                        <h3 className="mb-2 text-sm font-bold text-[#e3e8f1]">
-                                            {section.title}
-                                        </h3>
-                                        <ul className="space-y-2.5">
+                                        <div className="flex flex-wrap items-center justify-between gap-2">
+                                            <h3 className="text-sm font-bold text-[#e3e8f1]">
+                                                {section.title}
+                                            </h3>
+                                            {section.date && (
+                                                <span className="text-xs text-[#7f8b9e]">{section.date}</span>
+                                            )}
+                                        </div>
+                                        <ul className="mt-2 space-y-2.5">
                                             {section.changes.map((change) => (
                                                 <li key={change} className="flex gap-3 text-sm leading-6 text-[#bfc7d5]">
                                                     <span aria-hidden="true" className="mt-[9px] size-1.5 shrink-0 rounded-full bg-[#7182ff]" />

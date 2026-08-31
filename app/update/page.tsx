@@ -5,34 +5,73 @@ import { SiteFooter } from "../components/site-footer";
 import { TopNavigation } from "../components/top-navigation";
 
 export const metadata: Metadata = {
-    title: "Update 0.45 — Cam Lab",
-    description: "Catch a Monster Update 0.45 notes, including Coilwork City, Splash Isle quests and achievements, the Cog Event, and more.",
+    title: "Update 0.46 — Cam Lab",
+    description: "Catch a Monster Update 0.46 notes, including the Coilwork City boss, Dragon Evolution Event, AbyssalDrake evolution, fixes, and codes through 0.46.2.",
 };
 
 const updateSections = [
     {
-        eyebrow: "New Island",
-        title: "Coilwork City",
-        description: "Coilwork City is now available!",
-        accent: "border-[#7182ff]/35 bg-[#202846]/55 text-[#b7c0ff]",
-    },
-    {
-        eyebrow: "Splash Isle",
-        title: "New Quests & Achievements",
-        description: "Added new map quests for Splash Isle and new achievements to complete.",
-        accent: "border-[#4b96d8]/35 bg-[#18324a]/55 text-[#8bc9ff]",
-    },
-    {
-        eyebrow: "Limited-Time Shop",
-        title: "Dynamic Shop Rotation",
-        description: "Added a dynamic Limited-Time Shop that opens periodically.",
-        accent: "border-[#b07cff]/35 bg-[#2a1e3f]/55 text-[#d4b4ff]",
+        eyebrow: "Coilwork City",
+        title: "Brand-New Boss",
+        description: "Coilwork City now features a brand-new boss.",
+        accent: "border-[#ef6461]/35 bg-[#402021]/55 text-[#ffaaa7]",
     },
     {
         eyebrow: "Live Event",
-        title: "The Cog Event",
-        description: "The Cog Event is now live!",
+        title: "Dragon Evolution Event",
+        description: "The Dragon Evolution Event is now live.",
+        accent: "border-[#69b97c]/35 bg-[#183526]/55 text-[#9ad9a8]",
+    },
+    {
+        eyebrow: "Evolution",
+        title: "AbyssalDrake Evolution",
+        description: "A new evolution has been added for AbyssalDrake.",
         accent: "border-[#e3a34d]/35 bg-[#3a2a18]/55 text-[#f2c77f]",
+    },
+    {
+        eyebrow: "Weekly Index",
+        title: "Top 30 Titles",
+        description: "Added time-limited titles for the top 30 players in weekly Index Points.",
+        accent: "border-[#f0bd4b]/35 bg-[#3b2e16]/55 text-[#ffd77a]",
+    },
+    {
+        eyebrow: "Roblox Plus",
+        title: "Exclusive Title",
+        description: "Added an exclusive title for Roblox Plus users.",
+        accent: "border-[#7182ff]/35 bg-[#202846]/55 text-[#b7c0ff]",
+    },
+    {
+        eyebrow: "Crafting",
+        title: "Super Breeding Fruit",
+        description: "Added a crafting recipe for Super Breeding Fruit.",
+        accent: "border-[#dd5f70]/35 bg-[#3c1d27]/55 text-[#ff9cac]",
+    },
+    {
+        eyebrow: "Drops",
+        title: "More Normal Monster Items",
+        description: "Normal monsters now drop more items.",
+        accent: "border-[#9da8ba]/35 bg-[#252d38]/55 text-[#c9d0dc]",
+    },
+    {
+        eyebrow: "Spire Tower Shop",
+        title: "Islands 1–5 Rifts",
+        description: "Added Islands 1–5 rifts to the Spire Tower Shop.",
+        accent: "border-[#4b96d8]/35 bg-[#18324a]/55 text-[#8bc9ff]",
+    },
+];
+
+const followUpUpdates = [
+    {
+        version: "Update 0.46.1",
+        date: "August 28, 2026",
+        title: "Bug Fixes & Achievebug Code",
+        description: "Fixed some bugs. New Code: Achievebug. Old Code: Turret.",
+    },
+    {
+        version: "Update 0.46.2",
+        date: "August 29, 2026",
+        title: "More Bug Fixes & mutatebug Code",
+        description: "Fixed some bugs. New Code: mutatebug. Old Codes: achievebug, turret.",
     },
 ];
 
@@ -51,10 +90,10 @@ export default function UpdatePage() {
                             <span className="text-xs font-semibold text-[#7182ff]">Latest Game Update</span>
                         </div>
                         <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-5xl">
-                            Update 0.45
+                            Update 0.46
                         </h1>
                         <p className="mt-3 max-w-2xl text-sm leading-6 text-[#9da8ba] sm:text-base">
-                            A new island, more Splash Isle progression, a rotating shop, and the Cog Event arrive in Update 0.45.
+                            Update 0.46 adds a new Coilwork City boss, the Dragon Evolution Event, a new AbyssalDrake evolution, progression rewards, crafting, drop changes, and new Spire Tower Shop rifts. The 0.46.1 and 0.46.2 follow-ups are included below.
                         </p>
                     </div>
 
@@ -70,13 +109,23 @@ export default function UpdatePage() {
                         ))}
                     </div>
 
-                    <div className="border-t border-[#344050] px-4 py-5 sm:px-6">
-                        <div className="rounded-xl border border-[#4b596e] bg-[#151e2b] p-4 sm:p-5">
-                            <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#7182ff]">Admin Abuse</p>
-                            <h2 className="mt-1.5 text-lg font-bold text-[#edf1f7]">Two Time Zones</h2>
-                            <p className="mt-1.5 text-sm leading-6 text-[#aab4c4]">
-                                Admin Abuse will be held twice for different time zones.
-                            </p>
+                    <div className="border-t border-[#344050] p-4 sm:p-6">
+                        <div className="overflow-hidden rounded-xl border border-[#4b596e] bg-[#151e2b]">
+                            <div className="border-b border-[#344050] px-4 py-3 sm:px-5">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#7182ff]">Update 0.46 Follow-Ups</p>
+                            </div>
+                            <div className="divide-y divide-[#344050]">
+                                {followUpUpdates.map((update) => (
+                                    <article key={update.version} className="p-4 sm:p-5">
+                                        <div className="flex flex-wrap items-center justify-between gap-2">
+                                            <p className="text-xs font-bold text-[#c8d0ff]">{update.version}</p>
+                                            <p className="text-xs text-[#7f8b9e]">{update.date}</p>
+                                        </div>
+                                        <h2 className="mt-1.5 text-lg font-bold text-[#edf1f7]">{update.title}</h2>
+                                        <p className="mt-1.5 text-sm leading-6 text-[#aab4c4]">{update.description}</p>
+                                    </article>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </section>

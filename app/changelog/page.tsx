@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 const releases = [
     {
         version: "v1.0.5",
-        date: "August 28, 2026",
+        date: "August 30, 2026",
         label: "Latest",
         changes: [
             "Added structured Stun effects with dedicated Skill Analysis cards showing the enemy stun duration.",
@@ -22,6 +22,17 @@ const releases = [
             "Added matching Stun, Poison, and Burn effect icons and standardized their Skill Analysis presentation.",
             "Updated Scareharvest's Soul Reap Chain to display the Poison skill icon throughout Calculator Results and the Monster Database.",
             "Expanded CSV import reporting to include the generated skill-effect count, now totaling 48 structured effects.",
+            "Updated Catch a Monster 0.46 game data, adding Turretor and the AbyssalDrake evolutions VivisDrake, TerralDrake, and OblivionDrake to the calculator and Monster Database.",
+            "Added 0.46 skill data for Earthshatter, OblivionDrake's Fire Dash variant, and Flame Detonation.",
+            "Raised the live level cap from 105 to 110 and extended Experimental Mode to preview levels 111–115.",
+            "Centralized level-cap configuration so the Build Editor, stat validation, and Growth Preview automatically follow future five-level cap increases.",
+            "Fixed Experimental Mode toggling so disabling it safely clamps over-cap builds without triggering React render-time state update errors.",
+            "Fixed CSV skill-link importing to resolve canonical skill names to explicit IDs, including Earthshatter mapping correctly to earth-shatter.",
+            "Corrected VivisDrake's element from Leaf to Grass and added the Earthshatter skill icon.",
+            "Normalized the new 0.46 monster artwork filenames to lowercase so they load correctly on case-sensitive GitHub Pages hosting.",
+            "Added the missing Flame Detonation skill icon for Turretor.",
+            "Added Catch a Monster 0.46 patch notes and grouped the 0.46.1 and 0.46.2 follow-ups under the main update, dated August 28 and August 29 respectively.",
+            "Updated the site footer version label and project README to reflect v1.0.5 and the current feature set.",
         ],
     },
     {
