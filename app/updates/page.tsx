@@ -7,7 +7,20 @@ export const metadata: Metadata = {
     description: "Catch a Monster patch notes and game updates tracked by Cam Lab.",
 };
 
-const patches = [
+type PatchSection = {
+    title: string;
+    date?: string;
+    changes: string[];
+};
+
+type Patch = {
+    version: string;
+    date: string;
+    label?: string;
+    sections: PatchSection[];
+};
+
+const patches: Patch[] = [
     {
         version: "Update 0.46",
         date: "August 28, 2026",
