@@ -4,9 +4,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { EvolutionTree } from "./evolution-tree";
 
 import { GENERATED_MONSTERS } from "../data/generated/monsters";
-import { getPassiveDisplayName, getPassiveImagePath } from "../data/passives";
+import { getPassiveImagePath } from "../data/passives";
+import {
+    getPassiveConditionDescription,
+    getPassiveDescription,
+    getPassiveUiName,
+} from "../lib/passive-display";
 import { getSkill, getSkillDisplayName } from "../data/skills";
 import { assetPath } from "../lib/asset-path";
 import { getMonsterComparisonStats, type PassiveCompareMode } from "../lib/monster-comparison";
@@ -326,8 +332,8 @@ function MonsterCard({
                     {passive && passiveImage ? (
                         <img
                             src={assetPath(passiveImage)}
-                            alt={getPassiveDisplayName(passive)}
-                            title={getPassiveDisplayName(passive)}
+                            alt={getPassiveUiName(passive)}
+                            title={getPassiveUiName(passive)}
                             className="size-6 rounded-md border border-[#344050] bg-[#0d131d] object-contain p-0.5 sm:size-7"
                         />
                     ) : null}
@@ -356,10 +362,12 @@ function DetailPanel({
                          monster,
                          evolutionPercent,
                          passiveCompareMode,
+                         onMonsterSelect,
                      }: {
     monster: GeneratedMonster;
     evolutionPercent: number;
     passiveCompareMode: PassiveCompareMode;
+    onMonsterSelect: (monsterId: string) => void;
 }) {
     const skills = monster.skillIds.map((id) => getSkill(id)).filter(Boolean);
     const passive = monster.passives?.[0] ?? null;
@@ -477,9 +485,22 @@ function DetailPanel({
                                         className="size-10 shrink-0 object-contain"
                                     />
                                 ) : null}
-                                <div>
-                                    <p className="text-xs font-bold text-[#edf1f7]">{getPassiveDisplayName(passive)}</p>
-                                    <p className="mt-1 text-[10px] leading-4 text-[#7f8b9e]">Detailed passive description can be added in Phase 4.</p>
+                                <div className="min-w-0 flex-1">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <p className="text-xs font-bold text-[#edf1f7]">{getPassiveUiName(passive)}</p>
+                                        {getPassiveConditionDescription(passive) ? (
+                                            <span className="rounded border border-[#8b6b38] bg-[#2b2112] px-1.5 py-0.5 text-[9px] font-bold text-[#e9b968]">
+                                                {getPassiveConditionDescription(passive)}
+                                            </span>
+                                        ) : (
+                                            <span className="rounded border border-[#315f4c] bg-[#10241c] px-1.5 py-0.5 text-[9px] font-bold text-[#69d99f]">
+                                                Always active
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p className="mt-1.5 text-[10px] leading-4 text-[#9aa6b8]">
+                                        {getPassiveDescription(passive)}
+                                    </p>
                                 </div>
                             </div>
                         ) : (
@@ -499,62 +520,19 @@ function DetailPanel({
                             <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-[#7182ff]">Evolution</h3>
                             {getEvolutionFamily(monster).length > 1 ? (
                                 <span className="text-[9px] font-semibold text-[#667489]">
-                                {getEvolutionFamily(monster).length} forms
-                            </span>
+                                    {getEvolutionFamily(monster).length} forms
+                                </span>
                             ) : null}
                         </div>
 
                         {getEvolutionFamily(monster).length > 1 ? (
-                            <div className="mt-3 overflow-x-auto rounded-lg border border-[#293443] bg-[#0d141e] p-3">
-                                <div className="flex min-w-max items-center gap-2">
-                                    {getEvolutionFamily(monster).map((member, index, family) => {
-                                        const previousDepth = index > 0 ? family[index - 1].depth : 0;
-                                        const showArrow = index > 0;
-                                        const isSelected = member.monster.id === monster.id;
-
-                                        return (
-                                            <div key={member.monster.id} className="flex items-center gap-2">
-                                                {showArrow ? (
-                                                    <span
-                                                        className="text-sm font-black text-[#59677c]"
-                                                        title={member.depth > previousDepth ? "Evolves into" : "Evolution branch"}
-                                                    >
-                                                    →
-                                                </span>
-                                                ) : null}
-
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        const target = document.getElementById(`monster-${member.monster.id}`);
-                                                        target?.scrollIntoView({ behavior: "smooth", block: "center" });
-                                                    }}
-                                                    className={`w-24 rounded-lg border p-2 text-center transition ${
-                                                        isSelected
-                                                            ? "border-[#7182ff] bg-[#18213a] ring-1 ring-[#7182ff]/50"
-                                                            : "border-[#344050] bg-[#111925] hover:border-[#7182ff]/60"
-                                                    }`}
-                                                >
-                                                    <div className="mx-auto grid size-14 place-items-center overflow-hidden rounded-md bg-[#0b111a]">
-                                                        {member.monster.image ? (
-                                                            <img
-                                                                src={assetPath(member.monster.image)}
-                                                                alt={member.monster.name}
-                                                                className="h-full w-full object-contain p-1"
-                                                            />
-                                                        ) : null}
-                                                    </div>
-                                                    <p className="mt-1.5 truncate text-[10px] font-bold text-[#dbe2ee]">
-                                                        {member.monster.name}
-                                                    </p>
-                                                    <p className="mt-0.5 text-[8px] font-semibold uppercase tracking-[0.08em] text-[#657287]">
-                                                        {member.depth === 0 ? "Base" : `Stage ${member.depth}`}
-                                                    </p>
-                                                </button>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
+                            <div className="mt-3 rounded-lg border border-[#293443] bg-[#0d141e] p-3">
+                                <EvolutionTree
+                                    rootMonster={getEvolutionRoot(monster)}
+                                    selectedMonsterId={monster.id}
+                                    compact
+                                    onMonsterSelect={onMonsterSelect}
+                                />
                             </div>
                         ) : (
                             <div className="mt-3 rounded-lg border border-dashed border-[#344050] bg-[#0d141e] p-4 text-center text-[10px] text-[#6f7c90]">
@@ -666,7 +644,7 @@ export function MonsterDatabase() {
         }
 
         return [...byId.values()].sort((a, b) =>
-            getPassiveDisplayName(a).localeCompare(getPassiveDisplayName(b)),
+            getPassiveUiName(a).localeCompare(getPassiveUiName(b)),
         );
     }, []);
 
@@ -837,7 +815,7 @@ export function MonsterDatabase() {
                             <option value="none">No Passive</option>
                             {passiveOptions.map((passive) => (
                                 <option key={passive.id} value={passive.id}>
-                                    {getPassiveDisplayName(passive)}
+                                    {getPassiveUiName(passive)}
                                 </option>
                             ))}
                         </FilterSelect>
@@ -1108,6 +1086,7 @@ export function MonsterDatabase() {
                             monster={selectedMonster}
                             evolutionPercent={evolutionPercent}
                             passiveCompareMode={passiveCompareMode}
+                            onMonsterSelect={setSelectedId}
                         />
                     </div>
                 </div>

@@ -1,10 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { EvolutionTree } from "./evolution-tree";
 import { useMemo, useState } from "react";
 
 import { GENERATED_MONSTERS } from "../data/generated/monsters";
-import { getPassiveDisplayName, getPassiveImagePath } from "../data/passives";
+import { getPassiveImagePath } from "../data/passives";
+import {
+    getPassiveConditionDescription,
+    getPassiveDescription,
+    getPassiveUiName,
+} from "../lib/passive-display";
 import { getSkill, getSkillDisplayName, getSkillTotalHits, getSkillTotalMultiplier } from "../data/skills";
 import { assetPath } from "../lib/asset-path";
 import {
@@ -19,7 +25,7 @@ import {
     type PassiveCompareMode,
 } from "../lib/monster-comparison";
 import type { GeneratedMonster } from "../types/monster";
-import type { MonsterPassive, PassiveEffect } from "../types/build";
+import type { MonsterPassive } from "../types/build";
 
 type SkillEffect =
     | "burn"
@@ -154,41 +160,6 @@ function getEvolutionFamily(monster: GeneratedMonster): EvolutionFamilyMember[] 
     return family;
 }
 
-function formatPassiveEffect(effect: PassiveEffect): string {
-    if (typeof effect.value === "boolean") {
-        const label = effect.stat
-            .replace(/([A-Z])/g, " $1")
-            .replace(/^./, (letter) => letter.toUpperCase());
-
-        return effect.value ? label : `No ${label}`;
-    }
-
-    const labels: Partial<Record<PassiveEffect["stat"], string>> = {
-        damage: "Damage",
-        incomingDamage: "Incoming Damage",
-        critChance: "Crit Chance",
-        critDamage: "Crit Damage",
-        bossDamage: "Boss Damage",
-        bossIncomingDamage: "Incoming Boss Damage",
-        spireDamage: "Spire Damage",
-        spireIncomingDamage: "Incoming Spire Damage",
-        riftDamage: "Rift Damage",
-        riftIncomingDamage: "Incoming Rift Damage",
-        dungeonDamage: "Dungeon Damage",
-        dungeonIncomingDamage: "Incoming Dungeon Damage",
-        coinGain: "Coin Gain",
-        xpGain: "XP Gain",
-        rankLuck: "Rank Luck",
-        healthRestore: "Health Restore",
-        mutationRate: "Mutation Rate",
-    };
-
-    const label = labels[effect.stat] ?? effect.stat;
-    const sign = effect.value > 0 && !label.startsWith("Incoming") ? "+" : "";
-
-    return `${label} ${sign}${effect.value}%`;
-}
-
 function PassiveCard({ passive }: { passive: MonsterPassive }) {
     const image = getPassiveImagePath(passive);
 
@@ -209,11 +180,11 @@ function PassiveCard({ passive }: { passive: MonsterPassive }) {
 
                 <div className="min-w-0">
                     <h3 className="text-sm font-black text-[#edf1f7]">
-                        {getPassiveDisplayName(passive)}
+                        {getPassiveUiName(passive)}
                     </h3>
-                    {passive.condition != null ? (
+                    {getPassiveConditionDescription(passive) ? (
                         <p className="mt-0.5 text-[10px] font-semibold text-[#f0b36d]">
-                            Conditional: {String(passive.condition)}
+                            {getPassiveConditionDescription(passive)}
                         </p>
                     ) : (
                         <p className="mt-0.5 text-[10px] font-semibold text-[#6bdca2]">
@@ -223,16 +194,9 @@ function PassiveCard({ passive }: { passive: MonsterPassive }) {
                 </div>
             </div>
 
-            <div className="mt-3 flex flex-wrap gap-1.5">
-                {passive.effects.map((effect, index) => (
-                    <span
-                        key={`${passive.id}-${effect.stat}-${index}`}
-                        className="rounded-md border border-[#344050] bg-[#0d141e] px-2 py-1 text-[10px] font-semibold text-[#aeb9cb]"
-                    >
-                        {formatPassiveEffect(effect)}
-                    </span>
-                ))}
-            </div>
+            <p className="mt-3 text-[11px] leading-5 text-[#98a5b7]">
+                {getPassiveDescription(passive)}
+            </p>
         </div>
     );
 }
@@ -557,7 +521,7 @@ export function MonsterProfile({ monsterId }: { monsterId: string }) {
                                 Evolution
                             </p>
                             <div className="mt-1 flex items-end justify-between gap-3">
-                                <h2 className="text-xl font-black">Evolution Family</h2>
+                                <h2 className="text-xl font-black">Evolution Tree</h2>
                                 {evolutionFamily.length > 1 ? (
                                     <span className="text-[10px] font-semibold text-[#667489]">
                                         {evolutionFamily.length} forms
@@ -566,44 +530,12 @@ export function MonsterProfile({ monsterId }: { monsterId: string }) {
                             </div>
 
                             {evolutionFamily.length > 1 ? (
-                                <div className="mt-4 overflow-x-auto">
-                                    <div className="flex min-w-max items-center gap-2">
-                                        {evolutionFamily.map((member, index) => (
-                                            <div
-                                                key={member.monster.id}
-                                                className="flex items-center gap-2"
-                                            >
-                                                {index > 0 ? (
-                                                    <span className="text-lg font-black text-[#59677c]">→</span>
-                                                ) : null}
-
-                                                <Link
-                                                    href={`/monster-database/${member.monster.id}`}
-                                                    className={`w-28 rounded-xl border p-2.5 text-center transition ${
-                                                        member.monster.id === monster.id
-                                                            ? "border-[#7182ff] bg-[#18213a] ring-1 ring-[#7182ff]/40"
-                                                            : "border-[#344050] bg-[#0d141e] hover:border-[#7182ff]/60"
-                                                    }`}
-                                                >
-                                                    <div className="mx-auto grid size-16 place-items-center overflow-hidden rounded-lg bg-[#0b111a]">
-                                                        {member.monster.image ? (
-                                                            <img
-                                                                src={assetPath(member.monster.image)}
-                                                                alt={member.monster.name}
-                                                                className="h-full w-full object-contain p-1"
-                                                            />
-                                                        ) : null}
-                                                    </div>
-                                                    <p className="mt-2 truncate text-[10px] font-black text-[#dbe2ee]">
-                                                        {member.monster.name}
-                                                    </p>
-                                                    <p className="mt-0.5 text-[8px] font-semibold uppercase tracking-[0.08em] text-[#657287]">
-                                                        {member.depth === 0 ? "Base" : `Stage ${member.depth}`}
-                                                    </p>
-                                                </Link>
-                                            </div>
-                                        ))}
-                                    </div>
+                                <div className="mt-4 rounded-xl border border-[#293443] bg-[#0d141e] p-4">
+                                    <EvolutionTree
+                                        rootMonster={getEvolutionRoot(monster)}
+                                        selectedMonsterId={monster.id}
+                                        linkProfiles
+                                    />
                                 </div>
                             ) : (
                                 <div className="mt-4 rounded-xl border border-dashed border-[#344050] bg-[#0d141e] p-5 text-center text-xs text-[#6f7c90]">
