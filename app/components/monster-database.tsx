@@ -264,12 +264,14 @@ function MonsterCard({
                          onSelect,
                          evolutionPercent,
                          passiveCompareMode,
+                         sortBy,
                      }: {
     monster: GeneratedMonster;
     selected: boolean;
     onSelect: () => void;
     evolutionPercent: number;
     passiveCompareMode: PassiveCompareMode;
+    sortBy: SortKey;
 }) {
     const skills = monster.skillIds.map((id) => getSkill(id)).filter(Boolean).slice(0, 3);
     const passive = monster.passives?.[0] ?? null;
@@ -282,7 +284,7 @@ function MonsterCard({
             type="button"
             onClick={onSelect}
             className={`group min-w-0 overflow-hidden rounded-xl border bg-[#121a25] text-left transition hover:-translate-y-0.5 hover:border-[#7182ff]/70 hover:bg-[#151f2d] ${rarityClasses[monster.rarity]} ${
-                selected ? "ring-2 ring-[#7182ff] ring-offset-2 ring-offset-[#0d131d]" : ""
+                selected ? "border-[#8d9aff] bg-[#172136] ring-2 ring-[#7182ff] ring-offset-2 ring-offset-[#0d131d] shadow-[0_0_28px_rgba(113,130,255,0.24)]" : ""
             }`}
         >
             <div className="relative aspect-square overflow-hidden bg-[radial-gradient(circle_at_50%_35%,rgba(113,130,255,0.14),transparent_58%)] sm:aspect-[4/3]">
@@ -293,7 +295,11 @@ function MonsterCard({
                         className="h-full w-full object-contain p-2 transition duration-200 group-hover:scale-[1.035] sm:p-3"
                     />
                 ) : null}
-                <span className="absolute right-2 top-2 rounded-full border border-[#344050] bg-[#0d131d]/90 px-2 py-1 text-[10px] font-bold text-[#aeb9cb]">
+                <span className={`absolute right-2 top-2 rounded-full border px-2 py-1 text-[10px] font-bold ${
+                    sortBy === "index"
+                        ? "border-[#7182ff] bg-[#202846]/95 text-[#c7ccff] shadow-[0_0_12px_rgba(113,130,255,0.25)]"
+                        : "border-[#344050] bg-[#0d131d]/90 text-[#aeb9cb]"
+                }`}>
                     #{monster.indexPosition}
                 </span>
                 {!isObtainable(monster) ? (
@@ -314,17 +320,17 @@ function MonsterCard({
                 </div>
 
                 <div className="mt-2 grid grid-cols-3 gap-1 text-[9px] sm:mt-3 sm:gap-1.5 sm:text-[10px]">
-                    <div className="min-w-0 rounded-md border border-[#293443] bg-[#0e151f] px-1 py-1.5 sm:px-2">
-                        <span className="block text-[8px] font-bold uppercase tracking-[0.06em] text-[#6f7c90]">DMG</span>
-                        <span className="mt-0.5 block truncate font-bold text-[#dbe2ee]">{compactNumber(comparisonStats.damage)}</span>
+                    <div className={`min-w-0 rounded-md border px-1 py-1.5 sm:px-2 ${sortBy === "damage" ? "border-[#34d5ff]/70 bg-[#102631]" : "border-[#293443] bg-[#0e151f]"}`}>
+                        <span className={`block text-[8px] font-bold uppercase tracking-[0.06em] ${sortBy === "damage" ? "text-[#57dcff]" : "text-[#6f7c90]"}`}>DMG</span>
+                        <span className={`mt-0.5 block truncate font-bold ${sortBy === "damage" ? "text-[#b8f3ff]" : "text-[#dbe2ee]"}`}>{compactNumber(comparisonStats.damage)}</span>
                     </div>
-                    <div className="min-w-0 rounded-md border border-[#293443] bg-[#0e151f] px-1 py-1.5 sm:px-2">
-                        <span className="block text-[8px] font-bold uppercase tracking-[0.06em] text-[#6f7c90]">HP</span>
-                        <span className="mt-0.5 block truncate font-bold text-[#dbe2ee]">{compactNumber(comparisonStats.health)}</span>
+                    <div className={`min-w-0 rounded-md border px-1 py-1.5 sm:px-2 ${sortBy === "health" ? "border-[#34d5ff]/70 bg-[#102631]" : "border-[#293443] bg-[#0e151f]"}`}>
+                        <span className={`block text-[8px] font-bold uppercase tracking-[0.06em] ${sortBy === "health" ? "text-[#57dcff]" : "text-[#6f7c90]"}`}>HP</span>
+                        <span className={`mt-0.5 block truncate font-bold ${sortBy === "health" ? "text-[#b8f3ff]" : "text-[#dbe2ee]"}`}>{compactNumber(comparisonStats.health)}</span>
                     </div>
-                    <div className="min-w-0 rounded-md border border-[#293443] bg-[#0e151f] px-1 py-1.5 sm:px-2">
-                        <span className="block text-[8px] font-bold uppercase tracking-[0.06em] text-[#7182ff]">DPS</span>
-                        <span className="mt-0.5 block truncate font-bold text-[#dbe2ee]">{compactNumber(comparisonStats.dps)}</span>
+                    <div className={`min-w-0 rounded-md border px-1 py-1.5 sm:px-2 ${sortBy === "dps" ? "border-[#34d5ff]/70 bg-[#102631]" : "border-[#293443] bg-[#0e151f]"}`}>
+                        <span className={`block text-[8px] font-bold uppercase tracking-[0.06em] ${sortBy === "dps" ? "text-[#57dcff]" : "text-[#7182ff]"}`}>DPS</span>
+                        <span className={`mt-0.5 block truncate font-bold ${sortBy === "dps" ? "text-[#b8f3ff]" : "text-[#dbe2ee]"}`}>{compactNumber(comparisonStats.dps)}</span>
                     </div>
                 </div>
 
@@ -363,11 +369,13 @@ function DetailPanel({
                          evolutionPercent,
                          passiveCompareMode,
                          onMonsterSelect,
+                         sortBy,
                      }: {
     monster: GeneratedMonster;
     evolutionPercent: number;
     passiveCompareMode: PassiveCompareMode;
     onMonsterSelect: (monsterId: string) => void;
+    sortBy: SortKey;
 }) {
     const skills = monster.skillIds.map((id) => getSkill(id)).filter(Boolean);
     const passive = monster.passives?.[0] ?? null;
@@ -413,12 +421,17 @@ function DetailPanel({
                                 ["Health", compactNumber(comparisonStats.health)],
                                 ["DPS", compactNumber(comparisonStats.dps)],
                                 ["Index", monster.indexPosition],
-                            ].map(([label, value]) => (
-                                <div key={label} className="rounded-lg border border-[#293443] bg-[#0d141e] p-2.5">
-                                    <p className="text-[9px] font-bold uppercase tracking-[0.08em] text-[#667489]">{label}</p>
-                                    <p className="mt-1 text-sm font-black text-[#e8edf5]">{value}</p>
+                            ].map(([label, value]) => {
+                                const statKey = label.toString().toLowerCase() as SortKey;
+                                const active = sortBy === statKey;
+
+                                return (
+                                <div key={label} className={`rounded-lg border p-2.5 ${active ? "border-[#34d5ff]/70 bg-[#102631] shadow-[0_0_18px_rgba(52,213,255,0.1)]" : "border-[#293443] bg-[#0d141e]"}`}>
+                                    <p className={`text-[9px] font-bold uppercase tracking-[0.08em] ${active ? "text-[#57dcff]" : "text-[#667489]"}`}>{label}</p>
+                                    <p className={`mt-1 text-sm font-black ${active ? "text-[#b8f3ff]" : "text-[#e8edf5]"}`}>{value}</p>
                                 </div>
-                            ))}
+                                );
+                            })}
                         </div>
                         <p className="mt-2 text-[10px] leading-4 text-[#657287]">
                             Comparison preset: Base E-rank / Level 1 · selected EM for evolved forms ·{" "}
@@ -585,17 +598,26 @@ export function MonsterDatabase() {
     const [selectedId, setSelectedId] = useState("");
     const [filtersOpen, setFiltersOpen] = useState(false);
     const drawerRef = useRef<HTMLDivElement>(null);
+    const inspectorRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (!selectedId && !filtersOpen) return;
 
-        if (selectedId) drawerRef.current?.scrollTo({ top: 0 });
+        if (selectedId) {
+            drawerRef.current?.scrollTo({ top: 0 });
+            inspectorRef.current?.scrollTo({ top: 0 });
+        }
 
         const previousOverflow = document.body.style.overflow;
         const previousPaddingRight = document.body.style.paddingRight;
-        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-        document.body.style.overflow = "hidden";
-        if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
+        const selectedIsModal = Boolean(selectedId) && !window.matchMedia("(min-width: 1024px)").matches;
+        const shouldLockPage = filtersOpen || selectedIsModal;
+
+        if (shouldLockPage) {
+            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.overflow = "hidden";
+            if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
+        }
 
         const closeOnEscape = (event: KeyboardEvent) => {
             if (event.key !== "Escape") return;
@@ -1008,10 +1030,10 @@ export function MonsterDatabase() {
                     </div>
                 </section>
 
-                <div className="mt-5">
-                    <section>
+                <div className={`mt-5 ${selectedMonster ? "lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(360px,430px)] lg:items-start lg:gap-5" : ""}`}>
+                    <section className="min-w-0">
                         {filteredMonsters.length ? (
-                            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 2xl:grid-cols-4">
+                            <div className={`grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 ${selectedMonster ? "2xl:grid-cols-4" : "xl:grid-cols-4 2xl:grid-cols-5"}`}>
                                 {filteredMonsters.map((monster) => (
                                     <MonsterCard
                                         key={monster.id}
@@ -1023,6 +1045,7 @@ export function MonsterDatabase() {
                                         }}
                                         evolutionPercent={evolutionPercent}
                                         passiveCompareMode={passiveCompareMode}
+                                        sortBy={sortBy}
                                     />
                                 ))}
                             </div>
@@ -1053,11 +1076,35 @@ export function MonsterDatabase() {
                         )}
                     </section>
 
+                    {selectedMonster ? (
+                        <aside className="sticky top-4 hidden min-w-0 rounded-2xl shadow-[-14px_0_36px_rgba(0,0,0,0.3)] lg:block">
+                            <div ref={inspectorRef} className="max-h-[calc(100vh-32px)] overflow-y-auto overscroll-contain rounded-2xl">
+                                <div className="pointer-events-none sticky top-3 z-20 flex h-0 justify-end pr-3">
+                                    <button
+                                        type="button"
+                                        aria-label="Close monster inspector"
+                                        onClick={() => setSelectedId("")}
+                                        className="pointer-events-auto grid size-9 place-items-center rounded-full border border-[#59677a] bg-[#0b111a]/95 text-xl font-bold leading-none text-white shadow-lg transition hover:border-[#7182ff] hover:bg-[#182235] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7182ff]"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                                <DetailPanel
+                                    key={selectedMonster.id}
+                                    monster={selectedMonster}
+                                    evolutionPercent={evolutionPercent}
+                                    passiveCompareMode={passiveCompareMode}
+                                    onMonsterSelect={setSelectedId}
+                                    sortBy={sortBy}
+                                />
+                            </div>
+                        </aside>
+                    ) : null}
                 </div>
             </div>
 
             {selectedMonster ? (
-                <div className="fixed inset-0 z-[99]" role="presentation">
+                <div className="fixed inset-0 z-[99] lg:hidden" role="presentation">
                     <button
                         type="button"
                         aria-label="Close monster details"
@@ -1087,6 +1134,7 @@ export function MonsterDatabase() {
                             evolutionPercent={evolutionPercent}
                             passiveCompareMode={passiveCompareMode}
                             onMonsterSelect={setSelectedId}
+                            sortBy={sortBy}
                         />
                     </div>
                 </div>
