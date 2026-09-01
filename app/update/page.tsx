@@ -4,12 +4,27 @@ import Link from "next/link";
 import { SiteFooter } from "../components/site-footer";
 import { TopNavigation } from "../components/top-navigation";
 
+
+type UpdateSection = {
+    eyebrow: string;
+    title: string;
+    description: string;
+    accent: string;
+};
+
+type FollowUpUpdate = {
+    version: string;
+    date: string;
+    title: string;
+    description: string;
+};
+
 export const metadata: Metadata = {
     title: "Update 0.46 — Cam Lab",
     description: "Catch a Monster Update 0.46 notes, including the Coilwork City boss, Dragon Evolution Event, AbyssalDrake evolution, fixes, and codes through 0.46.2.",
 };
 
-const updateSections = [
+const updateSections: UpdateSection[] = [
     {
         eyebrow: "Coilwork City",
         title: "Brand-New Boss",
@@ -60,7 +75,7 @@ const updateSections = [
     },
 ];
 
-const followUpUpdates = [
+const followUpUpdates: FollowUpUpdate[] = [
     {
         version: "Update 0.46.1",
         date: "August 28, 2026",
