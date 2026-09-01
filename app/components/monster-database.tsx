@@ -370,12 +370,14 @@ function DetailPanel({
                          passiveCompareMode,
                          onMonsterSelect,
                          sortBy,
+                         desktopInspector = false,
                      }: {
     monster: GeneratedMonster;
     evolutionPercent: number;
     passiveCompareMode: PassiveCompareMode;
     onMonsterSelect: (monsterId: string) => void;
     sortBy: SortKey;
+    desktopInspector?: boolean;
 }) {
     const skills = monster.skillIds.map((id) => getSkill(id)).filter(Boolean);
     const passive = monster.passives?.[0] ?? null;
@@ -390,31 +392,36 @@ function DetailPanel({
     return (
         <div className="min-w-0">
             <aside className="overflow-hidden rounded-2xl border border-[#344050] bg-[#111925]">
-                <div className="relative aspect-[16/9] overflow-hidden border-b border-[#344050] bg-[radial-gradient(circle_at_50%_45%,rgba(113,130,255,0.17),transparent_62%)]">
-                    {monster.image ? (
-                        <img src={assetPath(monster.image)} alt={monster.name} className="h-full w-full object-contain p-6" />
-                    ) : null}
-                </div>
-
-                <div className="p-5">
-                    <div className="flex items-start justify-between gap-3">
-                        <div>
-                            <h2 className="text-2xl font-black tracking-tight text-white">{monster.name}</h2>
-                            <p className="mt-1 text-xs font-semibold text-[#9ba7b9]">
-                                {monster.rarity} · {monster.element} · Index {monster.indexPosition}
-                            </p>
-                        </div>
-                        <span className={`rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] ${
-                            isObtainable(monster)
-                                ? "border-[#2f7656] bg-[#10251c] text-[#6bdca2]"
-                                : "border-[#7a4550] bg-[#2d1419] text-[#ff8f9c]"
-                        }`}>
-                        {isObtainable(monster) ? "Obtainable" : "Unavailable"}
-                    </span>
+                <div className={desktopInspector ? "grid grid-cols-[160px_minmax(0,1fr)] border-b border-[#344050]" : ""}>
+                    <div className={`relative overflow-hidden bg-[radial-gradient(circle_at_50%_45%,rgba(113,130,255,0.17),transparent_62%)] ${desktopInspector ? "min-h-40 border-r border-[#344050]" : "aspect-[16/9] border-b border-[#344050]"}`}>
+                        {monster.image ? (
+                            <img src={assetPath(monster.image)} alt={monster.name} className={`h-full w-full object-contain ${desktopInspector ? "p-4" : "p-6"}`} />
+                        ) : null}
                     </div>
 
-                    <section className="mt-5 border-t border-[#293443] pt-4">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-[#7182ff]">Reference Stats</h3>
+                    <div className={desktopInspector ? "flex items-center p-4" : "p-5 pb-0"}>
+                        <div className="flex w-full items-start justify-between gap-3">
+                            <div className="min-w-0">
+                                <h2 className="text-2xl font-black tracking-tight text-white">{monster.name}</h2>
+                                <p className="mt-1 text-sm font-semibold text-[#aab5c6]">
+                                    {monster.rarity} · {monster.element} · Index {monster.indexPosition}
+                                </p>
+                            </div>
+                            <span className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] ${
+                                isObtainable(monster)
+                                    ? "border-[#2f7656] bg-[#10251c] text-[#6bdca2]"
+                                    : "border-[#7a4550] bg-[#2d1419] text-[#ff8f9c]"
+                            }`}>
+                                {isObtainable(monster) ? "Obtainable" : "Unavailable"}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={desktopInspector ? "p-4" : "px-5 pb-5"}>
+
+                    <section className={`${desktopInspector ? "" : "mt-5"} border-t border-[#293443] pt-4`}>
+                        <h3 className="text-xs font-black uppercase tracking-[0.14em] text-[#8290ff]">Reference Stats</h3>
                         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
                             {[
                                 ["Damage", compactNumber(comparisonStats.damage)],
@@ -427,13 +434,13 @@ function DetailPanel({
 
                                 return (
                                 <div key={label} className={`rounded-lg border p-2.5 ${active ? "border-[#34d5ff]/70 bg-[#102631] shadow-[0_0_18px_rgba(52,213,255,0.1)]" : "border-[#293443] bg-[#0d141e]"}`}>
-                                    <p className={`text-[9px] font-bold uppercase tracking-[0.08em] ${active ? "text-[#57dcff]" : "text-[#667489]"}`}>{label}</p>
-                                    <p className={`mt-1 text-sm font-black ${active ? "text-[#b8f3ff]" : "text-[#e8edf5]"}`}>{value}</p>
+                                    <p className={`text-[10px] font-bold uppercase tracking-[0.08em] ${active ? "text-[#57dcff]" : "text-[#7f8da2]"}`}>{label}</p>
+                                    <p className={`mt-1 text-lg font-black ${active ? "text-[#b8f3ff]" : "text-[#f2f5fa]"}`}>{value}</p>
                                 </div>
                                 );
                             })}
                         </div>
-                        <p className="mt-2 text-[10px] leading-4 text-[#657287]">
+                        <p className="mt-2 text-xs leading-5 text-[#8491a5]">
                             Comparison preset: Base E-rank / Level 1 · selected EM for evolved forms ·{" "}
                             {passiveCompareMode === "none"
                                 ? "no passives"
@@ -444,8 +451,8 @@ function DetailPanel({
                         </p>
                     </section>
 
-                    <section className="mt-5 border-t border-[#293443] pt-4">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-[#7182ff]">Skills</h3>
+                    <section className="mt-4 border-t border-[#293443] pt-4">
+                        <h3 className="text-xs font-black uppercase tracking-[0.14em] text-[#8290ff]">Skills</h3>
                         <div className="mt-3 grid gap-2">
                             {skills.map((skill, skillIndex) =>
                                 skill ? (
@@ -460,12 +467,12 @@ function DetailPanel({
                                         />
                                         <div className="min-w-0">
                                             <div className="flex items-center gap-2">
-                                                <p className="truncate text-xs font-bold text-[#edf1f7]">{getSkillDisplayName(skill.name)}</p>
+                                                <p className="truncate text-sm font-bold text-[#f4f6fa]">{getSkillDisplayName(skill.name)}</p>
                                                 {skill.cooldown !== null ? (
-                                                    <span className="text-[10px] font-semibold text-[#758399]">{skill.cooldown}s</span>
+                                                    <span className="text-xs font-semibold text-[#93a0b3]">{skill.cooldown}s</span>
                                                 ) : null}
                                             </div>
-                                            <p className="mt-1 line-clamp-2 text-[10px] leading-4 text-[#7f8b9e]">
+                                            <p className="mt-1 text-xs leading-5 text-[#9ba7b9]">
                                                 {skill.notes || `${skill.element} skill`}
                                             </p>
                                             {getSkillEffects(skill.notes).length > 0 ? (
@@ -473,7 +480,7 @@ function DetailPanel({
                                                     {getSkillEffects(skill.notes).map((effect) => (
                                                         <span
                                                             key={effect}
-                                                            className="rounded border border-[#344050] bg-[#121b27] px-1.5 py-0.5 text-[9px] font-bold text-[#9eabbe]"
+                                                            className="rounded border border-[#344050] bg-[#121b27] px-1.5 py-0.5 text-[10px] font-bold text-[#aeb9ca]"
                                                         >
                                                         {skillEffectLabels[effect]}
                                                     </span>
@@ -487,8 +494,8 @@ function DetailPanel({
                         </div>
                     </section>
 
-                    <section className="mt-5 border-t border-[#293443] pt-4">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-[#7182ff]">Passive</h3>
+                    <section className="mt-4 border-t border-[#293443] pt-4">
+                        <h3 className="text-xs font-black uppercase tracking-[0.14em] text-[#8290ff]">Passive</h3>
                         {passive ? (
                             <div className="mt-3 flex items-center gap-3 rounded-lg border border-[#293443] bg-[#0d141e] p-3">
                                 {passiveImage ? (
@@ -500,7 +507,7 @@ function DetailPanel({
                                 ) : null}
                                 <div className="min-w-0 flex-1">
                                     <div className="flex flex-wrap items-center gap-2">
-                                        <p className="text-xs font-bold text-[#edf1f7]">{getPassiveUiName(passive)}</p>
+                                        <p className="text-sm font-bold text-[#f4f6fa]">{getPassiveUiName(passive)}</p>
                                         {getPassiveConditionDescription(passive) ? (
                                             <span className="rounded border border-[#8b6b38] bg-[#2b2112] px-1.5 py-0.5 text-[9px] font-bold text-[#e9b968]">
                                                 {getPassiveConditionDescription(passive)}
@@ -511,7 +518,7 @@ function DetailPanel({
                                             </span>
                                         )}
                                     </div>
-                                    <p className="mt-1.5 text-[10px] leading-4 text-[#9aa6b8]">
+                                    <p className="mt-1.5 text-xs leading-5 text-[#aab5c6]">
                                         {getPassiveDescription(passive)}
                                     </p>
                                 </div>
@@ -521,18 +528,18 @@ function DetailPanel({
                         )}
                     </section>
 
-                    <section className="mt-5 border-t border-[#293443] pt-4">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-[#7182ff]">Obtained From</h3>
-                        <p className="mt-3 whitespace-pre-line rounded-lg border border-[#293443] bg-[#0d141e] p-3 text-[10px] leading-5 text-[#8996aa]">
+                    <section className="mt-4 border-t border-[#293443] pt-4">
+                        <h3 className="text-xs font-black uppercase tracking-[0.14em] text-[#8290ff]">Obtained From</h3>
+                        <p className="mt-3 whitespace-pre-line rounded-lg border border-[#293443] bg-[#0d141e] p-3 text-xs leading-5 text-[#a1adbe]">
                             {sourceDescription(monster)}
                         </p>
                     </section>
 
-                    <section className="mt-5 border-t border-[#293443] pt-4">
+                    <section className="mt-4 border-t border-[#293443] pt-4">
                         <div className="flex items-center justify-between gap-3">
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-[#7182ff]">Evolution</h3>
+                            <h3 className="text-xs font-black uppercase tracking-[0.14em] text-[#8290ff]">Evolution</h3>
                             {getEvolutionFamily(monster).length > 1 ? (
-                                <span className="text-[9px] font-semibold text-[#667489]">
+                                <span className="text-xs font-semibold text-[#8592a6]">
                                     {getEvolutionFamily(monster).length} forms
                                 </span>
                             ) : null}
@@ -548,29 +555,29 @@ function DetailPanel({
                                 />
                             </div>
                         ) : (
-                            <div className="mt-3 rounded-lg border border-dashed border-[#344050] bg-[#0d141e] p-4 text-center text-[10px] text-[#6f7c90]">
+                            <div className="mt-3 rounded-lg border border-dashed border-[#344050] bg-[#0d141e] p-4 text-center text-xs text-[#8794a8]">
                                 No known evolution family.
                             </div>
                         )}
                     </section>
 
-                    <div className="mt-5 grid gap-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                    <div className="mt-4 grid gap-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
                         <Link
                             href={`/#${monsterHash(monster)}`}
-                            className="rounded-lg bg-[#586af0] px-3 py-2.5 text-center text-xs font-black text-white transition hover:bg-[#7182ff]"
+                            className="rounded-lg bg-[#586af0] px-3 py-2.5 text-center text-sm font-black text-white transition hover:bg-[#7182ff]"
                         >
                             Open in Calculator
                         </Link>
                         <Link
                             href={`/monster-database/${monster.id}`}
-                            className="rounded-lg border border-[#586af0]/70 bg-[#18213a] px-3 py-2.5 text-center text-xs font-black text-[#cbd1ff] transition hover:border-[#7182ff] hover:text-white"
+                            className="rounded-lg border border-[#586af0]/70 bg-[#18213a] px-3 py-2.5 text-center text-sm font-black text-[#cbd1ff] transition hover:border-[#7182ff] hover:text-white"
                         >
                             View Profile
                         </Link>
                         <button
                             type="button"
                             onClick={() => void copyMonsterLink()}
-                            className="rounded-lg border border-[#344050] bg-[#141d29] px-3 py-2.5 text-xs font-bold text-[#c4cedd] transition hover:border-[#7182ff]/70 hover:text-white"
+                            className="rounded-lg border border-[#344050] bg-[#141d29] px-3 py-2.5 text-sm font-bold text-[#c4cedd] transition hover:border-[#7182ff]/70 hover:text-white"
                         >
                             Copy Link
                         </button>
@@ -599,6 +606,8 @@ export function MonsterDatabase() {
     const [filtersOpen, setFiltersOpen] = useState(false);
     const drawerRef = useRef<HTMLDivElement>(null);
     const inspectorRef = useRef<HTMLDivElement>(null);
+    const inspectorShellRef = useRef<HTMLElement>(null);
+    const [inspectorMaxHeight, setInspectorMaxHeight] = useState<number | null>(null);
 
     useEffect(() => {
         if (!selectedId && !filtersOpen) return;
@@ -610,7 +619,7 @@ export function MonsterDatabase() {
 
         const previousOverflow = document.body.style.overflow;
         const previousPaddingRight = document.body.style.paddingRight;
-        const selectedIsModal = Boolean(selectedId) && !window.matchMedia("(min-width: 1024px)").matches;
+        const selectedIsModal = Boolean(selectedId) && !window.matchMedia("(min-width: 1280px)").matches;
         const shouldLockPage = filtersOpen || selectedIsModal;
 
         if (shouldLockPage) {
@@ -632,6 +641,33 @@ export function MonsterDatabase() {
             document.body.style.paddingRight = previousPaddingRight;
         };
     }, [selectedId, filtersOpen]);
+
+    useEffect(() => {
+        if (!selectedId) return;
+
+        let animationFrame = 0;
+        const updateInspectorHeight = () => {
+            const inspectorTop = inspectorShellRef.current?.getBoundingClientRect().top;
+            if (inspectorTop === undefined) return;
+
+            const visibleTop = Math.max(16, inspectorTop);
+            setInspectorMaxHeight(Math.max(320, window.innerHeight - visibleTop - 16));
+        };
+        const scheduleUpdate = () => {
+            window.cancelAnimationFrame(animationFrame);
+            animationFrame = window.requestAnimationFrame(updateInspectorHeight);
+        };
+
+        scheduleUpdate();
+        window.addEventListener("resize", scheduleUpdate);
+        window.addEventListener("scroll", scheduleUpdate, { passive: true });
+
+        return () => {
+            window.cancelAnimationFrame(animationFrame);
+            window.removeEventListener("resize", scheduleUpdate);
+            window.removeEventListener("scroll", scheduleUpdate);
+        };
+    }, [selectedId, sortBy]);
 
     const sourceTypes = useMemo(
         () =>
@@ -1030,7 +1066,7 @@ export function MonsterDatabase() {
                     </div>
                 </section>
 
-                <div className={`mt-5 ${selectedMonster ? "lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(360px,430px)] lg:items-start lg:gap-5" : ""}`}>
+                <div className={`mt-5 ${selectedMonster ? "xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(460px,500px)] xl:items-start xl:gap-5" : ""}`}>
                     <section className="min-w-0">
                         {filteredMonsters.length ? (
                             <div className={`grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 ${selectedMonster ? "2xl:grid-cols-4" : "xl:grid-cols-4 2xl:grid-cols-5"}`}>
@@ -1077,8 +1113,15 @@ export function MonsterDatabase() {
                     </section>
 
                     {selectedMonster ? (
-                        <aside className="sticky top-4 hidden min-w-0 rounded-2xl shadow-[-14px_0_36px_rgba(0,0,0,0.3)] lg:block">
-                            <div ref={inspectorRef} className="max-h-[calc(100vh-32px)] overflow-y-auto overscroll-contain rounded-2xl">
+                        <aside
+                            ref={inspectorShellRef}
+                            className="sticky top-4 hidden min-w-0 rounded-2xl shadow-[-14px_0_36px_rgba(0,0,0,0.3)] xl:block"
+                        >
+                            <div
+                                ref={inspectorRef}
+                                className="overflow-y-auto overscroll-contain rounded-2xl"
+                                style={{ maxHeight: inspectorMaxHeight ? `${inspectorMaxHeight}px` : "calc(100vh - 2rem)" }}
+                            >
                                 <div className="pointer-events-none sticky top-3 z-20 flex h-0 justify-end pr-3">
                                     <button
                                         type="button"
@@ -1096,6 +1139,7 @@ export function MonsterDatabase() {
                                     passiveCompareMode={passiveCompareMode}
                                     onMonsterSelect={setSelectedId}
                                     sortBy={sortBy}
+                                    desktopInspector
                                 />
                             </div>
                         </aside>
@@ -1104,7 +1148,7 @@ export function MonsterDatabase() {
             </div>
 
             {selectedMonster ? (
-                <div className="fixed inset-0 z-[99] lg:hidden" role="presentation">
+                <div className="fixed inset-0 z-[99] xl:hidden" role="presentation">
                     <button
                         type="button"
                         aria-label="Close monster details"
