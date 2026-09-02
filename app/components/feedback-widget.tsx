@@ -369,6 +369,9 @@ export function FeedbackWidget() {
                                         <label className="block">
                                             <span className="text-sm font-bold text-[#dbe3f7]">
                                                 Your message
+                                                <span className="ml-1 font-normal text-[#8f9dbc]">
+                                                    (minimum 10 characters)
+                                                </span>
                                             </span>
                                             <textarea
                                                 value={message}
@@ -382,8 +385,13 @@ export function FeedbackWidget() {
                                                 placeholder="e.g. The Index Tracker is slow on mobile, or this monster's stat is incorrect..."
                                                 className="mt-2 w-full resize-y rounded-lg border border-[#293b68] bg-[#0b1532] px-3 py-3 text-sm leading-5 text-white outline-none placeholder:text-[#69789d] focus:border-[#62a7ff] focus:ring-2 focus:ring-[#62a7ff]/20"
                                             />
-                                            <span className="mt-1 block text-right text-xs text-[#8f9dbc]">
-                                                {message.length}/2000
+                                            <span className="mt-1 flex items-center justify-between gap-3 text-xs text-[#8f9dbc]">
+                                                <span>
+                                                    {message.trim().length < 10
+                                                        ? `${10 - message.trim().length} more characters required`
+                                                        : "Minimum length reached"}
+                                                </span>
+                                                <span>{message.length}/2000 characters</span>
                                             </span>
                                         </label>
 

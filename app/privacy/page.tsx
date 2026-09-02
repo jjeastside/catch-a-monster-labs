@@ -138,7 +138,7 @@ export default function PrivacyPolicyPage() {
 
                     <PolicySection number="5" title="Hosting and technical information">
                         <p>
-                            Cam Lab is published through GitHub Pages. GitHub and normal internet infrastructure may process technical information needed to deliver and secure the site, such as IP addresses, request details, device or browser information, and diagnostic logs. Cam Lab does not control the independent privacy practices of these service providers.
+                            Cam Lab is published through GitHub Pages and uses Cloudflare for share links, feedback delivery, and abuse protection. GitHub, Cloudflare, and normal internet infrastructure may process limited technical information needed to deliver and secure these services, such as IP addresses, request details, browser or device information, and diagnostic logs. Cam Lab does not intentionally use this information to identify visitors or include it in public GitHub feedback issues.
                         </p>
                         <p>
                             Learn more in the{" "}
