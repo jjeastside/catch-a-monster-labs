@@ -5,7 +5,7 @@ import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 
 const FEEDBACK_ENDPOINT =
     "https://cam-lab-feedback.camlab.workers.dev/feedback";
-const TURNSTILE_SITE_KEY = "0x4AAAAAAAEkgz3D6dd8N1N0";
+const TURNSTILE_SITE_KEY = "0x4AAAAAAEkgz3D6dd8N1N0R";
 const OPEN_FEEDBACK_EVENT = "cam-lab:open-feedback";
 
 const categoryOptions = [
@@ -26,7 +26,7 @@ type TurnstileApi = {
             theme: "dark";
             callback: (token: string) => void;
             "expired-callback": () => void;
-            "error-callback": () => void;
+            "error-callback": (errorCode: string) => boolean;
         },
     ) => string;
     remove: (widgetId: string) => void;
@@ -148,11 +148,12 @@ export function FeedbackWidget() {
                     setErrorMessage("");
                 },
                 "expired-callback": () => setTurnstileToken(""),
-                "error-callback": () => {
+                "error-callback": (errorCode) => {
                     setTurnstileToken("");
                     setErrorMessage(
-                        "Human verification could not load. Please try again.",
+                        `Human verification could not load (code ${errorCode}). Please try again.`,
                     );
+                    return true;
                 },
             },
         );
