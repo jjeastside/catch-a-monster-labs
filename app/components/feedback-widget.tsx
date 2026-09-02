@@ -347,6 +347,8 @@ export function FeedbackWidget() {
                                                 Category
                                             </span>
                                             <select
+                                                id="feedback-category"
+                                                name="feedback-category"
                                                 value={category}
                                                 onChange={(event) =>
                                                     setCategory(
@@ -374,6 +376,8 @@ export function FeedbackWidget() {
                                                 </span>
                                             </span>
                                             <textarea
+                                                id="feedback-message"
+                                                name="feedback-message"
                                                 value={message}
                                                 onChange={(event) =>
                                                     setMessage(event.target.value.slice(0, 2000))
@@ -403,6 +407,8 @@ export function FeedbackWidget() {
                                                 </span>
                                             </span>
                                             <input
+                                                id="feedback-discord-username"
+                                                name="feedback-discord-username"
                                                 type="text"
                                                 value={contact}
                                                 onChange={(event) =>

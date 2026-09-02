@@ -1048,6 +1048,8 @@ export function BuildEditor({
 
                                 <div className="flex items-center gap-2">
                                     <input
+                                        id="build-level-number"
+                                        name="build-level-number"
                                         type="number"
                                         min={MIN_LEVEL}
                                         max={maxSelectableLevel}

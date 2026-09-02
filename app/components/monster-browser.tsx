@@ -669,6 +669,8 @@ export function MonsterBrowser({
                             <span className="sr-only">Search monsters</span>
                             <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#7f8b9e]">⌕</span>
                             <input
+                                id="monster-search"
+                                name="monster-search"
                                 type="search"
                                 value={searchQuery}
                                 onChange={(event) => setSearchQuery(event.target.value)}

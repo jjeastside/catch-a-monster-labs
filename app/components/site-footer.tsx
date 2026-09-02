@@ -149,10 +149,18 @@ export function SiteFooter() {
                     </div>
                 </div>
 
-                <div className="mt-8 border-t border-[#252c39] pt-5">
+                <div className="mt-8 flex flex-col gap-3 border-t border-[#252c39] pt-5 sm:flex-row sm:items-center sm:justify-between">
                     <p className="max-w-5xl text-xs leading-5 text-[#69768a]">
                         Cam LAB is an independent fan-made companion site. It is not affiliated with, endorsed by, or sponsored by Roblox Corporation or LDS II. All trademarks are property of their respective owners.
                     </p>
+                    <a
+                        href="https://catchamonsterhub.com/"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="shrink-0 text-xs font-bold text-[#52aaff] transition hover:text-[#8dc8ff] focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7182ff]/60"
+                    >
+                        Partners with CAM Hub ↗
+                    </a>
                 </div>
             </div>
         </footer>
