@@ -10,8 +10,20 @@ export const metadata: Metadata = {
 const releases = [
     {
         version: "Development Update",
-        date: "September 1, 2026",
+        date: "September 2, 2026",
         label: "Latest",
+        changes: [
+            "Added a site-wide Feedback button and submission form so visitors can report bugs, request features, submit data corrections, or share general feedback without needing a GitHub account.",
+            "Added optional Discord usernames so feedback authors can provide a point of contact when they want a response.",
+            "Added Cloudflare Turnstile human verification to protect anonymous feedback submissions from bots and abuse.",
+            "Added the CAM Lab Feedback GitHub App and Cloudflare Worker integration, which securely publishes accepted submissions as public GitHub issues created by cam-lab-feedback[bot].",
+            "Added feedback success confirmation with a direct link to the newly created public GitHub issue.",
+            "Updated the Privacy Policy and site footer to explain public feedback submissions and provide access to the new feedback form.",
+        ],
+    },
+    {
+        version: "Development Update",
+        date: "September 1, 2026",
         changes: [
             "Added the Index Tracker, a dedicated progression page for tracking each monster's highest rank and Index bonuses without requiring an account.",
             "Added automatic Index Score calculations using rank points plus Shiny, Bloodlit, Fairy, and Huge bonuses, with per-monster completion shown out of 21 points.",
