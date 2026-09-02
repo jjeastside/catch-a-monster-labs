@@ -234,6 +234,82 @@ function parseVulnerabilityEffects(notes) {
     return effects;
 }
 
+function parseDamageDecreaseEffects(notes) {
+    const effects = [];
+    const variableRange = notes.match(
+        /-(\d+(?:\.\d+)?)%\s+to\s+-(\d+(?:\.\d+)?)%\s+damage(?:\s+(?:for\s+)?(\d+(?:\.\d+)?)\s*(?:s|secs?|seconds?))?/i,
+    );
+
+    if (variableRange) {
+        effects.push({
+            type: "damageDecrease",
+            target: "Enemy",
+            amountPercent: Number(variableRange[1]),
+            maxAmountPercent: Number(variableRange[2]),
+            durationSeconds: variableRange[3] !== undefined
+                ? Number(variableRange[3])
+                : 2,
+        });
+        return effects;
+    }
+
+    for (const match of notes.matchAll(
+        /(\d+(?:\.\d+)?)%\s+decreased damage(?:\s+for\s+(\d+(?:\.\d+)?)\s*(?:secs?|seconds?))?/gi,
+    )) {
+        effects.push({
+            type: "damageDecrease",
+            target: "Enemy",
+            amountPercent: Number(match[1]),
+            durationSeconds: match[2] !== undefined ? Number(match[2]) : 2,
+        });
+    }
+
+    const blackCard = notes.match(
+        /black card:\s*;?\s*-(\d+(?:\.\d+)?)%\s+damage(?:\s+for\s+(\d+(?:\.\d+)?)\s*(?:secs?|seconds?))?/i,
+    );
+    if (blackCard) {
+        effects.push({
+            type: "damageDecrease",
+            target: "Self",
+            amountPercent: Number(blackCard[1]),
+            durationSeconds: blackCard[2] !== undefined ? Number(blackCard[2]) : 2,
+            condition: "Black Card result",
+        });
+    }
+
+    if (!blackCard) {
+        for (const match of notes.matchAll(
+            /-(\d+(?:\.\d+)?)%\s+damage(?:\s+(?:for\s+)?(\d+(?:\.\d+)?)\s*(?:s|secs?|seconds?))?/gi,
+        )) {
+            effects.push({
+                type: "damageDecrease",
+                target: "Enemy",
+                amountPercent: Number(match[1]),
+                durationSeconds: match[2] !== undefined ? Number(match[2]) : 2,
+            });
+        }
+    }
+
+    return effects;
+}
+
+function parseDamageReductionEffects(notes) {
+    const effects = [];
+
+    for (const match of notes.matchAll(
+        /(\d+(?:\.\d+)?)%\s+damage reduction(?:\s+(?:for\s+)?self)?(?:\s+(?:for\s+)?(\d+(?:\.\d+)?)\s*(?:secs?|seconds?))?/gi,
+    )) {
+        effects.push({
+            type: "damageReduction",
+            target: "Self",
+            amountPercent: Number(match[1]),
+            durationSeconds: match[2] !== undefined ? Number(match[2]) : 2,
+        });
+    }
+
+    return effects;
+}
+
 function parseStunEffects(notes) {
     const effects = [];
 
@@ -309,6 +385,8 @@ function parseSkillStatusEffects(notes) {
     return [
         ...parseDamageIncreaseEffects(notes),
         ...parseVulnerabilityEffects(notes),
+        ...parseDamageDecreaseEffects(notes),
+        ...parseDamageReductionEffects(notes),
         ...parseStunEffects(notes),
         ...parsePoisonEffects(notes),
         ...parseBurnEffects(notes),

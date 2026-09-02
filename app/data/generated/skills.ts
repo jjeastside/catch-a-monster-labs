@@ -159,7 +159,16 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
-    "notes": "Target: Enemy. Enemy effects: -15% to -25% damage  for 10 s",
+    "statusEffects": [
+      {
+        "type": "damageDecrease",
+        "target": "Enemy",
+        "amountPercent": 15,
+        "maxAmountPercent": 25,
+        "durationSeconds": 10
+      }
+    ],
+    "notes": "Target: Enemy. Enemy effects: -15% to -25% damage  for 10 secs",
     "validationStatus": "Ready"
   },
   "dash": {
@@ -173,7 +182,15 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
-    "notes": "Target: Enemy | Self. Enemy effects: 95% damage reduction + knockback",
+    "statusEffects": [
+      {
+        "type": "damageReduction",
+        "target": "Self",
+        "amountPercent": 95,
+        "durationSeconds": 2
+      }
+    ],
+    "notes": "Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback",
     "validationStatus": "Ready"
   },
   "deadly-sonic-wave": {
@@ -231,12 +248,18 @@ export const GENERATED_SKILLS = {
     "cooldown": 6,
     "statusEffects": [
       {
+        "type": "damageReduction",
+        "target": "Self",
+        "amountPercent": 90,
+        "durationSeconds": 4
+      },
+      {
         "type": "stun",
         "target": "Enemy",
         "durationSeconds": 2
       }
     ],
-    "notes": "Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 90% damage reduction self",
+    "notes": "Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 90% damage reduction 4 secs self",
     "validationStatus": "Ready"
   },
   "dragons-breath": {
@@ -400,7 +423,7 @@ export const GENERATED_SKILLS = {
     "name": "Emergency Thorn Shield",
     "element": "Common",
     "damageInstances": [],
-    "cooldown": 0,
+    "cooldown": 8,
     "notes": "Target: Ally | Self. Ally effects: 60% Damage reflection for 2 secs",
     "validationStatus": "Ready"
   },
@@ -571,6 +594,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageDecrease",
+        "target": "Enemy",
+        "amountPercent": 15,
+        "durationSeconds": 10
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Taunt 2 secs; -15% damage 10 secs",
     "validationStatus": "Ready"
   },
@@ -585,7 +616,15 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
-    "notes": "Target: Enemy | Self. Enemy effects: 95% damage reduction + knockback",
+    "statusEffects": [
+      {
+        "type": "damageReduction",
+        "target": "Self",
+        "amountPercent": 95,
+        "durationSeconds": 2
+      }
+    ],
+    "notes": "Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback",
     "validationStatus": "Ready"
   },
   "fire-dash-oblivion-drake": {
@@ -599,7 +638,15 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
-    "notes": "Target: Enemy | Self. Enemy effects: 95% damage reduction + knockback",
+    "statusEffects": [
+      {
+        "type": "damageReduction",
+        "target": "Self",
+        "amountPercent": 95,
+        "durationSeconds": 2
+      }
+    ],
+    "notes": "Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback",
     "validationStatus": ""
   },
   "fire-dragon-flame-blast": {
@@ -1073,6 +1120,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageDecrease",
+        "target": "Enemy",
+        "amountPercent": 15,
+        "durationSeconds": 10
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: 15% decreased damage for 10 secs",
     "validationStatus": "Ready"
   },
@@ -1236,6 +1291,13 @@ export const GENERATED_SKILLS = {
         "amountPercent": 25,
         "durationSeconds": 5,
         "condition": "Red Card result"
+      },
+      {
+        "type": "damageDecrease",
+        "target": "Self",
+        "amountPercent": 15,
+        "durationSeconds": 5,
+        "condition": "Black Card result"
       }
     ],
     "notes": "Target: Enemy | Self. Ally effects: Black Card:; -15% damage for 5 secs; Red Card:; 25% damage for 5 secs",
@@ -1329,6 +1391,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageReduction",
+        "target": "Self",
+        "amountPercent": 95,
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy | Self. Ally effects: 95% damage reduction for 2 secs",
     "validationStatus": "Ready"
   },
@@ -1343,6 +1413,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageReduction",
+        "target": "Self",
+        "amountPercent": 95,
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for 2 secs",
     "validationStatus": "Ready"
   },
@@ -1863,6 +1941,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageReduction",
+        "target": "Self",
+        "amountPercent": 35,
+        "durationSeconds": 10
+      }
+    ],
     "notes": "Target: Enemy | Self. Enemy effects: Taunt for 2 secs Ally effects: 35% damage reduction for 10 secs",
     "validationStatus": "Ready"
   },
@@ -1877,6 +1963,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "damageDecrease",
+        "target": "Enemy",
+        "amountPercent": 15,
+        "durationSeconds": 10
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: 15% decreased damage for 10 secs",
     "validationStatus": "Ready"
   },
@@ -2005,6 +2099,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageReduction",
+        "target": "Self",
+        "amountPercent": 95,
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for self for 2 secs",
     "validationStatus": "Ready"
   },
@@ -2019,6 +2121,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageReduction",
+        "target": "Self",
+        "amountPercent": 95,
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for 2 secs; Taunt for 2 secs",
     "validationStatus": "Review"
   },

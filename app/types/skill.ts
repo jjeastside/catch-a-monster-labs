@@ -26,6 +26,7 @@ export type SkillStatusEffect = {
         | "stun";
     target: SkillEffectTarget;
     amountPercent?: number;
+    maxAmountPercent?: number;
     durationSeconds?: number;
     stacks?: number;
     maxStacks?: number;

@@ -53,6 +53,7 @@ type SkillEffect =
     | "vulnerability"
     | "knockback"
     | "damage-buff"
+    | "damage-decrease"
     | "damage-reduction"
     | "shield"
     | "taunt"
@@ -69,6 +70,7 @@ const skillEffectLabels: Record<SkillEffect, string> = {
     vulnerability: "Vulnerability",
     knockback: "Knockback",
     "damage-buff": "Damage Buff",
+    "damage-decrease": "Damage Decrease",
     "damage-reduction": "Damage Reduction",
     shield: "Shield",
     taunt: "Taunt",
@@ -211,6 +213,9 @@ function getSkillEffects(notes?: string): SkillEffect[] {
     if (/\bstun\b/.test(normalized)) effects.push("stun");
     if (/\bvulnerab/.test(normalized)) effects.push("vulnerability");
     if (/\bknockback\b/.test(normalized)) effects.push("knockback");
+    if (/\bdecreased damage\b|-(?:\d+(?:\.\d+)?)%\s+(?:to\s+-\d+(?:\.\d+)?%\s+)?damage\b/.test(normalized)) {
+        effects.push("damage-decrease");
+    }
     if (/\bdamage reduction\b/.test(normalized)) effects.push("damage-reduction");
     if (/\bshield\b/.test(normalized)) effects.push("shield");
     if (/\btaunt\b/.test(normalized)) effects.push("taunt");

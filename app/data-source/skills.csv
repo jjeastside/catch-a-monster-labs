@@ -24,10 +24,10 @@ crimson-burst,Crimson Burst,Common,"[
 ]",8,Target: Enemy. Enemy effects: Stun 1.5 secs; Stagger,Ready
 dark-singularity,Dark Singularity,Common,"[
   { multiplier: 1.2, hits: 2 },
-]",6,Target: Enemy. Enemy effects: -15% to -25% damage  for 10 s,Ready
+]",6,Target: Enemy. Enemy effects: -15% to -25% damage  for 10 secs,Ready
 dash,Dash,Common,"[
   { multiplier: 1.2, hits: 1 },
-]",8,Target: Enemy | Self. Enemy effects: 95% damage reduction + knockback,Ready
+]",8,Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback,Ready
 deadly-sonic-wave,Deadly Sonic Wave,Common,"[
   { multiplier: 1.2, hits: 2 },
 ]",8,Target: Enemy. Enemy effects: Stun 2 secs,Ready
@@ -36,7 +36,7 @@ demonic-lullaby,Demonic Lullaby,Common,"[
 ]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
 divine-energy-blast,Divine Energy Blast,Common,"[
   { multiplier: 3.5, hits: 1 },
-]",6,Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 90% damage reduction self,Ready
+]",6,Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 90% damage reduction 4 secs self,Ready
 dragons-breath,Dragon's Breath,Fire,"[
   { multiplier: 0.4, hits: 3 },
 ]",6,Target: Enemy.,Ready
@@ -61,7 +61,7 @@ electric-beam,Electric Beam,Common,"[
 electro-nova,Electro Nova,Common,"[
   { multiplier: 1.2, hits: 1 },
 ]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
-emergency-thorn-shield,Emergency Thorn Shield,Common,[],0,Target: Ally | Self. Ally effects: 60% Damage reflection for 2 secs,Ready
+emergency-thorn-shield,Emergency Thorn Shield,Common,[],8,Target: Ally | Self. Ally effects: 60% Damage reflection for 2 secs,Ready
 ex-air-bullet,Ex Air Bullet,Common,"[
   { multiplier: 0.3, hits: 4 },
 ]",6,Target: Enemy.,Ready
@@ -97,10 +97,10 @@ fear-taunt,Fear Taunt,Common,"[
 ]",8,Target: Enemy. Enemy effects: Taunt 2 secs; -15% damage 10 secs,Ready
 fire-dash,Fire Dash,Fire,"[
   { multiplier: 1.2, hits: 1 },
-]",8,Target: Enemy | Self. Enemy effects: 95% damage reduction + knockback,Ready
+]",8,Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback,Ready
 fire-dash-oblivion-drake,Fire Dash (Oblivion Drake),Fire,"[
   { multiplier: 2, hits: 1 },
-]",8,Target: Enemy | Self. Enemy effects: 95% damage reduction + knockback,
+]",8,Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback,
 fire-dragon-flame-blast,Fire Dragon Flame Blast,Fire,"[
   { multiplier: 2.5, hits: 1 },
 ]",6,Target: Enemy. Enemy effects: Knockback,Ready

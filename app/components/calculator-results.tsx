@@ -97,12 +97,10 @@ function formatStatNumber(value: number): string {
 
 function DamageIncreaseEffect({ effect }: { effect: SkillStatusEffect }) {
     const targetLabel = effect.target === "Team" ? "Team" : "Self";
-    const durationLabel = effect.durationSeconds !== undefined
-        ? `${formatNumber(effect.durationSeconds)}s`
-        : null;
+    const durationLabel = `${formatNumber(effect.durationSeconds ?? 2)}s`;
     const tooltip = [
         `Increases ${targetLabel.toLowerCase()} damage by ${formatNumber(effect.amountPercent ?? 0)}%.`,
-        durationLabel ? `Lasts ${durationLabel}.` : null,
+        `Lasts ${durationLabel}.`,
         effect.condition ? `Requires: ${effect.condition}.` : null,
     ].filter(Boolean).join(" ");
 
@@ -169,7 +167,7 @@ function VulnerabilityEffect({
                 <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
                     +{formatNumber(effectiveAmount)}%
                     <span className="ml-1.5 text-xs font-semibold text-[#bda2d8]">{targetLabel}</span>
-                    {durationLabel && <span className="ml-1.5 text-xs font-semibold text-[#8e99ad]">• {durationLabel}</span>}
+                    <span className="ml-1.5 text-xs font-semibold text-[#8e99ad]">• {durationLabel}</span>
                 </p>
                 {effect.condition && <p className="mt-0.5 truncate text-[10px] text-[#b7a6c7]" title={effect.condition}>{effect.condition}</p>}
             </div>
@@ -178,9 +176,7 @@ function VulnerabilityEffect({
 }
 
 function StunEffect({ effect }: { effect: SkillStatusEffect }) {
-    const durationLabel = effect.durationSeconds !== undefined
-        ? `${formatNumber(effect.durationSeconds)}s`
-        : null;
+    const durationLabel = `${formatNumber(effect.durationSeconds ?? 2)}s`;
     const tooltip = durationLabel
         ? `Prevents the enemy from acting for ${durationLabel}.`
         : "Temporarily prevents the enemy from acting.";
@@ -260,6 +256,85 @@ function BurnEffect({
                 <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
                     {formatNumber(stacks)} {stacks === 1 ? "Stack" : "Stacks"}
                     <span className="ml-1.5 text-xs font-semibold text-[#e3a0a0]">• {formatNumber(duration)}s</span>
+                </p>
+            </div>
+        </div>
+    );
+}
+
+function DamageDecreaseEffect({ effect }: { effect: SkillStatusEffect }) {
+    const amount = effect.amountPercent ?? 0;
+    const maxAmount = effect.maxAmountPercent;
+    const amountLabel = maxAmount !== undefined
+        ? `${formatNumber(amount)}–${formatNumber(maxAmount)}%`
+        : `${formatNumber(amount)}%`;
+    const targetLabel = effect.target === "Enemy" ? "Enemy" : effect.target;
+    const durationLabel = effect.durationSeconds !== undefined
+        ? `${formatNumber(effect.durationSeconds)}s`
+        : null;
+    const tooltip = [
+        maxAmount !== undefined
+            ? `Reduces ${targetLabel.toLowerCase()} damage dealt by ${amountLabel}.`
+            : `Reduces ${targetLabel.toLowerCase()} damage dealt by ${formatNumber(amount)}%.`,
+        durationLabel ? `Lasts ${durationLabel}.` : null,
+        effect.condition ? `Requires: ${effect.condition}.` : null,
+    ].filter(Boolean).join(" ");
+
+    return (
+        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#e06b72]/35 bg-[#3c1d24]/45 px-3 py-2">
+            <img
+                src={assetPath("/icons/damage-increase.png")}
+                alt=""
+                className="size-8 shrink-0 rotate-180 object-contain"
+            />
+            <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#f08a91]">Damage Decrease</p>
+                    <InfoTooltip label="Explain Damage Decrease" text={tooltip} />
+                </div>
+                <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
+                    -{amountLabel}
+                    <span className="ml-1.5 text-xs font-semibold text-[#d8a1a5]">{targetLabel}</span>
+                    {durationLabel && <span className="ml-1.5 text-xs font-semibold text-[#8e99ad]">• {durationLabel}</span>}
+                </p>
+                {effect.condition && (
+                    <p className="mt-0.5 truncate text-[10px] text-[#c7a2a5]" title={effect.condition}>
+                        {effect.condition}
+                    </p>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function DamageReductionEffect({ effect }: { effect: SkillStatusEffect }) {
+    const amount = effect.amountPercent ?? 0;
+    const targetLabel = effect.target === "Self" ? "Self" : effect.target;
+    const durationLabel = effect.durationSeconds !== undefined
+        ? `${formatNumber(effect.durationSeconds)}s`
+        : null;
+    const tooltip = [
+        `Reduces incoming damage taken by ${formatNumber(amount)}%.`,
+        targetLabel !== "Self" ? `Applies to ${targetLabel.toLowerCase()}.` : "Applies to the caster.",
+        `Lasts ${durationLabel}.`,
+    ].join(" ");
+
+    return (
+        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#67b7e8]/35 bg-[#173247]/45 px-3 py-2">
+            <img
+                src={assetPath("/icons/attribute-resistance.png")}
+                alt=""
+                className="size-8 shrink-0 object-contain"
+            />
+            <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#82c8f2]">Damage Reduction</p>
+                    <InfoTooltip label="Explain Damage Reduction" text={tooltip} />
+                </div>
+                <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
+                    -{formatNumber(amount)}% Incoming
+                    <span className="ml-1.5 text-xs font-semibold text-[#9fc5dc]">{targetLabel}</span>
+                    <span className="ml-1.5 text-xs font-semibold text-[#8e99ad]">• {durationLabel}</span>
                 </p>
             </div>
         </div>
@@ -954,6 +1029,12 @@ function SkillDamagePanel({
     const burnEffects = (skill.statusEffects ?? []).filter(
         (effect) => effect.type === "burn",
     );
+    const damageDecreaseEffects = (skill.statusEffects ?? []).filter(
+        (effect) => effect.type === "damageDecrease",
+    );
+    const damageReductionEffects = (skill.statusEffects ?? []).filter(
+        (effect) => effect.type === "damageReduction",
+    );
 
     return (
         <section className="p-4">
@@ -1338,6 +1419,28 @@ function SkillDamagePanel({
                             key={`${effect.type}-${effect.stacks}-${effect.amountPercent}-${effect.durationSeconds}-${index}`}
                             effect={effect}
                             durationBonus={burnDurationBonus}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {damageDecreaseEffects.length > 0 && (
+                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                    {damageDecreaseEffects.map((effect, index) => (
+                        <DamageDecreaseEffect
+                            key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.maxAmountPercent}-${effect.durationSeconds}-${index}`}
+                            effect={effect}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {damageReductionEffects.length > 0 && (
+                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                    {damageReductionEffects.map((effect, index) => (
+                        <DamageReductionEffect
+                            key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.durationSeconds}-${index}`}
+                            effect={effect}
                         />
                     ))}
                 </div>
