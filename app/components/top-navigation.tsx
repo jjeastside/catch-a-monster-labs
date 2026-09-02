@@ -10,9 +10,7 @@ import camLabLogo from "../assets/cam-lab-logo.png";
 const navItems = [
     { label: "Calculator", href: "/" },
     { label: "Monster Database", href: "/monster-database" },
-    { label: "Guides", href: "/work-in-progress" },
-    { label: "Compare", href: "/work-in-progress" },
-    { label: "Account", href: "/work-in-progress" },
+    { label: "Index Tracker", href: "/index-tracker" },
     { label: "Patch Notes", href: "/updates" },
     { label: "Changelog", href: "/changelog" },
 ];

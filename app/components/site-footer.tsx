@@ -13,7 +13,7 @@ const exploreLinks = [
 const projectLinks = [
     { label: "Changelog", href: "/work-in-progress" },
     { label: "Feedback", href: "/work-in-progress" },
-    { label: "About CAM Lab", href: "/work-in-progress" },
+    { label: "About CAM Lab", href: "/about" },
     { label: "Privacy", href: "/work-in-progress" },
 ];
 
