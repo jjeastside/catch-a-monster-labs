@@ -10,6 +10,32 @@ export const metadata: Metadata = {
     title: "About — Cam Lab",
     description:
         "Cam Lab is an independent fan-made Catch a Monster companion for build planning, monster research, Index tracking, and clear game calculations.",
+    alternates: {
+        canonical: "https://jjeastside.github.io/catch-a-monster-labs/about/",
+    },
+    openGraph: {
+        title: "About Cam Lab — Built for Catch a Monster Players",
+        description:
+            "Plan builds, explore monsters, track your Index, and keep up with Catch a Monster updates.",
+        type: "website",
+        siteName: "Cam Lab",
+        url: "https://jjeastside.github.io/catch-a-monster-labs/about/",
+        images: [
+            {
+                url: "https://jjeastside.github.io/catch-a-monster-labs/about-preview.png",
+                width: 1162,
+                height: 749,
+                alt: "Cam Lab About page featuring the build calculator, monster database, patch notes, and Index Tracker",
+            },
+        ],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "About Cam Lab — Built for Catch a Monster Players",
+        description:
+            "Plan builds, explore monsters, track your Index, and keep up with Catch a Monster updates.",
+        images: ["https://jjeastside.github.io/catch-a-monster-labs/about-preview.png"],
+    },
 };
 
 type IconName =
