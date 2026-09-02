@@ -6,15 +6,16 @@ import camLabLogo from "../assets/cam-lab-logo.png";
 const exploreLinks = [
     { label: "Calculator", href: "/" },
     { label: "Monster Database", href: "/monster-database" },
-    { label: "Guides", href: "/work-in-progress" },
-    { label: "Compare Builds", href: "/work-in-progress" },
+    { label: "Index Tracker", href: "/index-tracker" },
+    { label: "Patch Notes", href: "/updates" },
+    { label: "Changelog", href: "/changelog" },
+    { label: "About", href: "/about" },
 ];
 
 const projectLinks = [
-    { label: "Changelog", href: "/work-in-progress" },
-    { label: "Feedback", href: "/work-in-progress" },
-    { label: "About CAM Lab", href: "/about" },
-    { label: "Privacy", href: "/work-in-progress" },
+    { label: "Suggest a Feature", href: "https://github.com/jjeastside/catch-a-monster-labs/issues" },
+    { label: "Report an Issue", href: "https://github.com/jjeastside/catch-a-monster-labs/issues" },
+    { label: "View on GitHub", href: "https://github.com/jjeastside/catch-a-monster-labs" },
 ];
 
 function FooterLink({ label, href }: { label: string; href: string }) {
@@ -38,7 +39,7 @@ function FooterLink({ label, href }: { label: string; href: string }) {
 
 export function SiteFooter() {
     return (
-        <footer className="relative mt-5 overflow-hidden border-t border-[#293140] bg-[#0b0e14]">
+        <footer className="relative overflow-hidden border-t border-[#17345b] bg-[#050d1b]">
             <div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#7182ff]/70 to-transparent"
@@ -48,8 +49,8 @@ export function SiteFooter() {
                 className="pointer-events-none absolute -left-28 -top-36 size-72 rounded-full bg-[#7182ff]/[0.055] blur-3xl"
             />
 
-            <div className="relative mx-auto w-full max-w-[1800px] px-5 py-8 sm:px-7 lg:px-10">
-                <div className="grid gap-8 md:grid-cols-[minmax(0,1.5fr)_minmax(10rem,0.65fr)_minmax(10rem,0.65fr)]">
+            <div className="relative mx-auto w-full max-w-[1240px] px-5 py-8">
+                <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(9rem,.7fr))]">
                     <div className="max-w-xl">
                         <div className="flex items-center gap-3">
                             <span className="grid size-12 place-items-center">
@@ -61,7 +62,7 @@ export function SiteFooter() {
                                 />
                             </span>
                             <div>
-                                <p className="text-base font-bold tracking-tight text-[#f6f8fc]">
+                                <p className="text-xl font-black tracking-tight text-[#f6f8fc]">
                                     CAM<span className="text-[#7182ff]">/</span>LAB
                                 </p>
                                 <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#69768a]">
@@ -70,36 +71,15 @@ export function SiteFooter() {
                             </div>
                         </div>
 
-                        <p className="mt-4 text-sm leading-6 text-[#8f99aa]">
-                            Plan builds, compare stats, and explore monsters with clearer calculations and community-focused tools.
+                        <p className="mt-3 max-w-xs text-sm leading-5 text-[#8f99aa]">
+                            The ultimate companion for Catch a Monster on Roblox.
                         </p>
 
-                        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-[#7f8b9e]">
-                            <span>© 2026 CAM Lab</span>
-                            <span aria-hidden="true" className="text-[#41506a]">•</span>
-                            <span>ROBLOX FAN-SITE</span>
-                            <span aria-hidden="true" className="text-[#41506a]">•</span>
-                            <span className="rounded-full border border-[#344050] bg-[#0f1620] px-2 py-0.5 font-medium text-[#8e99ad]">
-                                v1.0.5
-                            </span>
-                            <span aria-hidden="true" className="text-[#41506a]">•</span>
-                            <span>
-                                Built by{" "}
-                                <a
-                                    href="https://github.com/jjeastside"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="font-semibold text-[#7182ff] transition hover:text-[#a8b0ff]"
-                                >
-                                    @jjeastside
-                                </a>
-                            </span>
-                        </div>
                     </div>
 
                     <nav aria-label="Explore CAM Lab">
                         <h2 className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#7182ff]">
-                            Explore
+                            Site
                         </h2>
                         <ul className="mt-4 space-y-2.5">
                             {exploreLinks.map((link) => (
@@ -110,7 +90,7 @@ export function SiteFooter() {
 
                     <nav aria-label="CAM Lab project links">
                         <h2 className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#7182ff]">
-                            Project
+                            Community
                         </h2>
                         <ul className="mt-4 space-y-2.5">
                             {projectLinks.map((link) => (
@@ -118,6 +98,24 @@ export function SiteFooter() {
                             ))}
                         </ul>
                     </nav>
+
+                    <div>
+                        <h2 className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#7182ff]">
+                            Project
+                        </h2>
+                        <div className="mt-4 inline-flex rounded-lg border border-[#7046c8] bg-[#130c2c] px-6 py-2 text-sm font-bold text-[#a982ff]">
+                            v1.0.5
+                        </div>
+                        <p className="mt-4 text-sm text-[#8f99aa]">Created by</p>
+                        <a
+                            href="https://github.com/jjeastside"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-sm font-bold text-[#52aaff] transition hover:text-[#8dc8ff]"
+                        >
+                            @jjeastside
+                        </a>
+                    </div>
                 </div>
 
                 <div className="mt-8 border-t border-[#252c39] pt-5">

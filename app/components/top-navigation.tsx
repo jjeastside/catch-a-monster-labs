@@ -13,6 +13,7 @@ const navItems = [
     { label: "Index Tracker", href: "/index-tracker" },
     { label: "Patch Notes", href: "/updates" },
     { label: "Changelog", href: "/changelog" },
+    { label: "About", href: "/about" },
 ];
 
 export function TopNavigation() {
@@ -23,10 +24,10 @@ export function TopNavigation() {
         href === "/" ? pathname === "/" : pathname.startsWith(href);
 
     return (
-        <header className="border-b border-[#3b4759] bg-[#0d131d]/95 backdrop-blur">
+        <header className="border-b border-[#16345e] bg-[#061023]/95 backdrop-blur">
             <nav
                 aria-label="Primary navigation"
-                className="mx-auto flex h-[52px] w-full max-w-[1800px] items-center justify-between gap-4 px-4 md:grid md:h-[73px] md:grid-cols-[1fr_auto_1fr] md:px-6"
+                className="mx-auto flex h-[58px] w-full max-w-[1240px] items-center justify-between gap-4 px-4 md:grid md:h-[86px] md:grid-cols-[1fr_auto] md:px-5"
             >
                 <Link
                     href="/"
@@ -42,7 +43,9 @@ export function TopNavigation() {
                         />
                     </span>
 
-                    <span>Cam Lab</span>
+                    <span className="text-lg font-black uppercase tracking-tight md:text-2xl">
+                        CAM<span className="text-[#7182ff]">/</span>LAB
+                    </span>
                 </Link>
 
                 <div className="hidden items-center gap-1 md:flex">
@@ -53,10 +56,10 @@ export function TopNavigation() {
                             <Link
                                 key={item.label}
                                 href={item.href}
-                                className={`rounded-md px-2.5 py-2 text-sm transition-colors ${
+                                className={`relative rounded-lg px-3 py-3 text-sm transition-colors ${
                                     isActive
-                                        ? "bg-[#1c2330] text-white"
-                                        : "text-[#8e99ad] hover:text-white"
+                                        ? "bg-[#0a1931] text-[#5caaff] after:absolute after:inset-x-3 after:-bottom-1 after:h-[3px] after:rounded-full after:bg-[#5caaff]"
+                                        : "text-[#a9b4ca] hover:bg-[#09162b] hover:text-white"
                                 }`}
                             >
                                 {item.label}
@@ -76,7 +79,6 @@ export function TopNavigation() {
                     Menu
                 </button>
 
-                <span aria-hidden="true" className="hidden md:block" />
             </nav>
 
             {isMobileMenuOpen && (
