@@ -7,7 +7,7 @@ import { TopNavigation } from "../components/top-navigation";
 export const metadata: Metadata = {
     title: "Privacy Policy — Cam Lab",
     description:
-        "Learn how Cam Lab handles locally stored preferences, Index progress, shared builds, and third-party services.",
+        "Learn how Cam Lab handles locally stored preferences, Index progress, shared builds, feedback, and third-party services.",
     alternates: {
         canonical: "https://jjeastside.github.io/catch-a-monster-labs/privacy/",
     },
@@ -102,7 +102,7 @@ export default function PrivacyPolicyPage() {
 
                     <PolicySection number="1" title="Information Cam Lab does not request">
                         <p>
-                            Cam Lab does not provide user accounts and does not ask for your name, email address, payment information, Roblox credentials, or other direct personal identifiers.
+                            Cam Lab does not provide user accounts or require your name, email address, payment information, Roblox credentials, or other direct personal identifiers. The feedback form includes an optional Discord username field only for visitors who want a reply.
                         </p>
                         <p>
                             Please never enter passwords, account credentials, or sensitive personal information into build names, notes, imported files, or any other Cam Lab field.
@@ -127,7 +127,16 @@ export default function PrivacyPolicyPage() {
                         </p>
                     </PolicySection>
 
-                    <PolicySection number="4" title="Hosting and technical information">
+                    <PolicySection number="4" title="Feedback submissions">
+                        <p>
+                            When you send feedback, Cam Lab sends the selected category, your message, the current page, the Cam Lab version, browser information, and any optional Discord username you provide to the Cam Lab feedback service hosted through Cloudflare. Cloudflare Turnstile also processes technical information needed to detect automated abuse.
+                        </p>
+                        <p>
+                            Accepted feedback is published as a public issue in the Cam Lab GitHub repository by the CAM Lab Feedback bot. Do not include passwords, private account details, or anything you do not want publicly visible. Providing a Discord username is optional and does not guarantee a response.
+                        </p>
+                    </PolicySection>
+
+                    <PolicySection number="5" title="Hosting and technical information">
                         <p>
                             Cam Lab is published through GitHub Pages. GitHub and normal internet infrastructure may process technical information needed to deliver and secure the site, such as IP addresses, request details, device or browser information, and diagnostic logs. Cam Lab does not control the independent privacy practices of these service providers.
                         </p>
@@ -153,39 +162,39 @@ export default function PrivacyPolicyPage() {
                         </p>
                     </PolicySection>
 
-                    <PolicySection number="5" title="Cookies and analytics">
+                    <PolicySection number="6" title="Cookies and analytics">
                         <p>
                             Cam Lab does not currently operate its own advertising cookies or third-party behavioral analytics. Hosting and sharing providers may use cookies or similar technologies according to their own policies when necessary to provide, protect, or measure their services.
                         </p>
                     </PolicySection>
 
-                    <PolicySection number="6" title="Third-party links">
+                    <PolicySection number="7" title="Third-party links">
                         <p>
                             Cam Lab may link to GitHub, Roblox, Discord, and other third-party websites. Visiting those services is governed by their own terms and privacy practices. A link from Cam Lab does not mean Cam Lab controls or endorses how another service handles information.
                         </p>
                     </PolicySection>
 
-                    <PolicySection number="7" title="Children's privacy">
+                    <PolicySection number="8" title="Children's privacy">
                         <p>
                             Cam Lab is a general fan-made reference tool and does not knowingly collect personal information from children. If you believe personal information has been submitted through a Cam Lab service, please contact the project so it can be reviewed.
                         </p>
                     </PolicySection>
 
-                    <PolicySection number="8" title="Changes to this policy">
+                    <PolicySection number="9" title="Changes to this policy">
                         <p>
                             This policy may be updated when Cam Lab adds features, changes service providers, or changes how information is handled. The effective date at the top of this page will be updated when material changes are made.
                         </p>
                     </PolicySection>
 
-                    <PolicySection number="9" title="Contact">
+                    <PolicySection number="10" title="Contact">
                         <p>
-                            For privacy questions or requests related to Cam Lab, open an issue through the project&apos;s GitHub repository. Do not include passwords or other sensitive information in a public issue.
+                            For privacy questions or requests related to Cam Lab, use the site&apos;s feedback form and select General feedback. The resulting issue is public, so do not include passwords or other sensitive information.
                         </p>
                         <Link
-                            href="https://github.com/jjeastside/catch-a-monster-labs/issues"
+                            href="#feedback"
                             className="mt-1 inline-flex rounded-lg border border-[#2b659f] bg-[#09294d] px-4 py-2 text-sm font-bold text-[#6db5ff] transition hover:border-[#4b8fd1] hover:bg-[#0b335e] hover:text-white"
                         >
-                            Contact through GitHub →
+                            Contact CAM Lab →
                         </Link>
                     </PolicySection>
                 </article>

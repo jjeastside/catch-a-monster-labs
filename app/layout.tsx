@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
+import { FeedbackWidget } from "./components/feedback-widget";
+
 export const viewport: Viewport = {
     width: "device-width",
     initialScale: 1,
@@ -36,7 +38,10 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-        <body>{children}</body>
+        <body>
+        {children}
+        <FeedbackWidget />
+        </body>
         </html>
     );
 }

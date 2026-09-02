@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,26 +16,54 @@ const exploreLinks = [
 ];
 
 const projectLinks = [
-    { label: "Suggest a Feature", href: "https://github.com/jjeastside/catch-a-monster-labs/issues" },
-    { label: "Report an Issue", href: "https://github.com/jjeastside/catch-a-monster-labs/issues" },
+    { label: "Suggest a Feature", feedbackCategory: "feature" },
+    { label: "Report an Issue", feedbackCategory: "bug" },
+    { label: "Send Feedback", feedbackCategory: "general" },
     { label: "View on GitHub", href: "https://github.com/jjeastside/catch-a-monster-labs" },
-];
+] as const;
 
-function FooterLink({ label, href }: { label: string; href: string }) {
+type FooterLinkProps = {
+    label: string;
+    href?: string;
+    feedbackCategory?: "feature" | "bug" | "general";
+};
+
+function FooterLink({ label, href, feedbackCategory }: FooterLinkProps) {
+    const content = (
+        <>
+            <span>{label}</span>
+            <span
+                aria-hidden="true"
+                className="translate-x-0 text-[#7182ff] opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100"
+            >
+                →
+            </span>
+        </>
+    );
+    const className =
+        "group inline-flex items-center gap-1.5 text-left text-sm text-[#8f99aa] transition hover:text-[#7182ff] focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7182ff]/60";
+
     return (
         <li>
-            <Link
-                href={href}
-                className="group inline-flex items-center gap-1.5 text-sm text-[#8f99aa] transition hover:text-[#7182ff] focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7182ff]/60"
-            >
-                <span>{label}</span>
-                <span
-                    aria-hidden="true"
-                    className="translate-x-0 text-[#7182ff] opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100"
+            {feedbackCategory ? (
+                <button
+                    type="button"
+                    className={className}
+                    onClick={() =>
+                        window.dispatchEvent(
+                            new CustomEvent("cam-lab:open-feedback", {
+                                detail: { category: feedbackCategory },
+                            }),
+                        )
+                    }
                 >
-                    →
-                </span>
-            </Link>
+                    {content}
+                </button>
+            ) : (
+                <Link href={href ?? "/"} className={className}>
+                    {content}
+                </Link>
+            )}
         </li>
     );
 }
