@@ -19,6 +19,8 @@ export type SkillStatusEffect = {
         | "vulnerability"
         | "poison"
         | "burn"
+        | "healing"
+        | "shield"
         | "damageDecrease"
         | "knockback"
         | "damageReduction"
@@ -31,6 +33,8 @@ export type SkillStatusEffect = {
     stacks?: number;
     maxStacks?: number;
     attackReductionPercent?: number;
+    scaling?: "Damage" | "MaxHealth";
+    chancePercent?: number;
     condition?: string;
 };
 

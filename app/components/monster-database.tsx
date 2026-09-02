@@ -55,6 +55,7 @@ type SkillEffect =
     | "damage-buff"
     | "damage-decrease"
     | "damage-reduction"
+    | "damage-reflection"
     | "shield"
     | "taunt"
     | "stagger";
@@ -72,6 +73,7 @@ const skillEffectLabels: Record<SkillEffect, string> = {
     "damage-buff": "Damage Buff",
     "damage-decrease": "Damage Decrease",
     "damage-reduction": "Damage Reduction",
+    "damage-reflection": "Damage Reflection",
     shield: "Shield",
     taunt: "Taunt",
     stagger: "Stagger",
@@ -217,6 +219,7 @@ function getSkillEffects(notes?: string): SkillEffect[] {
         effects.push("damage-decrease");
     }
     if (/\bdamage reduction\b/.test(normalized)) effects.push("damage-reduction");
+    if (/\bdamage reflection\b/.test(normalized)) effects.push("damage-reflection");
     if (/\bshield\b/.test(normalized)) effects.push("shield");
     if (/\btaunt\b/.test(normalized)) effects.push("taunt");
     if (/\bstagger\b/.test(normalized)) effects.push("stagger");

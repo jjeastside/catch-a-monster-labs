@@ -44,6 +44,15 @@ export const GENERATED_SKILLS = {
     "element": "Common",
     "damageInstances": [],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "shield",
+        "target": "Team",
+        "amountPercent": 25,
+        "scaling": "MaxHealth",
+        "durationSeconds": 5
+      }
+    ],
     "notes": "Target: Allies. Ally effects: 25% of Max HP Team shield for 5 secs",
     "validationStatus": "Ready"
   },
@@ -58,7 +67,16 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
-    "notes": "Target: Self. Ally effects: 15% of Max HP for Self shield",
+    "statusEffects": [
+      {
+        "type": "shield",
+        "target": "Self",
+        "amountPercent": 15,
+        "scaling": "MaxHealth",
+        "durationSeconds": 2
+      }
+    ],
+    "notes": "Target: Self. Ally effects: 15% of Max HP for Self shield 5 secs",
     "validationStatus": "Ready"
   },
   "bloodthirsty-aura": {
@@ -73,6 +91,13 @@ export const GENERATED_SKILLS = {
         "target": "Team",
         "amountPercent": 25,
         "durationSeconds": 6
+      },
+      {
+        "type": "shield",
+        "target": "Team",
+        "amountPercent": 15,
+        "scaling": "MaxHealth",
+        "durationSeconds": 2
       }
     ],
     "notes": "Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs",
@@ -354,7 +379,7 @@ export const GENERATED_SKILLS = {
       {
         "type": "damageIncrease",
         "target": "Self",
-        "amountPercent": 100,
+        "amountPercent": 25,
         "durationSeconds": 2,
         "condition": "Random Egg Blast result"
       },
@@ -368,7 +393,7 @@ export const GENERATED_SKILLS = {
       {
         "type": "damageIncrease",
         "target": "Self",
-        "amountPercent": 25,
+        "amountPercent": 100,
         "durationSeconds": 2,
         "condition": "Random Egg Blast result"
       },
@@ -376,11 +401,41 @@ export const GENERATED_SKILLS = {
         "type": "vulnerability",
         "target": "Self",
         "amountPercent": 20,
-        "durationSeconds": 3,
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      },
+      {
+        "type": "damageReduction",
+        "target": "Self",
+        "amountPercent": 95,
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      },
+      {
+        "type": "damageReflection",
+        "target": "Self",
+        "amountPercent": 60,
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      },
+      {
+        "type": "shield",
+        "target": "Self",
+        "amountPercent": 25,
+        "scaling": "MaxHealth",
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      },
+      {
+        "type": "shield",
+        "target": "Self",
+        "amountPercent": 50,
+        "scaling": "MaxHealth",
+        "durationSeconds": 2,
         "condition": "Random Egg Blast result"
       }
     ],
-    "notes": "Target: Enemy | Self. Ally effects: Chance for one of the following to activate:; 20% vulnerability on self for 3 secs; 100% self damage for 2 secs; 50% self damage for 2 secs; 25% self damage for 2 secs; 25% Max Hp self shield for 2 secs; 60% Damage reflection for 2 secs",
+    "notes": "Target: Enemy | Self. Ally effects: Chance for one of the following to activate:; 20% vulnerability on self for 2 secs; 25% self damage for 2 secs; 50% self damage for 2 secs; 100% self damage for 2 secs; 25% Max Hp self shield for 2 secs; 50% Max Hp self shield for 2 secs; 60% Damage reflection for 2 secs; 95% Damage reduction for 2 secs",
     "validationStatus": "Ready"
   },
   "electric-beam": {
@@ -424,6 +479,14 @@ export const GENERATED_SKILLS = {
     "element": "Common",
     "damageInstances": [],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageReflection",
+        "target": "Self",
+        "amountPercent": 60,
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Ally | Self. Ally effects: 60% Damage reflection for 2 secs",
     "validationStatus": "Ready"
   },
@@ -955,6 +1018,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "shield",
+        "target": "Team",
+        "amountPercent": 17.5,
+        "durationSeconds": 6
+      }
+    ],
     "notes": "Target: Enemy | Allies. Ally effects: 17.5% Team Shield for 6 secs",
     "validationStatus": "Ready"
   },
@@ -969,6 +1040,22 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "shield",
+        "target": "Team",
+        "amountPercent": 30,
+        "durationSeconds": 6,
+        "chancePercent": 75
+      },
+      {
+        "type": "shield",
+        "target": "Team",
+        "amountPercent": 60,
+        "durationSeconds": 6,
+        "chancePercent": 25
+      }
+    ],
     "notes": "Target: Enemy | Allies. Ally effects: 30% Team Shield for 6 secs (75% Chance); 60% Team Shield for 6 secs (25% chance)",
     "validationStatus": "Ready"
   },
@@ -1020,6 +1107,14 @@ export const GENERATED_SKILLS = {
     "element": "Grass",
     "damageInstances": [],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "healing",
+        "target": "Team",
+        "amountPercent": 80,
+        "scaling": "Damage"
+      }
+    ],
     "notes": "Target: Allies. Ally effects: 80% of damage team heal",
     "validationStatus": "Ready"
   },
@@ -1034,6 +1129,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "healing",
+        "target": "Self",
+        "amountPercent": 80,
+        "scaling": "Damage"
+      }
+    ],
     "notes": "Target: Enemy | Self. Ally effects: 80% of damage self heal",
     "validationStatus": "Ready"
   },
@@ -1053,6 +1156,12 @@ export const GENERATED_SKILLS = {
         "type": "stun",
         "target": "Enemy",
         "durationSeconds": 2
+      },
+      {
+        "type": "healing",
+        "target": "Self",
+        "amountPercent": 50,
+        "scaling": "Damage"
       }
     ],
     "notes": "Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 50% of damage self heal (Instant)",
@@ -1070,6 +1179,18 @@ export const GENERATED_SKILLS = {
         "target": "Team",
         "amountPercent": 25,
         "durationSeconds": 6
+      },
+      {
+        "type": "healing",
+        "target": "Team",
+        "amountPercent": 160,
+        "scaling": "Damage"
+      },
+      {
+        "type": "healing",
+        "target": "Team",
+        "amountPercent": 5,
+        "scaling": "MaxHealth"
       }
     ],
     "notes": "Target: Allies. Ally effects: 25% Team Damage for 6 secs; 160% of damage + 5% of health team heal",
@@ -1087,6 +1208,13 @@ export const GENERATED_SKILLS = {
         "target": "Team",
         "amountPercent": 25,
         "durationSeconds": 6
+      },
+      {
+        "type": "shield",
+        "target": "Team",
+        "amountPercent": 15,
+        "scaling": "MaxHealth",
+        "durationSeconds": 2
       }
     ],
     "notes": "Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs",
@@ -1104,6 +1232,13 @@ export const GENERATED_SKILLS = {
         "target": "Team",
         "amountPercent": 25,
         "durationSeconds": 6
+      },
+      {
+        "type": "shield",
+        "target": "Team",
+        "amountPercent": 15,
+        "scaling": "MaxHealth",
+        "durationSeconds": 2
       }
     ],
     "notes": "Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs",
@@ -1294,7 +1429,7 @@ export const GENERATED_SKILLS = {
       },
       {
         "type": "damageDecrease",
-        "target": "Self",
+        "target": "Enemy",
         "amountPercent": 15,
         "durationSeconds": 5,
         "condition": "Black Card result"
@@ -1320,6 +1455,12 @@ export const GENERATED_SKILLS = {
         "target": "Enemy",
         "amountPercent": 20,
         "durationSeconds": 10
+      },
+      {
+        "type": "healing",
+        "target": "Self",
+        "amountPercent": 13,
+        "scaling": "MaxHealth"
       }
     ],
     "notes": "Target: Enemy | Self. Enemy effects: Vulnerability (20%) incoming damage for 10 secs Ally effects: 13% of Max Health self heal",
@@ -1430,6 +1571,14 @@ export const GENERATED_SKILLS = {
     "element": "Common",
     "damageInstances": [],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "healing",
+        "target": "Team",
+        "amountPercent": 20,
+        "scaling": "MaxHealth"
+      }
+    ],
     "notes": "Target: Allies. Ally effects: Heal each ally for 20% of their Max HP",
     "validationStatus": "Ready"
   },
@@ -1697,7 +1846,16 @@ export const GENERATED_SKILLS = {
     "element": "Common",
     "damageInstances": [],
     "cooldown": 6,
-    "notes": "Target: Allies. Ally effects: 25% max hp shield",
+    "statusEffects": [
+      {
+        "type": "shield",
+        "target": "Team",
+        "amountPercent": 25,
+        "scaling": "MaxHealth",
+        "durationSeconds": 2
+      }
+    ],
+    "notes": "Target: Allies. Ally effects: 25% max hp shield 4 secs",
     "validationStatus": "Ready"
   },
   "rock-road": {
@@ -1746,6 +1904,14 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "healing",
+        "target": "Self",
+        "amountPercent": 100,
+        "scaling": "Damage"
+      }
+    ],
     "notes": "Target: Enemy | Self. Enemy effects: Knockback Ally effects: 100% of damage self heal",
     "validationStatus": "Ready"
   },
@@ -1980,6 +2146,14 @@ export const GENERATED_SKILLS = {
     "element": "Common",
     "damageInstances": [],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageReflection",
+        "target": "Self",
+        "amountPercent": 60,
+        "durationSeconds": 6
+      }
+    ],
     "notes": "Target: Self. Ally effects: 60% Damage reflection for 6 secs",
     "validationStatus": "Ready"
   },
@@ -2035,6 +2209,12 @@ export const GENERATED_SKILLS = {
         "target": "Team",
         "amountPercent": 25,
         "durationSeconds": 6
+      },
+      {
+        "type": "shield",
+        "target": "Team",
+        "amountPercent": 15,
+        "durationSeconds": 6
       }
     ],
     "notes": "Target: Enemy | Allies. Ally effects: 25% team damage for 6 secs; 15% team shield for 6 secs",
@@ -2081,6 +2261,14 @@ export const GENERATED_SKILLS = {
     "element": "Common",
     "damageInstances": [],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "healing",
+        "target": "Team",
+        "amountPercent": 20,
+        "scaling": "MaxHealth"
+      }
+    ],
     "notes": "Target: Ally. Ally effects: Targets ally with lowest hp and restore 20% of ally's Max HP",
     "validationStatus": "Ready"
   },

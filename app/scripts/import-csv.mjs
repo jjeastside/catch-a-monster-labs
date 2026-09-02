@@ -270,7 +270,7 @@ function parseDamageDecreaseEffects(notes) {
     if (blackCard) {
         effects.push({
             type: "damageDecrease",
-            target: "Self",
+            target: "Enemy",
             amountPercent: Number(blackCard[1]),
             durationSeconds: blackCard[2] !== undefined ? Number(blackCard[2]) : 2,
             condition: "Black Card result",
@@ -301,6 +301,23 @@ function parseDamageReductionEffects(notes) {
     )) {
         effects.push({
             type: "damageReduction",
+            target: "Self",
+            amountPercent: Number(match[1]),
+            durationSeconds: match[2] !== undefined ? Number(match[2]) : 2,
+        });
+    }
+
+    return effects;
+}
+
+function parseDamageReflectionEffects(notes) {
+    const effects = [];
+
+    for (const match of notes.matchAll(
+        /(\d+(?:\.\d+)?)%\s+damage reflection(?:\s+for\s+(\d+(?:\.\d+)?)\s*(?:secs?|seconds?))?/gi,
+    )) {
+        effects.push({
+            type: "damageReflection",
             target: "Self",
             amountPercent: Number(match[1]),
             durationSeconds: match[2] !== undefined ? Number(match[2]) : 2,
@@ -381,16 +398,113 @@ function parseBurnEffects(notes) {
     }];
 }
 
+function getSupportEffectTarget(notes) {
+    if (/\bself\b/i.test(notes) && !/\bteam\s+(?:heal|shield)\b/i.test(notes)) {
+        return "Self";
+    }
+
+    return "Team";
+}
+
+function parseHealingEffects(notes) {
+    if (!/\b(?:heal|restore)\b/i.test(notes)) {
+        return [];
+    }
+
+    const effects = [];
+    const target = getSupportEffectTarget(notes);
+
+    for (const match of notes.matchAll(
+        /(\d+(?:\.\d+)?)%\s+of\s+damage/gi,
+    )) {
+        effects.push({
+            type: "healing",
+            target,
+            amountPercent: Number(match[1]),
+            scaling: "Damage",
+        });
+    }
+
+    for (const match of notes.matchAll(
+        /(\d+(?:\.\d+)?)%\s+of\s+(?:(?:their|ally's)\s+)?(?:max(?:imum)?\s+)?(?:health|hp)/gi,
+    )) {
+        effects.push({
+            type: "healing",
+            target,
+            amountPercent: Number(match[1]),
+            scaling: "MaxHealth",
+        });
+    }
+
+    for (const match of notes.matchAll(
+        /(\d+(?:\.\d+)?)%\s+(self|team)\s+(?:heal|healing|restore)\b/gi,
+    )) {
+        effects.push({
+            type: "healing",
+            target: match[2].toLowerCase() === "self" ? "Self" : "Team",
+            amountPercent: Number(match[1]),
+        });
+    }
+
+    return effects;
+}
+
+function parseShieldEffects(notes) {
+    if (!/\bshield\b/i.test(notes)) {
+        return [];
+    }
+
+    const isRandomOutcome = /chance for one of the following to activate/i.test(notes);
+    const effects = [];
+
+    for (const clause of notes.split(";")) {
+        if (!/\bshield\b/i.test(clause)) continue;
+
+        const amount = clause.match(/(\d+(?:\.\d+)?)%/);
+        if (!amount) continue;
+
+        const duration = clause.match(/for\s+(\d+(?:\.\d+)?)\s*(?:secs?|seconds?)/i);
+        const chance = clause.match(/\((\d+(?:\.\d+)?)%\s*chance\)/i);
+
+        effects.push({
+            type: "shield",
+            target: getSupportEffectTarget(`${notes} ${clause}`),
+            amountPercent: Number(amount[1]),
+            ...(/max\s*(?:health|hp)/i.test(clause) || /of\s+max\s+hp/i.test(clause)
+                ? { scaling: "MaxHealth" }
+                : {}),
+            durationSeconds: duration ? Number(duration[1]) : 2,
+            ...(chance ? { chancePercent: Number(chance[1]) } : {}),
+            ...(isRandomOutcome ? { condition: "Random Egg Blast result" } : {}),
+        });
+    }
+
+    return effects;
+}
+
 function parseSkillStatusEffects(notes) {
-    return [
+    const effects = [
         ...parseDamageIncreaseEffects(notes),
         ...parseVulnerabilityEffects(notes),
         ...parseDamageDecreaseEffects(notes),
         ...parseDamageReductionEffects(notes),
+        ...parseDamageReflectionEffects(notes),
         ...parseStunEffects(notes),
         ...parsePoisonEffects(notes),
         ...parseBurnEffects(notes),
+        ...parseHealingEffects(notes),
+        ...parseShieldEffects(notes),
     ];
+
+    if (!/chance for one of the following to activate/i.test(notes)) {
+        return effects;
+    }
+
+    return effects.map((effect) => ({
+        ...effect,
+        durationSeconds: 2,
+        condition: "Random Egg Blast result",
+    }));
 }
 
 const passiveEffects = {

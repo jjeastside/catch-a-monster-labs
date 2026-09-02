@@ -317,7 +317,8 @@ function DamageReductionEffect({ effect }: { effect: SkillStatusEffect }) {
         `Reduces incoming damage taken by ${formatNumber(amount)}%.`,
         targetLabel !== "Self" ? `Applies to ${targetLabel.toLowerCase()}.` : "Applies to the caster.",
         `Lasts ${durationLabel}.`,
-    ].join(" ");
+        effect.condition ? `Requires: ${effect.condition}.` : null,
+    ].filter(Boolean).join(" ");
 
     return (
         <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#67b7e8]/35 bg-[#173247]/45 px-3 py-2">
@@ -336,6 +337,134 @@ function DamageReductionEffect({ effect }: { effect: SkillStatusEffect }) {
                     <span className="ml-1.5 text-xs font-semibold text-[#9fc5dc]">{targetLabel}</span>
                     <span className="ml-1.5 text-xs font-semibold text-[#8e99ad]">• {durationLabel}</span>
                 </p>
+                {effect.condition && (
+                    <p className="mt-0.5 truncate text-[10px] text-[#9fc5dc]" title={effect.condition}>
+                        {effect.condition}
+                    </p>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function HealingEffect({ effect }: { effect: SkillStatusEffect }) {
+    const amount = effect.amountPercent ?? 0;
+    const displayTarget = effect.target === "Team" ? "Team" : effect.target === "Self" ? "Self" : "Enemy";
+    const targetLabel = effect.target === "Self" ? "the caster" : "the team";
+    const healingDescription = effect.scaling === "Damage"
+        ? `Heals ${targetLabel} for ${formatNumber(amount)}% of Damage.`
+        : effect.scaling === "MaxHealth"
+            ? `Heals ${targetLabel} for ${formatNumber(amount)}% of Max Health.`
+            : `Heals ${targetLabel} by ${formatNumber(amount)}%.`;
+    const tooltip = [
+        healingDescription,
+        "Healing cannot critically heal.",
+        effect.condition ? `Requires: ${effect.condition}.` : null,
+    ].filter(Boolean).join(" ");
+
+    return (
+        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#65d58a]/35 bg-[#173627]/45 px-3 py-2">
+            <img
+                src={assetPath("/account-icons/health.png")}
+                alt=""
+                className="size-8 shrink-0 object-contain"
+            />
+            <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#7ee6a0]">Healing</p>
+                    <InfoTooltip label="Explain Healing" text={tooltip} />
+                </div>
+                <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
+                    {formatNumber(amount)}%
+                    <span className="ml-1.5 text-xs font-semibold text-[#9fd8b2]">{displayTarget}</span>
+                </p>
+                {effect.condition && (
+                    <p className="mt-0.5 truncate text-[10px] text-[#9fc5dc]" title={effect.condition}>
+                        {effect.condition}
+                    </p>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function DamageReflectionEffect({ effect }: { effect: SkillStatusEffect }) {
+    const amount = effect.amountPercent ?? 0;
+    const targetLabel = effect.target === "Team" ? "Team" : effect.target === "Self" ? "Self" : "Enemy";
+    const duration = effect.durationSeconds ?? 2;
+    const tooltip = [
+        `Reflects ${formatNumber(amount)}% of incoming damage back to the attacker.`,
+        `Lasts ${formatNumber(duration)} seconds.`,
+        effect.condition ? `Requires: ${effect.condition}.` : null,
+    ].filter(Boolean).join(" ");
+
+    return (
+        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#a989ff]/35 bg-[#292044]/45 px-3 py-2">
+            <img
+                src={assetPath("/icons/damage-reflection.png")}
+                alt=""
+                className="size-8 shrink-0 object-contain"
+            />
+            <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#bba3ff]">Damage Reflection</p>
+                    <InfoTooltip label="Explain Damage Reflection" text={tooltip} />
+                </div>
+                <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
+                    {formatNumber(amount)}%
+                    <span className="ml-1.5 text-xs font-semibold text-[#bba3d7]">{targetLabel}</span>
+                </p>
+                {effect.condition && (
+                    <p className="mt-0.5 truncate text-[10px] text-[#bba3d7]" title={effect.condition}>
+                        {effect.condition}
+                    </p>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function ShieldEffect({ effect }: { effect: SkillStatusEffect }) {
+    const amount = effect.amountPercent ?? 0;
+    const displayTarget = effect.target === "Team" ? "Team" : effect.target === "Self" ? "Self" : "Enemy";
+    const durationLabel = `${formatNumber(effect.durationSeconds ?? 2)}s`;
+    const targetLabel = effect.target === "Self" ? "the caster" : "the team";
+    const scalingText = effect.scaling === "MaxHealth"
+        ? " of Max Health"
+        : "";
+    const tooltip = [
+        `Grants ${targetLabel} a shield equal to ${formatNumber(amount)}%${scalingText}.`,
+        effect.durationSeconds !== undefined
+            ? `Lasts ${formatNumber(effect.durationSeconds)} seconds.`
+            : null,
+        effect.chancePercent !== undefined
+            ? `${formatNumber(effect.chancePercent)}% activation chance.`
+            : null,
+        effect.condition ? `Requires: ${effect.condition}.` : null,
+    ].filter(Boolean).join(" ");
+
+    return (
+        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#66b8ee]/35 bg-[#173147]/45 px-3 py-2">
+            <img
+                src={assetPath("/icons/attribute-resistance.png")}
+                alt=""
+                className="size-8 shrink-0 object-contain"
+            />
+            <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#82caf7]">Shield</p>
+                    <InfoTooltip label="Explain Shield" text={tooltip} />
+                </div>
+                <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
+                    {formatNumber(amount)}%
+                    <span className="ml-1.5 text-xs font-semibold text-[#9fc5dc]">{displayTarget}</span>
+                    <span className="ml-1.5 text-xs font-semibold text-[#8e99ad]">• {durationLabel}</span>
+                </p>
+                {effect.condition && (
+                    <p className="mt-0.5 truncate text-[10px] text-[#9fc5dc]" title={effect.condition}>
+                        {effect.condition}
+                    </p>
+                )}
             </div>
         </div>
     );
@@ -794,7 +923,10 @@ function SkillDamagePanel({
     const effectiveMonsterVulnerability = monsterVulnerability * (1 + getTraitEffectValue(build.traitId, "vulnerabilityEffectiveness") / 100);
     const vulnerabilityMultiplier = build.vulnerabilityActive ? 1 + effectiveActiveVulnerability / 100 : 1;
     const notes = skill.notes?.toLowerCase() ?? "";
-    const skillHasHealing = getDamageHealingPercent(skill.notes) !== null || getHealthHealingPercent(skill.notes) !== null;
+    const skillHasHealing =
+        (skill.statusEffects ?? []).some((effect) => effect.type === "healing") ||
+        getDamageHealingPercent(skill.notes) !== null ||
+        getHealthHealingPercent(skill.notes) !== null;
     const skillHasCooldown = skill.cooldown !== null && skill.cooldown > 0;
     const appliesAttackReduction = /attack.{0,20}(reduc|lower)|(?:reduc|lower).{0,20}attack/.test(notes);
     const appliesVulnerability = notes.includes("vulnerab") || skill.id === "root-spike";
@@ -1034,6 +1166,15 @@ function SkillDamagePanel({
     );
     const damageReductionEffects = (skill.statusEffects ?? []).filter(
         (effect) => effect.type === "damageReduction",
+    );
+    const healingEffects = (skill.statusEffects ?? []).filter(
+        (effect) => effect.type === "healing",
+    );
+    const shieldEffects = (skill.statusEffects ?? []).filter(
+        (effect) => effect.type === "shield",
+    );
+    const damageReflectionEffects = (skill.statusEffects ?? []).filter(
+        (effect) => effect.type === "damageReflection",
     );
 
     return (
@@ -1291,39 +1432,6 @@ function SkillDamagePanel({
                             </>
                         )}
 
-                        {healingAmount !== null && (
-                            <div className="min-w-0 rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 p-3">
-                                <div className="flex items-center gap-1.5 text-[#aeb8ff]">
-                                    <img src={assetPath("/account-icons/health.png")} alt="" className="size-4 shrink-0 object-contain" />
-                                    <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Healing</p>
-                                    <InfoTooltip
-                                        label="Explain healing"
-                                        text="The amount healed by this skill using its current damage and/or Max HP healing scaling."
-                                    />
-                                </div>
-                                <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]" title={formatStatNumber(healingAmount)}>
-                                    {formatStatNumber(healingAmount)}
-                                </p>
-                            </div>
-                        )}
-
-                        {healingPerSecond !== null && (
-                            <div className="min-w-0 rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 p-3">
-                                <div className="flex items-center gap-1.5 text-[#aeb8ff]">
-                                    <img src={assetPath("/account-icons/health.png")} alt="" className="size-4 shrink-0 object-contain" />
-                                    <p className="text-[9px] font-bold uppercase tracking-[0.1em]">HPS</p>
-                                    <InfoTooltip
-                                        label="Explain healing per second"
-                                        text="Healing per second from this skill using its adjusted cooldown. Healing cannot critically heal. Pure Max-HP percentage heals do not receive an HPS value; mixed damage + Max-HP heals do."
-                                    />
-                                </div>
-                                <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]" title={`${formatStatNumber(healingPerSecond)} HPS`}>
-                                    {formatStatNumber(healingPerSecond)}
-                                    <span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
-                                </p>
-                            </div>
-                        )}
-
                         {hasOvervoltTempestOverload && alternateCombatDamage && alternateTotalMultiplier !== null && (
                             <>
                                 <div className="min-w-0 rounded-lg border border-[#5363a8]/45 bg-[#20263a] p-3">
@@ -1446,56 +1554,42 @@ function SkillDamagePanel({
                 </div>
             )}
 
+            {healingEffects.length > 0 && (
+                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                    {healingEffects.map((effect, index) => (
+                        <HealingEffect
+                            key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.scaling}-${index}`}
+                            effect={effect}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {shieldEffects.length > 0 && (
+                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                    {shieldEffects.map((effect, index) => (
+                        <ShieldEffect
+                            key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.durationSeconds}-${effect.chancePercent}-${index}`}
+                            effect={effect}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {damageReflectionEffects.length > 0 && (
+                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                    {damageReflectionEffects.map((effect, index) => (
+                        <DamageReflectionEffect
+                            key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.durationSeconds}-${index}`}
+                            effect={effect}
+                        />
+                    ))}
+                </div>
+            )}
+
             {!isDamagingSkill ? (
                 <>
-                    {healingAmount !== null ? (
-                        <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-3">
-                            <div className="min-w-0 rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 p-3">
-                                <div className="flex items-center gap-1.5 text-[#aeb8ff]">
-                                    <img
-                                        src={assetPath("/account-icons/health.png")}
-                                        alt=""
-                                        className="size-4 shrink-0 object-contain"
-                                    />
-                                    <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Healing</p>
-                                    <InfoTooltip
-                                        label="Explain healing"
-                                        text="The amount healed by this skill using its current damage and/or Max HP healing scaling."
-                                    />
-                                </div>
-                                <p
-                                    className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
-                                    title={formatStatNumber(healingAmount)}
-                                >
-                                    {formatStatNumber(healingAmount)}
-                                </p>
-                            </div>
-
-                            {healingPerSecond !== null && (
-                                <div className="min-w-0 rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 p-3">
-                                    <div className="flex items-center gap-1.5 text-[#aeb8ff]">
-                                        <img
-                                            src={assetPath("/account-icons/health.png")}
-                                            alt=""
-                                            className="size-4 shrink-0 object-contain"
-                                        />
-                                        <p className="text-[9px] font-bold uppercase tracking-[0.1em]">HPS</p>
-                                        <InfoTooltip
-                                            label="Explain healing per second"
-                                            text="Healing per second from this skill using its adjusted cooldown. Pure Max-HP percentage heals do not receive an HPS value; mixed damage + Max-HP heals do."
-                                        />
-                                    </div>
-                                    <p
-                                        className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
-                                        title={`${formatStatNumber(healingPerSecond)} HPS`}
-                                    >
-                                        {formatStatNumber(healingPerSecond)}
-                                        <span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-                    ) : damageIncreaseEffects.length === 0 ? (
+                    {(skill.statusEffects?.length ?? 0) === 0 ? (
                         <div className="mt-3 rounded-md border border-dashed border-[#344050] bg-[#0d131d]/45 p-3">
                             <p className="text-sm text-[#8e99ad]">
                                 {skill.notes ?? "This skill does not deal damage."}

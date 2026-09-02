@@ -8,7 +8,7 @@ bale-breath,Bale Breath,Fire,"[
 barrier,Barrier,Common,[],6,Target: Allies. Ally effects: 25% of Max HP Team shield for 5 secs,Ready
 blaze-blast,Blaze Blast,Fire,"[
   { multiplier: 1.5, hits: 1 },
-]",8,Target: Self. Ally effects: 15% of Max HP for Self shield,Ready
+]",8,Target: Self. Ally effects: 15% of Max HP for Self shield 5 secs,Ready
 bloodthirsty-aura,Bloodthirsty Aura,Common,[],8,Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs,Ready
 candy-bomb,Candy Bomb,Common,"[
   { multiplier: 1.2, hits: 1 },
@@ -54,7 +54,7 @@ earth-shatter,Earthshatter,Ground,"[
 ]",8,Target: Enemy. Enemy effects: Knockback + Stun for 2 Second,
 egg-blast,Egg Blast,Common,"[
   { multiplier: 1.5, hits: 1 },
-]",3,Target: Enemy | Self. Ally effects: Chance for one of the following to activate:; 20% vulnerability on self for 3 secs; 100% self damage for 2 secs; 50% self damage for 2 secs; 25% self damage for 2 secs; 25% Max Hp self shield for 2 secs; 60% Damage reflection for 2 secs,Ready
+]",3,Target: Enemy | Self. Ally effects: Chance for one of the following to activate:; 20% vulnerability on self for 2 secs; 25% self damage for 2 secs; 50% self damage for 2 secs; 100% self damage for 2 secs; 25% Max Hp self shield for 2 secs; 50% Max Hp self shield for 2 secs; 60% Damage reflection for 2 secs; 95% Damage reduction for 2 secs,Ready
 electric-beam,Electric Beam,Common,"[
   { multiplier: 0.25, hits: 5 },
 ]",8,Target: Enemy.,Ready
@@ -273,7 +273,7 @@ reapers-crescents-scareharvest,Reaper's Crescents (Scareharvest),Common,"[
   { multiplier: 0.7, hits: 1 },
   { multiplier: 0.8, hits: 1 },
 ]",6,Target: Enemy.,
-ripple-guard,Ripple Guard,Common,[],6,Target: Allies. Ally effects: 25% max hp shield,Ready
+ripple-guard,Ripple Guard,Common,[],6,Target: Allies. Ally effects: 25% max hp shield 4 secs,Ready
 rock-road,Rock Road,Ground,"[
   { multiplier: 3, hits: 1 },
 ]",8,Target: Enemy.,Ready
