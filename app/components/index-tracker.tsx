@@ -30,7 +30,7 @@ type MonsterProgress = {
     bonuses?: Partial<Record<BonusId, boolean>>;
 };
 type TrackerProgress = Record<string, MonsterProgress>;
-type Filter = "all" | "incomplete" | "complete" | "missing-rank" | "missing-bonuses";
+type Filter = "all" | "incomplete" | "complete" | "missing-monster" | "missing-bonuses";
 type SortOption = "index" | "missing-most" | "closest" | "score-high" | "name";
 type ViewMode = "grid" | "list";
 type BulkRankAction = "keep" | "clear" | Rank;
@@ -73,6 +73,9 @@ export function IndexTracker() {
     const [viewMode, setViewMode] = useState<ViewMode>("grid");
     const [bulkMode, setBulkMode] = useState(false);
     const [bulkSelectedIds, setBulkSelectedIds] = useState<Set<string>>(() => new Set());
+    const [bulkHiddenIds, setBulkHiddenIds] = useState<Set<string>>(() => new Set());
+    const [showBulkHidden, setShowBulkHidden] = useState(false);
+    const [hideBulkAfterApply, setHideBulkAfterApply] = useState(true);
     const [bulkRankAction, setBulkRankAction] = useState<BulkRankAction>("keep");
     const [bulkBonusActions, setBulkBonusActions] = useState<Record<BonusId, BulkBonusAction>>(emptyBulkBonusActions);
     const [mobileEditorOpen, setMobileEditorOpen] = useState(false);
@@ -127,22 +130,23 @@ export function IndexTracker() {
         const score = monsters.reduce((sum, monster) => sum + scoreFor(progress[monster.id]), 0);
         const collected = monsters.filter((monster) => Boolean(progress[monster.id]?.rank)).length;
         const complete = monsters.filter((monster) => scoreFor(progress[monster.id]) === 21).length;
-        const missingRank = monsters.filter((monster) => progress[monster.id]?.rank !== "SS").length;
+        const missingMonster = monsters.filter((monster) => !progress[monster.id]?.rank).length;
         const missingBonuses = monsters.filter((monster) =>
             BONUSES.some((bonus) => !progress[monster.id]?.bonuses?.[bonus.id]),
         ).length;
-        return { score, collected, complete, missingRank, missingBonuses };
+        return { score, collected, complete, missingMonster, missingBonuses };
     }, [monsters, progress]);
 
     const visibleMonsters = useMemo(() => {
         const query = search.trim().toLowerCase();
         const filtered = monsters.filter((monster) => {
             if (query && !monster.name.toLowerCase().includes(query)) return false;
+            if (bulkMode && !showBulkHidden && bulkHiddenIds.has(monster.id)) return false;
             const monsterProgress = progress[monster.id];
             const score = scoreFor(monsterProgress);
             if (filter === "incomplete") return score < 21;
             if (filter === "complete") return score === 21;
-            if (filter === "missing-rank") return monsterProgress?.rank !== "SS";
+            if (filter === "missing-monster") return !monsterProgress?.rank;
             if (filter === "missing-bonuses") {
                 return BONUSES.some((bonus) => !monsterProgress?.bonuses?.[bonus.id]);
             }
@@ -158,7 +162,9 @@ export function IndexTracker() {
             if (sortBy === "name") return a.name.localeCompare(b.name);
             return a.indexPosition - b.indexPosition;
         });
-    }, [filter, monsters, progress, search, sortBy]);
+    }, [bulkHiddenIds, bulkMode, filter, monsters, progress, search, showBulkHidden, sortBy]);
+
+    const bulkSelectableVisibleMonsters = visibleMonsters.filter((monster) => !bulkHiddenIds.has(monster.id));
 
     const selectedMonster = monsters.find((monster) => monster.id === selectedId) ?? monsters[0];
     const selectedProgress = selectedMonster ? progress[selectedMonster.id] : undefined;
@@ -215,10 +221,48 @@ export function IndexTracker() {
     const setBulkModeActive = (active: boolean) => {
         setBulkMode(active);
         setBulkSelectedIds(new Set());
+        setBulkHiddenIds(new Set());
+        setShowBulkHidden(false);
+        setHideBulkAfterApply(true);
         setBulkRankAction("keep");
         setBulkBonusActions(emptyBulkBonusActions());
         setMobileEditorOpen(false);
         setImportMessage(null);
+    };
+
+    const hideBulkMonster = (monsterId: string) => {
+        setBulkHiddenIds((current) => {
+            const next = new Set(current);
+            next.add(monsterId);
+            return next;
+        });
+        setBulkSelectedIds((current) => {
+            const next = new Set(current);
+            next.delete(monsterId);
+            return next;
+        });
+    };
+
+    const unhideBulkMonster = (monsterId: string) => {
+        setBulkHiddenIds((current) => {
+            const next = new Set(current);
+            next.delete(monsterId);
+            return next;
+        });
+    };
+
+    const hideBulkSelected = () => {
+        const selectedIds = Array.from(bulkSelectedIds);
+        if (selectedIds.length === 0) return;
+        setBulkHiddenIds((current) => new Set([...current, ...selectedIds]));
+        setBulkSelectedIds(new Set());
+        setImportMessage({ tone: "success", text: `Hidden ${selectedIds.length} monster${selectedIds.length === 1 ? "" : "s"} for this bulk-edit session.` });
+    };
+
+    const restoreBulkHidden = () => {
+        setBulkHiddenIds(new Set());
+        setShowBulkHidden(false);
+        setImportMessage({ tone: "success", text: "All hidden monsters are visible again." });
     };
 
     const hasBulkChanges = bulkRankAction !== "keep"
@@ -251,10 +295,16 @@ export function IndexTracker() {
             return next;
         });
 
+        if (hideBulkAfterApply) {
+            setBulkHiddenIds((current) => new Set([...current, ...selectedIds]));
+        }
         setBulkSelectedIds(new Set());
         setBulkRankAction("keep");
         setBulkBonusActions(emptyBulkBonusActions());
-        setImportMessage({ tone: "success", text: `Bulk changes applied to ${selectedIds.length} monster${selectedIds.length === 1 ? "" : "s"}.` });
+        setImportMessage({
+            tone: "success",
+            text: `Bulk changes applied to ${selectedIds.length} monster${selectedIds.length === 1 ? "" : "s"}${hideBulkAfterApply ? " and hidden from this session" : ""}.`,
+        });
     };
 
     const clearAllProgress = () => {
@@ -321,7 +371,7 @@ export function IndexTracker() {
         { id: "all", label: "All", count: monsters.length },
         { id: "incomplete", label: "Incomplete", count: monsters.length - totals.complete },
         { id: "complete", label: "Complete", count: totals.complete },
-        { id: "missing-rank", label: "Missing Rank", count: totals.missingRank },
+        { id: "missing-monster", label: "Missing Monster", count: totals.missingMonster },
         { id: "missing-bonuses", label: "Missing Bonuses", count: totals.missingBonuses },
     ];
 
@@ -404,10 +454,19 @@ export function IndexTracker() {
                             <p className="mt-1 text-xs text-[#9eabbc]">Click monster cards to select them, then choose only the changes you want to apply.</p>
                         </div>
                         <div className="flex flex-wrap gap-2">
-                            <button type="button" onClick={() => setBulkSelectedIds(new Set(visibleMonsters.map((monster) => monster.id)))} disabled={visibleMonsters.length === 0} className="rounded-md border border-[#3d627d] bg-[#12283a] px-3 py-2 text-xs font-semibold text-white hover:border-[#35b5ff] disabled:cursor-not-allowed disabled:opacity-40">Select All Results ({visibleMonsters.length})</button>
+                            <button type="button" onClick={() => setBulkSelectedIds(new Set(bulkSelectableVisibleMonsters.map((monster) => monster.id)))} disabled={bulkSelectableVisibleMonsters.length === 0} className="rounded-md border border-[#3d627d] bg-[#12283a] px-3 py-2 text-xs font-semibold text-white hover:border-[#35b5ff] disabled:cursor-not-allowed disabled:opacity-40">Select All Results ({bulkSelectableVisibleMonsters.length})</button>
+                            <button type="button" onClick={hideBulkSelected} disabled={bulkSelectedIds.size === 0} className="rounded-md border border-[#725b3d] bg-[#2a2114] px-3 py-2 text-xs font-semibold text-[#ffd98a] hover:border-[#e9a93d] hover:text-white disabled:cursor-not-allowed disabled:opacity-40">Hide Selected</button>
+                            {bulkHiddenIds.size > 0 && <button type="button" onClick={() => setShowBulkHidden((current) => !current)} className="rounded-md border border-[#4b5672] bg-[#191d2c] px-3 py-2 text-xs font-semibold text-[#cbd5ff] hover:border-[#7c8ee8] hover:text-white">{showBulkHidden ? "Hide Hidden" : `Show Hidden (${bulkHiddenIds.size})`}</button>}
+                            {bulkHiddenIds.size > 0 && <button type="button" onClick={restoreBulkHidden} className="rounded-md border border-[#3f6452] bg-[#11271d] px-3 py-2 text-xs font-semibold text-[#9ee8bd] hover:border-[#55c985] hover:text-white">Restore Hidden</button>}
                             <button type="button" onClick={() => setBulkSelectedIds(new Set())} disabled={bulkSelectedIds.size === 0} className="rounded-md border border-[#485769] bg-[#18222e] px-3 py-2 text-xs font-semibold text-[#d0d8e3] hover:text-white disabled:cursor-not-allowed disabled:opacity-40">Clear Selection</button>
                         </div>
                     </div>
+
+                    <label className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded-md border border-[#304356] bg-[#0d1822] px-3 py-2 text-xs font-semibold text-[#d5dde8]">
+                        <input type="checkbox" checked={hideBulkAfterApply} onChange={(event) => setHideBulkAfterApply(event.target.checked)} className="size-4 accent-[#168fff]" />
+                        Hide updated monsters after Apply
+                        <span className="font-normal text-[#7f8b9e]">(temporary)</span>
+                    </label>
 
                     <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
                         <label className="rounded-md border border-[#304356] bg-[#0d1822] px-3 py-2">
@@ -446,33 +505,42 @@ export function IndexTracker() {
                             {visibleMonsters.map((monster) => {
                                 const monsterProgress = progress[monster.id];
                                 const score = scoreFor(monsterProgress);
+                                const isHidden = bulkHiddenIds.has(monster.id);
                                 const isSelected = bulkMode ? bulkSelectedIds.has(monster.id) : monster.id === selectedMonster?.id;
                                 return (
-                                    <button key={monster.id} type="button" onClick={() => { if (bulkMode) toggleBulkSelection(monster.id); else { setSelectedId(monster.id); setMobileEditorOpen(true); } }} aria-pressed={isSelected} aria-label={bulkMode ? `${isSelected ? "Deselect" : "Select"} ${monster.name}` : `Edit ${monster.name}`} className={`group relative overflow-hidden rounded-lg border bg-gradient-to-b from-[#101b27] to-[#0b121a] p-3 text-left transition ${viewMode === "grid" ? "min-h-48" : "grid min-h-28 grid-cols-[90px_1fr] items-center gap-3"} ${isSelected ? "border-[#16a1ff] shadow-[0_0_14px_rgba(22,161,255,0.38)]" : "border-[#334153] hover:border-[#64809f]"}`}>
-                                        {bulkMode && <span aria-hidden="true" className={`absolute left-3 top-3 z-20 grid size-7 place-items-center rounded border text-sm font-black ${isSelected ? "border-[#2be577] bg-[#0c572b] text-white" : "border-[#738196] bg-[#091019] text-transparent"}`}>✓</span>}
-                                        <span className={`absolute ${bulkMode ? "left-12" : "left-3"} top-2 z-10 text-2xl font-black drop-shadow-[0_2px_2px_#000] ${rankTone(monsterProgress?.rank)}`}>{monsterProgress?.rank ?? "—"}</span>
-                                        <div className={`flex items-end justify-center ${viewMode === "grid" ? "h-32" : "h-24"}`}>
-                                            {monster.image ? <img src={assetPath(monster.image)} alt="" loading="lazy" className={`${viewMode === "grid" ? "max-h-32" : "max-h-24"} ${score === 0 ? "grayscale opacity-55" : ""} w-full object-contain drop-shadow-[0_8px_8px_rgba(0,0,0,0.55)] transition-all group-hover:scale-105`} /> : null}
-                                        </div>
-                                        <div className="mt-1 flex items-end justify-between gap-2">
-                                            <div className="min-w-0">
-                                                <p className="truncate font-bold text-white">{monster.name}</p>
-                                                <p className="mt-1 font-black text-[#ffb138]">{score} <span className="font-normal text-[#8e99ad]">/ 21</span></p>
+                                    <div key={monster.id} className="flex min-w-0 flex-col gap-1">
+                                        <button type="button" disabled={bulkMode && isHidden} onClick={() => { if (bulkMode) toggleBulkSelection(monster.id); else { setSelectedId(monster.id); setMobileEditorOpen(true); } }} aria-pressed={isSelected} aria-label={bulkMode ? `${isSelected ? "Deselect" : "Select"} ${monster.name}` : `Edit ${monster.name}`} className={`group relative w-full flex-1 overflow-hidden rounded-lg border bg-gradient-to-b from-[#101b27] to-[#0b121a] p-3 text-left transition ${viewMode === "grid" ? "min-h-48" : "grid min-h-28 grid-cols-[90px_1fr] items-center gap-3"} ${isSelected ? "border-[#16a1ff] shadow-[0_0_14px_rgba(22,161,255,0.38)]" : "border-[#334153] hover:border-[#64809f]"} ${isHidden ? "opacity-40 grayscale" : ""}`}>
+                                            {bulkMode && <span aria-hidden="true" className={`absolute left-3 top-3 z-20 grid size-7 place-items-center rounded border text-sm font-black ${isSelected ? "border-[#2be577] bg-[#0c572b] text-white" : "border-[#738196] bg-[#091019] text-transparent"}`}>✓</span>}
+                                            {bulkMode && isHidden && <span className="absolute left-12 top-3 z-20 rounded bg-[#1d2733] px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-[#c6cfdb]">Hidden</span>}
+                                            <span className={`absolute ${bulkMode ? "left-12" : "left-3"} ${bulkMode && isHidden ? "top-10" : "top-2"} z-10 text-2xl font-black drop-shadow-[0_2px_2px_#000] ${rankTone(monsterProgress?.rank)}`}>{monsterProgress?.rank ?? "—"}</span>
+                                            <div className={`flex items-end justify-center ${viewMode === "grid" ? "h-32" : "h-24"}`}>
+                                                {monster.image ? <img src={assetPath(monster.image)} alt="" loading="lazy" className={`${viewMode === "grid" ? "max-h-32" : "max-h-24"} ${score === 0 ? "grayscale opacity-55" : ""} w-full object-contain drop-shadow-[0_8px_8px_rgba(0,0,0,0.55)] transition-all group-hover:scale-105`} /> : null}
                                             </div>
-                                            <div className={`absolute right-2 top-2 z-10 flex gap-1 ${viewMode === "grid" ? "flex-col" : "flex-row"}`}>
-                                                {BONUSES.map((bonus) => {
-                                                    const isActive = Boolean(monsterProgress?.bonuses?.[bonus.id]);
-                                                    return (
-                                                        <span key={bonus.id} title={`${bonus.label}${isActive ? " completed" : " missing"}`} className={`grid size-7 place-items-center rounded border bg-[#080d13] p-0.5 ${isActive ? "border-[#35ef76] shadow-[0_0_6px_rgba(53,239,118,0.38)]" : "border-[#566273] opacity-40 grayscale"}`}>
-                                                            <img src={assetPath(bonus.icon)} alt={bonus.label} className="size-full object-contain" />
-                                                        </span>
-                                                    );
-                                                })}
+                                            <div className="mt-1 flex items-end justify-between gap-2">
+                                                <div className="min-w-0">
+                                                    <p className="truncate font-bold text-white">{monster.name}</p>
+                                                    <p className="mt-1 font-black text-[#ffb138]">{score} <span className="font-normal text-[#8e99ad]">/ 21</span></p>
+                                                </div>
+                                                <div className={`absolute right-2 top-2 z-10 flex gap-1 ${viewMode === "grid" ? "flex-col" : "flex-row"}`}>
+                                                    {BONUSES.map((bonus) => {
+                                                        const isActive = Boolean(monsterProgress?.bonuses?.[bonus.id]);
+                                                        return (
+                                                            <span key={bonus.id} title={`${bonus.label}${isActive ? " completed" : " missing"}`} className={`grid size-7 place-items-center rounded border bg-[#080d13] p-0.5 ${isActive ? "border-[#35ef76] shadow-[0_0_6px_rgba(53,239,118,0.38)]" : "border-[#566273] opacity-40 grayscale"}`}>
+                                                                <img src={assetPath(bonus.icon)} alt={bonus.label} className="size-full object-contain" />
+                                                            </span>
+                                                        );
+                                                    })}
+                                                </div>
                                             </div>
-                                        </div>
-                                        {score < 21 && viewMode === "grid" && <span className="absolute bottom-3 right-11 text-[10px] text-[#ff625a]">{21 - score} missing</span>}
-                                        <img src={assetPath(`/element-icons/${monster.element.toLowerCase()}.png`)} alt={monster.element} title={monster.element} className="absolute bottom-2 right-2 size-7 object-contain drop-shadow-[0_2px_3px_rgba(0,0,0,0.75)]" />
-                                    </button>
+                                            {score < 21 && viewMode === "grid" && <span className="absolute bottom-3 right-11 text-[10px] text-[#ff625a]">{21 - score} missing</span>}
+                                            <img src={assetPath(`/element-icons/${monster.element.toLowerCase()}.png`)} alt={monster.element} title={monster.element} className="absolute bottom-2 right-2 size-7 object-contain drop-shadow-[0_2px_3px_rgba(0,0,0,0.75)]" />
+                                        </button>
+                                        {bulkMode && (
+                                            <button type="button" onClick={() => { if (isHidden) unhideBulkMonster(monster.id); else hideBulkMonster(monster.id); }} className={`rounded-md border px-2 py-1.5 text-xs font-semibold transition ${isHidden ? "border-[#3f6452] bg-[#11271d] text-[#9ee8bd] hover:border-[#55c985] hover:text-white" : "border-[#4b5564] bg-[#141c26] text-[#9faaba] hover:border-[#d0933c] hover:text-[#ffd98a]"}`}>
+                                                {isHidden ? "↩ Unhide" : "Hide"}
+                                            </button>
+                                        )}
+                                    </div>
                                 );
                             })}
                         </div>
