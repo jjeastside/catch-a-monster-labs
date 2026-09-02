@@ -506,20 +506,27 @@ export function IndexTracker() {
                                 const monsterProgress = progress[monster.id];
                                 const score = scoreFor(monsterProgress);
                                 const isHidden = bulkHiddenIds.has(monster.id);
+                                const isComplete = score === 21;
                                 const isSelected = bulkMode ? bulkSelectedIds.has(monster.id) : monster.id === selectedMonster?.id;
                                 return (
                                     <div key={monster.id} className="flex min-w-0 flex-col gap-1">
-                                        <button type="button" disabled={bulkMode && isHidden} onClick={() => { if (bulkMode) toggleBulkSelection(monster.id); else { setSelectedId(monster.id); setMobileEditorOpen(true); } }} aria-pressed={isSelected} aria-label={bulkMode ? `${isSelected ? "Deselect" : "Select"} ${monster.name}` : `Edit ${monster.name}`} className={`group relative w-full flex-1 overflow-hidden rounded-lg border bg-gradient-to-b from-[#101b27] to-[#0b121a] p-3 text-left transition ${viewMode === "grid" ? "min-h-48" : "grid min-h-28 grid-cols-[90px_1fr] items-center gap-3"} ${isSelected ? "border-[#16a1ff] shadow-[0_0_14px_rgba(22,161,255,0.38)]" : "border-[#334153] hover:border-[#64809f]"} ${isHidden ? "opacity-40 grayscale" : ""}`}>
+                                        <button type="button" disabled={bulkMode && isHidden} onClick={() => { if (bulkMode) toggleBulkSelection(monster.id); else { setSelectedId(monster.id); setMobileEditorOpen(true); } }} aria-pressed={isSelected} aria-label={bulkMode ? `${isSelected ? "Deselect" : "Select"} ${monster.name}` : `Edit ${monster.name}`} className={`group relative w-full flex-1 overflow-hidden rounded-lg border bg-gradient-to-b from-[#101b27] to-[#0b121a] p-3 text-left transition ${viewMode === "grid" ? "min-h-48" : "grid min-h-28 grid-cols-[90px_1fr] items-center gap-3"} ${isComplete ? "border-[#58f58b] shadow-[0_0_10px_rgba(62,238,119,0.48),0_0_28px_rgba(255,214,61,0.18),inset_0_0_22px_rgba(62,238,119,0.08)] hover:border-[#91ffb2] hover:shadow-[0_0_14px_rgba(62,238,119,0.6),0_0_34px_rgba(255,214,61,0.24),inset_0_0_24px_rgba(62,238,119,0.1)]" : isSelected ? "border-[#16a1ff] shadow-[0_0_14px_rgba(22,161,255,0.38)]" : "border-[#334153] hover:border-[#64809f]"} ${isHidden ? "opacity-40 grayscale" : ""}`}>
+                                            {isComplete && !isHidden && (
+                                                <>
+                                                    <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-lg bg-[radial-gradient(circle_at_50%_42%,rgba(83,255,145,0.14),transparent_58%)]" />
+                                                    <span aria-hidden="true" className="pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-[#d9ff79] to-transparent opacity-90 shadow-[0_0_10px_rgba(217,255,121,0.9)]" />
+                                                </>
+                                            )}
                                             {bulkMode && <span aria-hidden="true" className={`absolute left-3 top-3 z-20 grid size-7 place-items-center rounded border text-sm font-black ${isSelected ? "border-[#2be577] bg-[#0c572b] text-white" : "border-[#738196] bg-[#091019] text-transparent"}`}>✓</span>}
                                             {bulkMode && isHidden && <span className="absolute left-12 top-3 z-20 rounded bg-[#1d2733] px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-[#c6cfdb]">Hidden</span>}
                                             <span className={`absolute ${bulkMode ? "left-12" : "left-3"} ${bulkMode && isHidden ? "top-10" : "top-2"} z-10 text-2xl font-black drop-shadow-[0_2px_2px_#000] ${rankTone(monsterProgress?.rank)}`}>{monsterProgress?.rank ?? "—"}</span>
                                             <div className={`flex items-end justify-center ${viewMode === "grid" ? "h-32" : "h-24"}`}>
-                                                {monster.image ? <img src={assetPath(monster.image)} alt="" loading="lazy" className={`${viewMode === "grid" ? "max-h-32" : "max-h-24"} ${score === 0 ? "grayscale opacity-55" : ""} w-full object-contain drop-shadow-[0_8px_8px_rgba(0,0,0,0.55)] transition-all group-hover:scale-105`} /> : null}
+                                                {monster.image ? <img src={assetPath(monster.image)} alt="" loading="lazy" className={`${viewMode === "grid" ? "max-h-32" : "max-h-24"} ${score === 0 ? "grayscale opacity-55" : ""} ${isComplete ? "drop-shadow-[0_0_10px_rgba(77,255,139,0.42)]" : "drop-shadow-[0_8px_8px_rgba(0,0,0,0.55)]"} w-full object-contain transition-all group-hover:scale-105`} /> : null}
                                             </div>
                                             <div className="mt-1 flex items-end justify-between gap-2">
                                                 <div className="min-w-0">
                                                     <p className="truncate font-bold text-white">{monster.name}</p>
-                                                    <p className="mt-1 font-black text-[#ffb138]">{score} <span className="font-normal text-[#8e99ad]">/ 21</span></p>
+                                                    <p className={`mt-1 font-black ${isComplete ? "text-[#5cff8d] drop-shadow-[0_0_6px_rgba(92,255,141,0.45)]" : "text-[#ffb138]"}`}>{score} <span className={`font-normal ${isComplete ? "text-[#c6ffd7]" : "text-[#8e99ad]"}`}>/ 21</span></p>
                                                 </div>
                                                 <div className={`absolute right-2 top-2 z-10 flex gap-1 ${viewMode === "grid" ? "flex-col" : "flex-row"}`}>
                                                     {BONUSES.map((bonus) => {
