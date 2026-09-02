@@ -10,6 +10,7 @@ const exploreLinks = [
     { label: "Patch Notes", href: "/updates" },
     { label: "Changelog", href: "/changelog" },
     { label: "About", href: "/about" },
+    { label: "Privacy Policy", href: "/privacy" },
 ];
 
 const projectLinks = [
