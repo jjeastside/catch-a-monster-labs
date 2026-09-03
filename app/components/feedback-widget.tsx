@@ -53,6 +53,7 @@ function currentPageContext() {
 
 export function FeedbackWidget() {
     const [isOpen, setIsOpen] = useState(false);
+    const [isLauncherDismissed, setIsLauncherDismissed] = useState(false);
     const [category, setCategory] = useState<FeedbackCategory>("feature");
     const [message, setMessage] = useState("");
     const [contact, setContact] = useState("");
@@ -239,24 +240,35 @@ export function FeedbackWidget() {
                 onReady={() => setScriptReady(true)}
             />
 
-            {!isOpen && (
-                <button
-                    type="button"
-                    onClick={() => openFeedback()}
-                    className="fixed bottom-4 right-4 z-[80] inline-flex items-center gap-2 rounded-full bg-[#ff6b3d] px-4 py-3 text-sm font-extrabold text-white shadow-[0_12px_30px_rgba(0,0,0,0.38)] transition hover:-translate-y-0.5 hover:bg-[#ff7a50] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff9a79] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b111a] sm:bottom-5 sm:right-5"
-                    aria-haspopup="dialog"
-                >
-                    <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        className="size-5 fill-none stroke-current"
-                        strokeWidth="2"
+            {!isOpen && !isLauncherDismissed && (
+                <div className="fixed bottom-4 right-4 z-[80] flex items-center overflow-hidden rounded-full bg-[#ff6b3d] text-white shadow-[0_12px_30px_rgba(0,0,0,0.38)] sm:bottom-5 sm:right-5">
+                    <button
+                        type="button"
+                        onClick={() => openFeedback()}
+                        className="inline-flex items-center gap-2 py-3 pl-4 pr-3 text-sm font-extrabold transition hover:bg-[#ff7a50] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#ffd0c1]"
+                        aria-haspopup="dialog"
                     >
-                        <path d="M5 5h14v11H9l-4 3V5Z" />
-                        <path d="M9 10h6M12 7v6" />
-                    </svg>
-                    Feedback
-                </button>
+                        <svg
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            className="size-5 fill-none stroke-current"
+                            strokeWidth="2"
+                        >
+                            <path d="M5 5h14v11H9l-4 3V5Z" />
+                            <path d="M9 10h6M12 7v6" />
+                        </svg>
+                        Feedback
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setIsLauncherDismissed(true)}
+                        aria-label="Hide feedback button until page reload"
+                        title="Hide until page reload"
+                        className="grid self-stretch place-items-center border-l border-white/25 px-3 text-lg font-bold text-white/85 transition hover:bg-[#e9562d] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#ffd0c1]"
+                    >
+                        ×
+                    </button>
+                </div>
             )}
 
             {isOpen && (

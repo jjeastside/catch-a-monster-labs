@@ -731,8 +731,11 @@ export function IndexTracker() {
                                 </div>
                             )}
                         </div>
+                        <button type="button" onClick={() => setMobileEditorOpen(false)} className="sticky bottom-0 z-10 mt-4 w-full rounded-md border border-[#4d9dff] bg-gradient-to-r from-[#315ee8] to-[#168fff] px-4 py-3 text-base font-black text-white shadow-[0_-8px_24px_rgba(11,20,30,0.9),0_8px_20px_rgba(22,143,255,0.24)] hover:brightness-110 xl:hidden">
+                            Apply Changes
+                        </button>
                         <div className="mt-3 grid grid-cols-2 gap-2">
-                            <button type="button" onClick={markAllBonuses} className="flex items-center justify-center gap-2 rounded-md border border-[#16a7ff] bg-gradient-to-r from-[#073c75] to-[#075fa6] px-3 py-2.5 text-sm font-semibold text-white hover:brightness-110"><span className="grid size-5 place-items-center rounded-full bg-white text-xs font-black text-[#1765a5]">✓</span>Mark All Bonuses</button>
+                            <button type="button" onClick={markAllBonuses} className="flex items-center justify-center gap-2 rounded-md border border-[#405066] bg-[#18222e] px-3 py-2.5 text-sm font-semibold text-[#d2d9e4] hover:border-[#16a7ff] hover:text-white"><span className="grid size-5 place-items-center rounded-full border border-[#657287] text-xs font-black text-[#b9c3d1]">✓</span>Mark All Bonuses</button>
                             <button type="button" onClick={resetSelected} className="rounded-md border border-[#405066] bg-[#18222e] px-3 py-2.5 text-sm font-semibold text-[#d2d9e4] hover:text-white">↻ Reset</button>
                         </div>
                     </aside>
