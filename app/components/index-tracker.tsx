@@ -1,9 +1,10 @@
 "use client";
 
-import { type ChangeEvent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { type ChangeEvent, type CSSProperties, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
 import { GENERATED_MONSTERS } from "../data/generated/monsters";
 import { assetPath } from "../lib/asset-path";
+import { ISLANDS, type Island } from "../types/monster";
 
 const STORAGE_KEY = "cam-lab-index-tracker-v1";
 const RANKS = ["E", "D", "C", "B", "A", "S", "SS"] as const;
@@ -17,10 +18,10 @@ const RANK_POINTS: Record<Rank, number> = {
     SS: 12,
 };
 const BONUSES = [
+    { id: "huge", label: "Huge", points: 3, icon: "/icons/Huge.png" },
     { id: "shiny", label: "Shiny", points: 2, icon: "/icons/Shiny.png" },
     { id: "bloodlit", label: "Bloodlit", points: 2, icon: "/icons/Bloodlit.png" },
     { id: "fairy", label: "Fairy", points: 2, icon: "/icons/Fairy.png" },
-    { id: "huge", label: "Huge", points: 3, icon: "/icons/Huge.png" },
 ] as const;
 
 type Rank = (typeof RANKS)[number];
@@ -33,12 +34,14 @@ type MonsterProgress = {
 };
 type TrackerProgress = Record<string, MonsterProgress>;
 type Filter = "all" | "incomplete" | "complete" | "missing-monster" | "missing-bonuses";
-type SortOption = "index" | "missing-most" | "closest" | "score-high" | "name";
+type SortOption = "index" | "missing-most" | "closest" | "score-high" | "mutation" | "name";
 type ViewMode = "grid" | "list";
 type BulkRankAction = "keep" | "clear" | Rank;
 type BulkBonusAction = "keep" | "add" | "remove";
 type BulkGenderAction = "keep" | "clear" | Gender;
 type GenderFilter = "all" | Gender;
+type RankFilter = "all" | "unranked" | Rank;
+type LocationFilter = "all" | Island;
 
 const GENDERS = {
     male: { label: "Male", icon: "/icons/male.png", tone: "border-[#19a9ff] bg-[#082b42] text-[#42c2ff]" },
@@ -56,12 +59,42 @@ function scoreFor(progress?: MonsterProgress) {
 
 function rankTone(rank?: Rank) {
     if (rank === "SS") return "text-[#ff5757]";
-    if (rank === "S") return "text-[#ffad32]";
+    if (rank === "S") return "text-transparent";
     if (rank === "A") return "text-[#ffd84a]";
     if (rank === "B") return "text-[#d965ff]";
     if (rank === "C") return "text-[#55d7ff]";
     if (rank === "D") return "text-[#45ec72]";
     return "text-[#aeb8c8]";
+}
+
+function rankLabelStyle(rank?: Rank): CSSProperties {
+    const heavierLabel: CSSProperties = {
+        display: "inline-block",
+        fontWeight: 950,
+        letterSpacing: "-0.015em",
+        transform: "scaleX(1.1)",
+        WebkitTextStroke: "0.2px currentColor",
+    };
+    if (rank !== "S") return heavierLabel;
+    return {
+        ...heavierLabel,
+        backgroundImage: "linear-gradient(100deg,#ff4545 4%,#ffd83d 25%,#43e86e 45%,#31cbea 65%,#8e62ff 82%,#ff58a8 100%)",
+        backgroundClip: "text",
+        WebkitBackgroundClip: "text",
+        color: "transparent",
+        textShadow: "none",
+        filter: "drop-shadow(0 1px 0 #050608)",
+        transform: "scaleX(1.14)",
+        WebkitTextStroke: "0",
+    };
+}
+
+function compareMutationPriority(a?: MonsterProgress, b?: MonsterProgress) {
+    for (const bonus of BONUSES) {
+        const difference = Number(Boolean(b?.bonuses?.[bonus.id])) - Number(Boolean(a?.bonuses?.[bonus.id]));
+        if (difference !== 0) return difference;
+    }
+    return 0;
 }
 
 function emptyBonuses(): Partial<Record<BonusId, boolean>> {
@@ -79,6 +112,8 @@ export function IndexTracker() {
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState<Filter>("all");
     const [genderFilter, setGenderFilter] = useState<GenderFilter>("all");
+    const [rankFilter, setRankFilter] = useState<RankFilter>("all");
+    const [locationFilter, setLocationFilter] = useState<LocationFilter>("all");
     const [sortBy, setSortBy] = useState<SortOption>("index");
     const [viewMode, setViewMode] = useState<ViewMode>("grid");
     const [bulkMode, setBulkMode] = useState(false);
@@ -155,6 +190,9 @@ export function IndexTracker() {
             if (bulkMode && !showBulkHidden && bulkHiddenIds.has(monster.id)) return false;
             const monsterProgress = progress[monster.id];
             if (genderFilter !== "all" && monsterProgress?.gender !== genderFilter) return false;
+            if (rankFilter === "unranked" && monsterProgress?.rank) return false;
+            if (rankFilter !== "all" && rankFilter !== "unranked" && monsterProgress?.rank !== rankFilter) return false;
+            if (locationFilter !== "all" && !monster.sources.some((source) => source.location === locationFilter)) return false;
             const score = scoreFor(monsterProgress);
             if (filter === "incomplete") return score < 21;
             if (filter === "complete") return score === 21;
@@ -171,10 +209,15 @@ export function IndexTracker() {
             if (sortBy === "missing-most") return (21 - bScore) - (21 - aScore) || a.indexPosition - b.indexPosition;
             if (sortBy === "closest") return (21 - aScore) - (21 - bScore) || a.indexPosition - b.indexPosition;
             if (sortBy === "score-high") return bScore - aScore || a.indexPosition - b.indexPosition;
+            if (sortBy === "mutation") {
+                return compareMutationPriority(progress[a.id], progress[b.id])
+                    || bScore - aScore
+                    || a.indexPosition - b.indexPosition;
+            }
             if (sortBy === "name") return a.name.localeCompare(b.name);
             return a.indexPosition - b.indexPosition;
         });
-    }, [bulkHiddenIds, bulkMode, filter, genderFilter, monsters, progress, search, showBulkHidden, sortBy]);
+    }, [bulkHiddenIds, bulkMode, filter, genderFilter, locationFilter, monsters, progress, rankFilter, search, showBulkHidden, sortBy]);
 
     const bulkSelectableVisibleMonsters = visibleMonsters.filter((monster) => !bulkHiddenIds.has(monster.id));
 
@@ -427,7 +470,7 @@ export function IndexTracker() {
                     <h2 className="text-sm font-bold uppercase text-[#32aaff]">How Index Score Works</h2>
                     <p className="mt-2 text-sm text-[#dbe1ea]">Your highest rank gives base points:</p>
                     <div className="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-base font-black">
-                        {RANKS.slice().reverse().map((rank) => <span key={rank} className={rankTone(rank)}>{rank}: <span className="text-white">{RANK_POINTS[rank]}</span></span>)}
+                        {RANKS.slice().reverse().map((rank) => <span key={rank} className={rankTone(rank)} style={rankLabelStyle(rank)}>{rank}: <span className="text-white">{RANK_POINTS[rank]}</span></span>)}
                     </div>
                     <p className="mt-4 text-sm text-[#dbe1ea]">Mutations add extra points:</p>
                     <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -449,7 +492,7 @@ export function IndexTracker() {
                         </button>
                     ))}
                 </div>
-                <div className="flex min-w-0 flex-col gap-2 sm:flex-row">
+                <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:flex-wrap lg:justify-end">
                     <label className="flex min-w-0 items-center rounded-md border border-[#344050] bg-[#0c131d] px-3 focus-within:border-[#168fff] lg:w-72">
                         <span aria-hidden="true" className="text-[#7f8b9e]">⌕</span>
                         <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search monsters..." className="min-w-0 flex-1 bg-transparent px-2 py-2 text-sm text-white outline-none placeholder:text-[#677386]" />
@@ -459,11 +502,21 @@ export function IndexTracker() {
                         <option value="female">Gender: Female</option>
                         <option value="male">Gender: Male</option>
                     </select>
+                    <select value={rankFilter} onChange={(event) => setRankFilter(event.target.value as RankFilter)} aria-label="Filter by rank" className="rounded-md border border-[#344050] bg-[#0c131d] px-3 py-2 text-sm text-[#d5dce6] outline-none focus:border-[#168fff]">
+                        <option value="all">Rank: All</option>
+                        <option value="unranked">Rank: Unranked</option>
+                        {RANKS.map((rank) => <option key={rank} value={rank}>Rank: {rank}</option>)}
+                    </select>
+                    <select value={locationFilter} onChange={(event) => setLocationFilter(event.target.value as LocationFilter)} aria-label="Filter by island" className="rounded-md border border-[#344050] bg-[#0c131d] px-3 py-2 text-sm text-[#d5dce6] outline-none focus:border-[#168fff]">
+                        <option value="all">Island: All</option>
+                        {ISLANDS.map((island) => <option key={island} value={island}>{island}</option>)}
+                    </select>
                     <select value={sortBy} onChange={(event) => setSortBy(event.target.value as SortOption)} aria-label="Sort monsters" className="rounded-md border border-[#344050] bg-[#0c131d] px-3 py-2 text-sm text-[#d5dce6] outline-none focus:border-[#168fff]">
                         <option value="index">Sort: Index Order</option>
                         <option value="missing-most">Sort: Most Missing</option>
                         <option value="closest">Sort: Closest to Complete</option>
                         <option value="score-high">Sort: Highest Score</option>
+                        <option value="mutation">Sort: Mutation Priority</option>
                         <option value="name">Sort: Name A–Z</option>
                     </select>
                     <button type="button" onClick={() => setBulkModeActive(!bulkMode)} aria-pressed={bulkMode} className={`rounded-md border px-3 py-2 text-sm font-semibold transition ${bulkMode ? "border-[#27bdff] bg-[#0d4771] text-white" : "border-[#405b70] bg-[#132536] text-[#d8e0ea] hover:border-[#2eacff] hover:text-white"}`}>
@@ -562,7 +615,7 @@ export function IndexTracker() {
                                             )}
                                             {bulkMode && <span aria-hidden="true" className={`absolute left-3 top-3 z-20 grid size-7 place-items-center rounded border text-sm font-black ${isSelected ? "border-[#2be577] bg-[#0c572b] text-white" : "border-[#738196] bg-[#091019] text-transparent"}`}>✓</span>}
                                             {bulkMode && isHidden && <span className="absolute left-12 top-3 z-20 rounded bg-[#1d2733] px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-[#c6cfdb]">Hidden</span>}
-                                            <span className={`absolute ${bulkMode ? "left-12" : "left-3"} ${bulkMode && isHidden ? "top-10" : "top-2"} z-10 text-2xl font-black drop-shadow-[0_2px_2px_#000] ${rankTone(monsterProgress?.rank)}`}>{monsterProgress?.rank ?? "—"}</span>
+                                            <span className={`absolute ${bulkMode ? "left-12" : "left-3"} ${bulkMode && isHidden ? "top-10" : "top-2"} z-10 text-2xl font-black drop-shadow-[0_2px_2px_#000] ${rankTone(monsterProgress?.rank)}`} style={rankLabelStyle(monsterProgress?.rank)}>{monsterProgress?.rank ?? "—"}</span>
                                             {monsterProgress?.gender && (
                                                 <img src={assetPath(GENDERS[monsterProgress.gender].icon)} alt={GENDERS[monsterProgress.gender].label} title={GENDERS[monsterProgress.gender].label} className="absolute right-11 top-2 z-10 size-8 object-contain drop-shadow-[0_2px_3px_rgba(0,0,0,0.8)]" />
                                             )}
@@ -610,7 +663,7 @@ export function IndexTracker() {
                             <div>
                                 <p className="text-xs font-bold uppercase tracking-wider text-[#2eacff]">Monster Progress</p>
                                 <div className="mt-1 flex items-center gap-2">
-                                    <span className={`text-2xl font-black ${rankTone(selectedProgress?.rank)}`}>{selectedProgress?.rank ?? "—"}</span>
+                                    <span className={`text-2xl font-black ${rankTone(selectedProgress?.rank)}`} style={rankLabelStyle(selectedProgress?.rank)}>{selectedProgress?.rank ?? "—"}</span>
                                     <h2 className="text-2xl font-black text-white">{selectedMonster.name}</h2>
                                 </div>
                             </div>
@@ -631,7 +684,7 @@ export function IndexTracker() {
                                 <p className="mb-2 text-sm text-[#cbd3df]">Highest Rank</p>
                                 <div className="flex flex-wrap gap-1">
                                     {RANKS.map((rank) => (
-                                        <button key={rank} type="button" onClick={() => setRank(rank)} className={`min-w-9 rounded border px-2 py-2 text-sm font-black ${selectedProgress?.rank === rank ? "border-[#ff5757] bg-[#6c2025] text-white" : "border-[#415065] bg-[#131d28] text-[#c4ccd8] hover:border-[#7182ff]"}`}>{rank}</button>
+                                        <button key={rank} type="button" onClick={() => setRank(rank)} className={`min-w-9 rounded border px-2 py-2 text-sm font-black ${selectedProgress?.rank === rank ? "border-[#ff5757] bg-[#6c2025]" : "border-[#415065] bg-[#131d28] hover:border-[#7182ff]"}`}><span className={rankTone(rank)} style={rankLabelStyle(rank)}>{rank}</span></button>
                                     ))}
                                 </div>
                                 <p className="mt-3 flex items-center gap-2 text-sm text-[#f5cc3f]"><img src={assetPath("/icons/index.png")} alt="" className="size-7 object-contain" />Rank Points: <b className="text-lg">{selectedRankPoints}</b></p>
