@@ -343,6 +343,38 @@ function parseStunEffects(notes) {
     return effects;
 }
 
+function parseKnockbackEffects(notes) {
+    if (!/\bknockback\b/i.test(notes)) {
+        return [];
+    }
+
+    return [{
+        type: "knockback",
+        target: "Enemy",
+    }];
+}
+
+function parseTauntEffects(notes) {
+    const tauntIndex = notes.search(/\btaunt\b/i);
+
+    if (tauntIndex === -1) {
+        return [];
+    }
+
+    const allyEffectsIndex = notes.search(/\bally effects:/i);
+    const duration = notes.match(
+        /\btaunt(?:\s+for)?\s+(\d+(?:\.\d+)?)\s*(?:s|secs?|seconds?)\b/i,
+    );
+
+    return [{
+        type: "taunt",
+        target: allyEffectsIndex !== -1 && allyEffectsIndex < tauntIndex
+            ? "Self"
+            : "Enemy",
+        durationSeconds: duration ? Number(duration[1]) : 2,
+    }];
+}
+
 function parsePoisonEffects(notes) {
     if (!/\bpoison\b/i.test(notes)) {
         return [];
@@ -490,6 +522,8 @@ function parseSkillStatusEffects(notes) {
         ...parseDamageReductionEffects(notes),
         ...parseDamageReflectionEffects(notes),
         ...parseStunEffects(notes),
+        ...parseKnockbackEffects(notes),
+        ...parseTauntEffects(notes),
         ...parsePoisonEffects(notes),
         ...parseBurnEffects(notes),
         ...parseHealingEffects(notes),

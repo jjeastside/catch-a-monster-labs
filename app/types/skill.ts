@@ -25,7 +25,8 @@ export type SkillStatusEffect = {
         | "knockback"
         | "damageReduction"
         | "damageReflection"
-        | "stun";
+        | "stun"
+        | "taunt";
     target: SkillEffectTarget;
     amountPercent?: number;
     maxAmountPercent?: number;

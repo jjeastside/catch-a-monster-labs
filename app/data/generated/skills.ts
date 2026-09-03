@@ -213,6 +213,10 @@ export const GENERATED_SKILLS = {
         "target": "Self",
         "amountPercent": 95,
         "durationSeconds": 2
+      },
+      {
+        "type": "knockback",
+        "target": "Enemy"
       }
     ],
     "notes": "Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback",
@@ -359,6 +363,10 @@ export const GENERATED_SKILLS = {
         "type": "stun",
         "target": "Enemy",
         "durationSeconds": 2
+      },
+      {
+        "type": "knockback",
+        "target": "Enemy"
       }
     ],
     "notes": "Target: Enemy. Enemy effects: Knockback + Stun for 2 Second",
@@ -663,6 +671,11 @@ export const GENERATED_SKILLS = {
         "target": "Enemy",
         "amountPercent": 15,
         "durationSeconds": 10
+      },
+      {
+        "type": "taunt",
+        "target": "Enemy",
+        "durationSeconds": 2
       }
     ],
     "notes": "Target: Enemy. Enemy effects: Taunt 2 secs; -15% damage 10 secs",
@@ -685,6 +698,10 @@ export const GENERATED_SKILLS = {
         "target": "Self",
         "amountPercent": 95,
         "durationSeconds": 2
+      },
+      {
+        "type": "knockback",
+        "target": "Enemy"
       }
     ],
     "notes": "Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback",
@@ -707,6 +724,10 @@ export const GENERATED_SKILLS = {
         "target": "Self",
         "amountPercent": 95,
         "durationSeconds": 2
+      },
+      {
+        "type": "knockback",
+        "target": "Enemy"
       }
     ],
     "notes": "Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback",
@@ -723,6 +744,12 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "knockback",
+        "target": "Enemy"
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Knockback",
     "validationStatus": "Ready"
   },
@@ -737,6 +764,12 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "knockback",
+        "target": "Enemy"
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Knockback",
     "validationStatus": "Ready"
   },
@@ -1070,6 +1103,12 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "knockback",
+        "target": "Enemy"
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Knockback",
     "validationStatus": "Ready"
   },
@@ -1098,6 +1137,12 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "knockback",
+        "target": "Enemy"
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Knockback",
     "validationStatus": "Ready"
   },
@@ -1360,6 +1405,10 @@ export const GENERATED_SKILLS = {
         "target": "Self",
         "amountPercent": 25,
         "durationSeconds": 6
+      },
+      {
+        "type": "knockback",
+        "target": "Enemy"
       }
     ],
     "notes": "Target: Enemy. Enemy effects: Knockback Ally effects: 25% self damage for 6 secs",
@@ -1382,6 +1431,10 @@ export const GENERATED_SKILLS = {
         "target": "Self",
         "amountPercent": 25,
         "durationSeconds": 6
+      },
+      {
+        "type": "knockback",
+        "target": "Enemy"
       }
     ],
     "notes": "Target: Enemy. Enemy effects: Knockback Ally effects: 25% self damage for 6 secs",
@@ -1560,6 +1613,10 @@ export const GENERATED_SKILLS = {
         "target": "Self",
         "amountPercent": 95,
         "durationSeconds": 2
+      },
+      {
+        "type": "knockback",
+        "target": "Enemy"
       }
     ],
     "notes": "Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for 2 secs",
@@ -1593,6 +1650,13 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "taunt",
+        "target": "Enemy",
+        "durationSeconds": 3
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Taunt for 3 secs",
     "validationStatus": "Ready"
   },
@@ -1906,6 +1970,10 @@ export const GENERATED_SKILLS = {
     "cooldown": 8,
     "statusEffects": [
       {
+        "type": "knockback",
+        "target": "Enemy"
+      },
+      {
         "type": "healing",
         "target": "Self",
         "amountPercent": 100,
@@ -1992,6 +2060,12 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "knockback",
+        "target": "Enemy"
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Knockback",
     "validationStatus": "Ready"
   },
@@ -2093,6 +2167,17 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "knockback",
+        "target": "Enemy"
+      },
+      {
+        "type": "taunt",
+        "target": "Enemy",
+        "durationSeconds": 2
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Taunt for 2 secs Knockback",
     "validationStatus": "Ready"
   },
@@ -2113,6 +2198,11 @@ export const GENERATED_SKILLS = {
         "target": "Self",
         "amountPercent": 35,
         "durationSeconds": 10
+      },
+      {
+        "type": "taunt",
+        "target": "Enemy",
+        "durationSeconds": 2
       }
     ],
     "notes": "Target: Enemy | Self. Enemy effects: Taunt for 2 secs Ally effects: 35% damage reduction for 10 secs",
@@ -2252,6 +2342,12 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "knockback",
+        "target": "Enemy"
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Knockback",
     "validationStatus": "Ready"
   },
@@ -2293,6 +2389,10 @@ export const GENERATED_SKILLS = {
         "target": "Self",
         "amountPercent": 95,
         "durationSeconds": 2
+      },
+      {
+        "type": "knockback",
+        "target": "Enemy"
       }
     ],
     "notes": "Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for self for 2 secs",
@@ -2314,6 +2414,15 @@ export const GENERATED_SKILLS = {
         "type": "damageReduction",
         "target": "Self",
         "amountPercent": 95,
+        "durationSeconds": 2
+      },
+      {
+        "type": "knockback",
+        "target": "Enemy"
+      },
+      {
+        "type": "taunt",
+        "target": "Self",
         "durationSeconds": 2
       }
     ],
@@ -2352,6 +2461,12 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "knockback",
+        "target": "Enemy"
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Knockback",
     "validationStatus": "Ready"
   },
@@ -2366,6 +2481,12 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "knockback",
+        "target": "Enemy"
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Knockback",
     "validationStatus": "Ready"
   },
@@ -2384,6 +2505,12 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "knockback",
+        "target": "Enemy"
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Knockback + Stagger + Lift",
     "validationStatus": "Ready"
   },
@@ -2440,6 +2567,12 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
+    "statusEffects": [
+      {
+        "type": "knockback",
+        "target": "Enemy"
+      }
+    ],
     "notes": "Target: Enemy. Enemy effects: Knockback + Stagger + Lift",
     "validationStatus": "Ready"
   },
@@ -2473,6 +2606,10 @@ export const GENERATED_SKILLS = {
         "type": "stun",
         "target": "Enemy",
         "durationSeconds": 1
+      },
+      {
+        "type": "knockback",
+        "target": "Enemy"
       }
     ],
     "notes": "Target: Enemy. Enemy effects: Knockback + Stun for 1 Second",

@@ -202,6 +202,60 @@ function StunEffect({ effect }: { effect: SkillStatusEffect }) {
     );
 }
 
+function KnockbackEffect({ effect }: { effect: SkillStatusEffect }) {
+    const targetLabel = effect.target === "Enemy" ? "Enemy" : effect.target;
+    const tooltip = targetLabel === "Enemy"
+        ? "Pushes the enemy away from the caster."
+        : `Pushes the ${targetLabel.toLowerCase()} away.`;
+
+    return (
+        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#e7e13d]/35 bg-[#383518]/45 px-3 py-2">
+            <img
+                src={assetPath("/icons/knockback.png")}
+                alt=""
+                className="size-8 shrink-0 object-contain"
+            />
+            <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#f0eb62]">Knockback</p>
+                    <InfoTooltip label="Explain Knockback" text={tooltip} />
+                </div>
+                <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
+                    {targetLabel}
+                </p>
+            </div>
+        </div>
+    );
+}
+
+function TauntEffect({ effect }: { effect: SkillStatusEffect }) {
+    const targetLabel = effect.target === "Self" ? "Self" : "Enemy";
+    const durationLabel = `${formatNumber(effect.durationSeconds ?? 2)}s`;
+    const tooltip = effect.target === "Self"
+        ? `Forces enemies to target the caster for ${durationLabel}.`
+        : `Forces the affected enemy to target the caster for ${durationLabel}.`;
+
+    return (
+        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#f5c934]/35 bg-[#3b2f16]/45 px-3 py-2">
+            <img
+                src={assetPath("/icons/taunt.png")}
+                alt=""
+                className="size-8 shrink-0 object-contain"
+            />
+            <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#ffd85c]">Taunt</p>
+                    <InfoTooltip label="Explain Taunt" text={tooltip} />
+                </div>
+                <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
+                    {durationLabel}
+                    <span className="ml-1.5 text-xs font-semibold text-[#d8c58b]">{targetLabel}</span>
+                </p>
+            </div>
+        </div>
+    );
+}
+
 function PoisonEffect({ effect }: { effect: SkillStatusEffect }) {
     const stacks = effect.stacks ?? 1;
     const maxStacks = effect.maxStacks ?? 10;
@@ -1155,6 +1209,12 @@ function SkillDamagePanel({
     const stunEffects = (skill.statusEffects ?? []).filter(
         (effect) => effect.type === "stun",
     );
+    const knockbackEffects = (skill.statusEffects ?? []).filter(
+        (effect) => effect.type === "knockback",
+    );
+    const tauntEffects = (skill.statusEffects ?? []).filter(
+        (effect) => effect.type === "taunt",
+    );
     const poisonEffects = (skill.statusEffects ?? []).filter(
         (effect) => effect.type === "poison",
     );
@@ -1502,6 +1562,28 @@ function SkillDamagePanel({
                 <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
                     {stunEffects.map((effect, index) => (
                         <StunEffect
+                            key={`${effect.type}-${effect.target}-${effect.durationSeconds}-${index}`}
+                            effect={effect}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {knockbackEffects.length > 0 && (
+                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                    {knockbackEffects.map((effect, index) => (
+                        <KnockbackEffect
+                            key={`${effect.type}-${effect.target}-${index}`}
+                            effect={effect}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {tauntEffects.length > 0 && (
+                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                    {tauntEffects.map((effect, index) => (
+                        <TauntEffect
                             key={`${effect.type}-${effect.target}-${effect.durationSeconds}-${index}`}
                             effect={effect}
                         />
