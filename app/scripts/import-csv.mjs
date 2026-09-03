@@ -5,7 +5,7 @@ const root = path.resolve(import.meta.dirname, "..");
 const sourceDir = path.join(root, "data-source");
 const outputDir = path.join(root, "data", "generated");
 
-function parseCsv(fileName) {
+export function parseCsv(fileName) {
     const input = fs
         .readFileSync(path.join(sourceDir, fileName), "utf8")
         .replace(/^\uFEFF/, "");
@@ -639,6 +639,21 @@ const monsterRows = parseCsv("monsters.csv");
 const skills = parseCsv("skills.csv");
 const achievementRows = parseCsv("achievements.csv");
 
+function assertCsvColumns(fileName, rows, requiredColumns) {
+    const columns = new Set(Object.keys(rows[0] ?? {}));
+    const missing = requiredColumns.filter((column) => !columns.has(column));
+
+    if (missing.length > 0) {
+        throw new Error(
+            `${fileName} has the wrong columns. Missing: ${missing.join(", ")}. ` +
+            "Check that the correct CSV was placed in app/data-source.",
+        );
+    }
+}
+
+assertCsvColumns("monsters.csv", monsterRows, ["Monster", "Rarity", "Element", "Damage", "Health"]);
+assertCsvColumns("skills.csv", skills, ["id", "name", "description", "notes"]);
+
 const monsters = monsterRows.map((monster, index) => {
     const name = monster.Monster.trim();
 
@@ -854,6 +869,9 @@ const generatedSkills = Object.fromEntries(
             id: skill.id,
             name: skill.name,
             element: titleCase(skill.element),
+            ...(skill.description
+                ? { description: skill.description }
+                : {}),
             damageInstances: parseDamageInstances(
                 skill.damageInstances,
                 skill.id,
@@ -879,6 +897,9 @@ const skillEffectCount = Object.values(generatedSkills).reduce(
     (total, skill) => total + (skill.statusEffects?.length ?? 0),
     0,
 );
+const skillDescriptionCount = Object.values(generatedSkills).filter(
+    (skill) => Boolean(skill.description),
+).length;
 
 const generatedMonsters = monsters.map(
     (monster) => ({
@@ -1068,6 +1089,7 @@ export const GENERATED_ACHIEVEMENTS: Achievement[] = ${JSON.stringify(
 console.log(
     `Imported ${monsters.length} monsters, ` +
     `${skills.length} skills, ` +
+    `${skillDescriptionCount} skill descriptions, ` +
     `${skillEffectCount} skill effects, ` +
     `${monsterSkills.length} monster-skill links, ` +
     `${monsterPassives.length} passives, ` +

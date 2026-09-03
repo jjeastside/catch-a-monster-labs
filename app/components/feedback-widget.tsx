@@ -193,7 +193,7 @@ export function FeedbackWidget() {
                     contact: contact.trim(),
                     turnstileToken,
                     page: currentPageContext(),
-                    version: "1.0.5",
+                    version: "1.0.8",
                     browser: navigator.userAgent,
                 }),
             });
@@ -222,7 +222,7 @@ export function FeedbackWidget() {
             });
         } catch {
             setErrorMessage(
-                "CAM Lab could not reach the feedback service. Please try again.",
+                "Cam Lab could not reach the feedback service. Please try again.",
             );
             resetTurnstile();
         } finally {
@@ -297,7 +297,7 @@ export function FeedbackWidget() {
                                     </h2>
                                     <p className="mt-2 text-sm leading-6 text-[#aebbd8]">
                                         Thank you! Your feedback was added as GitHub
-                                        Issue #{createdIssue.number} by the CAM Lab
+                                        Issue #{createdIssue.number} by the Cam Lab
                                         feedback bot.
                                     </p>
                                     <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -329,13 +329,13 @@ export function FeedbackWidget() {
                                         </h2>
                                         <p className="mt-1 text-sm leading-5 text-[#aebbd8]">
                                             Tell us what you want, what&apos;s broken, or
-                                            any thoughts—it goes straight to the CAM Lab
+                                            any thoughts—it goes straight to the Cam Lab
                                             GitHub tracker.
                                         </p>
                                     </div>
 
                                     <div className="mt-5 rounded-lg border border-[#293b68] bg-[#0b1532] px-3 py-3 text-xs leading-5 text-[#9eacd0]">
-                                        This feedback is about the <strong className="text-white">CAM Lab website</strong>—not the Catch a Monster game itself. CAM Lab is fan-made and cannot change anything in-game.
+                                        This feedback is about the <strong className="text-white">Cam Lab website</strong>—not the Catch a Monster game itself. Cam Lab is fan-made and cannot change anything in-game.
                                     </div>
 
                                     <form

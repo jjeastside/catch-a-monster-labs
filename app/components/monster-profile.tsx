@@ -26,33 +26,11 @@ import {
 } from "../lib/monster-comparison";
 import type { GeneratedMonster } from "../types/monster";
 import type { MonsterPassive } from "../types/build";
-
-type SkillEffect =
-    | "burn"
-    | "poison"
-    | "healing"
-    | "stun"
-    | "vulnerability"
-    | "knockback"
-    | "damage-buff"
-    | "damage-reduction"
-    | "shield"
-    | "taunt"
-    | "stagger";
-
-const skillEffectLabels: Record<SkillEffect, string> = {
-    burn: "Burn",
-    poison: "Poison",
-    healing: "Healing",
-    stun: "Stun",
-    vulnerability: "Vulnerability",
-    knockback: "Knockback",
-    "damage-buff": "Damage Buff",
-    "damage-reduction": "Damage Reduction",
-    shield: "Shield",
-    taunt: "Taunt",
-    stagger: "Stagger",
-};
+import {
+    databaseSkillEffectDetails,
+    getDatabaseSkillDescription,
+    getDatabaseSkillEffects,
+} from "../lib/skill-display";
 
 function compactNumber(value: number): string {
     return new Intl.NumberFormat("en-US", {
@@ -81,34 +59,6 @@ function getDatabaseSkillIconPath(skillId: string): string {
     };
 
     return `/skill-icons/${iconAliases[skillId] ?? skillId}.png`;
-}
-
-function getSkillEffects(notes?: string): SkillEffect[] {
-    if (!notes) return [];
-
-    const normalized = notes.toLowerCase();
-    const effects: SkillEffect[] = [];
-
-    if (/\bburn(?:ed|s|ing)?\b/.test(normalized)) effects.push("burn");
-    if (/\bpoison\b/.test(normalized)) effects.push("poison");
-    if (/\bheal(?:s|ed|ing)?\b/.test(normalized)) effects.push("healing");
-    if (/\bstun\b/.test(normalized)) effects.push("stun");
-    if (/\bvulnerab/.test(normalized)) effects.push("vulnerability");
-    if (/\bknockback\b/.test(normalized)) effects.push("knockback");
-    if (/\bdamage reduction\b/.test(normalized)) effects.push("damage-reduction");
-    if (/\bshield\b/.test(normalized)) effects.push("shield");
-    if (/\btaunt\b/.test(normalized)) effects.push("taunt");
-    if (/\bstagger\b/.test(normalized)) effects.push("stagger");
-
-    const allyEffects = normalized.split("ally effects:")[1] ?? "";
-    if (
-        /(?:\d+(?:\.\d+)?%\s+)?team damage\b/.test(allyEffects) ||
-        /(?:\d+(?:\.\d+)?%\s+)?self damage\b/.test(allyEffects)
-    ) {
-        effects.push("damage-buff");
-    }
-
-    return [...new Set(effects)];
 }
 
 type EvolutionFamilyMember = {
@@ -495,17 +445,19 @@ export function MonsterProfile({ monsterId }: { monsterId: string }) {
                                             </div>
 
                                             <p className="mt-3 text-[11px] leading-5 text-[#8c99ac]">
-                                                {skill.notes || "No additional skill notes."}
+                                                {getDatabaseSkillDescription(skill)}
                                             </p>
 
-                                            {getSkillEffects(skill.notes).length > 0 ? (
+                                            {getDatabaseSkillEffects(skill).length > 0 ? (
                                                 <div className="mt-3 flex flex-wrap gap-1.5">
-                                                    {getSkillEffects(skill.notes).map((effect) => (
+                                                    {getDatabaseSkillEffects(skill).map((effect) => (
                                                         <span
                                                             key={effect}
-                                                            className="rounded-md border border-[#344050] bg-[#121b27] px-2 py-1 text-[9px] font-bold text-[#aeb9cb]"
+                                                            title={databaseSkillEffectDetails[effect].label}
+                                                            className="inline-flex items-center gap-1.5 rounded-md border border-[#344050] bg-[#121b27] px-2 py-1 text-[9px] font-bold text-[#aeb9cb]"
                                                         >
-                                                            {skillEffectLabels[effect]}
+                                                            <img src={assetPath(databaseSkillEffectDetails[effect].icon)} alt="" className="size-4 object-contain" />
+                                                            {databaseSkillEffectDetails[effect].label}
                                                         </span>
                                                     ))}
                                                 </div>

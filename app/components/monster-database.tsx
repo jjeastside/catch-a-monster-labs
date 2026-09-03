@@ -18,6 +18,13 @@ import { getSkill, getSkillDisplayName } from "../data/skills";
 import { assetPath } from "../lib/asset-path";
 import { getMonsterComparisonStats, type PassiveCompareMode } from "../lib/monster-comparison";
 import {
+    databaseSkillEffectDetails,
+    databaseSkillEffectOptions,
+    getDatabaseSkillDescription,
+    getDatabaseSkillEffects,
+    type DatabaseSkillEffect,
+} from "../lib/skill-display";
+import {
     EVOLUTION_STEP,
     MAX_EVOLUTION_PERCENT,
     MIN_EVOLUTION_PERCENT,
@@ -45,41 +52,8 @@ type ObtainabilityFilter = "all" | "obtainable" | "unobtainable";
 type PassiveFilter = "all" | "none" | Passive;
 type SourceFilter = "All" | string;
 type LocationFilter = "All" | string;
-type SkillEffect =
-    | "burn"
-    | "poison"
-    | "healing"
-    | "stun"
-    | "vulnerability"
-    | "knockback"
-    | "damage-buff"
-    | "damage-decrease"
-    | "damage-reduction"
-    | "damage-reflection"
-    | "shield"
-    | "taunt"
-    | "stagger";
-type SkillEffectFilter = "all" | SkillEffect;
+type SkillEffectFilter = "all" | DatabaseSkillEffect;
 type EvolutionFilter = "all" | "can-evolve" | "evolved" | "no-evolution";
-
-
-const skillEffectLabels: Record<SkillEffect, string> = {
-    burn: "Burn",
-    poison: "Poison",
-    healing: "Healing",
-    stun: "Stun",
-    vulnerability: "Vulnerability",
-    knockback: "Knockback",
-    "damage-buff": "Damage Buff",
-    "damage-decrease": "Damage Decrease",
-    "damage-reduction": "Damage Reduction",
-    "damage-reflection": "Damage Reflection",
-    shield: "Shield",
-    taunt: "Taunt",
-    stagger: "Stagger",
-};
-
-const skillEffectOptions = Object.entries(skillEffectLabels) as Array<[SkillEffect, string]>;
 
 
 function compactNumber(value: number): string {
@@ -203,42 +177,10 @@ function matchesEvolutionFilter(monster: GeneratedMonster, filter: EvolutionFilt
     }
 }
 
-function getSkillEffects(notes?: string): SkillEffect[] {
-    if (!notes) return [];
-
-    const normalized = notes.toLowerCase();
-    const effects: SkillEffect[] = [];
-
-    if (/\bburn(?:ed|s|ing)?\b/.test(normalized)) effects.push("burn");
-    if (/\bpoison\b/.test(normalized)) effects.push("poison");
-    if (/\bheal(?:s|ed|ing)?\b/.test(normalized)) effects.push("healing");
-    if (/\bstun\b/.test(normalized)) effects.push("stun");
-    if (/\bvulnerab/.test(normalized)) effects.push("vulnerability");
-    if (/\bknockback\b/.test(normalized)) effects.push("knockback");
-    if (/\bdecreased damage\b|-(?:\d+(?:\.\d+)?)%\s+(?:to\s+-\d+(?:\.\d+)?%\s+)?damage\b/.test(normalized)) {
-        effects.push("damage-decrease");
-    }
-    if (/\bdamage reduction\b/.test(normalized)) effects.push("damage-reduction");
-    if (/\bdamage reflection\b/.test(normalized)) effects.push("damage-reflection");
-    if (/\bshield\b/.test(normalized)) effects.push("shield");
-    if (/\btaunt\b/.test(normalized)) effects.push("taunt");
-    if (/\bstagger\b/.test(normalized)) effects.push("stagger");
-
-    const allyEffects = normalized.split("ally effects:")[1] ?? "";
-    if (
-        /(?:\d+(?:\.\d+)?%\s+)?team damage\b/.test(allyEffects) ||
-        /(?:\d+(?:\.\d+)?%\s+)?self damage\b/.test(allyEffects)
-    ) {
-        effects.push("damage-buff");
-    }
-
-    return [...new Set(effects)];
-}
-
-function monsterHasSkillEffect(monster: GeneratedMonster, effect: SkillEffect): boolean {
+function monsterHasSkillEffect(monster: GeneratedMonster, effect: DatabaseSkillEffect): boolean {
     return monster.skillIds.some((skillId) => {
         const skill = getSkill(skillId);
-        return skill ? getSkillEffects(skill.notes).includes(effect) : false;
+        return getDatabaseSkillEffects(skill).includes(effect);
     });
 }
 
@@ -430,7 +372,15 @@ function DetailPanel({
                 <div className={desktopInspector ? "p-4" : "px-5 pb-5"}>
 
                     <section className={`${desktopInspector ? "" : "mt-5"} border-t border-[#293443] pt-4`}>
-                        <h3 className="text-xs font-black uppercase tracking-[0.14em] text-[#8290ff]">Reference Stats</h3>
+                        <div className="flex items-center gap-2">
+                            <h3 className="text-xs font-black uppercase tracking-[0.14em] text-[#8290ff]">Reference Stats</h3>
+                            <span className="group relative inline-flex">
+                                <button type="button" aria-label="Explain reference stats" className="grid size-5 place-items-center rounded-full border border-[#4b5b70] bg-[#121b27] text-[10px] font-black text-[#aeb9ca] transition hover:border-[#7182ff] hover:text-white focus:border-[#7182ff] focus:text-white focus:outline-none">?</button>
+                                <span role="tooltip" className="pointer-events-none absolute left-0 top-7 z-30 hidden w-72 max-w-[calc(100vw-3rem)] rounded-lg border border-[#43516a] bg-[#080e16] p-3 text-left text-[11px] font-medium normal-case leading-5 tracking-normal text-[#c5cedb] shadow-[0_12px_32px_rgba(0,0,0,0.65)] group-hover:block group-focus-within:block">
+                                    Comparison preset: Base E-rank / Level 1 · selected EM for evolved forms · {passiveCompareMode === "none" ? "no passives" : passiveCompareMode === "conditional" ? "always-active + conditional self passives" : "non-conditional self passives"} · expected crit · no gear, traits, mutations, account bonuses, or combat-context bonuses.
+                                </span>
+                            </span>
+                        </div>
                         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
                             {[
                                 ["Damage", compactNumber(comparisonStats.damage)],
@@ -449,15 +399,6 @@ function DetailPanel({
                                 );
                             })}
                         </div>
-                        <p className="mt-2 text-xs leading-5 text-[#8491a5]">
-                            Comparison preset: Base E-rank / Level 1 · selected EM for evolved forms ·{" "}
-                            {passiveCompareMode === "none"
-                                ? "no passives"
-                                : passiveCompareMode === "conditional"
-                                    ? "always-active + conditional self passives"
-                                    : "non-conditional self passives"}
-                            {" "}· expected crit · no gear, traits, mutations, account bonuses, or combat-context bonuses.
-                        </p>
                     </section>
 
                     <section className="mt-4 border-t border-[#293443] pt-4">
@@ -482,17 +423,19 @@ function DetailPanel({
                                                 ) : null}
                                             </div>
                                             <p className="mt-1 text-xs leading-5 text-[#9ba7b9]">
-                                                {skill.notes || `${skill.element} skill`}
+                                                {getDatabaseSkillDescription(skill)}
                                             </p>
-                                            {getSkillEffects(skill.notes).length > 0 ? (
+                                            {getDatabaseSkillEffects(skill).length > 0 ? (
                                                 <div className="mt-2 flex flex-wrap gap-1">
-                                                    {getSkillEffects(skill.notes).map((effect) => (
+                                                    {getDatabaseSkillEffects(skill).map((effect) => (
                                                         <span
                                                             key={effect}
-                                                            className="rounded border border-[#344050] bg-[#121b27] px-1.5 py-0.5 text-[10px] font-bold text-[#aeb9ca]"
+                                                            title={databaseSkillEffectDetails[effect].label}
+                                                            className="inline-flex items-center gap-1 rounded border border-[#344050] bg-[#121b27] px-1.5 py-0.5 text-[10px] font-bold text-[#aeb9ca]"
                                                         >
-                                                        {skillEffectLabels[effect]}
-                                                    </span>
+                                                            <img src={assetPath(databaseSkillEffectDetails[effect].icon)} alt="" className="size-4 object-contain" />
+                                                            {databaseSkillEffectDetails[effect].label}
+                                                        </span>
                                                     ))}
                                                 </div>
                                             ) : null}
@@ -1055,7 +998,7 @@ export function MonsterDatabase() {
             <div className="mx-auto w-full max-w-[1800px] px-4 py-6 sm:px-6 lg:px-8">
                 <div className="flex flex-col gap-3 border-b border-[#293443] pb-5 sm:flex-row sm:items-end sm:justify-between">
                     <div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#7182ff]">CAM Lab</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#7182ff]">Cam Lab</p>
                         <h1 className="mt-1 text-3xl font-black tracking-tight text-[#f5f7fb]">Monster Database</h1>
                         <p className="mt-2 hidden max-w-3xl text-sm leading-6 text-[#8f9aae] sm:block">
                             Browse every monster, discover what it does, see where it comes from, and open it directly in the build calculator.
@@ -1173,9 +1116,9 @@ export function MonsterDatabase() {
                             onChange={(value) => setSkillEffectFilter(value as SkillEffectFilter)}
                         >
                             <option value="all">All Effects</option>
-                            {skillEffectOptions.map(([value, label]) => (
+                            {databaseSkillEffectOptions.map(([value, details]) => (
                                 <option key={value} value={value}>
-                                    {label}
+                                    {details.label}
                                 </option>
                             ))}
                         </FilterSelect>

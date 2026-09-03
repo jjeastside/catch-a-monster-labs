@@ -44,7 +44,7 @@ export function TopNavigation() {
                     </span>
 
                     <span className="text-lg font-black uppercase tracking-tight md:text-2xl">
-                        CAM<span className="text-[#7182ff]">/</span>LAB
+                        Cam Lab
                     </span>
                 </Link>
 

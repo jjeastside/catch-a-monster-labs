@@ -154,8 +154,8 @@ export function getPassiveDescription(passive: MonsterPassive): string {
     }
 
     if (typeof firstValue === "number") {
-        return `Passive value: ${firstValue}%. The exact gameplay effect is not yet modeled in CAM Lab.`;
+        return `Passive value: ${firstValue}%. The exact gameplay effect is not yet modeled in Cam Lab.`;
     }
 
-    return "This passive's exact gameplay effect is not yet modeled in CAM Lab.";
+    return "This passive's exact gameplay effect is not yet modeled in Cam Lab.";
 }

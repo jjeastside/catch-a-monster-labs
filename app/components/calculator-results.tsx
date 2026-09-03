@@ -337,9 +337,9 @@ function DamageDecreaseEffect({ effect }: { effect: SkillStatusEffect }) {
     return (
         <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#e06b72]/35 bg-[#3c1d24]/45 px-3 py-2">
             <img
-                src={assetPath("/icons/damage-increase.png")}
+                src={assetPath("/icons/damage-decrease.png")}
                 alt=""
-                className="size-8 shrink-0 rotate-180 object-contain"
+                className="size-8 shrink-0 object-contain"
             />
             <div className="min-w-0">
                 <div className="flex items-center gap-1.5">

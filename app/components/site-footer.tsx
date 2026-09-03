@@ -94,7 +94,7 @@ export function SiteFooter() {
                             </span>
                             <div>
                                 <p className="text-xl font-black tracking-tight text-[#f6f8fc]">
-                                    CAM<span className="text-[#7182ff]">/</span>LAB
+                                    Cam Lab
                                 </p>
                                 <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#69768a]">
                                     Roblox fan-made companion
@@ -108,7 +108,7 @@ export function SiteFooter() {
 
                     </div>
 
-                    <nav aria-label="Explore CAM Lab">
+                    <nav aria-label="Explore Cam Lab">
                         <h2 className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#7182ff]">
                             Site
                         </h2>
@@ -119,7 +119,7 @@ export function SiteFooter() {
                         </ul>
                     </nav>
 
-                    <nav aria-label="CAM Lab project links">
+                    <nav aria-label="Cam Lab project links">
                         <h2 className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#7182ff]">
                             Community
                         </h2>
@@ -135,7 +135,7 @@ export function SiteFooter() {
                             Project
                         </h2>
                         <div className="mt-4 inline-flex rounded-lg border border-[#7046c8] bg-[#130c2c] px-6 py-2 text-sm font-bold text-[#a982ff]">
-                            v1.0.5
+                            v1.0.8
                         </div>
                         <p className="mt-4 text-sm text-[#8f99aa]">Created by</p>
                         <a
@@ -151,7 +151,7 @@ export function SiteFooter() {
 
                 <div className="mt-8 flex flex-col gap-3 border-t border-[#252c39] pt-5 sm:flex-row sm:items-center sm:justify-between">
                     <p className="max-w-5xl text-xs leading-5 text-[#69768a]">
-                        Cam LAB is an independent fan-made companion site. It is not affiliated with, endorsed by, or sponsored by Roblox Corporation or LDS II. All trademarks are property of their respective owners.
+                        Cam Lab is an independent fan-made companion site. It is not affiliated with, endorsed by, or sponsored by Roblox Corporation or LDS II. All trademarks are property of their respective owners.
                     </p>
                     <a
                         href="https://catchamonsterhub.com/"

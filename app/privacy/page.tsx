@@ -132,7 +132,7 @@ export default function PrivacyPolicyPage() {
                             When you send feedback, Cam Lab sends the selected category, your message, the current page, the Cam Lab version, browser information, and any optional Discord username you provide to the Cam Lab feedback service hosted through Cloudflare. Cloudflare Turnstile also processes technical information needed to detect automated abuse.
                         </p>
                         <p>
-                            Accepted feedback is published as a public issue in the Cam Lab GitHub repository by the CAM Lab Feedback bot. Do not include passwords, private account details, or anything you do not want publicly visible. Providing a Discord username is optional and does not guarantee a response.
+                            Accepted feedback is published as a public issue in the Cam Lab GitHub repository by the Cam Lab Feedback bot. Do not include passwords, private account details, or anything you do not want publicly visible. Providing a Discord username is optional and does not guarantee a response.
                         </p>
                     </PolicySection>
 
@@ -194,7 +194,7 @@ export default function PrivacyPolicyPage() {
                             href="#feedback"
                             className="mt-1 inline-flex rounded-lg border border-[#2b659f] bg-[#09294d] px-4 py-2 text-sm font-bold text-[#6db5ff] transition hover:border-[#4b8fd1] hover:bg-[#0b335e] hover:text-white"
                         >
-                            Contact CAM Lab →
+                            Contact Cam Lab →
                         </Link>
                     </PolicySection>
                 </article>

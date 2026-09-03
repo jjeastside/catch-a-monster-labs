@@ -43,6 +43,7 @@ export type Skill = {
     id: string;
     name: string;
     element: SkillElement;
+    description?: string;
 
     damageInstances: SkillDamageInstance[];
     cooldown: number | null;
