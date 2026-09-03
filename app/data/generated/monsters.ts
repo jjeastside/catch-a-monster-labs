@@ -2893,24 +2893,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       {
         "type": "Rift",
         "name": "Duneveil Isle Rift 3",
-        "location": "Volcano",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Duneveil Isle Rift 3",
-        "location": "Frost Isle",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Duneveil Isle Rift 3",
-        "location": "Neverland",
-        "status": "Current"
-      },
-      {
-        "type": "Rift",
-        "name": "Duneveil Isle Rift 3",
         "location": "Duneveil Isle",
         "status": "Current"
       },
@@ -4493,27 +4475,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "element": "Common",
     "rarity": "Mythical",
     "sources": [
-      {
-        "type": "Egg",
-        "name": "Violetaegis's Egg",
-        "location": "Treasure Vault Cellar",
-        "status": "Current",
-        "notes": "Coins"
-      },
-      {
-        "type": "Egg",
-        "name": "Violetaegis's Egg",
-        "location": "Treasure Vault Cellar",
-        "status": "Current",
-        "notes": "Vault Mark"
-      },
-      {
-        "type": "Egg",
-        "name": "Violetaegis's Egg",
-        "location": "Treasure Vault Cellar",
-        "status": "Current",
-        "notes": "EXP"
-      },
       {
         "type": "Egg",
         "name": "Violetaegis's Egg",
@@ -7520,7 +7481,14 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/void-strum-bones.png",
     "element": "Common",
     "rarity": "Void",
-    "sources": [],
+    "sources": [
+      {
+        "type": "Egg",
+        "name": "Void Purple Egg",
+        "location": "Blossom Haven",
+        "status": "Current"
+      }
+    ],
     "skillIds": [
       "demonic-lullaby",
       "healing-pulse"

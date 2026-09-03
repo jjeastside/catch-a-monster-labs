@@ -128,10 +128,7 @@ Emberwing,Mythical,Fire,267887,1462400,0,DustWing,Standard,Fireball,Fire Tornado
 Fernwing,Mythical,Grass,229600,1706200,0,DustWing,Standard,Galecut,Healing Pulse,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,98
 Snowwing,Mythical,Ice,159450,2454200,0,DustWing,Standard,Barrier,Frosty Dart,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,99
 Iceplate,Mythical,Ice,75835,1168500,0,,Standard,Ice Road,Ex Iceball,,Rift Dominance | 50,Chest | Rift Chest | Abyss Shop | Current,100
-Voltgator,Mythical,Common,91300,2200000,10,,Standard,Electric Beam,Ex Air Bullet,,Spire Dominance | 50,"Rift | Duneveil Isle Rift 3 | Volcano | Current
-Rift | Duneveil Isle Rift 3 | Frost Isle | Current
-Rift | Duneveil Isle Rift 3 | Neverland | Current
-Rift | Duneveil Isle Rift 3 | Duneveil Isle | Current
+Voltgator,Mythical,Common,91300,2200000,10,,Standard,Electric Beam,Ex Air Bullet,,Spire Dominance | 50,"Rift | Duneveil Isle Rift 3 | Duneveil Isle | Current
 Chest | Mythical Chest | Limited Events | Current",101
 Undine,Mythical,Water,286960,2132300,10,,Standard,Healing Water Ball,Tsunami,,,"Island Special Spawn | Special Spawn | Tideland | Current
 Rift | Tideland Rift 3 | Tideland | Current
@@ -207,10 +204,7 @@ Stormhorn,Mythical,Common,2700000,261900000,0,,Standard,Lightning Thrust,Taunt,,
 Chest | Mythical Chest | Limited Events | Current",139
 Solgryph,Mythical,Common,11422420,62358000,10,,Standard,Scorching Fireball,Fire Tornado,,Spire Guard | 35,"Rift | Nova Coast Rift 3 | Nova Coast | Current
 Chest | Mythical Chest | Limited Events | Current",140
-Violetaegis,Mythical,Common,14062000,58772000,15,,Standard,Lightning Storm (Blue),Void Orb,,Vital Surge | 60 |  | 80,"Egg | Violetaegis's Egg | Treasure Vault Cellar | Current |  | Coins
-Egg | Violetaegis's Egg | Treasure Vault Cellar | Current |  | Vault Mark
-Egg | Violetaegis's Egg | Treasure Vault Cellar | Current |  | EXP
-Egg | Violetaegis's Egg | Treasure Vault Cellar | Current",141
+Violetaegis,Mythical,Common,14062000,58772000,15,,Standard,Lightning Storm (Blue),Void Orb,,Vital Surge | 60 |  | 80,Egg | Violetaegis's Egg | Treasure Vault Cellar | Current,141
 Venofrog,Mythical,Water,9824000,105120000,0,,Standard,Tsunami,Poison Volley,,,Island Special Spawn | Special Spawn | Splash Isle | Current,142
 Rainimp,Mythical,Water,12698000,94362000,0,,Standard,Soul Reap Chain (Vulnerability),Healing Shuriken,,,Egg | Rainimp's Egg | Splash Isle | Current,143
 Vorturion,Mythical,Common,11830000,126580000,10,,Standard,Ghost Impact (Vulnerability),Inferno Blast,,Rift Guard | 30,"Rift | Splash Isle Rift 3 | Splash Isle | Current
@@ -315,7 +309,7 @@ Void Scythewing,Void,Ground,2484000,26585000,0,,Standard,GaleMoon Blade,Crimson 
 Chest | Memory Chest 2 | Abyss Shop | Current",230
 Void Shadecloak,Void,Common,1057070,11311000,0,,Standard,Barrier,Soul Reap Chain,,,,231
 Void Strum Bones,Void,Common,2090000,89450000,10,,Standard,Demonic Lullaby,Healing Pulse,,"Mentor Spirit | 35
-Fortune Spirit | 35",,232
+Fortune Spirit | 35",Egg | Void Purple Egg | Blossom Haven | Current,232
 Void Nightveil,Void,Common,3350000,18300000,15,Void Shadecloak,Standard,The Ring,Soul Reap Chain,,Trial Power | 60,Evolution | Void Shadecloak Evolution |  | Current |  | Evolves from Void Shadecloak.,233
 Void Scareaper,Void,Common,1741000,167690000,0,,Standard,Fear Taunt,Reaper's Crescents,,Capturer's Boon | 25,"Egg | Scareaper's Egg | Specter Shallows | Current
 Chest | Memory Chest 1 | Abyss Shop | Current",234
