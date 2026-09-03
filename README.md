@@ -1,8 +1,10 @@
 # Cam Lab
 
-Cam Lab is a modern build planner and stat calculator for **Catch a Monster**, built with **React**, **Next.js**, **TypeScript**, and **Tailwind CSS**.
+**Cam Lab** is a build planner, stat calculator, monster database, and collection tracker for **Catch a Monster**, built with **React**, **Next.js**, **TypeScript**, and **Tailwind CSS**.
 
-The project turns game data and player-tested formulas into an interactive tool for exploring monsters, creating builds, and understanding how each modifier affects combat statistics. Its interface is inspired by detailed planning tools such as Path of Building and PCPartPicker while remaining approachable for regular players.
+It turns game data and player-tested formulas into an interactive tool for exploring monsters, creating builds, comparing combat results, and understanding how individual modifiers affect final stats.
+
+The goal is to provide the depth of a serious theorycrafting tool while keeping the interface approachable for everyday players.
 
 ## Access the Site
 
@@ -10,72 +12,74 @@ Use Cam Lab directly in your browser:
 
 **[Open Cam Lab](https://jjeastside.github.io/catch-a-monster-labs/)**
 
-No installation is required. The current build is hosted on GitHub Pages and is automatically redeployed from the `main` branch. Development updates through **v1.0.8** are documented in the [Cam Lab Changelog](https://jjeastside.github.io/catch-a-monster-labs/changelog/).
+No installation is required. The current build is hosted on GitHub Pages and is automatically redeployed from the `main` branch.
 
-## Screenshots
+Development updates through **v1.0.8** are documented in the [Cam Lab Changelog](https://jjeastside.github.io/catch-a-monster-labs/changelog/).
 
-### Calculator Workflow
+---
 
-Select a monster, customize its complete build, and immediately see the resulting combat stats and skill calculations.
+## What Cam Lab Does
+
+Cam Lab is built around four connected systems:
+
+- **Monster Browser & Database** — explore the roster, compare stats, inspect skills and passives, and see where monsters come from.
+- **Build Calculator** — configure levels, ranks, mutations, equipment, traits, teammates, and combat conditions.
+- **Calculation Engine** — calculate Health, Damage, skill damage, DPS, healing, shielding, cooldowns, and combat effects.
+- **Index Tracker** — track collection progress, ranks, mutation bonuses, breeding genders, and total Index Score.
+
+Together, these systems let players move from discovering a monster to building it, analyzing it, and tracking it without leaving the site.
+
+---
+
+## Monster Browser
+
+The Monster Browser is the main entry point into the calculator. It keeps a large roster easy to search while still exposing the filters and comparison tools needed for theorycrafting.
 
 ![Cam Lab Monster Browser](docs/images/monster-browser.png)
 
-![Cam Lab Build Editor](docs/images/build-editor.png)
+Players can:
 
-![Cam Lab Calculator Results](docs/images/calculator-results.png)
-
-### Advanced Calculations
-
-Inspect stat growth and every multiplier in the final result, then configure teammates and combat conditions for the encounter being tested.
-
-![Health growth graph and formula breakdown](docs/images/advanced-calculations.png)
-
-![Team effects and combat conditions](docs/images/combat-conditions.png)
-
-### Saved Builds
-
-Save multiple builds locally and compare their important combat statistics before loading one.
-
-![Cam Lab saved builds](docs/images/saved-builds.png)
-
-## Current Features
-
-### Monster Browser
-
-- Search and browse the complete roster of 235 monsters
+- Search and browse the complete roster of **235 monsters**
 - Filter by source, island, rarity, element, availability, evolution status, and passive
-- Sort by Index, DPS, Damage, or Health with passive-aware comparison modes and Evolution Multiplier control
-- Compact and expanded browser views
-- Monster artwork, element icons, rarity styling, and source information
-- Detailed monster overview with skills and availability requirements
-- Persistent favorites and selected-monster state after refreshing the page
-- Direct monster links using URL hashes
+- Sort by Index, DPS, Damage, or Health
+- Use passive-aware comparison modes and Evolution Multiplier controls
+- Switch between compact and expanded browser views
+- View monster artwork, element icons, rarity styling, skills, and source information
+- Save favorites and restore the selected monster after refreshing the page
+- Link directly to monsters using URL hashes
 
 ### Monster Database
 
-- Dedicated visual database for the complete monster roster
-- Search, sorting, and filters for rarity, element, source, location, availability, passives, skill effects, and evolution status
+The dedicated Monster Database turns the roster into a full reference library.
+
+![Cam Lab Monster Database](docs/images/monster-database.png)
+
+It is designed for players who want to research monsters before building them. You can filter the entire roster, compare reference stats, and inspect a detailed profile without losing your place in the grid.
+
+It includes:
+
+- Search, sorting, and advanced filters for rarity, element, source, location, availability, passives, skill effects, and evolution status
 - Damage, Health, DPS, and Index comparison modes
 - Evolution Multiplier and passive-aware stat comparisons
-- Monster profiles with artwork, skills, passives, reference stats, obtainment details, evolution families, and calculator links
-- Fixed profile drawer that preserves the user's place in the monster grid and resets each selected profile to the top
-- Shareable profile routes with a Copy Link action
+- Monster profiles with artwork, skills, passives, reference stats, obtainment details, and evolution families
+- Direct links back into the calculator
+- Shareable monster profile routes with a **Copy Link** action
+- A fixed profile drawer that preserves the user's place in the monster grid
 - Compact mobile cards, a sticky results toolbar, and a dedicated mobile filter drawer
-- Clear descriptions and matching effect icons for all 133 skills
-- Reference-stat comparison details available through a compact help tooltip
+- Clear descriptions and matching effect icons for all **133 skills**
+- Reference-stat comparison details through a compact help tooltip
 
-### Index Tracker
+---
 
-- Track every monster's highest rank and Shiny, Bloodlit, Fairy, and Huge bonuses
-- Automatic Index Score, completion, average, and remaining-points summaries
-- All, Incomplete, Complete, Missing Monster, and Missing Bonuses filters
-- Bulk editing with temporary hide controls for working through large collections
-- Male and Female breeding tracking with gender filters and bulk gender editing
-- Automatic browser saving plus JSON export and import for backups
+## Build Editor
 
-### Build Editor
+After selecting a monster, the Build Editor becomes the central workspace for configuring the complete build.
 
-- Level and rank configuration
+![Cam Lab Build Editor](docs/images/build-editor.png)
+
+A build can include:
+
+- Level and rank
 - Enhancements from `+0` through `+10`
 - Genetic Potential for Damage and Health
 - Breed Attack and Breed Health values
@@ -84,11 +88,75 @@ Save multiple builds locally and compare their important combat statistics befor
 - Weapon and armor selection
 - Rarity-based equipment attribute slots
 - Trait selection with rarity-specific visuals
-- Teammate selection for transferable passives and skill effects
-- Combat-condition controls for contextual passives, target types, and active skill effects
-- Optional Experimental Mode for level 111–115 previews
+- Teammates with transferable passives and skill effects
+- Combat conditions for contextual passives, target types, and active skill effects
+- Optional Experimental Mode for level **111–115** previews
 
-### Calculation Engine
+The editor uses one typed build state as the source of truth, allowing the same configuration to drive calculations, saved builds, and shared links.
+
+### Teammates and Combat Conditions
+
+Some Catch a Monster effects only apply under specific encounter conditions, so Cam Lab models those separately instead of treating every bonus as permanently active.
+
+![Team effects and combat conditions](docs/images/combat-conditions.png)
+
+This lets the calculator account for effects such as:
+
+- Personal and teammate passives
+- Boss, Rift, Spire, and dungeon bonuses
+- HP-threshold effects
+- Active Damage Increase and Vulnerability effects
+- Skill-specific buffs and debuffs
+- Target-dependent effects
+
+---
+
+## Calculator Results
+
+The Results panel updates immediately as the build changes, making it easy to see the impact of each rank, mutation, trait, equipment piece, or combat condition.
+
+![Cam Lab Calculator Results](docs/images/calculator-results.png)
+
+It includes:
+
+- Combined combat-stat summaries
+- Skill analysis for every monster skill
+- Normal, Critical, DPS, Healing, and HPS values where applicable
+- Passive-effect breakdowns with separate personal and teammate counts
+- Equipment, attribute, mutation, and trait summaries
+- Copyable calculation values
+- Consistent large-number formatting
+
+### Structured Skill Effects
+
+Cam Lab does more than calculate direct damage. Skills can also contain structured effects that are displayed with their amount, target, duration, stack count, or activation requirements.
+
+Currently modeled effects include:
+
+- Damage Increase
+- Damage Decrease
+- Damage Reduction
+- Damage Reflection
+- Vulnerability
+- Stun
+- Poison
+- Burn
+- Healing
+- Shield
+- Knockback
+- Taunt
+
+Healing calculations remain independent of Critical Chance and Critical Damage, and active Damage Increase or Vulnerability sources are resolved without applying the same source twice.
+
+---
+
+## Advanced Calculations
+
+For players who want to understand *why* a number changed—not just what the final number is—Cam Lab exposes the formulas and multiplier breakdowns behind the result.
+
+![Health growth graph and formula breakdown](docs/images/advanced-calculations.png)
+
+The calculation engine supports:
 
 - Base Health and Damage calculations
 - Piecewise level-growth formulas
@@ -99,75 +167,101 @@ Save multiple builds locally and compare their important combat statistics befor
 - Account achievement multipliers
 - Conditional personal and teammate passive effects
 - Normal, critical, and expected skill-damage previews
-- Multi-hit, chance-based, cooldown-adjusted, and total skill DPS calculations
-- Healing, Healing Per Second, shielding, cooldown, resistance, and damage-reduction effects
-- Healing calculations that remain independent of critical chance and critical damage
-- Structured Damage Increase, Damage Decrease, Damage Reduction, Damage Reflection, Vulnerability, Stun, Poison, Burn, Healing, Shield, Knockback, and Taunt effects
-- Vulnerability- and Damage Increase-boosted damage results without double stacking
+- Multi-hit and chance-based skills
+- Cooldown-adjusted and total skill DPS
+- Healing and Healing Per Second
+- Shielding
+- Cooldown modification
+- Resistance and damage-reduction effects
 - Boss, Rift, Spire, dungeon, and HP-threshold conditions
 
-### Calculator Results
+Many formulas were determined through controlled in-game testing: a baseline value was recorded, one variable was changed at a time, and competing formulas were checked against the observed result before implementation.
 
-- Combined combat-stat summary
-- Skill analysis for every monster skill
-- Normal, Critical, DPS, Healing, and HPS result comparisons where applicable
-- Structured effect cards for buff amount, target, duration, stack count, and activation requirements
-- Compact help tooltips for detailed Poison and Burn behavior
-- Passive-effect breakdown with accurate personal and teammate counts
-- Equipment, attribute, mutation, and trait summaries
-- Advanced Health and Damage formula breakdowns
-- Growth preview graph
-- Copyable calculation values
-- Consistent large-number formatting
+---
 
-### Account Multipliers
+## Index Tracker
 
-- Path of Progress tracking
-- Index Mania tracking
-- Sequential Pet Quest tracking
-- Rift Challenger support
-- `Striver for Perfection` support
-- Automatic combined Health, Damage, Rift Damage, and Critical Chance bonuses
+The Index Tracker turns collection progress into a visual checklist instead of forcing players to calculate and remember their score manually.
 
-### Sharing and Persistence
+![Cam Lab Index Tracker](docs/images/index-tracker.png)
 
-- Persistent active build, favorites, and selected monster in browser storage
+At a glance, players can see their current score, completion percentage, remaining points, missing upgrades, and which monsters still need attention.
+
+The tracker can:
+
+- Record every monster's highest rank
+- Track Shiny, Bloodlit, Fairy, and Huge bonuses
+- Calculate Index Score, completion percentage, average score, and remaining points automatically
+- Filter by All, Incomplete, Complete, Missing Monster, and Missing Bonuses
+- Bulk edit large portions of the collection
+- Temporarily hide monsters while working through a bulk update
+- Track Male and Female breeding availability
+- Filter and bulk-edit breeding genders
+- Save progress automatically in the browser
+- Export and import progress as JSON for backups
+
+---
+
+## Saved Builds and Sharing
+
+Builds are stored locally so players can experiment, save setups, and share configurations without needing an account.
+
+![Cam Lab saved builds](docs/images/saved-builds.png)
+
+Cam Lab currently supports:
+
+- Persistent active builds, favorites, and selected monsters in browser storage
 - Three local build save/load slots
-- Compact shared-build URLs that preserve calculator-relevant build state
-- Short share IDs for links that are easier to post in Discord and other communities
+- Compact shared-build URLs that preserve calculator-relevant state
+- Short share IDs that are easier to post in Discord and other communities
 - Cloudflare-powered rich previews with monster artwork, rarity styling, and calculated build stats
-- Stable restoration of equipment, attributes, achievements, teammates, combat conditions, and other packed selections
+- Restoration of equipment, attributes, achievements, teammates, combat conditions, and other packed selections
 
-### Community and Project Pages
+---
 
-- About page explaining Cam Lab's goals and development approach
-- Changelog for Cam Lab releases and separate Catch a Monster patch notes
-- Privacy Policy covering local storage, shared builds, and feedback submissions
-- Site-wide feedback form for bug reports, feature requests, and data corrections
+## Account Multipliers
 
-### Interface and Deployment
+Achievement progress can be entered directly into the calculator and is converted into the appropriate account-wide bonuses.
 
-- Responsive three-panel desktop interface
-- Mobile Monster, Results, and Build views
-- Cam Lab navy visual theme
-- Rarity-specific Legendary, Mythical, Secret, and Void presentation
-- Changelog, patch-notes, and work-in-progress pages
-- Static Next.js export deployed automatically through GitHub Actions
-- Routing and public assets configured for the GitHub Pages repository path
+Supported progression includes:
+
+- Path of Progress
+- Index Mania
+- Sequential Pet Quests
+- Rift Challenger
+- `Striver for Perfection`
+
+Cam Lab automatically combines the resulting Health, Damage, Rift Damage, and Critical Chance bonuses with the rest of the build.
+
+---
+
+## Community and Project Pages
+
+The site also includes supporting pages around the calculator itself:
+
+- **About** — explains Cam Lab's goals and development approach
+- **Changelog** — tracks Cam Lab releases
+- **Patch Notes** — records Catch a Monster game updates separately from site changes
+- **Privacy Policy** — explains local storage, shared builds, and feedback handling
+- **Feedback** — allows players to submit bug reports, feature requests, and data corrections
+
+---
 
 ## Tech Stack
 
-| Technology                        | Purpose                                                             |
-|-----------------------------------|---------------------------------------------------------------------|
-| React                             | Interactive component-based interface and state updates             |
-| Next.js                           | Application structure, routing, static export, and deployment build |
-| TypeScript                        | Type-safe data models and calculation logic                         |
-| Tailwind CSS                      | Responsive styling and reusable visual patterns                     |
-| CSV and JavaScript import scripts | Maintainable source data and generated TypeScript records           |
-| Browser local storage             | Build slots, favorites, and selected-monster persistence            |
-| Cloudflare Workers and KV         | Short build links, stored preview data, and dynamic social cards    |
-| GitHub Actions                    | Automated build and GitHub Pages deployment                         |
-| Git and GitHub                    | Version control, project history, and hosting                       |
+| Technology | Purpose |
+|---|---|
+| React | Interactive component-based interface and state updates |
+| Next.js | Application structure, routing, static export, and deployment build |
+| TypeScript | Type-safe data models and calculation logic |
+| Tailwind CSS | Responsive styling and reusable visual patterns |
+| CSV and JavaScript import scripts | Maintainable source data and generated TypeScript records |
+| Browser local storage | Build slots, favorites, Index progress, and selected-monster persistence |
+| Cloudflare Workers and KV | Short build links, stored preview data, and dynamic social cards |
+| GitHub Actions | Automated build and GitHub Pages deployment |
+| Git and GitHub | Version control, project history, and hosting |
+
+---
 
 ## How It Works
 
@@ -185,13 +279,13 @@ flowchart TD
 2. React updates the typed build state.
 3. Independent calculation modules apply growth, rank, enhancement, mutation, equipment, trait, passive, achievement, combat-context, and structured skill-effect modifiers.
 4. The engine returns calculated statistics, skill results, and effect summaries.
-5. React renders the results immediately and saves the build state locally.
+5. React renders those results immediately and saves the relevant state locally.
 
 Keeping the calculation engine separate from the presentation layer makes individual formulas easier to test, explain, and update without rewriting the interface.
 
-## Architecture and Interview Talking Points
+---
 
-This project demonstrates more than a finished interface. It documents the process of converting uncertain game behavior into a maintainable software model.
+## Architecture
 
 ### Separation of Concerns
 
@@ -202,23 +296,38 @@ This project demonstrates more than a finished interface. It documents the proce
 
 ### Data-Driven Design
 
-Monsters, skills, skill effects, equipment, attributes, traits, achievements, and passives are represented as structured data. Adding content usually requires a data entry rather than a new custom component or calculation path.
+Monsters, skills, skill effects, equipment, attributes, traits, achievements, and passives are represented as structured data.
+
+Adding new game content therefore usually requires updating data rather than creating a new custom component or calculation path.
 
 ### Modifier Composition
 
-The calculation pipeline distinguishes additive bonuses, multiplicative modifiers, conditional effects, and context-dependent rules. This is important because combining every percentage in the same way would produce incorrect results. Active Damage Increase and Vulnerability effects are also resolved without applying the same source twice.
+The calculation pipeline distinguishes between:
+
+- Additive bonuses
+- Multiplicative modifiers
+- Conditional effects
+- Context-dependent rules
+
+That distinction matters because combining every percentage in the same way would produce incorrect results.
 
 ### State and Persistence
 
-The editor uses one typed build state as its source of truth. Derived results are recalculated from that state, while browser storage restores the active build, saved slots, favorites, and selected monster after a refresh. The same state model is serialized into compact shared-build links.
+The editor uses one typed build state as its source of truth.
 
-### Validation Through Testing
+Derived results are recalculated from that state, while browser storage restores the active build, saved slots, favorites, Index progress, and selected monster after a refresh.
 
-Many formulas were determined by controlled in-game comparisons. Baseline values were recorded, one variable was changed at a time, and competing formulas were checked against observed results before implementation.
+The same state model is also serialized into compact shared-build links.
 
 ### Static Deployment
 
-Cam Lab is exported as static HTML, CSS, and JavaScript. A shared asset-path utility allows the same codebase to work at `localhost:3000` and under GitHub Pages' `/catch-a-monster-labs` repository path. A separate Cloudflare Worker handles short links and dynamic social-preview cards without requiring a traditional application server.
+Cam Lab is exported as static HTML, CSS, and JavaScript.
+
+A shared asset-path utility allows the same codebase to work at `localhost:3000` and under GitHub Pages' `/catch-a-monster-labs` repository path.
+
+A separate Cloudflare Worker handles short links and dynamic social-preview cards without requiring a traditional application server.
+
+---
 
 ## Project Structure
 
@@ -241,6 +350,8 @@ app/
 cloudflare-share-worker/    # Short links and dynamic shared-build previews
 public/                     # Monster artwork and interface icons
 ```
+
+---
 
 ## Local Development
 
@@ -277,6 +388,8 @@ Run the automated tests:
 npm test
 ```
 
+---
+
 ## Progress and Roadmap
 
 ### Completed
@@ -304,28 +417,49 @@ npm test
 
 ### Planned
 
-- [ ] Expanded favorites management
-- [ ] Named build slots
-- [ ] Full skill-rotation and sustained-DPS comparisons
-- [ ] Equipment optimization tools
-- [ ] Reverse base-stat solver
-- [ ] Account synchronization across devices
-- [ ] Additional automated calculation tests
+#### Calculator Functionality
+
+- [ ] Add team composition calculations for all three equipped monsters
+- [ ] Add an Enemy page with enemy locations, Health, and scaling information
+- [ ] Add an Egg page that shows all egg items
+- [ ] Add a trait, gear, and mutation optimization tool using equipment and team inputs
+- [ ] Add side-by-side build comparisons
+
+#### Research
+
+- [ ] Record each skill's cast time, animation lock, and recovery delay
+- [ ] Determine whether cooldowns begin when casting starts, when the skill hits, or when the animation finishes
+- [ ] Determine whether Attack Speed affects skills, basic attacks, animation time, or a combination of them
+- [ ] Measure Burn and Poison tick timing and refresh behavior
+
+#### Future Account & Build System
+
+- [ ] Add builds and user accounts backed by a database, requiring a non-static hosting setup
+
+---
 
 ## Why I Built This
 
-I built Cam Lab to create a genuinely useful community tool while strengthening my ability to design and explain a real application. The project combines UI design, data modeling, TypeScript architecture, reverse engineering, controlled testing, formula validation, and automated deployment.
+I built Cam Lab to create a genuinely useful community tool while strengthening my ability to design and explain a real application.
 
-Instead of treating the calculator as a collection of unrelated inputs, I designed it around a centralized build model and composable calculation pipeline. This makes the project easier to extend and gives me concrete engineering decisions to discuss in interviews, including state management, separation of concerns, data-driven design, validation strategy, static-hosting constraints, and tradeoffs between accuracy and maintainability.
+The project combines UI design, data modeling, TypeScript architecture, reverse engineering, controlled testing, formula validation, persistence, sharing, and automated deployment.
+
+Instead of treating the calculator as a collection of unrelated inputs, I designed it around a centralized build model and composable calculation pipeline. This makes the project easier to extend and creates clear engineering decisions around state management, separation of concerns, data-driven design, validation strategy, static-hosting constraints, and the tradeoff between accuracy and maintainability.
+
+---
 
 ## Fan-Site Notice
 
-Cam Lab is an independent, fan-made companion site. It is not affiliated with, endorsed by, or sponsored by Roblox Corporation or LDS II. Game names, trademarks, characters, and related game assets remain the property of their respective owners.
+Cam Lab is an independent, fan-made companion site.
+
+It is not affiliated with, endorsed by, or sponsored by Roblox Corporation or LDS II. Game names, trademarks, characters, and related game assets remain the property of their respective owners.
 
 ## License and Usage
 
 Copyright © 2026 `@jjeastside`. All rights reserved.
 
-The source code and original Cam Lab materials in this repository are publicly available for viewing, educational review, and portfolio evaluation only. No permission is granted to copy, reproduce, redistribute, publish, sell, sublicense, or create derivative projects from this repository without prior written authorization from the copyright owner.
+The source code and original Cam Lab materials in this repository are publicly available for viewing, educational review, and portfolio evaluation only.
+
+No permission is granted to copy, reproduce, redistribute, publish, sell, sublicense, or create derivative projects from this repository without prior written authorization from the copyright owner.
 
 Third-party trademarks, game artwork, names, and other referenced assets are excluded from this copyright claim and remain subject to the rights of their respective owners.
