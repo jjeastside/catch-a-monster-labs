@@ -2070,7 +2070,20 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       "grass-tornado",
       "galecut"
     ],
-    "passives": [],
+    "passives": [
+      {
+        "id": "mentorSpirit",
+        "effects": [
+          {
+            "stat": "xpGain",
+            "value": 32
+          }
+        ],
+        "values": [
+          32
+        ]
+      }
+    ],
     "hasEvolution": false,
     "baseDamageELevel1": 2063300,
     "baseHealthELevel1": 22077000,
@@ -3948,7 +3961,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "skillIds": [
-      "lightning-storm-blue",
+      "lightning-storm-purple",
       "lightning-thrust"
     ],
     "passives": [
@@ -3966,8 +3979,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "hasEvolution": false,
-    "baseDamageELevel1": 3750000,
-    "baseHealthELevel1": 20450000,
+    "baseDamageELevel1": 3746000,
+    "baseHealthELevel1": 20454000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 128
@@ -3993,7 +4006,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "skillIds": [
-      "lightning-storm-purple",
+      "lightning-storm-blue",
       "lightning-thrust"
     ],
     "passives": [
@@ -4011,7 +4024,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "hasEvolution": false,
-    "baseDamageELevel1": 1500000,
+    "baseDamageELevel1": 1495800,
     "baseHealthELevel1": 64023300,
     "baseCritChance": 10,
     "growthType": "standard",

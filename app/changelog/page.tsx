@@ -10,8 +10,17 @@ export const metadata: Metadata = {
 const releases = [
     {
         version: "Development Update",
-        date: "September 2, 2026",
+        date: "September 3, 2026",
         label: "Latest",
+        changes: [
+            "Added Male and Female breeding tracking to every monster in the Index Tracker, with gender badges on overview cards and dedicated Monster Progress controls.",
+            "Added an All Genders, Female, and Male filter plus bulk gender editing for quickly organizing breeding collections.",
+            "Included breeding gender data in automatic browser saves and tracker JSON exports while preserving compatibility with existing tracker backups.",
+        ],
+    },
+    {
+        version: "Development Update",
+        date: "September 2, 2026",
         changes: [
             "Added a site-wide Feedback button and submission form so visitors can report bugs, request features, submit data corrections, or share general feedback without needing a GitHub account.",
             "Added optional Discord usernames so feedback authors can provide a point of contact when they want a response.",

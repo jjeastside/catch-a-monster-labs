@@ -25,9 +25,11 @@ const BONUSES = [
 
 type Rank = (typeof RANKS)[number];
 type BonusId = (typeof BONUSES)[number]["id"];
+type Gender = "male" | "female";
 type MonsterProgress = {
     rank?: Rank;
     bonuses?: Partial<Record<BonusId, boolean>>;
+    gender?: Gender;
 };
 type TrackerProgress = Record<string, MonsterProgress>;
 type Filter = "all" | "incomplete" | "complete" | "missing-monster" | "missing-bonuses";
@@ -35,6 +37,13 @@ type SortOption = "index" | "missing-most" | "closest" | "score-high" | "name";
 type ViewMode = "grid" | "list";
 type BulkRankAction = "keep" | "clear" | Rank;
 type BulkBonusAction = "keep" | "add" | "remove";
+type BulkGenderAction = "keep" | "clear" | Gender;
+type GenderFilter = "all" | Gender;
+
+const GENDERS = {
+    male: { label: "Male", icon: "/icons/male.png", tone: "border-[#19a9ff] bg-[#082b42] text-[#42c2ff]" },
+    female: { label: "Female", icon: "/icons/female.png", tone: "border-[#ff5075] bg-[#40121f] text-[#ff7893]" },
+} as const;
 
 function scoreFor(progress?: MonsterProgress) {
     const rankPoints = progress?.rank ? RANK_POINTS[progress.rank] : 0;
@@ -69,6 +78,7 @@ export function IndexTracker() {
     const [selectedId, setSelectedId] = useState(GENERATED_MONSTERS[0]?.id ?? "");
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState<Filter>("all");
+    const [genderFilter, setGenderFilter] = useState<GenderFilter>("all");
     const [sortBy, setSortBy] = useState<SortOption>("index");
     const [viewMode, setViewMode] = useState<ViewMode>("grid");
     const [bulkMode, setBulkMode] = useState(false);
@@ -77,6 +87,7 @@ export function IndexTracker() {
     const [showBulkHidden, setShowBulkHidden] = useState(false);
     const [hideBulkAfterApply, setHideBulkAfterApply] = useState(true);
     const [bulkRankAction, setBulkRankAction] = useState<BulkRankAction>("keep");
+    const [bulkGenderAction, setBulkGenderAction] = useState<BulkGenderAction>("keep");
     const [bulkBonusActions, setBulkBonusActions] = useState<Record<BonusId, BulkBonusAction>>(emptyBulkBonusActions);
     const [mobileEditorOpen, setMobileEditorOpen] = useState(false);
     const [showClearConfirmation, setShowClearConfirmation] = useState(false);
@@ -143,6 +154,7 @@ export function IndexTracker() {
             if (query && !monster.name.toLowerCase().includes(query)) return false;
             if (bulkMode && !showBulkHidden && bulkHiddenIds.has(monster.id)) return false;
             const monsterProgress = progress[monster.id];
+            if (genderFilter !== "all" && monsterProgress?.gender !== genderFilter) return false;
             const score = scoreFor(monsterProgress);
             if (filter === "incomplete") return score < 21;
             if (filter === "complete") return score === 21;
@@ -162,7 +174,7 @@ export function IndexTracker() {
             if (sortBy === "name") return a.name.localeCompare(b.name);
             return a.indexPosition - b.indexPosition;
         });
-    }, [bulkHiddenIds, bulkMode, filter, monsters, progress, search, showBulkHidden, sortBy]);
+    }, [bulkHiddenIds, bulkMode, filter, genderFilter, monsters, progress, search, showBulkHidden, sortBy]);
 
     const bulkSelectableVisibleMonsters = visibleMonsters.filter((monster) => !bulkHiddenIds.has(monster.id));
 
@@ -180,11 +192,16 @@ export function IndexTracker() {
     };
 
     const setRank = (rank?: Rank) => {
-        updateSelected({ rank, bonuses: selectedProgress?.bonuses ?? emptyBonuses() });
+        updateSelected({ ...selectedProgress, rank, bonuses: selectedProgress?.bonuses ?? emptyBonuses() });
+    };
+
+    const setGender = (gender?: Gender) => {
+        updateSelected({ ...selectedProgress, gender });
     };
 
     const toggleBonus = (bonusId: BonusId) => {
         updateSelected({
+            ...selectedProgress,
             rank: selectedProgress?.rank,
             bonuses: {
                 ...selectedProgress?.bonuses,
@@ -195,6 +212,7 @@ export function IndexTracker() {
 
     const markAllBonuses = () => {
         updateSelected({
+            ...selectedProgress,
             rank: "SS",
             bonuses: Object.fromEntries(BONUSES.map((bonus) => [bonus.id, true])) as Record<BonusId, boolean>,
         });
@@ -225,6 +243,7 @@ export function IndexTracker() {
         setShowBulkHidden(false);
         setHideBulkAfterApply(true);
         setBulkRankAction("keep");
+        setBulkGenderAction("keep");
         setBulkBonusActions(emptyBulkBonusActions());
         setMobileEditorOpen(false);
         setImportMessage(null);
@@ -265,7 +284,7 @@ export function IndexTracker() {
         setImportMessage({ tone: "success", text: "All hidden monsters are visible again." });
     };
 
-    const hasBulkChanges = bulkRankAction !== "keep"
+    const hasBulkChanges = bulkRankAction !== "keep" || bulkGenderAction !== "keep"
         || BONUSES.some((bonus) => bulkBonusActions[bonus.id] !== "keep");
 
     const applyBulkChanges = () => {
@@ -282,6 +301,11 @@ export function IndexTracker() {
                         ? undefined
                         : bulkRankAction;
                 const bonuses = { ...existing.bonuses };
+                const gender = bulkGenderAction === "keep"
+                    ? existing.gender
+                    : bulkGenderAction === "clear"
+                        ? undefined
+                        : bulkGenderAction;
 
                 BONUSES.forEach((bonus) => {
                     const action = bulkBonusActions[bonus.id];
@@ -289,8 +313,8 @@ export function IndexTracker() {
                     if (action === "remove") delete bonuses[bonus.id];
                 });
 
-                if (!rank && Object.keys(bonuses).length === 0) delete next[monsterId];
-                else next[monsterId] = { rank, bonuses };
+                if (!rank && !gender && Object.keys(bonuses).length === 0) delete next[monsterId];
+                else next[monsterId] = { rank, bonuses, gender };
             });
             return next;
         });
@@ -300,6 +324,7 @@ export function IndexTracker() {
         }
         setBulkSelectedIds(new Set());
         setBulkRankAction("keep");
+        setBulkGenderAction("keep");
         setBulkBonusActions(emptyBulkBonusActions());
         setImportMessage({
             tone: "success",
@@ -317,7 +342,7 @@ export function IndexTracker() {
     const exportTracker = () => {
         const payload = {
             app: "Cam Lab Index Tracker",
-            version: 1,
+            version: 2,
             exportedAt: new Date().toISOString(),
             progress,
         };
@@ -337,7 +362,7 @@ export function IndexTracker() {
 
         try {
             const parsed = JSON.parse(await file.text()) as { version?: unknown; progress?: unknown };
-            if (parsed.version !== 1 || !parsed.progress || typeof parsed.progress !== "object" || Array.isArray(parsed.progress)) {
+            if ((parsed.version !== 1 && parsed.version !== 2) || !parsed.progress || typeof parsed.progress !== "object" || Array.isArray(parsed.progress)) {
                 throw new Error("Invalid tracker backup");
             }
 
@@ -345,17 +370,18 @@ export function IndexTracker() {
             const imported: TrackerProgress = {};
             Object.entries(parsed.progress).forEach(([monsterId, value]) => {
                 if (!monsterIds.has(monsterId) || !value || typeof value !== "object" || Array.isArray(value)) return;
-                const candidate = value as { rank?: unknown; bonuses?: unknown };
+                const candidate = value as { rank?: unknown; bonuses?: unknown; gender?: unknown };
                 const rank = typeof candidate.rank === "string" && RANKS.includes(candidate.rank as Rank)
                     ? candidate.rank as Rank
                     : undefined;
                 const bonuses: Partial<Record<BonusId, boolean>> = {};
+                const gender = candidate.gender === "male" || candidate.gender === "female" ? candidate.gender : undefined;
                 if (candidate.bonuses && typeof candidate.bonuses === "object" && !Array.isArray(candidate.bonuses)) {
                     BONUSES.forEach((bonus) => {
                         if ((candidate.bonuses as Record<string, unknown>)[bonus.id] === true) bonuses[bonus.id] = true;
                     });
                 }
-                if (rank || Object.keys(bonuses).length > 0) imported[monsterId] = { rank, bonuses };
+                if (rank || gender || Object.keys(bonuses).length > 0) imported[monsterId] = { rank, bonuses, gender };
             });
 
             setProgress(imported);
@@ -428,6 +454,11 @@ export function IndexTracker() {
                         <span aria-hidden="true" className="text-[#7f8b9e]">⌕</span>
                         <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search monsters..." className="min-w-0 flex-1 bg-transparent px-2 py-2 text-sm text-white outline-none placeholder:text-[#677386]" />
                     </label>
+                    <select value={genderFilter} onChange={(event) => setGenderFilter(event.target.value as GenderFilter)} aria-label="Filter by gender" className="rounded-md border border-[#344050] bg-[#0c131d] px-3 py-2 text-sm text-[#d5dce6] outline-none focus:border-[#168fff]">
+                        <option value="all">Gender: All</option>
+                        <option value="female">Gender: Female</option>
+                        <option value="male">Gender: Male</option>
+                    </select>
                     <select value={sortBy} onChange={(event) => setSortBy(event.target.value as SortOption)} aria-label="Sort monsters" className="rounded-md border border-[#344050] bg-[#0c131d] px-3 py-2 text-sm text-[#d5dce6] outline-none focus:border-[#168fff]">
                         <option value="index">Sort: Index Order</option>
                         <option value="missing-most">Sort: Most Missing</option>
@@ -468,7 +499,7 @@ export function IndexTracker() {
                         <span className="font-normal text-[#7f8b9e]">(temporary)</span>
                     </label>
 
-                    <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                    <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
                         <label className="rounded-md border border-[#304356] bg-[#0d1822] px-3 py-2">
                             <span className="block text-[10px] font-bold uppercase tracking-wide text-[#f5cc3f]">Highest Rank</span>
                             <select value={bulkRankAction} onChange={(event) => setBulkRankAction(event.target.value as BulkRankAction)} style={{ colorScheme: "dark" }} className="mt-1 w-full bg-transparent text-sm font-semibold text-white outline-none">
@@ -476,6 +507,18 @@ export function IndexTracker() {
                                 {RANKS.map((rank) => <option key={rank} value={rank} className="bg-[#0d1822] text-white">Set to {rank}</option>)}
                                 <option value="clear" className="bg-[#0d1822] text-white">Clear rank</option>
                             </select>
+                        </label>
+                        <label className="flex items-center gap-2 rounded-md border border-[#304356] bg-[#0d1822] px-3 py-2">
+                            <span className="grid size-8 place-items-center rounded-full border border-[#7b4f75] bg-[#231726] text-lg font-black text-[#ff7ca0]">⚥</span>
+                            <span className="min-w-0 flex-1">
+                                <span className="block text-[10px] font-bold uppercase tracking-wide text-[#cbd4e0]">Gender</span>
+                                <select value={bulkGenderAction} onChange={(event) => setBulkGenderAction(event.target.value as BulkGenderAction)} style={{ colorScheme: "dark" }} className="mt-1 w-full bg-transparent text-sm font-semibold text-white outline-none">
+                                    <option value="keep" className="bg-[#0d1822] text-white">Keep</option>
+                                    <option value="female" className="bg-[#0d1822] text-white">Set Female</option>
+                                    <option value="male" className="bg-[#0d1822] text-white">Set Male</option>
+                                    <option value="clear" className="bg-[#0d1822] text-white">Clear</option>
+                                </select>
+                            </span>
                         </label>
                         {BONUSES.map((bonus) => (
                             <label key={bonus.id} className="flex items-center gap-2 rounded-md border border-[#304356] bg-[#0d1822] px-3 py-2">
@@ -520,6 +563,9 @@ export function IndexTracker() {
                                             {bulkMode && <span aria-hidden="true" className={`absolute left-3 top-3 z-20 grid size-7 place-items-center rounded border text-sm font-black ${isSelected ? "border-[#2be577] bg-[#0c572b] text-white" : "border-[#738196] bg-[#091019] text-transparent"}`}>✓</span>}
                                             {bulkMode && isHidden && <span className="absolute left-12 top-3 z-20 rounded bg-[#1d2733] px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-[#c6cfdb]">Hidden</span>}
                                             <span className={`absolute ${bulkMode ? "left-12" : "left-3"} ${bulkMode && isHidden ? "top-10" : "top-2"} z-10 text-2xl font-black drop-shadow-[0_2px_2px_#000] ${rankTone(monsterProgress?.rank)}`}>{monsterProgress?.rank ?? "—"}</span>
+                                            {monsterProgress?.gender && (
+                                                <img src={assetPath(GENDERS[monsterProgress.gender].icon)} alt={GENDERS[monsterProgress.gender].label} title={GENDERS[monsterProgress.gender].label} className="absolute right-11 top-2 z-10 size-8 object-contain drop-shadow-[0_2px_3px_rgba(0,0,0,0.8)]" />
+                                            )}
                                             <div className={`flex items-end justify-center ${viewMode === "grid" ? "h-32" : "h-24"}`}>
                                                 {monster.image ? <img src={assetPath(monster.image)} alt="" loading="lazy" className={`${viewMode === "grid" ? "max-h-32" : "max-h-24"} ${score === 0 ? "grayscale opacity-55" : ""} ${isComplete ? "drop-shadow-[0_0_10px_rgba(77,255,139,0.42)]" : "drop-shadow-[0_8px_8px_rgba(0,0,0,0.55)]"} w-full object-contain transition-all group-hover:scale-105`} /> : null}
                                             </div>
@@ -589,6 +635,20 @@ export function IndexTracker() {
                                     ))}
                                 </div>
                                 <p className="mt-3 flex items-center gap-2 text-sm text-[#f5cc3f]"><img src={assetPath("/icons/index.png")} alt="" className="size-7 object-contain" />Rank Points: <b className="text-lg">{selectedRankPoints}</b></p>
+                            </div>
+                        </div>
+
+                        <div className="border-b border-[#2a3543] py-4">
+                            <h3 className="text-sm font-bold uppercase text-[#2eacff]">Breeding Gender</h3>
+                            <p className="mt-1 text-xs text-[#8f9bad]">Track the gender of this monster for breeding.</p>
+                            <div className="mt-3 grid grid-cols-3 gap-2">
+                                <button type="button" onClick={() => setGender(undefined)} className={`rounded-md border px-3 py-2 text-sm font-semibold ${!selectedProgress?.gender ? "border-[#8a97a8] bg-[#273241] text-white" : "border-[#405066] bg-[#141d27] text-[#9da8b8]"}`}>Unset</button>
+                                {(["female", "male"] as const).map((gender) => (
+                                    <button key={gender} type="button" onClick={() => setGender(gender)} className={`flex items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-bold ${selectedProgress?.gender === gender ? GENDERS[gender].tone : "border-[#405066] bg-[#141d27] text-[#b4bdca] hover:border-[#7182a0]"}`}>
+                                        <img src={assetPath(GENDERS[gender].icon)} alt="" className="size-6 object-contain" />
+                                        {GENDERS[gender].label}
+                                    </button>
+                                ))}
                             </div>
                         </div>
 
