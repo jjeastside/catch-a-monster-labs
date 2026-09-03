@@ -1,22 +1,48 @@
-# CAM Lab
+# Cam Lab
 
-CAM Lab is a modern build planner and stat calculator for **Catch a Monster**, built with **React**, **Next.js**, **TypeScript**, and **Tailwind CSS**.
+Cam Lab is a modern build planner and stat calculator for **Catch a Monster**, built with **React**, **Next.js**, **TypeScript**, and **Tailwind CSS**.
 
 The project turns game data and player-tested formulas into an interactive tool for exploring monsters, creating builds, and understanding how each modifier affects combat statistics. Its interface is inspired by detailed planning tools such as Path of Building and PCPartPicker while remaining approachable for regular players.
 
 ## Access the Site
 
-Use CAM Lab directly in your browser:
+Use Cam Lab directly in your browser:
 
-**[Open CAM Lab](https://jjeastside.github.io/catch-a-monster-labs/)**
+**[Open Cam Lab](https://jjeastside.github.io/catch-a-monster-labs/)**
 
-No installation is required. The current build is hosted on GitHub Pages and is automatically redeployed from the `main` branch. Development updates through **v1.0.5** are documented in the [CAM Lab Changelog](https://jjeastside.github.io/catch-a-monster-labs/changelog/).
+No installation is required. The current build is hosted on GitHub Pages and is automatically redeployed from the `main` branch. Development updates through **v1.0.8** are documented in the [Cam Lab Changelog](https://jjeastside.github.io/catch-a-monster-labs/changelog/).
+
+## Screenshots
+
+### Calculator Workflow
+
+Select a monster, customize its complete build, and immediately see the resulting combat stats and skill calculations.
+
+![Cam Lab Monster Browser](docs/images/monster-browser.png)
+
+![Cam Lab Build Editor](docs/images/build-editor.png)
+
+![Cam Lab Calculator Results](docs/images/calculator-results.png)
+
+### Advanced Calculations
+
+Inspect stat growth and every multiplier in the final result, then configure teammates and combat conditions for the encounter being tested.
+
+![Health growth graph and formula breakdown](docs/images/advanced-calculations.png)
+
+![Team effects and combat conditions](docs/images/combat-conditions.png)
+
+### Saved Builds
+
+Save multiple builds locally and compare their important combat statistics before loading one.
+
+![Cam Lab saved builds](docs/images/saved-builds.png)
 
 ## Current Features
 
 ### Monster Browser
 
-- Search and browse the complete roster of 231 monsters
+- Search and browse the complete roster of 235 monsters
 - Filter by source, island, rarity, element, availability, evolution status, and passive
 - Sort by Index, DPS, Damage, or Health with passive-aware comparison modes and Evolution Multiplier control
 - Compact and expanded browser views
@@ -35,6 +61,17 @@ No installation is required. The current build is hosted on GitHub Pages and is 
 - Fixed profile drawer that preserves the user's place in the monster grid and resets each selected profile to the top
 - Shareable profile routes with a Copy Link action
 - Compact mobile cards, a sticky results toolbar, and a dedicated mobile filter drawer
+- Clear descriptions and matching effect icons for all 133 skills
+- Reference-stat comparison details available through a compact help tooltip
+
+### Index Tracker
+
+- Track every monster's highest rank and Shiny, Bloodlit, Fairy, and Huge bonuses
+- Automatic Index Score, completion, average, and remaining-points summaries
+- All, Incomplete, Complete, Missing Monster, and Missing Bonuses filters
+- Bulk editing with temporary hide controls for working through large collections
+- Male and Female breeding tracking with gender filters and bulk gender editing
+- Automatic browser saving plus JSON export and import for backups
 
 ### Build Editor
 
@@ -49,7 +86,7 @@ No installation is required. The current build is hosted on GitHub Pages and is 
 - Trait selection with rarity-specific visuals
 - Teammate selection for transferable passives and skill effects
 - Combat-condition controls for contextual passives, target types, and active skill effects
-- Optional Experimental Mode for level 106–110 previews
+- Optional Experimental Mode for level 111–115 previews
 
 ### Calculation Engine
 
@@ -65,7 +102,7 @@ No installation is required. The current build is hosted on GitHub Pages and is 
 - Multi-hit, chance-based, cooldown-adjusted, and total skill DPS calculations
 - Healing, Healing Per Second, shielding, cooldown, resistance, and damage-reduction effects
 - Healing calculations that remain independent of critical chance and critical damage
-- Structured Damage Increase, Vulnerability, Stun, Poison, and Burn effects
+- Structured Damage Increase, Damage Decrease, Damage Reduction, Damage Reflection, Vulnerability, Stun, Poison, Burn, Healing, Shield, Knockback, and Taunt effects
 - Vulnerability- and Damage Increase-boosted damage results without double stacking
 - Boss, Rift, Spire, dungeon, and HP-threshold conditions
 
@@ -101,11 +138,18 @@ No installation is required. The current build is hosted on GitHub Pages and is 
 - Cloudflare-powered rich previews with monster artwork, rarity styling, and calculated build stats
 - Stable restoration of equipment, attributes, achievements, teammates, combat conditions, and other packed selections
 
+### Community and Project Pages
+
+- About page explaining Cam Lab's goals and development approach
+- Changelog for Cam Lab releases and separate Catch a Monster patch notes
+- Privacy Policy covering local storage, shared builds, and feedback submissions
+- Site-wide feedback form for bug reports, feature requests, and data corrections
+
 ### Interface and Deployment
 
 - Responsive three-panel desktop interface
 - Mobile Monster, Results, and Build views
-- CAM Lab navy visual theme
+- Cam Lab navy visual theme
 - Rarity-specific Legendary, Mythical, Secret, and Void presentation
 - Changelog, patch-notes, and work-in-progress pages
 - Static Next.js export deployed automatically through GitHub Actions
@@ -127,7 +171,7 @@ No installation is required. The current build is hosted on GitHub Pages and is 
 
 ## How It Works
 
-CAM Lab uses a centralized calculation pipeline:
+Cam Lab uses a centralized calculation pipeline:
 
 ```mermaid
 flowchart TD
@@ -174,7 +218,7 @@ Many formulas were determined by controlled in-game comparisons. Baseline values
 
 ### Static Deployment
 
-CAM Lab is exported as static HTML, CSS, and JavaScript. A shared asset-path utility allows the same codebase to work at `localhost:3000` and under GitHub Pages' `/catch-a-monster-labs` repository path. A separate Cloudflare Worker handles short links and dynamic social-preview cards without requiring a traditional application server.
+Cam Lab is exported as static HTML, CSS, and JavaScript. A shared asset-path utility allows the same codebase to work at `localhost:3000` and under GitHub Pages' `/catch-a-monster-labs` repository path. A separate Cloudflare Worker handles short links and dynamic social-preview cards without requiring a traditional application server.
 
 ## Project Structure
 
@@ -246,14 +290,16 @@ npm test
 - [x] Conditional personal and teammate passive multipliers
 - [x] Trait system
 - [x] Skill, critical-hit, healing, HPS, shielding, cooldown, and total DPS analysis
-- [x] Structured Damage Increase, Vulnerability, Stun, Poison, and Burn effects
+- [x] Structured skill effects for buffs, debuffs, damage over time, healing, shields, crowd control, and reflection
 - [x] Advanced formula breakdowns and growth visualization
 - [x] Browser-based active-build, save-slot, favorite, and monster persistence
 - [x] Dedicated visual Monster Database with mobile support
 - [x] Sortable monster stat comparisons and advanced database filters
 - [x] Direct monster profile links
+- [x] Complete skill descriptions and structured skill-effect filtering
+- [x] Index Tracker with bulk editing, backups, and breeding-gender tracking
 - [x] Compact shared builds, short IDs, and rich preview cards
-- [x] Changelog and patch-notes pages
+- [x] Changelog, patch notes, Feedback, About, and Privacy pages
 - [x] GitHub Pages static deployment
 
 ### Planned
@@ -264,23 +310,22 @@ npm test
 - [ ] Equipment optimization tools
 - [ ] Reverse base-stat solver
 - [ ] Account synchronization across devices
-- [ ] Complete Guides, Compare, Feedback, About, and Privacy pages
 - [ ] Additional automated calculation tests
 
 ## Why I Built This
 
-I built CAM Lab to create a genuinely useful community tool while strengthening my ability to design and explain a real application. The project combines UI design, data modeling, TypeScript architecture, reverse engineering, controlled testing, formula validation, and automated deployment.
+I built Cam Lab to create a genuinely useful community tool while strengthening my ability to design and explain a real application. The project combines UI design, data modeling, TypeScript architecture, reverse engineering, controlled testing, formula validation, and automated deployment.
 
 Instead of treating the calculator as a collection of unrelated inputs, I designed it around a centralized build model and composable calculation pipeline. This makes the project easier to extend and gives me concrete engineering decisions to discuss in interviews, including state management, separation of concerns, data-driven design, validation strategy, static-hosting constraints, and tradeoffs between accuracy and maintainability.
 
 ## Fan-Site Notice
 
-CAM Lab is an independent, fan-made companion site. It is not affiliated with, endorsed by, or sponsored by Roblox Corporation or LDS II. Game names, trademarks, characters, and related game assets remain the property of their respective owners.
+Cam Lab is an independent, fan-made companion site. It is not affiliated with, endorsed by, or sponsored by Roblox Corporation or LDS II. Game names, trademarks, characters, and related game assets remain the property of their respective owners.
 
 ## License and Usage
 
 Copyright © 2026 `@jjeastside`. All rights reserved.
 
-The source code and original CAM Lab materials in this repository are publicly available for viewing, educational review, and portfolio evaluation only. No permission is granted to copy, reproduce, redistribute, publish, sell, sublicense, or create derivative projects from this repository without prior written authorization from the copyright owner.
+The source code and original Cam Lab materials in this repository are publicly available for viewing, educational review, and portfolio evaluation only. No permission is granted to copy, reproduce, redistribute, publish, sell, sublicense, or create derivative projects from this repository without prior written authorization from the copyright owner.
 
 Third-party trademarks, game artwork, names, and other referenced assets are excluded from this copyright claim and remain subject to the rights of their respective owners.
