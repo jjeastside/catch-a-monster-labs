@@ -20,18 +20,21 @@ Development updates through **v1.0.8** are documented in the [Cam Lab Changelog]
 
 ## What Cam Lab Does
 
-Cam Lab is built around four connected systems:
+Cam Lab is built around three main player-facing sections:
 
-- **Monster Browser & Database** — explore the roster, compare stats, inspect skills and passives, and see where monsters come from.
-- **Build Calculator** — configure levels, ranks, mutations, equipment, traits, teammates, and combat conditions.
-- **Calculation Engine** — calculate Health, Damage, skill damage, DPS, healing, shielding, cooldowns, and combat effects.
+- **Calculator** — browse monsters, configure builds, manage account multipliers, and analyze results.
+- **Monster Database** — explore the roster in a reference-first layout with detailed monster profiles.
 - **Index Tracker** — track collection progress, ranks, mutation bonuses, breeding genders, and total Index Score.
 
-Together, these systems let players move from discovering a monster to building it, analyzing it, and tracking it without leaving the site.
+Under the hood, those sections are powered by a shared calculation engine that handles Health, Damage, skill damage, DPS, healing, shielding, cooldowns, and structured combat effects.
 
 ---
 
-## Monster Browser
+## Calculator
+
+The calculator is the core of Cam Lab. It is designed to take a monster from discovery to full build planning, then turn that build into clear and explainable results.
+
+### Monster Browser
 
 The Monster Browser is the main entry point into the calculator. It keeps a large roster easy to search while still exposing the filters and comparison tools needed for theorycrafting.
 
@@ -48,30 +51,7 @@ Players can:
 - Save favorites and restore the selected monster after refreshing the page
 - Link directly to monsters using URL hashes
 
-### Monster Database
-
-The dedicated Monster Database turns the roster into a full reference library.
-
-![Cam Lab Monster Database](docs/images/monster-database.png)
-
-It is designed for players who want to research monsters before building them. You can filter the entire roster, compare reference stats, and inspect a detailed profile without losing your place in the grid.
-
-It includes:
-
-- Search, sorting, and advanced filters for rarity, element, source, location, availability, passives, skill effects, and evolution status
-- Damage, Health, DPS, and Index comparison modes
-- Evolution Multiplier and passive-aware stat comparisons
-- Monster profiles with artwork, skills, passives, reference stats, obtainment details, and evolution families
-- Direct links back into the calculator
-- Shareable monster profile routes with a **Copy Link** action
-- A fixed profile drawer that preserves the user's place in the monster grid
-- Compact mobile cards, a sticky results toolbar, and a dedicated mobile filter drawer
-- Clear descriptions and matching effect icons for all **133 skills**
-- Reference-stat comparison details through a compact help tooltip
-
----
-
-## Build Editor
+### Build Editor
 
 After selecting a monster, the Build Editor becomes the central workspace for configuring the complete build.
 
@@ -109,9 +89,29 @@ This lets the calculator account for effects such as:
 - Skill-specific buffs and debuffs
 - Target-dependent effects
 
----
+### Account Multipliers
 
-## Calculator Results
+Account progression can also be entered directly into the calculator so account-wide bonuses are reflected in the final build.
+
+![Account Multipliers summary](docs/images/account-multipliers-summary.png)
+
+The compact Account Multipliers panel gives quick access to your saved progress and shows the bonus categories currently affecting the build.
+
+![Account Multipliers manager](docs/images/account-multipliers-manager.png)
+
+The full manager provides a more detailed view of each progression source and automatically combines the selected bonuses into the correct totals.
+
+Supported progression includes:
+
+- Path of Progress
+- Index Mania
+- Sequential Pet Quests
+- Rift Challenger
+- `Striver for Perfection`
+
+Cam Lab automatically combines the resulting Health, Damage, Rift Damage, and Critical Chance bonuses with the rest of the build.
+
+### Calculator Results
 
 The Results panel updates immediately as the build changes, making it easy to see the impact of each rank, mutation, trait, equipment piece, or combat condition.
 
@@ -148,9 +148,7 @@ Currently modeled effects include:
 
 Healing calculations remain independent of Critical Chance and Critical Damage, and active Damage Increase or Vulnerability sources are resolved without applying the same source twice.
 
----
-
-## Advanced Calculations
+### Advanced Calculations
 
 For players who want to understand *why* a number changed—not just what the final number is—Cam Lab exposes the formulas and multiplier breakdowns behind the result.
 
@@ -177,7 +175,41 @@ The calculation engine supports:
 
 Many formulas were determined through controlled in-game testing: a baseline value was recorded, one variable was changed at a time, and competing formulas were checked against the observed result before implementation.
 
----
+### Saved Builds and Sharing
+
+Builds are stored locally so players can experiment, save setups, and share configurations without needing an account.
+
+![Cam Lab saved builds](docs/images/saved-builds.png)
+
+Cam Lab currently supports:
+
+- Persistent active builds, favorites, and selected monsters in browser storage
+- Three local build save/load slots
+- Compact shared-build URLs that preserve calculator-relevant state
+- Short share IDs that are easier to post in Discord and other communities
+- Cloudflare-powered rich previews with monster artwork, rarity styling, and calculated build stats
+- Restoration of equipment, attributes, achievements, teammates, combat conditions, and other packed selections
+
+## Monster Database
+
+The dedicated Monster Database turns the roster into a full reference library.
+
+![Cam Lab Monster Database](docs/images/monster-database.png)
+
+It is designed for players who want to research monsters before building them. You can filter the entire roster, compare reference stats, and inspect a detailed profile without losing your place in the grid.
+
+It includes:
+
+- Search, sorting, and advanced filters for rarity, element, source, location, availability, passives, skill effects, and evolution status
+- Damage, Health, DPS, and Index comparison modes
+- Evolution Multiplier and passive-aware stat comparisons
+- Monster profiles with artwork, skills, passives, reference stats, obtainment details, and evolution families
+- Direct links back into the calculator
+- Shareable monster profile routes with a **Copy Link** action
+- A fixed profile drawer that preserves the user's place in the monster grid
+- Compact mobile cards, a sticky results toolbar, and a dedicated mobile filter drawer
+- Clear descriptions and matching effect icons for all **133 skills**
+- Reference-stat comparison details through a compact help tooltip
 
 ## Index Tracker
 
@@ -199,41 +231,6 @@ The tracker can:
 - Filter and bulk-edit breeding genders
 - Save progress automatically in the browser
 - Export and import progress as JSON for backups
-
----
-
-## Saved Builds and Sharing
-
-Builds are stored locally so players can experiment, save setups, and share configurations without needing an account.
-
-![Cam Lab saved builds](docs/images/saved-builds.png)
-
-Cam Lab currently supports:
-
-- Persistent active builds, favorites, and selected monsters in browser storage
-- Three local build save/load slots
-- Compact shared-build URLs that preserve calculator-relevant state
-- Short share IDs that are easier to post in Discord and other communities
-- Cloudflare-powered rich previews with monster artwork, rarity styling, and calculated build stats
-- Restoration of equipment, attributes, achievements, teammates, combat conditions, and other packed selections
-
----
-
-## Account Multipliers
-
-Achievement progress can be entered directly into the calculator and is converted into the appropriate account-wide bonuses.
-
-Supported progression includes:
-
-- Path of Progress
-- Index Mania
-- Sequential Pet Quests
-- Rift Challenger
-- `Striver for Perfection`
-
-Cam Lab automatically combines the resulting Health, Damage, Rift Damage, and Critical Chance bonuses with the rest of the build.
-
----
 
 ## Community and Project Pages
 

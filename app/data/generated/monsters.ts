@@ -7462,7 +7462,14 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/void-shadecloak.png",
     "element": "Common",
     "rarity": "Void",
-    "sources": [],
+    "sources": [
+      {
+        "type": "Egg",
+        "name": "Void Purple Egg",
+        "location": "Blossom Haven",
+        "status": "Current"
+      }
+    ],
     "skillIds": [
       "barrier",
       "soul-reap-chain"
@@ -7481,14 +7488,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/void-strum-bones.png",
     "element": "Common",
     "rarity": "Void",
-    "sources": [
-      {
-        "type": "Egg",
-        "name": "Void Purple Egg",
-        "location": "Blossom Haven",
-        "status": "Current"
-      }
-    ],
+    "sources": [],
     "skillIds": [
       "demonic-lullaby",
       "healing-pulse"
