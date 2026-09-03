@@ -1,322 +1,383 @@
-Monster,Rarity,Element,Damage,Health,Crit Chance,Evolution Source,Growth Type,Skill 1,Skill 2,Skill 3,Passives,Sources,Index (Position)
-Dummee,Common,Common,8,53,0,,Dummee,Air Bullet,,,,"First-Time Reward | First-Time Player Reward | Starter Island | Current
-Egg | Swamp Egg | Starter Island | Current",1
-Leafet,Common,Grass,7.25,43.5,0,,Standard,Seed Grenade,,,,Island Spawn | Natural Spawn | Starter Island | Current,2
-Wattoad,Uncommon,Water,10.5,63.1,0,,Standard,Water Jet,,,,Island Spawn | Natural Spawn | Starter Island | Current,3
-Treemo,Rare,Grass,15.2,163.1,0,,Standard,Seed Grenade,,,,Island Spawn | Natural Spawn | Starter Island | Current,4
-Flamix,Rare,Fire,22.1,236.5,0,,Standard,Fireball,Air Bullet,,,Island Spawn | Natural Spawn | Starter Island | Current,5
-Puffu,Rare,Water,32,342.9,0,,Standard,Water Jet,Wind Disc,,,Island Spawn | Natural Spawn | Starter Island | Current,6
-Candlechick,Rare,Fire,38.6,412.7,0,,Standard,Air Bullet,Fireball,,,"Event | Turkey Egg | Thanksgiving Event 2025 | Legacy
-Chest | Memory Chest 2 | Abyss Shop | Current",7
-SantaDumi,Rare,Common,97.7,1040,0,,Standard,Air Bullet,Candy Bomb,,,"Event | Christmas Event Summon | Christmas Event 2025 | Unavailable
-Chest | Memory Chest 1 | Abyss Shop | Current",8
-Santacub,Rare,Common,205.39,2197.8,0,,Standard,Fireball,Gift Delivery,,,"Event | Christmas Event Summon | Christmas Event 2025 | Unavailable
-Chest | Memory Chest 1 | Abyss Shop | Current",9
-Pricko,Rare,Grass,1915,29518,10,,Standard,Petal Dance,Root Spike,,Fortune Spirit | 20,Chest | Rift Chest | Abyss Shop | Current,10
-Aquron,Epic,Water,46.5,497.2,0,,Standard,Water Cannon,Water Jet,,,Island Spawn | Natural Spawn | Starter Island | Current,11
-Skedeer,Epic,Common,67.4,721,0,,Standard,Air Bullet,Wind Disc,,,Island Spawn | Natural Spawn | Volcano | Current,12
-Woodliz,Epic,Grass,97.7,1040,0,,Standard,Grass Tornado,Leaf Surge,,,Island Spawn | Natural Spawn | Volcano | Current,13
-Candlehawk,Epic,Fire,170.59,1825,0,,Standard,Fire Tornado,Fireball,,,"Event | Turkey Egg | Thanksgiving Event 2025 | Legacy
-Chest | Memory Chest | Abyss Shop | Current",14
-Zybit,Epic,Common,117.65,1258.8,0,,Standard,Ex Air Bullet,Wind Disc,,,"Event | Abuse Egg | Abuse Event 2025 | Legacy
-Chest | Memory Chest 1 | Abyss Shop | Current",15
-Flarecub,Epic,Fire,141.67,1510,0,,Standard,Wind Disc,Fire Tornado,,,Island Spawn | Natural Spawn | Volcano | Current,16
-Blazelord,Epic,Fire,205.42,2190,0,,Standard,Fireball,Fire Dash,,,Island Spawn | Natural Spawn | Volcano | Current,17
-Icevolf,Epic,Ice,431.9,4620,0,,Standard,Iceball,Wind Disc,,,Island Spawn | Natural Spawn | Frost Isle | Current,18
-Frostoise,Epic,Water,626.25,6700,0,,Standard,Ex Water Jet,Claw Attack,,,Island Spawn | Natural Spawn | Frost Isle | Current,19
-Fluffairy,Epic,Common,908.07,9710,0,,Standard,Ex Air Bullet,Wind Disc,,,Island Spawn | Natural Spawn | Frost Isle | Current,20
-Santafairy,Epic,Common,626.2,6693,0,,Standard,Gift Delivery,Candy Bomb,,,"Chest | Memory Chest 1 | Abyss Shop | Current
-Chest | Christmas Event Summon | Christmas Event 2025 | Unavailable",21
-Dreamtane,Epic,Common,2768,29620,0,,Standard,Ex Air Bullet,Wind Disc,,,Island Spawn | Natural Spawn | Neverland | Current,22
-Dollfey,Epic,Common,4010,42950,0,,Standard,Toxic Grenade,Wind Disc,,,Island Spawn | Natural Spawn | Neverland | Current,23
-Stonebara,Epic,Ground,12230,130940,0,,Standard,Rock Toss,Gravel Scatter Shot,,,Island Spawn | Natural Spawn | Duneveil Isle | Current,24
-Pangard,Epic,Fire,17736,189870,0,,Standard,Ex Air Bullet,Fireball,,,Island Spawn | Natural Spawn | Duneveil Isle | Current,25
-Pandleaf,Epic,Grass,7032,108360,10,,Standard,Grass Tornado,Galecut,,Mentor Spirit | 20,Chest | Rift Chest | Abyss Shop | Current,26
-RingDuck,Epic,Water,54090,578830,0,,Standard,Tidal Conch,Wind Disc,,,Island Spawn | Natural Spawn | Tideland | Current,27
-Shorefur,Epic,Water,78440,839300,0,,Standard,Water Shuriken,Tidal Conch,,,Island Spawn | Natural Spawn | Tideland | Current,28
-Sproutfox,Epic,Grass,136961,1465000,0,,Standard,Toxic Grenade,Petal Dance,,,Island Spawn | Natural Spawn | Spirit Grove | Current,29
-Terralion,Epic,Ground,164920,1764000,0,,Standard,Earth Smash,Dash,,,Island Spawn | Natural Spawn | Spirit Grove | Current,30
-Noxicrow,Epic,Fire,239130,2558000,0,,Standard,Wind Disc,Fireball,,,Island Spawn | Natural Spawn | Dragon's Breath | Current,31
-Verdysaur,Epic,Grass,287950,3080000,0,,Standard,Leaf Surge,Galecut,,,Island Spawn | Natural Spawn | Dragon's Breath | Current,32
-Bunshroom,Epic,Ground,417530,4460000,0,,Standard,Rock Toss,Wind Disc,,,Island Spawn | Natural Spawn | Blossom Haven | Current,33
-Bunleaf,Epic,Grass,502780,5380000,0,,Standard,Root Spike,Urgent Aid,,,Island Spawn | Natural Spawn | Blossom Haven | Current,34
-LeafMage,Epic,Grass,785270,8402200,0,,Standard,Ex Seed Grenade,Galecut,,,Island Spawn | Natural Spawn | Mobius Circus | Current,35
-Boinglick,Epic,Water,1018500,10898000,0,,Standard,Soul Reap Chain (Vulnerability),Ex Water Jet,,,Island Spawn | Natural Spawn | Mobius Circus | Current,36
-Wickloom,Epic,Fire,1651000,17666000,0,,Standard,Fireball (Ghost),Wind Disc (Purple),,,Island Spawn | Natural Spawn | Specter Shallows | Current,37
-Glowraith,Epic,Ice,2222450,23780000,0,,Standard,Frosty Dart,Soul Reap Chain,,,Island Spawn | Natural Spawn | Specter Shallows | Current,38
-Spiralin,Epic,Water,3471000,37141000,0,,Standard,Tidal Conch,Ex Water Jet,,,Island Spawn | Natural Spawn | Nova Coast | Current,39
-Snoozeble,Epic,Water,4180000,44726000,0,,Standard,Hydro Cannon,Water Shuriken,,,Island Spawn | Natural Spawn | Nova Coast | Current,40
-Bubbloo,Epic,Water,5420000,58011000,0,,Standard,Ripple Guard,Ex Water Jet,,,Island Spawn | Natural Spawn | Splash Isle | Current,41
-Terratort,Epic,Ground,5840000,62486000,0,,Standard,Earth Smash,Rock Road,,,Island Spawn | Natural Spawn | Splash Isle | Current,42
-Mechizza,Epic,Fire,8465000,90606000,0,,Standard,Wind Disc,Wind Disc (Purple),,,Island Spawn | Natural Spawn | Coilwork City | Current,43
-Geariff,Epic,Common,9120000,97596000,0,,Standard,Soul Reap Chain,,,,Island Spawn | Natural Spawn | Coilwork City | Current,44
-Santavolf,Legendary,Ice,2767,29622,0,,Standard,Ex Candy Bomb,Iceball,,,"Event | Christmas Event Summon | Christmas Event 2025 | Unavailable
-Chest | Memory Chest 2 | Abyss Shop | Current",45
-Pyrowulf,Legendary,Fire,297.86,3187,0,,Standard,Fire Tornado,Fire Dash,,,Island Spawn | Natural Spawn | Volcano | Current,46
-Noctane,Legendary,Common,358.66,3838,0,,Standard,Air Bullet,Wind Disc,,,"Egg | Fire Egg | Volcano | Current
-Chest | Mythical Chest | Limited Events | Current",47
-YWendihoofs,Legendary,Ice,1316,14088,0,,Standard,Ice Surge,Claw Attack,,,Island Spawn | Natural Spawn | Frost Isle | Current,48
-Starshade,Legendary,Ice,2293.1,24594,0,,Standard,Ice Road,Ex Iceball,,,Island Spawn | Natural Spawn | Frost Isle | Current,49
-Sproutusk,Legendary,Grass,1909,20426,0,,Standard,Ex Seed Grenade,Ex Air Bullet,,,Island Spawn | Natural Spawn | Frost Isle | Current,50
-Nightclaw,Legendary,Common,5821,62278,0,,Standard,Toxic Grenade,Ex Air Bullet,,,Island Spawn | Natural Spawn | Neverland | Current,51
-Floradelle,Legendary,Grass,14684,109115,10,,Standard,Solar Beam,Petal Dance,,,"Egg | Blossom Egg | Neverland | Current
-Egg | Rosette Egg | Neverland | Current",52
-Hydribbit,Legendary,Water,10162,108740,0,,Standard,Water Shuriken,Water Jet,,,Island Spawn | Special Spawn | Neverland | Current,53
-Knockroo,Legendary,Fire,25727,275300,0,,Standard,Fire Dash,Fireball,,,Island Spawn | Natural Spawn | Duneveil Isle | Current,54
-Volcamel,Legendary,Fire,53904,400574,0,,Standard,Fireball,Rallying War Cry (3 sec 50%),,,"Egg | Sand Egg | Duneveil Isle | Current
-Chest | Mythical Chest | Limited Events | Current",55
-Mistvolf,Legendary,Water,14777,227835,0,Icevolf,Standard,Water Jet,Ripple Guard,,,Evolution | Icevolf Evolution |  | Current |  | Evolves from Icevolf.,56
-Flamevolf,Legendary,Fire,21292,158220,0,Icevolf,Standard,Fireball,Rallying War Cry (6 sec 50%),,,Evolution | Icevolf Evolution |  | Current |  | Evolves from Icevolf.,57
-Floravolf,Legendary,Grass,17743,189863,0,Icevolf,Standard,Seed Grenade,Healing Pulse,,,Evolution | Icevolf Evolution |  | Current |  | Evolves from Icevolf.,58
-Aurobull,Legendary,Common,37306,399190,0,,Standard,Dash,Ex Air Bullet,,,"Island Spawn | Natural Spawn | Duneveil Isle | Current
-Chest | Mythical Chest | Limited Events | Current",59
-King Penguin,Legendary,Water,626,6700,0,,Standard,Ex Water Jet,Wind Disc,,,Island Special Spawn | Special Spawn | Starter Island | Current,60
-Fanglo,Legendary,Fire,21441,330370,0,,Standard,Dash,Fire Tornado,,Capturer's Boon | 5,Chest | Rift Chest | Abyss Shop | Current,61
-Weasplash,Legendary,Water,113736,1216900,0,,Standard,Tsunami,Water Shuriken,,,Island Spawn | Natural Spawn | Tideland | Current,62
-Walrusk,Legendary,Water,138693,1465400,0,,Standard,Ice Road,Ex Water Shuriken,,,Island Special Spawn | Special Spawn | Tideland | Current,63
-Deerleaf,Legendary,Grass,198590,2124900,0,,Standard,Wind Disc,Leaf Surge,,,Island Spawn | Natural Spawn | Spirit Grove | Current,64
-Mintwolf,Legendary,Grass,287955,3081100,10,,Standard,Root Spike,Grass Tornado,,,"Egg | Giant Tree Egg | Spirit Grove | Current
-Chest | Mythical Chest | Limited Events | Current",65
-Nivisgon,Legendary,Water,346740,3710100,0,,Standard,Ex Water Jet,Ice Road,,,Island Spawn | Natural Spawn | Dragon's Breath | Current,66
-Tricerasteel,Legendary,Ground,335184,8069450,0,,Standard,Earth Smash,Gravel Scatter Shot,,,"Island Special Spawn | Special Spawn | Dragon's Breath | Current
-Egg | Ancient Egg | Dragon's Breath | Current
-Chest | Mythical Chest | Limited Events | Current",67
-Cloveria,Legendary,Grass,605420,6477600,0,,Standard,Grass Tornado,Ex Seed Grenade,,,Island Spawn | Natural Spawn | Blossom Haven | Current,68
-Shadecloak,Legendary,Common,874800,6500500,0,,Standard,Barrier,Soul Reap Chain,,,"Island Spawn | Natural Spawn | Blossom Haven | Current
-Chest | Mythical Chest | Limited Events | Current",69
-Emberwolf,Legendary,Fire,482759,3587200,0,Mintwolf,Standard,Rallying War Cry (6 sec 50%),Fire Tornado,,,Evolution | Mintwolf Evolution |  | Current |  | Evolves from Mintwolf.,70
-Jackpotron,Legendary,Common,1273000,13620000,0,,Standard,Egg Blast,Egg Blast,,,Island Spawn | Natural Spawn | Mobius Circus | Current,71
-Sleetwolf,Legendary,Water,335253,5165200,0,Mintwolf,Standard,Ripple Guard,Tsunami,,,Evolution | Mintwolf Evolution |  | Current |  | Evolves from Mintwolf.,72
-Rexie,Legendary,Ground,1651000,17666000,0,,Standard,Rock Road,Gravel Whirlwind,,,"Egg | Rexie's Egg | Mobius Circus | Current
-Chest | Mythical Chest | Limited Events | Current",73
-Stumpfox,Legendary,Grass,2063300,22077000,0,,Standard,Grass Tornado,Galecut,,Mentor Spirit | 32,"Chest | Rift Chest | Abyss Shop | Current
-Chest | Mythical Chest | Limited Events | Current",74
-Strum Bones,Legendary,Common,2882750,30845000,0,,Standard,Demonic Lullaby,Healing Pulse,,,Island Spawn | Natural Spawn | Specter Shallows | Current,75
-Bone Guard,Legendary,Common,3222700,34482400,0,,Standard,Taunt,Ghost Impact,,,Island Spawn | Natural Spawn | Specter Shallows | Current,76
-Meowl,Legendary,Common,4338000,46418000,0,,Standard,Ex Air Bullet,,,"Mentor Spirit | 25
-Fortune Spirit | 25
-Capturer's Boon | 25",Chest | Rift Chest | Abyss Shop | Current,77
-Snoozepink,Legendary,Water,5033040,53856700,0,,Standard,Vortex Nova,Water Shuriken,,,Island Spawn | Natural Spawn | Nova Coast | Current,78
-Froxy,Legendary,Ice,6286000,67305000,0,,Standard,Glacial Wall,Ice Road,,,Island Spawn | Natural Spawn | Splash Isle | Current,79
-Lynxgear,Legendary,Common,9824000,105124000,0,,Standard,Dark Singularity,Electro Nova,,,Island Spawn | Natural Spawn | Coilwork City | Current,80
-Flaragon,Mythical,Fire,754,8068,0,,Standard,Claw Attack,Ex Fireball,,,Egg | Flaragon's Egg | Volcano | Current,81
-Glazadon,Mythical,Ice,4013,42951,0,,Standard,Frost Breath,Ice Surge,,,Egg | Glacier Egg | Frost Isle | Current,82
-Mountusk,Mythical,Grass,4027,62063,0,,Standard,Ex Seed Grenade,Healing Pulse,,,Egg | Sprout Egg | Frost Isle | Current,83
-Frostbun,Mythical,Ice,333720,3970000,0,,Standard,Ex Iceball,Ice Road,,,Island Special Spawn | Special Spawn | Frost Isle | Current,84
-Flarecrest,Mythical,Fire,4817,35792,10,,Standard,Inferno Maelstrom,Ex Fireball,,,"Event | Turkey Egg | Thanksgiving Event 2025 | Legacy
-Event | Xmas Egg | Christmas Event 2025 | Current
-Chest | Memory Chest 2 | Abyss Shop | Current",85
-Aquilune,Mythical,Ice,5217,28481,0,,Standard,Ice Surge,Ex Iceball,,,"Shop | Tower Spire Shop | Skyheart Isle | Current
-Chest | Mythical Chest | Limited Events | Current",86
-Frost Floradelle,Mythical,Grass,44770,332660,10,,Standard,Solar Beam,Petal Dance,,,"Island Spawn | Natural Spawn | Neverland | Current | Night and Aurora
-Chest | Mythical Chest | Limited Events | Current",87
-Puffmora,Mythical,Grass,14787,227840,20,,Standard,Ex Candy Bomb,Ex Gift Delivery,Petal Dance,,"Event | Event Battlepass | Christmas Event 2025 | Current
-Chest | Memory Chest 1 | Abyss Shop | Current",88
-Pinecarol,Mythical,Grass,25730,275300,0,,Standard,Ex Candy Bomb,Ex Gift Delivery,Leaf Surge,,"Event | Festive Gift Box | Christmas Event 2025 | Legacy |  | Small chance to be obtained when oppened
-Chest | Memory Chest 1 | Abyss Shop | Current",89
-Gingerjoy,Mythical,Common,21290,158200,0,,Standard,Ex Candy Bomb,Ex Gift Delivery,,,"Event | Christmas Event Summnon | Christmas Event 2025 | Legacy
-Chest | Memory Chest 1 | Abyss Shop | Current",90
-Rudolphin,Mythical,Ice,9822,236513,0,,Standard,Ex Candy Bomb,Ex Gift Delivery,,,"Event | Christmas Event Shop | Christmas Event 2025 | Unavailable |  | Obtainable during the Christmas Event shop for 9000 candy canes
-Chest | Memory Chest 1 | Abyss Shop | Current",91
-ShadeKnight,Mythical,Water,21360,228620,0,,Standard,Ex Water Shuriken,Water Pillar Blast,,,Egg | ShadeKnight's Egg | Neverland | Current,92
-Gildron,Mythical,Ground,78440,839300,0,,Standard,Earth Smash,Ex Rock Toss,,,Egg | Gildron's Egg | Duneveil Isle | Current,93
-FlameSpike,Mythical,Fire,2284,17024,10,,Standard,Rallying War Cry (6 sec 50%),Ex Fireball,,,Island Special Spawn | Special Spawn | Volcano | Current,94
-DustWing,Mythical,Ground,87686,938240,10,,Standard,Barrier,Gravel Scatter Shot,,,"Island Special Spawn | Special Spawn | Duneveil Isle | Current
-Rift | Duneveil Isle Rift 3 | Duneveil Isle | Current",95
-Mistwing,Mythical,Water,191350,2047400,0,DustWing,Standard,Wind Blast,Water Shuriken,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,96
-Emberwing,Mythical,Fire,267887,1462400,0,DustWing,Standard,Fireball,Fire Tornado,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,97
-Fernwing,Mythical,Grass,229600,1706200,0,DustWing,Standard,Galecut,Healing Pulse,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,98
-Snowwing,Mythical,Ice,159450,2454200,0,DustWing,Standard,Barrier,Frosty Dart,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,99
-Iceplate,Mythical,Ice,75835,1168500,0,,Standard,Ice Road,Ex Iceball,,Rift Dominance | 50,Chest | Rift Chest | Abyss Shop | Current,100
-Voltgator,Mythical,Common,91300,2200000,10,,Standard,Electric Beam,Ex Air Bullet,,Spire Dominance | 50,"Rift | Duneveil Isle Rift 3 | Volcano | Current
-Rift | Duneveil Isle Rift 3 | Frost Isle | Current
-Rift | Duneveil Isle Rift 3 | Neverland | Current
-Rift | Duneveil Isle Rift 3 | Duneveil Isle | Current
-Chest | Mythical Chest | Limited Events | Current",101
-Undine,Mythical,Water,286960,2132300,10,,Standard,Healing Water Ball,Tsunami,,,"Island Special Spawn | Special Spawn | Tideland | Current
-Rift | Tideland Rift 3 | Tideland | Current
-Chest | Mythical Chest | Limited Events | Current",102
-TideVex,Mythical,Water,267300,2860400,10,,Standard,Ex Water Shuriken,Ice Road,,,Egg | TideVex's Egg | Tideland | Current,103
-Woolhorn,Mythical,Common,185000,2850400,10,,Standard,Wind Blast,Dash,,Fortune Spirit | 25,"Chest | Rift Chest | Abyss Shop | Current
-Chest | Mythical Chest | Limited Events | Current",104
-Mechavolt,Mythical,Ice,467700,2553400,0,,Standard,Thunder Stun,Void Orb,,Boss Slayer | 40,"Rift | Tideland Rift 3 | Tideland | Current
-Chest | Mythical Chest | Limited Events | Current",105
-Cobaltwing,Mythical,Ice,542660,2962600,10,,Standard,Frosty Dart,Frozen Nova,,,"Island Special Spawn | Special Spawn | Spirit Grove | Current
-Rift | Spirit Grove Rift 3 | Spirit Grove | Current
-Chest | Mythical Chest | Limited Events | Current",106
-Frostwyrm,Mythical,Ice,466770,4994400,0,,Standard,Frost Breath,Frozen Nova,,,Egg | Frostwyrm's Egg | Spirit Grove | Current,107
-Liodan,Mythical,Fire,320800,2383700,0,,Standard,Fire Tornado,Firecracker Pop,,,"Chest | Memory Chest 2 | Abyss Shop | Current
-Event | Valentine's Egg | Valentine's Event 2026 | Legacy
-Rift | Valentine's Rift | Valentine's Event 2026 | Legacy",108
-Kitsunine,Mythical,Fire,335240,5165500,10,,Standard,Ex Fireball,Charming Wind,,,"Chest | Memory Chest 2 | Abyss Shop | Current
-Event | Valentine's Egg | Valentine's Event 2026 | Legacy
-Rift | Valentine's Rift | Valentine's Event 2026 | Legacy",109
-Thunderjet,Mythical,Common,278400,4289700,0,,Standard,Ion Blast,Void Orb,,Capturer's Boon | 10,"Chest | Rift Chest | Abyss Shop | Current
-Chest | Mythical Chest | Limited Events | Current",110
-Psyber,Mythical,Common,502780,5379400,10,,Standard,Lightning Thrust,Violet Core Burst,,Spire Dominance | 50,"Rift | Spirit Grove Rift 3 | Spirit Grove | Current
-Chest | Mythical Chest | Limited Events | Current",111
-Dracospike,Mythical,Ground,291670,12480000,0,,Standard,Rock Road,Ex Rock Toss,,,Egg | Dracospike's Egg | Dragon's Breath | Current,112
-Ignisraptor,Mythical,Fire,912900,4984000,10,,Standard,Inferno Maelstrom,Ex Fireball,,,Island Special Spawn | Special Spawn | Dragon's Breath | Current |  | Area: Castle,113
-Mintgloom,Mythical,Fire,466769,4994100,0,,Standard,Nether Fireball,Rallying War Cry (3 sec 50%),,Fortune Spirit | 30,"Chest | Rift Chest | Abyss Shop | Current
-Chest | Mythical Chest | Limited Events | Current",114
-Netherdemon,Mythical,Common,451200,10862000,0,,Standard,Soul Reap Chain,Thorn Shield,,Boss Resistance | 25,"Rift | Dragon's Breath Rift 3 | Dragon's Breath | Current
-Chest | Mythical Chest | Limited Events | Current",115
-Toucan BirdMan,Mythical,Common,679160,10464000,10,,Standard,Wind Blast,Urgent Aid,,Boss Slayer | 40,"Rift | Dragon's Breath Rift 3 | Dragon's Breath | Current
-Chest | Mythical Chest | Limited Events | Current",116
-Primothorn,Mythical,Common,418977,6455200,10,,Standard,Galecut,Root Spike,,,"Egg | Primothorn's Egg | Cinderclaw Castle | Current |  | Normal Difficulty and Hard Difficulty
-Chest | Mythical Chest | Limited Events | Current",117
-AbyssalDrake,Mythical,Common,1323800,7226900,10,,Standard,Fire Dragon Flame Blast,Crimson Burst,,Capturer's Boon | 15,"Egg | Abyssal Drake's Egg | Cinderclaw Castle | Current |  | Normal Difficulty
-Chest | Mythical Chest | Limited Events | Current",118
-Berrybun,Mythical,Common,1140000,12188000,10,,Standard,Egg Blast,,,"Mentor Spirit | 25
-Capturer's Boon | 10","Chest | Memory Chest 1 | Abyss Shop | Current
-Egg | Berrybun's Egg | Easter Event 2026 | Unavailable |  | Was obtainable as a drop from Cinderclaw Castle Normal during the Easter 2026 event",119
-Bladetooth,Mythical,Ground,704700,16965000,10,,Standard,Sunder Taunt,Thorn Shield,,,"Island Special Spawn | Special Spawn | Blossom Haven | Current
-Chest | Mythical Chest | Limited Events | Current",120
-Thunderclaw,Mythical,Ground,1782000,9728600,0,,Standard,Gravel Whirlwind,Electro Nova,,,Egg | Thunderclaw's Egg | Blossom Haven | Current,121
-Burrowbun,Mythical,Ground,981300,10500000,0,,Standard,Gravel Whirlwind,Rock Road,,Fortune Spirit | 30,Chest | Rift Chest | Abyss Shop | Current,122
-Aetherpanther,Mythical,Common,2452200,10250300,10,,Standard,Thunder Stun,Bale Breath,,Spire Dominance | 50,"Rift | Blossom Haven Rift 3 | Blossom Haven | Current
-Chest | Mythical Chest | Limited Events | Current",123
-Crystalfae,Mythical,Water,1707500,12688000,10,,Standard,Vortex Nova,Tsunami,,Rift Guard | 30,Egg | Crystalfae's Egg | Blossom Haven | Current |  | Area: Maze,124
-Magma Tortoise,Mythical,Fire,1101000,26499000,10,,Standard,Flame Jet,Thorn Shield,,Spire Guard | 30,"Egg | Magma Tortoise's Egg | Cinderclaw Castle | Current |  | Nightmare Difficulty
-Chest | Mythical Chest | Limited Events | Current",125
-Stellar Sentinel,Mythical,Water,2569600,19095000,10,,Standard,Ghost Impact,Soul Reap Chain,,,"Island Special Spawn | Special Spawn | Mobius Circus | Current
-Chest | Mythical Chest | Limited Events | Current",126
-Lampyr,Mythical,Water,1600000,38423000,0,,Standard,Void Orb,Thunder Stun,,,Egg | Lampyr's Egg | Mobius Circus | Current,127
-Umbra Reaver,Mythical,Common,3746000,20454000,0,,Standard,Lightning Storm (Purple),Lightning Thrust,,Trial Power | 50,"Rift | Mobius Rift 3 | Mobius Circus | Current
-Chest | Mythical Chest | Limited Events | Current",128
-Lumen Knight,Mythical,Common,1495800,64023300,10,,Standard,Lightning Storm (Blue),Lightning Thrust,,Dungeon Guard | 30,"Rift | Mobius Rift 3 | Mobius Circus | Current
-Chest | Mythical Chest | Limited Events | Current",129
-Jokaire,Mythical,Common,3105100,33220000,0,,Standard,Joker's Trick,Void Collapse,,Capturer's Boon | 15,"Egg | Jokaire's Egg | Mobius Circus | Current
-Chest | Mythical Chest | Limited Events | Current",130
-Bull Lord,Mythical,Common,3880400,41523000,10,,Standard,Ghost Fireball,Earth Smash,,,"Island Special Spawn | Special Spawn | Specter Shallows | Current
-Chest | Mythical Chest | Limited Events | Current",131
-Scareaper,Mythical,Common,3615000,55702000,0,,Standard,Reaper's Crescents,Soul Reap Chain,,,"Egg | Scareaper's Egg | Specter Shallows | Current
-Chest | Mythical Chest | Limited Events | Current",132
-Magmorus,Mythical,Fire,3482300,83841000,10,,Standard,Fire Tornado,Blaze Blast,,Spire Guard | 30,"Rift | Specter Shallows Rift 3 | Specter Shallows | Current
-Chest | Mythical Chest | Limited Events | Current",133
-Gravion,Mythical,Common,2813200,12041000,10,,Standard,Dark Singularity,Oblivion Beam,,Boss Resistance | 25,"Rift | Specter Shallows Rift 3 | Specter Shallows | Current
-Chest | Mythical Chest | Limited Events | Current",134
-Runegolem,Mythical,Ground,7007700,52071000,15,,Standard,Ex Rock Toss,Earth Smash,,Critical Damage | 60,"Egg | Runegolem's Egg | Cinderclaw Castle | Current |  | Inferno Difficulty
-Chest | Mythical Chest | Limited Events | Current",135
-Crabblaze,Mythical,Fire,6528000,69855000,10,,Standard,Fire Dragon Flame Blast,Inferno Maelstrom,,Hard Carapace | 30 | 30,"Island Special Spawn | Special Spawn | Nova Coast | Current
-Chest | Mythical Chest | Limited Events | Current",136
-Capshark,Mythical,Water,9140000,49900000,10,,Standard,Mighty Water Shuriken,Tsunami,,Boss Resistance | 25,"Island Special Spawn | Special Spawn | Nova Coast | Current
-Chest | Mythical Chest | Limited Events | Current",137
-Beatopus,Mythical,Water,9140000,49900000,10,,Standard,Deadly Sonic Wave,Ripple Guard,,,Island Special Spawn | Special Spawn | Nova Coast | Current,138
-Stormhorn,Mythical,Common,2700000,261900000,0,,Standard,Lightning Thrust,Taunt,,Trial Power | 50,"Rift | Nova Coast Rift 3 | Nova Coast | Current
-Chest | Mythical Chest | Limited Events | Current",139
-Solgryph,Mythical,Common,11422420,62358000,10,,Standard,Scorching Fireball,Fire Tornado,,Spire Guard | 35,"Rift | Nova Coast Rift 3 | Nova Coast | Current
-Chest | Mythical Chest | Limited Events | Current",140
-Violetaegis,Mythical,Common,14062000,58772000,15,,Standard,Lightning Storm (Blue),Void Orb,,Vital Surge | 60 |  | 80,"Egg | Violetaegis's Egg | Treasure Vault Cellar | Current |  | Coins
-Egg | Violetaegis's Egg | Treasure Vault Cellar | Current |  | Vault Mark
-Egg | Violetaegis's Egg | Treasure Vault Cellar | Current |  | EXP
-Egg | Violetaegis's Egg | Treasure Vault Cellar | Current",141
-Venofrog,Mythical,Water,9824000,105120000,0,,Standard,Tsunami,Poison Volley,,,Island Special Spawn | Special Spawn | Splash Isle | Current,142
-Rainimp,Mythical,Water,12698000,94362000,0,,Standard,Soul Reap Chain (Vulnerability),Healing Shuriken,,,Egg | Rainimp's Egg | Splash Isle | Current,143
-Vorturion,Mythical,Common,11830000,126580000,10,,Standard,Ghost Impact (Vulnerability),Inferno Blast,,Rift Guard | 30,"Rift | Splash Isle Rift 3 | Splash Isle | Current
-Egg | Conduit Egg | Store | Current",144
-Sylvaris,Mythical,Common,16562000,90416300,10,,Standard,Root Spike,Urgent Aid,,Mutation Catalyst | 20,"Rift | Splash Isle Rift 3 | Splash Isle | Current
-Egg | Conduit Egg | Store | Current",145
-Plaguecannon,Mythical,Common,4747000,457290000,0,,Standard,Thorn Shield,Crimson Burst,,,Island Spawn | Natural Spawn | Coilwork City | Current,146
-Turretor,Mythical,Common,18410000,136800000,0,,Standard,Scorching Fireball,Flame Detonation,,,Egg | Turretor's Egg | Coilwork City | Current,147
-Dragon Cannelloni,Mythical,Fire,40,500,0,,Standard,Dragon's Breath,Fireball,,,Shop | 99 Robux Purachase | Skyheart Isle | Current,148
-Flaragflora,Mythical,Grass,15817,117530,0,Flaragon,Standard,Grass Tornado,Solar Beam,,,Evolution | Flaragon Evolution |  | Current |  | Evolves from Flaragon.,149
-Flaragfrost,Mythical,Ice,10980,169250,0,Flaragon,Standard,Ex Iceball,Ice Surge,,,Evolution | Flaragon Evolution |  | Current |  | Evolves from Flaragon.,150
-Flaragaqua,Mythical,Water,13179,141042,0,Flaragon,Standard,Ex Water Jet,Ex Water Shuriken,,,Evolution | Flaragon Evolution |  | Current |  | Evolves from Flaragon.,151
-Glazadonbloom,Mythical,Grass,13180,141040,0,Glazadon,Standard,Solar Breath,Leaf Surge,,,Evolution | Glazadon Evolution |  | Current |  | Evolves from Glazadon.,152
-GlazadonWave,Mythical,Water,12280,189210,0,Glazadon,Standard,Water Breath,Ex Water Jet,,,Evolution | Glazadon Evolution |  | Current |  | Evolves from Glazadon.,153
-Glazadonflare,Mythical,Fire,15820,117530,0,Glazadon,Standard,Flame Breath,Ex Fireball,,,Evolution | Glazadon Evolution |  | Current |  | Evolves from Glazadon.,154
-Frostvolf,Mythical,Ice,41706,446240,0,,Standard,Holy Aura (Frostvolf),Ice Road,Ex Iceball,,"Chest | Memory Chest 2 | Abyss Shop | Current
-Event | New Year Event Task | New Year Event 2025 | Legacy |  | Final reward for completing icevolf's mission.",155
-Frostusk,Mythical,Ice,21370,228630,0,Mountusk,Standard,Ice Road,Ex Iceball,,,Evolution | Mountusk Evolution |  | Current |  | Evolves from Mountusk.,156
-Volctusk,Mythical,Fire,25600,190500,0,Mountusk,Standard,Inferno Maelstrom,Ex Fireball,,,Evolution | Mountusk Evolution |  | Current |  | Evolves from Mountusk.,157
-Terratops,Mythical,Ground,17804,274353,0,Mountusk,Standard,Barrier,Earth Smash,,,Evolution | Mountusk Evolution |  | Current |  | Evolves from Mountusk.,158
-Frostbound Knight,Mythical,Ice,113344,842200,0,ShadeKnight,Standard,Ice Road,Ex Iceball,,,Evolution | ShadeKnight Evolution |  | Current |  | Evolves from ShadeKnight.,159
-Flame Knight,Mythical,Fire,132230,721900,0,ShadeKnight,Standard,Ex Fireball,Rallying War Cry (3 sec 50%),,,Evolution | ShadeKnight Evolution |  | Current |  | Evolves from ShadeKnight.,160
-Verdant Knight,Mythical,Grass,94451,1010000,0,ShadeKnight,Standard,Root Spike,Galecut,,,Evolution | ShadeKnight Evolution |  | Current |  | Evolves from ShadeKnight.,161
-Stoneward Knight,Mythical,Ground,78700,1212700,0,ShadeKnight,Standard,Ex Rock Toss,Barrier,,,Evolution | ShadeKnight Evolution |  | Current |  | Evolves from ShadeKnight.,162
-Leafane,Mythical,Grass,136480,1014100,0,Noctane,Standard,Root Spike,Healing Pulse,,,Evolution | Noctane Evolution |  | Current |  | Evolves from Noctane.,163
-Glacane,Mythical,Ice,94800,1460000,0,Noctane,Standard,Ex Iceball,Ice Surge,,,Evolution | Noctane Evolution |  | Current |  | Evolves from Noctane.,164
-Folirabbit,Mythical,Grass,205393,1526200,0,Hydribbit,Standard,Galecut,Leaf Surge,,,Evolution | Hydribbit Evolution |  | Current |  | Evolves from Hydribbit.,165
-Mudbit,Mythical,Ground,142630,2200000,0,Hydribbit,Standard,Gravel Scatter Shot,Barrier,,,Evolution | Hydribbit Evolution |  | Current |  | Evolves from Hydribbit.,166
-Inferron,Mythical,Fire,158900,1700200,0,Gildron,Standard,Inferno Maelstrom,Inferno Smash,,,Evolution | Gildron Evolution |  | Current |  | Evolves from Gildron.,167
-Mossron,Mythical,Grass,190680,1416900,0,Gildron,Standard,Root Spike,Root Slam,,,Evolution | Gildron Evolution |  | Current |  | Evolves from Gildron.,168
-Glaciron,Mythical,Ice,222463,1214500,0,Gildron,Standard,Glacial Smash,Ex Iceball,,,Evolution | Gildron Evolution |  | Current |  | Evolves from Gildron.,169
-BlazeVex,Mythical,Fire,309100,2299000,0,TideVex,Standard,Fire Dash,Inferno Maelstrom,,,Evolution | TideVex Evolution |  | Current |  | Evolves from TideVex.,170
-Bramblevex,Mythical,Grass,214650,3307100,0,TideVex,Standard,Root Spike,Healing Pulse,,,Evolution | TideVex Evolution |  | Current |  | Evolves from TideVex.,171
-Geogator,Mythical,Ground,418400,2280000,0,voltgator,Standard,Earth Smash,Ex Rock Toss,,,Evolution | voltgator Evolution |  | Current |  | Evolves from voltgator.,172
-Glacigator,Mythical,Ice,298850,3200000,0,voltgator,Standard,Frost Beam,Ex Iceball,,Spire Dominance | 50,Evolution | voltgator Evolution |  | Current |  | Evolves from voltgator.,173
-Blazewyrm,Mythical,Fire,521800,5583000,0,Frostwyrm,Standard,Inferno Maelstrom,Ex Fireball,,,Evolution | Frostwyrm Evolution |  | Current |  | Evolves from Frostwyrm.,174
-Spinewyrm,Mythical,Grass,730500,3987800,0,Frostwyrm,Standard,Healing Pulse,Galecut,,,Evolution | Frostwyrm Evolution |  | Current |  | Evolves from Frostwyrm.,175
-Marigon,Mythical,Water,1373930,7500500,15,Nivisgon,Standard,Mighty Water Shuriken,Healing Water Ball,,Marigon Fortune Spirit | 20 | 50,Evolution | Nivisgon Evolution |  | Current |  | Evolves from Nivisgon.,176
-Cinderine,Mythical,Fire,1303900,5450200,0,Undine,Standard,Fire Tornado,Fire Dash,,,Evolution | Undine Evolution |  | Current |  | Evolves from Undine.,177
-Tellurine,Mythical,Ground,407500,17441000,0,Undine,Standard,Rock Road,Barrier,,,Evolution | Undine Evolution |  | Current |  | Evolves from Undine.,178
-Dracovine,Mythical,Grass,1060000,12368000,0,Dracospike,Standard,Healing Pulse,Leaf Surge,,,Evolution | Dracospike Evolution |  | Current |  | Evolves from Dracospike.,179
-Dracosleet,Mythical,Ice,1480000,9589000,0,Dracospike,Standard,Ice Road,Frozen Nova,,,Evolution | Dracospike Evolution |  | Current |  | Evolves from Dracospike.,180
-Nightveil,Mythical,Common,2490000,13590000,15,Shadecloak,Standard,The Ring,Soul Reap Chain (Vulnerability),,Trial Power | 50,Evolution | Shadecloak Evolution |  | Current |  | Evolves from Shadecloak.,181
-Diabvok,Mythical,Fire,2145900,11715000,0,Mechavolt,Standard,Rallying War Cry (6 sec 50%),Fire Dragon Flame Blast,,,Evolution | Mechavolt Evolution |  | Current |  | Evolves from Mechavolt.,182
-Terravok,Mythical,Ground,1532800,16401000,0,Mechavolt,Standard,Rock Road,Barrier,,,Evolution | Mechavolt Evolution |  | Current |  | Evolves from Mechavolt.,183
-Rubywing,Mythical,Fire,2670000,19814000,0,Cobaltwing,Standard,Ex Fireball,Inferno Maelstrom,,,Evolution | Cobaltwing Evolution |  | Current |  | Evolves from Cobaltwing.,184
-Lazuliwing,Mythical,Water,1851000,28537000,0,Cobaltwing,Standard,Tsunami,Ex Water Shuriken,,,Evolution | Cobaltwing Evolution |  | Current |  | Evolves from Cobaltwing.,185
-Hornrexie,Mythical,Ground,4511500,24630000,0,Rexie,Standard,Mighty Rock Toss,Rallying War Cry (6 sec 40% self 70%),,Spire Dominance | 50,Evolution | Rexie Evolution |  | Current |  | Evolves from Rexie.,186
-Glacierclaw,Mythical,Ground,2676000,28635000,0,Thunderclaw,Standard,Ice Road,Ex Iceball,,,Evolution | Thunderclaw Evolution |  | Current |  | Evolves from Thunderclaw.,187
-Mossclaw,Mythical,Ground,3211000,23860000,0,Thunderclaw,Standard,Healing Pulse,Galecut,,,Evolution | Thunderclaw Evolution |  | Current |  | Evolves from Thunderclaw.,188
-Ignilampyr,Mythical,Fire,4013000,29825000,0,Lampyr,Standard,Rallying War Cry (6 sec 50%),Fire Tornado,,,Evolution | Lampyr Evolution |  | Current |  | Evolves from Lampyr.,189
-Terrampyr,Mythical,Ground,3330000,35770000,0,Lampyr,Standard,Gravel Whirlwind,Earth Smash,,,Evolution | Lampyr Evolution |  | Current |  | Evolves from Lampyr.,190
-Dumplorer,Mythical,Common,4502400,48175610,10,Dummee,Standard,Egg Blast,Joker's Trick,,"Capturer's Boon | 45
-Potential Seeker | 20",Evolution | Dummee Evolution |  | Current |  | Evolves from Dummee.,191
-Psyflora,Mythical,Grass,4480000,33340000,0,Psyber,Standard,Grass Tornado,Root Spike,,,Evolution | Psyber Evolution |  | Current |  | Evolves from Psyber.,192
-Glaciber,Mythical,Ice,3115000,48009000,0,Psyber,Standard,Ex Iceball,Ripple Guard,,,Evolution | Psyber Evolution |  | Current |  | Evolves from Psyber.,193
-Scarevine,Mythical,Grass,3114000,75000000,0,Scareaper,Standard,Leaf Blade,Grass Tornado,,,Evolution | Scareaper Evolution |  | Current |  | Evolves from Scareaper.,194
-Scarewraith,Mythical,Ice,4672480,49998500,0,Scareaper,Standard,Ice Road,Wind Blast,,,Evolution | Scareaper Evolution |  | Current |  | Evolves from Scareaper.,195
-VivisDrake,Mythical,Grass,6528000,69855000,0,AbyssalDrake,Standard,Leaf Surge,Root Spike,,,Evolution | AbyssalDrake Evolution |  | Current |  | Evolves from AbyssalDrake.,196
-TerralDrake,Mythical,Ground,5440000,83826000,0,AbyssalDrake,Standard,Gravel Whirlwind,Ex Rock Toss,,,Evolution | AbyssalDrake Evolution |  | Current |  | Evolves from AbyssalDrake.,197
-Flaragblaze,Secret,Fire,25600,190500,15,Flaragon,Standard,Inferno Maelstrom,Ex Fireball,,,Evolution | Flaragon Evolution |  | Current |  | Evolves from Flaragon.,198
-GlazadonFroz,Secret,Ice,21360,228630,15,Glazadon,Standard,Frost Breath,Ice Surge,Ice Road,,Evolution | Glazadon Evolution |  | Current |  | Evolves from Glazadon.,199
-Fire Dragon Cannelloni,Secret,Fire,18450,100740,0,Dragon Cannelloni,Standard,Dragon's Breath,Fireball,,,Evolution | Dragon Cannelloni Evolution |  | Current |  | Evolves from Dragon Cannelloni.,200
-Necro Dragon Cannelloni,Secret,Fire,28826,157390,15,Dragon Cannelloni,Standard,Dragon's Breath (Ghost),Fireball (Ghost),,,Evolution | Dragon Cannelloni Evolution |  | Current |  | Evolves from Dragon Cannelloni.,201
-Titanusk,Secret,Grass,46610,498820,15,Mountusk,Standard,Holy Aura (Titan Tusk),Grass Tornado,Leaf Surge,,Evolution | Mountusk Evolution |  | Current |  | Evolves from Mountusk.,202
-Eclipse Knight,Secret,Common,142140,1520000,15,ShadeKnight,Standard,Bloodthirsty Aura,Reaper's Crescents,Void Orb,,Evolution | ShadeKnight Evolution |  | Current |  | Evolves from ShadeKnight.,203
-Lunavox,Secret,Common,85581,3662000,0,Noctane,Standard,Wind Disc (Purple),Lunar Taunt,Lunar Heal,,Evolution | Noctane Evolution |  | Current |  | Evolves from Noctane.,204
-Hydrolope,Secret,Water,309100,2300000,15,Hydribbit,Standard,Mighty Water Shuriken,Tsunami,,Rift Guard | 30,Evolution | Hydribbit Evolution |  | Current |  | Evolves from Hydribbit.,205
-Solron,Secret,Ground,239120,2558600,15,Gildron,Standard,Titan Slam,Ex Rock Toss,,Rift Dominance | 50,Evolution | Gildron Evolution |  | Current |  | Evolves from Gildron.,206
-Scythewing,Secret,Ground,298820,3200000,15,DustWing,Standard,GaleMoon Blade,Crimson Burst,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,207
-Celestide,Secret,Water,542600,2962000,15,TideVex,Standard,Healing Water Ball,Icicle Prison,,Rift Dominance | 50,Evolution | TideVex Evolution |  | Current |  | Evolves from TideVex.,208
-Doomgator,Secret,Common,629610,3437300,15,voltgator,Standard,Inferno Blast,Bloodthirsty Aura,,Trial Power | 50,Evolution | voltgator Evolution |  | Current |  | Evolves from voltgator.,209
-Frostiel,Secret,Common,660500,28270000,20,,Standard,Void Collapse,Soul Reap Chain (Vulnerability),,Spire Guard | 30,"Egg | Frostiel's Egg | Cinderclaw Castle | Current |  | Normal and Hard Difficulty
-Chest | Mythical Chest | Limited Events | Current",210
-Steamforge,Secret,Fire,1920000,20500000,10,,Standard,Blaze Blast,Ex Fireball,,Boss Resistance | 25,"Egg | Steamforge's Egg | Cinderclaw Castle | Current |  | Nightmare Difficulty
-Chest | Mythical Chest | Limited Events | Current",211
-Mentawolf,Secret,Grass,403610,9716800,15,Mintwolf,Standard,Leaf Blade,Root Spike,,Dungeon Guard | 30,Evolution | Mintwolf Evolution |  | Current |  | Evolves from Mintwolf.,212
-Avalanchewyrm,Secret,Ice,1256000,5251400,15,Frostwyrm,Standard,Ex Ice Surge,Icicle Prison,,Boss Slayer | 40,Evolution | Frostwyrm Evolution |  | Current |  | Evolves from Frostwyrm.,213
-Poseidine,Secret,Water,1418000,10537000,15,Undine,Standard,Hydro Cannon,Healing Water Ball,,Rift Dominance | 50,Evolution | Undine Evolution |  | Current |  | Evolves from Undine.,214
-Armored Dracospike,Secret,Ground,1060000,32700000,15,Dracospike,Standard,Emergency Thorn Shield,Ion Blast,,Rift Guard | 30,Evolution | Dracospike Evolution |  | Current |  | Evolves from Dracospike.,215
-Soulguard,Secret,Fire,5040000,27531000,15,,Standard,Soul Slash,Ghost Fireball,,Spire Dominance | 50,"Egg | Soulguard's Egg | Cinderclaw Castle | Current |  | Nightmare Difficulty
-Chest | Mythical Chest | Limited Events | Current",216
-Motovok,Secret,Common,3827000,16010000,15,Mechavolt,Standard,Overvolt Tempest,Electro Nova,,Critical Chance | 30,Evolution | Mechavolt Evolution |  | Current |  | Evolves from Mechavolt.,217
-Crystalwing,Secret,Ice,859500,82776000,10,Cobaltwing,Standard,Glacial Wall,Healing Water Ball,,Dungeon Guard | 35,Evolution | Cobaltwing Evolution |  | Current |  | Evolves from Cobaltwing.,218
-Divineclaw,Secret,Ground,5351300,22367000,15,Thunderclaw,Standard,Divine Energy Blast,Rock Road,,Sacred Beetle | 35,Evolution | Thunderclaw Evolution |  | Current |  | Evolves from Thunderclaw.,219
-Djinn Lampyr,Secret,Common,5016000,37271000,15,Lampyr,Standard,Holy Aura (Djinn Lampyr),Thunder Stun,,Last Blessing | 80,Evolution | Lampyr Evolution |  | Current |  | Evolves from Lampyr.,220
-Necro Hydra Tortelloni,Secret,Fire,10064800,42066000,15,Necro Dragon Cannelloni,Standard,Dragon's Rage,,,"Dragon's Curse | 15
-Trial Power | 50",Evolution | Necro Dragon Cannelloni Evolution |  | Current |  | Evolves from Necro Dragon Cannelloni.,221
-Psyberion X,Secret,Common,1677800,161568500,10,Psyber,Standard,Violet Core Burst (Psyberion X),Lightning Thrust (Psyberion X),,Spire Guard | 35,Evolution | Psyber Evolution |  | Current |  | Evolves from Psyber.,222
-Celestian,Secret,Ground,13225000,141510000,15,,Standard,Soul Slash,Holy Aura (Frostvolf),,Critical Damage | 60,Egg | Celestian's Egg | Cinderclaw Castle | Current |  | Cataclysm Difficulty,223
-Scareharvest,Secret,Common,9139800,49896000,0,Scareaper,Standard,Reaper's Crescents (Scareharvest),Soul Reap Chain (Scareharvest),,Critical Chance | 30,Evolution | Scareaper Evolution |  | Current |  | Evolves from Scareaper.,224
-OblivionDrake,Secret,Fire,10604000,57892000,0,AbyssalDrake,Standard,Fire Dash,Earthshatter,,Spire Dominance | 50,Evolution | AbyssalDrake Evolution |  | Current |  | Evolves from AbyssalDrake.,225
-Void Noctane,Void,Common,2227000,12158000,0,,Standard,Air Bullet,Wind Disc,,Fortune Spirit | 35,"Event | Void Jars | Void Event 2025 | Legacy
-Chest | Memory Chest 2 | Abyss Shop | Current",226
-Void Dustwing,Void,Ground,1778100,19029000,0,,Standard,Barrier,Gravel Scatter Shot,,Mentor Spirit | 35,"Event | Void Jars | Void Event 2025 | Legacy
-Chest | Memory Chest 2 | Abyss Shop | Current",227
-Void Lunavox,Void,Common,687740,66232000,0,,Standard,Barrier,Lunar Taunt,Lunar Heal,,"Event | Void Jars | Void Event 2025 | Legacy
-Chest | Memory Chest 2 | Abyss Shop | Current",228
-Void Iceplate,Void,Ice,1482000,35672000,0,,Standard,Ice Road,Ex Iceball,,Capturer's Boon | 25,"Event | Void Jars | Void Event 2025 | Legacy
-Chest | Memory Chest 2 | Abyss Shop | Current",229
-Void Scythewing,Void,Ground,2484000,26585000,0,,Standard,GaleMoon Blade,Crimson Burst,Barrier,,"Event | Void Jars | Void Event 2025 | Legacy
-Chest | Memory Chest 2 | Abyss Shop | Current",230
-Void Shadecloak,Void,Common,1057070,11311000,0,,Standard,Barrier,Soul Reap Chain,,,,231
-Void Strum Bones,Void,Common,2090000,89450000,10,,Standard,Demonic Lullaby,Healing Pulse,,"Mentor Spirit | 35
-Fortune Spirit | 35",,232
-Void Nightveil,Void,Common,3350000,18300000,15,Void Shadecloak,Standard,The Ring,Soul Reap Chain,,Trial Power | 60,Evolution | Void Shadecloak Evolution |  | Current |  | Evolves from Void Shadecloak.,233
-Void Scareaper,Void,Common,1741000,167690000,0,,Standard,Fear Taunt,Reaper's Crescents,,Capturer's Boon | 25,"Egg | Scareaper's Egg | Specter Shallows | Current
-Chest | Memory Chest 1 | Abyss Shop | Current",234
-Icearia,Mythical,Ice,840000,13500000,20,,Standard,Icicle Prison,Frosty Dart,,,Contest | Art Contest |  | Unavailable,235
+id,name,element,damageInstances,cooldown,notes,validation_status
+air-bullet,Air Bullet,Common,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+bale-breath,Bale Breath,Fire,"[
+  { multiplier: 0.4, hits: 4 },
+]",8,Target: Enemy | Allies. Ally effects: 50% Team Damage for 4 secs,Ready
+barrier,Barrier,Common,[],6,Target: Allies. Ally effects: 25% of Max HP Team shield for 5 secs,Ready
+blaze-blast,Blaze Blast,Fire,"[
+  { multiplier: 1.5, hits: 1 },
+]",8,Target: Self. Ally effects: 15% of Max HP for Self shield for 6 secs,Ready
+bloodthirsty-aura,Bloodthirsty Aura,Common,[],8,Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs,Ready
+candy-bomb,Candy Bomb,Common,"[
+  { multiplier: 1.2, hits: 1 },
+]",6,Target: Enemy.,Ready
+charming-wind,Charming Wind,Common,"[
+  { multiplier: 1.2, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+claw-attack,Claw Attack,Common,"[
+  { multiplier: 0.6, hits: 2 },
+]",3,Target: Enemy.,Ready
+crimson-burst,Crimson Burst,Common,"[
+  { multiplier: 0.2, hits: 11 },
+]",8,Target: Enemy. Enemy effects: Stun 1.5 secs; Stagger,Ready
+dark-singularity,Dark Singularity,Common,"[
+  { multiplier: 1.2, hits: 2 },
+]",6,Target: Enemy. Enemy effects: -15% to -25% damage  for 10 secs,Ready
+dash,Dash,Common,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback,Ready
+deadly-sonic-wave,Deadly Sonic Wave,Common,"[
+  { multiplier: 1.2, hits: 2 },
+]",8,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+demonic-lullaby,Demonic Lullaby,Common,"[
+  { multiplier: 0.2, hits: 5 },
+]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+divine-energy-blast,Divine Energy Blast,Common,"[
+  { multiplier: 3.5, hits: 1 },
+]",6,Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 90% damage reduction 4 secs self,Ready
+dragons-breath,Dragon's Breath,Fire,"[
+  { multiplier: 0.4, hits: 3 },
+]",6,Target: Enemy.,Ready
+dragons-breath-ghost,Dragon's Breath (Ghost),Fire,"[
+  { multiplier: 0.4, hits: 3 },
+]",6,Target: Enemy.,Ready
+dragons-rage,Dragon's Rage,Fire,"[
+  { multiplier: 5, hits: 1 },
+]",3,Target: Enemy | Self. Ally effects: Sacrifices 40% of Max HP each attack,Ready
+earth-smash,Earth Smash,Ground,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy.,Ready
+earth-shatter,Earthshatter,Ground,"[
+  { multiplier: 2, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Knockback + Stun for 2 Second,
+egg-blast,Egg Blast,Common,"[
+  { multiplier: 1.5, hits: 1 },
+]",3,Target: Enemy | Self. Ally effects: Chance for one of the following to activate:; 20% vulnerability on self for 2 secs; 25% self damage for 2 secs; 50% self damage for 2 secs; 100% self damage for 2 secs; 25% Max Hp self shield for 2 secs; 50% Max Hp self shield for 2 secs; 60% Damage reflection for 2 secs; 95% Damage reduction for 2 secs,Ready
+electric-beam,Electric Beam,Common,"[
+  { multiplier: 0.25, hits: 5 },
+]",8,Target: Enemy.,Ready
+electro-nova,Electro Nova,Common,"[
+  { multiplier: 1.2, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+emergency-thorn-shield,Emergency Thorn Shield,Common,[],8,Target: Ally | Self. Ally effects: 60% Damage reflection for 2 secs,Ready
+ex-air-bullet,Ex Air Bullet,Common,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy.,Ready
+ex-candy-bomb,Ex Candy Bomb,Common,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy.,Ready
+ex-fireball,Ex Fireball,Fire,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy | Self. Ally effects: 25% self Damage for 6 secs,Ready
+ex-gift-delivery,Ex Gift Delivery,Common,"[
+  { multiplier: 0.7, hits: 3 },
+]",8,Target: Enemy.,Ready
+ex-ice-surge,Ex Ice Surge,Ice,"[
+  { multiplier: 0.2, hits: 5 },
+]",6,Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs,Ready
+ex-iceball,Ex Iceball,Ice,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy.,Ready
+ex-rock-toss,Ex Rock Toss,Ground,"[
+  { multiplier: 0.5, hits: 4 },
+]",6,Target: Enemy.,Ready
+ex-seed-grenade,Ex Seed Grenade,Grass,"[
+  { multiplier: 1.2, hits: 3 },
+]",3,Target: Enemy.,Ready
+ex-water-jet,Ex Water Jet,Water,"[
+  { multiplier: 1.2, hits: 4 },
+]",6,Target: Enemy.,Ready
+ex-water-shuriken,Ex Water Shuriken,Water,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy.,Ready
+fear-taunt,Fear Taunt,Common,"[
+  { multiplier: 0.5, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Taunt 2 secs; -15% damage 10 secs,Ready
+fire-dash,Fire Dash,Fire,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback,Ready
+fire-dash-oblivion-drake,Fire Dash (Oblivion Drake),Fire,"[
+  { multiplier: 2, hits: 1 },
+]",8,Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback,
+fire-dragon-flame-blast,Fire Dragon Flame Blast,Fire,"[
+  { multiplier: 2.5, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback,Ready
+fire-tornado,Fire Tornado,Fire,"[
+  { multiplier: 1.8, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback,Ready
+fireball,Fireball,Fire,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+fireball-ghost,Fireball (Ghost),Fire,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+firecracker-pop,Firecracker Pop,Fire,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy.,Ready
+flame-breath,Flame Breath,Fire,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy. Enemy effects: Stagger,Ready
+flame-detonation,Flame Detonation,Fire,"[
+  { multiplier: 0.2, hits: 7 },
+  { multiplier: 1.5, hits: 1 },
+]",8,Target: Enemy.,
+flame-jet,Flame Jet,Fire,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy. Enemy effects: Stagger,Ready
+frost-beam,Frost Beam,Ice,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy. Enemy effects: Stagger,Ready
+frost-breath,Frost Breath,Ice,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy.,Ready
+frosty-dart,Frosty Dart,Ice,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+frozen-nova,Frozen Nova,Ice,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Stun 1 secs,Ready
+galecut,Galecut,Grass,"[
+  { multiplier: 1, hits: 1 },
+]",3,Target: Enemy.,Ready
+galemoon-blade,GaleMoon Blade,Common,"[
+  { multiplier: 0.4, hits: 4 },
+]",8,Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs; Stagger,Ready
+ghost-fireball,Ghost Fireball,Fire,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs,Ready
+ghost-impact,Ghost Impact,Common,"[
+  { multiplier: 0.2, hits: 4 },
+]",6,Target: Enemy | Allies. Ally effects: 50% Team Damage for 4 secs,Ready
+ghost-impact-vulnerability,Ghost Impact (Vulnerability),Common,"[
+  { multiplier: 0.5, hits: 4 },
+]",6,Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs; Stagger,Ready
+gift-delivery,Gift Delivery,Common,"[
+  { multiplier: 1, hits: 1 },
+]",6,Target: Enemy.,Ready
+glacial-smash,Glacial Smash,Ice,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy | Allies. Ally effects: 17.5% Team Shield for 6 secs,Ready
+glacial-wall,Glacial Wall,Ice,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy | Allies. Ally effects: 30% Team Shield for 6 secs (75% Chance); 60% Team Shield for 6 secs (25% chance),Ready
+grass-tornado,Grass Tornado,Grass,"[
+  { multiplier: 1.8, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Knockback,Ready
+gravel-scatter-shot,Gravel Scatter Shot,Ground,"[
+  { multiplier: 1, hits: 1 },
+]",3,Target: Enemy.,Ready
+gravel-whirlwind,Gravel Whirlwind,Ground,"[
+  { multiplier: 1, hits: 2 },
+]",8,Target: Enemy. Enemy effects: Knockback,Ready
+healing-pulse,Healing Pulse,Grass,[],6,Target: Allies. Ally effects: 80% of damage team heal,Ready
+healing-shuriken,Healing Shuriken,Water,"[
+  { multiplier: 0.2, hits: 4 },
+]",6,Target: Enemy | Self. Ally effects: 80% of damage self heal,Ready
+healing-water-ball,Healing Water Ball,Water,"[
+  { multiplier: 1, hits: 1 },
+]",6,Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 50% of damage self heal (Instant),Ready
+holy-aura-djinn-lampyr,Holy Aura (Djinn Lampyr),Common,[],8,Target: Allies. Ally effects: 25% Team Damage for 6 secs; 160% of damage + 5% of health team heal,Ready
+holy-aura-frostvolf,Holy Aura (Frostvolf),Common,[],8,Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs,Ready
+holy-aura-titan-tusk,Holy Aura (Titan Tusk),Common,[],8,Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs,Ready
+hydro-cannon,Hydro Cannon,Water,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy. Enemy effects: 15% decreased damage for 10 secs,Ready
+ice-road,Ice Road,Ice,"[
+  { multiplier: 1.5, hits: 1 },
+]",8,Target: Enemy.,Ready
+ice-surge,Ice Surge,Ice,"[
+  { multiplier: 0.2, hits: 5 },
+]",6,Target: Enemy.,Ready
+iceball,Iceball,Ice,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+icicle-prison,Icicle Prison,Ice,"[
+  { multiplier: 2, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Stun 1 secs,Ready
+inferno-blast,Inferno Blast,Common,"[
+  { multiplier: 1.5, hits: 1 },
+]",8,Target: Enemy.,Ready
+inferno-maelstrom,Inferno Maelstrom,Fire,"[
+  { multiplier: 1.2, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback Ally effects: 25% self damage for 6 secs,Ready
+inferno-smash,Inferno Smash,Fire,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Knockback Ally effects: 25% self damage for 6 secs,Ready
+ion-blast,Ion Blast,Common,"[
+  { multiplier: 1, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+jokers-trick,Joker's Trick,Common,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy | Self. Ally effects: Black Card:; -15% damage for 5 secs; Red Card:; 25% damage for 5 secs,Ready
+leaf-blade,Leaf blade,Grass,"[
+  { multiplier: 1, hits: 2 },
+]",3,Target: Enemy | Self. Enemy effects: Vulnerability (20%) incoming damage for 10 secs Ally effects: 13% of Max Health self heal,Ready
+leaf-surge,Leaf Surge,Grass,"[
+  { multiplier: 1.2, hits: 1 },
+]",6,Target: Enemy.,Ready
+lightning-storm-blue,Lightning Storm (Blue),Common,"[
+  { multiplier: 0.28, hits: 11 },
+]",8,Target: Enemy | Self. Enemy effects: Stagger Ally effects: 16.67% of Max HP self shield for 6 secs,Ready
+lightning-storm-purple,Lightning Storm (Purple),Common,"[
+  { multiplier: 0.2, hits: 11 },
+]",8,Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 25% self damage for 6 secs,Ready
+lightning-thrust,Lightning Thrust,Common,"[
+  { multiplier: 1.5, hits: 1 },
+]",8,Target: Enemy | Self. Ally effects: 95% damage reduction for 2 secs,Ready
+lightning-thrust-psyberion-x,Lightning Thrust (Psyberion X),Common,"[
+  { multiplier: 2, hits: 1 },
+]",8,Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for 2 secs,Ready
+lunar-heal,Lunar Heal,Common,[],8,Target: Allies. Ally effects: Heal each ally for 20% of their Max HP,Ready
+lunar-taunt,Lunar Taunt,Common,"[
+  { multiplier: 0.75, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Taunt for 3 secs,Ready
+mighty-rock-toss,Mighty Rock Toss,Ground,"[
+  { multiplier: 0.5, hits: 1 },
+  { multiplier: 1, hits: 1 },
+  { multiplier: 1.5, hits: 1 },
+  { multiplier: 2, hits: 1 },
+]",6,Damage increases per hit Target: Enemy.,Ready
+mighty-water-shuriken,Mighty Water Shuriken,Water,"[
+  { multiplier: 2, hits: 1 },
+  { multiplier: 0.3, hits: 4 },
+]",8,Target: Enemy.,Ready
+nether-fireball,Nether Fireball,Fire,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy.,Ready
+oblivion-beam,Oblivion Beam,Common,"[
+  { multiplier: 0.4, hits: 5 },
+]",6,Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs,Ready
+overvolt-tempest,Overvolt Tempest,Common,"[
+  { multiplier: 0.2, hits: 11 },
+]",6,Target: Enemy. Enemy effects: Stagger Ally effects: 25% chance to trigger overvolt tempest overload deal 100% damage,Ready
+overvolt-tempest-overload,Overvolt Tempest (Overload),Common,"[
+  { multiplier: 0.4, hits: 11 },
+]",6,Alternate version of Overvolt Tempest. The same 11-hit attack at 40% of Attack per hit.,Ready
+petal-dance,Petal Dance,Grass,"[
+  { multiplier: 0.3, hits: 3 },
+]",6,Target: Enemy. Enemy effects: Stagger,Ready
+poison-volley,Poison Volley,Fire,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,"Target: Enemy. Enemy effects: Cast four poison orbs at the enemy, each orb applies a stack of Poison. Each stack of Poison deals 0.4% of current HP per second and reduces enemy Attack by 4%, up to 10 stacks",Ready
+rallying-war-cry-3-sec-50,Rallying War Cry (3 sec 50%),Fire,[],3,Target: Allies. Ally effects: 50% team damage for 3 secs,Ready
+rallying-war-cry-6-sec-40-self-70,Rallying War Cry (6 sec 40% self 70%),Ground,[],6,Target: Allies | Self. Ally effects: 40% team damage for 6 secs; 70% self damage for 6 secs,Ready
+rallying-war-cry-6-sec-50,Rallying War Cry (6 sec 50%),Fire,[],6,Target: Allies. Ally effects: 50% team damage for 6 secs,Ready
+reapers-crescents,Reaper's Crescents,Common,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,Target: Enemy.,Ready
+reapers-crescents-scareharvest,Reaper's Crescents (Scareharvest),Common,"[
+  { multiplier: 0.5, hits: 1 },
+  { multiplier: 0.6, hits: 1 },
+  { multiplier: 0.7, hits: 1 },
+  { multiplier: 0.8, hits: 1 },
+]",6,Target: Enemy.,
+ripple-guard,Ripple Guard,Common,[],6,Target: Allies. Ally effects: 25% max hp shield 5.5 secs,Ready
+rock-road,Rock Road,Ground,"[
+  { multiplier: 3, hits: 1 },
+]",8,Target: Enemy.,Ready
+rock-toss,Rock Toss,Ground,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+root-slam,Root Slam,Grass,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy | Self. Enemy effects: Knockback Ally effects: 100% of damage self heal,Ready
+root-spike,Root Spike,Grass,"[
+  { multiplier: 3, hits: 1 },
+]",8,Target: Enemy.,Ready
+scorching-fireball,Scorching Fireball,Fire,"[
+  { multiplier: 0.3, hits: 4 },
+]",6,"Target: Enemy. Enemy effects: Burn 4 times; Burn deals 0.5% of the target's Max HP per second for 8 seconds, up to 10 stacks",Ready
+seed-grenade,Seed Grenade,Grass,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+solar-beam,Solar Beam,Grass,"[
+  { multiplier: 2, hits: 1 },
+]",6,Target: Enemy.,Ready
+solar-breath,Solar Breath,Grass,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy. Enemy effects: Knockback,Ready
+soul-reap-chain,Soul Reap Chain,Common,"[
+  { multiplier: 1.5, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Stun 2 secs;,Ready
+soul-reap-chain-vulnerability,Soul Reap Chain (Vulnerability),Common,"[
+  { multiplier: 1.5, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Stun 2 secs; Vulnerability (20%) incoming damage for 10 secs,
+soul-reap-chain-scareharvest,Soul Reap Chain (Scareharvest),Common,"[
+  { multiplier: 2.5, hits: 1 },
+]",6,Target: Enemy. Enemy effects: 1 stack of Poison,Ready
+soul-slash,Soul Slash,Common,"[
+  { multiplier: 0.2, hits: 11 },
+]",8,Target: Enemy. Enemy effects: Stagger,Ready
+sunder-taunt,Sunder Taunt,Ground,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Taunt for 2 secs Knockback,Ready
+taunt,Taunt,Common,"[
+  { multiplier: 0.5, hits: 1 },
+]",8,Target: Enemy | Self. Enemy effects: Taunt for 2 secs Ally effects: 35% damage reduction for 10 secs,Ready
+the-ring,The Ring,Common,"[
+  { multiplier: 0.3, hits: 3 },
+]",6,Target: Enemy. Enemy effects: 15% decreased damage for 10 secs,Ready
+thorn-shield,Thorn Shield,Common,[],8,Target: Self. Ally effects: 60% Damage reflection for 6 secs,Ready
+thunder-stun,Thunder Stun,Common,"[
+  { multiplier: 1, hits: 1 },
+]",8,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+tidal-conch,Tidal Conch,Water,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+titan-slam,Titan Slam,Ground,"[
+  { multiplier: 1.2, hits: 1 },
+]",8,Target: Enemy | Allies. Ally effects: 25% team damage for 6 secs; 15% team shield for 6 secs,Ready
+toxic-grenade,Toxic Grenade,Grass,"[
+  { multiplier: 1, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+tsunami,Tsunami,Water,"[
+  { multiplier: 1, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback,Ready
+urgent-aid,Urgent Aid,Common,[],6,Target: Ally. Ally effects: Targets ally with lowest hp and restore 20% of ally's Max HP,Ready
+violet-core-burst,Violet Core Burst,Common,"[
+  { multiplier: 0.2, hits: 1 },
+  { multiplier: 2, hits: 1 },
+]",8,Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for self for 2 secs,Ready
+violet-core-burst-psyberion-x,Violet Core Burst (Psyberion X),Common,"[
+  { multiplier: 0.5, hits: 2 },
+  { multiplier: 2, hits: null },
+]",8,Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for 2 secs; Taunt for 2 secs,Review
+void-collapse,Void Collapse,Common,"[
+  { multiplier: 1.2, hits: 2 },
+]",6,Target: Enemy. Enemy effects: Stun 2 secs,Ready
+void-orb,Void Orb,Common,"[
+  { multiplier: 1.25, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback,Ready
+void-orb-red,Void Orb (Red),Common,"[
+  { multiplier: 1.25, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback,Ready
+vortex-nova,Vortex Nova,Water,"[
+  { multiplier: 0.2, hits: 4 },
+  { multiplier: 0.5, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback + Stagger + Lift,Ready
+water-breath,Water Breath,Water,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy.,Ready
+water-cannon,Water Cannon,Water,"[
+  { multiplier: 0.4, hits: 5 },
+]",8,Target: Enemy.,Ready
+water-jet,Water Jet,Water,"[
+  { multiplier: 1.2, hits: 1 },
+]",3,Target: Enemy.,Ready
+water-pillar-blast,Water Pillar Blast,Water,"[
+  { multiplier: 1.8, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback + Stagger + Lift,Ready
+water-shuriken,Water Shuriken,Water,"[
+  { multiplier: 1.2, hits: 1 },
+]",6,Target: Enemy.,Ready
+wind-blast,Wind Blast,Common,"[
+  { multiplier: 1, hits: 1 },
+]",6,Target: Enemy. Enemy effects: Knockback + Stun for 1 Second,Ready
+wind-disc,Wind Disc,Common,"[
+  { multiplier: 1, hits: 1 },
+]",3,Target: Enemy.,Ready
+wind-disc-purple,Wind Disc (Purple),Common,"[
+  { multiplier: 1, hits: 1 },
+]",3,Target: Enemy.,Ready

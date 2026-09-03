@@ -219,7 +219,7 @@ leaf-surge,Leaf Surge,Grass,"[
 ]",6,Target: Enemy.,Ready
 lightning-storm-blue,Lightning Storm (Blue),Common,"[
   { multiplier: 0.28, hits: 11 },
-]",8,Target: Enemy. Enemy effects: Stagger,Ready
+]",8,Target: Enemy | Self. Enemy effects: Stagger Ally effects: 16.67% of Max HP self shield for 6 secs,Ready
 lightning-storm-purple,Lightning Storm (Purple),Common,"[
   { multiplier: 0.2, hits: 11 },
 ]",8,Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 25% self damage for 6 secs,Ready

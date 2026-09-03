@@ -488,6 +488,8 @@ function parseShieldEffects(notes) {
 
     const isRandomOutcome = /chance for one of the following to activate/i.test(notes);
     const effects = [];
+    const supportEffectsText = notes.match(/ally effects:\s*(.*?)(?=\s+(?:enemy|self) effects:|$)/i)?.[1] ?? notes;
+    const sharedDuration = supportEffectsText.match(/(?:for\s+)?(\d+(?:\.\d+)?)\s*(?:secs?|seconds?)/i);
 
     for (const clause of notes.split(";")) {
         if (!/\bshield\b/i.test(clause)) continue;
@@ -495,7 +497,7 @@ function parseShieldEffects(notes) {
         const amount = clause.match(/(\d+(?:\.\d+)?)%/);
         if (!amount) continue;
 
-        const duration = clause.match(/for\s+(\d+(?:\.\d+)?)\s*(?:secs?|seconds?)/i);
+        const duration = clause.match(/(?:for\s+)?(\d+(?:\.\d+)?)\s*(?:secs?|seconds?)/i);
         const chance = clause.match(/\((\d+(?:\.\d+)?)%\s*chance\)/i);
 
         effects.push({
@@ -505,7 +507,11 @@ function parseShieldEffects(notes) {
             ...(/max\s*(?:health|hp)/i.test(clause) || /of\s+max\s+hp/i.test(clause)
                 ? { scaling: "MaxHealth" }
                 : {}),
-            durationSeconds: duration ? Number(duration[1]) : 2,
+            durationSeconds: duration
+                ? Number(duration[1])
+                : sharedDuration
+                    ? Number(sharedDuration[1])
+                    : 2,
             ...(chance ? { chancePercent: Number(chance[1]) } : {}),
             ...(isRandomOutcome ? { condition: "Random Egg Blast result" } : {}),
         });

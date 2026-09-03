@@ -73,7 +73,7 @@ export const GENERATED_SKILLS = {
         "target": "Self",
         "amountPercent": 15,
         "scaling": "MaxHealth",
-        "durationSeconds": 2
+        "durationSeconds": 5
       }
     ],
     "notes": "Target: Self. Ally effects: 15% of Max HP for Self shield 5 secs",
@@ -97,7 +97,7 @@ export const GENERATED_SKILLS = {
         "target": "Team",
         "amountPercent": 15,
         "scaling": "MaxHealth",
-        "durationSeconds": 2
+        "durationSeconds": 6
       }
     ],
     "notes": "Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs",
@@ -1259,7 +1259,7 @@ export const GENERATED_SKILLS = {
         "target": "Team",
         "amountPercent": 15,
         "scaling": "MaxHealth",
-        "durationSeconds": 2
+        "durationSeconds": 6
       }
     ],
     "notes": "Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs",
@@ -1283,7 +1283,7 @@ export const GENERATED_SKILLS = {
         "target": "Team",
         "amountPercent": 15,
         "scaling": "MaxHealth",
-        "durationSeconds": 2
+        "durationSeconds": 6
       }
     ],
     "notes": "Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs",
@@ -1544,7 +1544,16 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 8,
-    "notes": "Target: Enemy. Enemy effects: Stagger",
+    "statusEffects": [
+      {
+        "type": "shield",
+        "target": "Self",
+        "amountPercent": 16.67,
+        "scaling": "MaxHealth",
+        "durationSeconds": 6
+      }
+    ],
+    "notes": "Target: Enemy | Self. Enemy effects: Stagger Ally effects: 16.67% of Max HP self shield for 6 secs",
     "validationStatus": "Ready"
   },
   "lightning-storm-purple": {
@@ -1916,7 +1925,7 @@ export const GENERATED_SKILLS = {
         "target": "Team",
         "amountPercent": 25,
         "scaling": "MaxHealth",
-        "durationSeconds": 2
+        "durationSeconds": 4
       }
     ],
     "notes": "Target: Allies. Ally effects: 25% max hp shield 4 secs",
