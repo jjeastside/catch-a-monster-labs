@@ -7488,7 +7488,14 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "image": "/monster-artwork/void-strum-bones.png",
     "element": "Common",
     "rarity": "Void",
-    "sources": [],
+    "sources": [
+      {
+        "type": "Island Special Spawn",
+        "name": "Special Spawn",
+        "location": "Specter Shallows",
+        "status": "Current"
+      }
+    ],
     "skillIds": [
       "demonic-lullaby",
       "healing-pulse"
