@@ -1,3 +1,4 @@
+import { PageHeading } from "../components/page-heading";
 import type { Metadata } from "next";
 import { SiteFooter } from "../components/site-footer";
 import { TopNavigation } from "../components/top-navigation";
@@ -135,17 +136,7 @@ export default function UpdatesPage() {
             <TopNavigation />
 
             <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-                <div className="mb-8 max-w-2xl">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7182ff]">
-                        Catch a Monster Updates
-                    </p>
-                    <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-                        Patch Notes
-                    </h1>
-                    <p className="mt-3 text-sm leading-6 text-[#8e99ad] sm:text-base">
-                        A simple history of Catch a Monster updates, new islands, monsters, quests, events, and other gameplay changes.
-                    </p>
-                </div>
+                <div className="mb-8 [&_img]:!size-16 sm:[&_img]:!size-[72px]"><PageHeading title="Patch Notes" image="/icons/patch-notes.png">Follow the latest <span className="text-[#ffd53d]">game updates and events.</span></PageHeading></div>
 
                 <div className="space-y-5">
                     {patches.map((patch) => (

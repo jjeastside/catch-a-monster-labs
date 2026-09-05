@@ -1,4 +1,5 @@
 "use client";
+import { PageHeading } from "./page-heading";
 
 import Link from "next/link";
 import { EvolutionTree } from "./evolution-tree";
@@ -232,17 +233,7 @@ export function MonsterProfile({ monsterId }: { monsterId: string }) {
 
                         <div className="p-5 sm:p-7">
                             <div className="flex flex-wrap items-start justify-between gap-4">
-                                <div>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#7182ff]">
-                                        Monster Profile
-                                    </p>
-                                    <h1 className="mt-1 text-4xl font-black tracking-tight text-[#f5f7fb]">
-                                        {monster.name}
-                                    </h1>
-                                    <p className="mt-2 text-sm font-semibold text-[#9ba7b9]">
-                                        {monster.rarity} · {monster.element} · Index {monster.indexPosition}
-                                    </p>
-                                </div>
+                                <PageHeading title={monster.name} image={monster.image || "/icons/genetic-potential.png"}><span className="text-[#69dfaa]">{monster.rarity} · {monster.element}</span> · Index {monster.indexPosition}</PageHeading>
 
                                 <span
                                     className={`rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.08em] ${

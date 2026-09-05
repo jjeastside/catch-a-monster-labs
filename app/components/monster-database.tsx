@@ -1,5 +1,5 @@
-
 "use client";
+import { PageHeading } from "./page-heading";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
@@ -997,13 +997,7 @@ export function MonsterDatabase() {
         <main className="min-h-screen bg-[#0d131d] text-white">
             <div className="mx-auto w-full max-w-[1800px] px-4 py-6 sm:px-6 lg:px-8">
                 <div className="flex flex-col gap-3 border-b border-[#293443] pb-5 sm:flex-row sm:items-end sm:justify-between">
-                    <div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#7182ff]">Cam Lab</p>
-                        <h1 className="mt-1 text-3xl font-black tracking-tight text-[#f5f7fb]">Monster Database</h1>
-                        <p className="mt-2 hidden max-w-3xl text-sm leading-6 text-[#8f9aae] sm:block">
-                            Browse every monster, discover what it does, see where it comes from, and open it directly in the build calculator.
-                        </p>
-                    </div>
+                    <PageHeading title="Monster Database" image="/icons/monster-database.png">Discover every monster and explore its <span className="text-[#69dfaa]">skills, stats, and locations.</span></PageHeading>
                     <div className="rounded-full border border-[#344050] bg-[#111925] px-3 py-1.5 text-xs font-bold text-[#aeb9cb]">
                         {filteredMonsters.length} / {GENERATED_MONSTERS.length} monsters
                     </div>

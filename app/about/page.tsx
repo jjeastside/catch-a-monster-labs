@@ -1,3 +1,4 @@
+import { PageHeading } from "../components/page-heading";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -159,13 +160,7 @@ export default function AboutPage() {
 
                     <div className="relative grid items-center gap-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,.92fr)]">
                         <div className="max-w-[610px]">
-                            <p className="text-xs font-bold uppercase tracking-[0.19em] text-[#55adff]">About Cam Lab</p>
-                            <h1 className="mt-3 text-[clamp(2.6rem,6vw,4.45rem)] font-black leading-[.98] tracking-[-0.045em]">
-                                Built for Catch a<br className="hidden sm:block" /> Monster players
-                            </h1>
-                            <p className="mt-5 max-w-[570px] text-base leading-7 text-[#b5c1d8] sm:text-lg">
-                                Cam Lab is a fan-made companion site for Catch a Monster on Roblox. We help you plan builds, check stats, explore monsters, track your Index, and keep up with the latest updates.
-                            </p>
+                            <PageHeading title="About Cam Lab" image="/icons/changelog.png">Your companion for <span className="text-[#69dfaa]">Catch a Monster builds and discovery.</span></PageHeading>
                         </div>
 
                         <div className="relative mx-auto flex h-[260px] w-full max-w-[430px] items-center justify-center sm:h-[330px] lg:h-[350px]">

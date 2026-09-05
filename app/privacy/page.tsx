@@ -1,3 +1,4 @@
+import { PageHeading } from "../components/page-heading";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -13,23 +14,7 @@ export const metadata: Metadata = {
     },
 };
 
-function ShieldIcon() {
-    return (
-        <svg
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="size-9"
-        >
-            <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" />
-            <path d="m9 12 2 2 4-5" />
-        </svg>
-    );
-}
+
 
 function PolicySection({
     number,
@@ -65,20 +50,7 @@ export default function PrivacyPolicyPage() {
                         className="pointer-events-none absolute inset-0 opacity-30 [background-image:radial-gradient(circle,#3f64ff_1px,transparent_1px)] [background-size:72px_72px]"
                     />
                     <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center">
-                        <span className="grid size-16 shrink-0 place-items-center rounded-2xl border border-[#2869ab] bg-[#0a2a50] text-[#64b1ff] shadow-[0_0_28px_rgba(48,116,255,.2)]">
-                            <ShieldIcon />
-                        </span>
-                        <div>
-                            <p className="text-xs font-bold uppercase tracking-[0.19em] text-[#59adff]">
-                                Cam Lab
-                            </p>
-                            <h1 className="mt-2 text-3xl font-black tracking-tight sm:text-5xl">
-                                Privacy Policy
-                            </h1>
-                            <p className="mt-3 max-w-2xl text-sm leading-6 text-[#afbdd4] sm:text-base">
-                                A clear explanation of what Cam Lab stores, when data leaves your browser, and the choices available to you.
-                            </p>
-                        </div>
+                        <PageHeading title="Privacy Policy" image="/icons/attribute-resistance.png">Understand your data and <span className="text-[#64b1ff]">stay in control.</span></PageHeading>
                     </div>
                 </header>
 

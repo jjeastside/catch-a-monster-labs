@@ -1,4 +1,5 @@
 "use client";
+import { PageHeading } from "./page-heading";
 
 import { type ChangeEvent, type CSSProperties, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
@@ -448,15 +449,7 @@ export function IndexTracker() {
         <main className="mx-auto w-full max-w-[1800px] px-3 py-5 sm:px-5 lg:px-6">
             <section className="mb-5 grid gap-4 xl:grid-cols-[1fr_560px]">
                 <div>
-                    <div className="flex items-center gap-3">
-                        <img src={assetPath("/icons/index.png")} alt="" className="size-14 object-contain sm:size-16" />
-                        <div>
-                            <h1 className="text-2xl font-black uppercase tracking-tight text-white sm:text-4xl">Index Tracker</h1>
-                            <p className="mt-1 text-sm text-[#c2cad7] sm:text-base">
-                                Track every monster and maximize your <span className="text-[#ffd53d]">Index Score.</span>
-                            </p>
-                        </div>
-                    </div>
+                    <PageHeading title="Index Tracker" image="/icons/index.png">Track every monster and maximize your <span className="text-[#ffd53d]">Index Score.</span></PageHeading>
 
                     <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4">
                         <SummaryCard label="Current Score" labelTone="text-[#32b5ff]" value={totals.score.toLocaleString()} detail={<span className="inline-flex items-center gap-1">of <span title={`${(monsters.length * 21).toLocaleString()} total points`} className="grid size-4 place-items-center rounded-full border border-[#6e7c90] text-[10px] font-bold text-[#c7d0dd]">?</span> (Max Possible)</span>} tone="text-[#28b9ff]" />

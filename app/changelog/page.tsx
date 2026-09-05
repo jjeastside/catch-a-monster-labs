@@ -1,3 +1,4 @@
+import { PageHeading } from "../components/page-heading";
 import type { Metadata } from "next";
 import { SiteFooter } from "../components/site-footer";
 import { TopNavigation } from "../components/top-navigation";
@@ -14,6 +15,7 @@ const releases = [
         label: "Latest",
         changes: [
             "Added the new pets Nexil and Stellawulf.",
+            "Refreshed the Patch Notes, Monster Database, Changelog, and About Cam Lab page headers with dedicated artwork for a more consistent site-wide look.",
             "Fixed Vitiate's +50% Attack Reduction Effectiveness bonus for Damage Decrease effects, including Nexil's Dark Singularity: 15–25% now becomes 22.5–37.5% with Vitiate equipped.",
             "Improved Vitiate's Skill Analysis UI with trait icons beside affected skills and Damage Decrease effects, animated Mythical colors for boosted percentages, and a tooltip explaining the bonus.",
         ],
@@ -234,17 +236,7 @@ export default function ChangelogPage() {
             <TopNavigation />
 
             <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-                <div className="mb-8 max-w-2xl">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7182ff]">
-                        Cam Lab Updates
-                    </p>
-                    <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-                        Changelog
-                    </h1>
-                    <p className="mt-3 text-sm leading-6 text-[#8e99ad] sm:text-base">
-                        New features, calculator improvements, data updates, and bug fixes added to Cam Lab.
-                    </p>
-                </div>
+                <div className="mb-8"><PageHeading title="Changelog" image="/icons/changelog.png">See what’s new in Cam Lab: <span className="text-[#ffb566]">features, improvements, and fixes.</span></PageHeading></div>
 
                 <div className="space-y-5">
                     {releases.map((release) => (
