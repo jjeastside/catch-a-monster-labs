@@ -507,7 +507,7 @@ export const GENERATED_SKILLS = {
     "id": "emergency-thorn-shield",
     "name": "Emergency Thorn Shield",
     "element": "Common",
-    "description": "Quickly restores health and grants a temporary Thorn Shield that reflects damage to attackers.",
+    "description": "Quickly restores 20% HP and grants a Thorn Shield for a short time, reflecting damage to attackers.",
     "damageInstances": [],
     "cooldown": 8,
     "statusEffects": [
@@ -516,9 +516,15 @@ export const GENERATED_SKILLS = {
         "target": "Self",
         "amountPercent": 60,
         "durationSeconds": 2
+      },
+      {
+        "type": "healing",
+        "target": "Self",
+        "amountPercent": 20,
+        "scaling": "MaxHealth"
       }
     ],
-    "notes": "Target: Ally | Self. Ally effects: 60% Damage reflection for 2 secs",
+    "notes": "Target: Self. Ally effects: 60% self Damage reflection for 2 secs; 20% of Max Health self heal",
     "validationStatus": "Ready"
   },
   "ex-air-bullet": {
@@ -1060,7 +1066,7 @@ export const GENERATED_SKILLS = {
     "id": "ghost-impact-vulnerability",
     "name": "Ghost Impact (Vulnerability)",
     "element": "Common",
-    "description": "Unleashes a soul impact that damages nearby enemies.",
+    "description": "Unleashes a soul impact that damages nearby enemies and makes them vulnerable.",
     "damageInstances": [
       {
         "multiplier": 0.5,
@@ -1716,18 +1722,18 @@ export const GENERATED_SKILLS = {
     "id": "lunar-heal",
     "name": "Lunar Heal",
     "element": "Common",
-    "description": "Channels lunar energy to instantly restore 10% of maximum health.",
+    "description": "Channels lunar energy to instantly restore 18% of maximum health.",
     "damageInstances": [],
     "cooldown": 8,
     "statusEffects": [
       {
         "type": "healing",
         "target": "Team",
-        "amountPercent": 20,
+        "amountPercent": 18,
         "scaling": "MaxHealth"
       }
     ],
-    "notes": "Target: Allies. Ally effects: Heal each ally for 20% of their Max HP",
+    "notes": "Target: Allies. Ally effects: Heal each ally for 18% of their Max HP",
     "validationStatus": "Ready"
   },
   "lunar-taunt": {
