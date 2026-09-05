@@ -1060,7 +1060,7 @@ export const GENERATED_SKILLS = {
     "id": "ghost-impact-vulnerability",
     "name": "Ghost Impact (Vulnerability)",
     "element": "Common",
-    "description": "Unleashes a soul impact that damages nearby enemies and makes them vulnerable.",
+    "description": "Unleashes a soul impact that damages nearby enemies.",
     "damageInstances": [
       {
         "multiplier": 0.5,

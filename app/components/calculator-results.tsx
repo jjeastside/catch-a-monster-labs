@@ -1357,7 +1357,13 @@ function SkillDamagePanel({
                             )}
                         </div>
 
-                        {isTriggeredSkill && skill.notes && (
+                        {skill.description?.trim() && (
+                            <p className="mt-2 text-[11px] leading-relaxed text-[#a3aec0]">
+                                {skill.description}
+                            </p>
+                        )}
+
+                        {isTriggeredSkill && skill.notes && skill.notes.trim() !== skill.description?.trim() && (
                             <p className="mt-2 text-[10px] leading-4 text-[#8e99ad]">
                                 {skill.notes}
                             </p>
