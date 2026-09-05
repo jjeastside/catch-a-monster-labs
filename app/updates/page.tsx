@@ -22,15 +22,42 @@ type Patch = {
 
 const patches: Patch[] = [
     {
-        version: "Update 0.46",
-        date: "August 28, 2026",
+        version: "Update 0.47",
+        date: "September 5, 2026",
         label: "Latest",
         sections: [
             {
-                title: "Boss & Evolution Event",
+                title: "Rift Event",
+                changes: [
+                    "Added a Rift to Coilwork City.",
+                    "The Rift Event is now live.",
+                ],
+            },
+            {
+                title: "Rewards & Shop",
+                changes: [
+                    "Added tiers for the Tower's daily rewards.",
+                    "Reduced the prices of some items in the Dungeon Shop.",
+                    "Added Roblox Plus to the shop purchase options.",
+                ],
+            },
+            {
+                title: "Coming Next & New Code",
+                changes: [
+                    "PVP Mode is planned for next week, as announced in Update 0.47.",
+                    "New Code: stellawolf",
+                ],
+            },
+        ],
+    },
+    {
+        version: "Update 0.46",
+        date: "August 28, 2026",
+        sections: [
+            {
+                title: "Boss & Evolution",
                 changes: [
                     "Coilwork City now features a brand-new boss.",
-                    "The Dragon Evolution Event is now live.",
                     "Added a new evolution for AbyssalDrake.",
                 ],
             },
