@@ -9,9 +9,18 @@ export const metadata: Metadata = {
 
 const releases = [
     {
+        version: "v1.0.9",
+        date: "September 5, 2026",
+        label: "Latest",
+        changes: [
+            "Added the new pets Nexil and Stellawulf.",
+            "Fixed Vitiate's +50% Attack Reduction Effectiveness bonus for Damage Decrease effects, including Nexil's Dark Singularity: 15–25% now becomes 22.5–37.5% with Vitiate equipped.",
+            "Improved Vitiate's Skill Analysis UI with trait icons beside affected skills and Damage Decrease effects, animated Mythical colors for boosted percentages, and a tooltip explaining the bonus.",
+        ],
+    },
+    {
         version: "v1.0.8",
         date: "September 3, 2026",
-        label: "Latest",
         changes: [
             "Updated all 133 Monster Database skill entries with clearer in-game descriptions transcribed and refined from the Catch a Monster skill panels.",
             "Corrected the displayed shield durations for Blaze Blast, Bloodthirsty Aura, both Holy Aura shield variants, Ripple Guard, and Lightning Storm.",
