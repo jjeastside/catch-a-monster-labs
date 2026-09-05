@@ -434,15 +434,16 @@ function DamageReductionEffect({ effect }: { effect: SkillStatusEffect }) {
     );
 }
 
-function HealingEffect({ effect, calculatedAmount, cooldown, description }: {
+function HealingEffect({ effect, calculatedAmount, cooldown, description, singleAlly = false }: {
     effect: SkillStatusEffect;
     calculatedAmount: number | null;
     cooldown: number | null;
     description?: string;
+    singleAlly?: boolean;
 }) {
     const amount = effect.amountPercent ?? 0;
-    const displayTarget = effect.target === "Team" ? "Team" : effect.target === "Self" ? "Self" : "Enemy";
-    const targetLabel = effect.target === "Self" ? "the caster" : "the team";
+    const displayTarget = effect.target === "Self" ? "Self" : singleAlly ? "Ally" : effect.target === "Team" ? "All" : "Enemy";
+    const targetLabel = effect.target === "Self" ? "the caster" : singleAlly ? "the ally with the lowest HP" : "all affected allies";
     const healingDescription = effect.scaling === "Damage"
         ? `Heals ${targetLabel} for ${formatNumber(amount)}% of the caster's Damage, including healing effectiveness bonuses.`
         : effect.scaling === "MaxHealth"
@@ -450,7 +451,7 @@ function HealingEffect({ effect, calculatedAmount, cooldown, description }: {
                 ? `Heals ${targetLabel} for ${formatNumber(amount)}% of the caster's Max Health, including healing effectiveness bonuses.`
                 : effect.target === "Self"
                     ? `Restores ${formatNumber(amount)}% of the caster's Max HP.`
-                    : `Heals affected allies for ${formatNumber(amount)}% of their own Max Health.`
+                    : `Heals ${targetLabel} for ${formatNumber(amount)}% of their own Max Health.`
             : `Heals ${targetLabel} by ${formatNumber(amount)}%.`;
     const tooltip = [
         description ?? healingDescription,
@@ -1705,8 +1706,9 @@ function SkillDamagePanel({
                         <HealingEffect
                             key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.scaling}-${index}`}
                             effect={effect}
+                            singleAlly={/^Target:\s*Ally\s*\./i.test(skill.notes ?? "")}
                             description={skill.id === "holy-aura-djinn-lampyr"
-                                ? "One team heal equal to 160% of the caster's Damage + 5% of the caster's Health, including healing effectiveness bonuses."
+                                ? "One heal for all affected allies equal to 160% of the caster's Damage + 5% of the caster's Health, including healing effectiveness bonuses."
                                 : undefined}
                             calculatedAmount={skill.id === "holy-aura-djinn-lampyr"
                                 ? healingAmount
