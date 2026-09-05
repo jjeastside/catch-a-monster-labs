@@ -69,3 +69,17 @@ select,
 textarea {
   font: inherit;
 }
+@keyframes vitiate-rainbow-cycle {
+  from { filter: hue-rotate(0deg); }
+  to { filter: hue-rotate(360deg); }
+}
+
+.vitiate-rainbow-value {
+  animation: vitiate-rainbow-cycle 4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vitiate-rainbow-value {
+    animation: none;
+  }
+}

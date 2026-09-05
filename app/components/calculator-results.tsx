@@ -43,6 +43,7 @@ import type { Build, MonsterPassive, Mutation, PassiveEffectStat, Rank } from ".
 import type { Monster } from "../types/monster";
 import type { MonsterStatData } from "../types/monster-stats";
 import type { SkillStatusEffect } from "../types/skill";
+import type { Trait } from "../types/trait";
 
 import { MonsterOverviewCard } from "./monster-overview-card";
 import { Panel } from "./panel";
@@ -316,9 +317,20 @@ function BurnEffect({
     );
 }
 
-function DamageDecreaseEffect({ effect }: { effect: SkillStatusEffect }) {
-    const amount = effect.amountPercent ?? 0;
-    const maxAmount = effect.maxAmountPercent;
+function DamageDecreaseEffect({
+    effect,
+    effectivenessBonus = 0,
+    effectivenessTrait,
+}: {
+    effect: SkillStatusEffect;
+    effectivenessBonus?: number;
+    effectivenessTrait?: Trait | null;
+}) {
+    const effectivenessMultiplier = 1 + effectivenessBonus / 100;
+    const amount = (effect.amountPercent ?? 0) * effectivenessMultiplier;
+    const maxAmount = effect.maxAmountPercent !== undefined
+        ? effect.maxAmountPercent * effectivenessMultiplier
+        : undefined;
     const amountLabel = maxAmount !== undefined
         ? `${formatNumber(amount)}–${formatNumber(maxAmount)}%`
         : `${formatNumber(amount)}%`;
@@ -330,6 +342,9 @@ function DamageDecreaseEffect({ effect }: { effect: SkillStatusEffect }) {
         maxAmount !== undefined
             ? `Reduces ${targetLabel.toLowerCase()} damage dealt by ${amountLabel}.`
             : `Reduces ${targetLabel.toLowerCase()} damage dealt by ${formatNumber(amount)}%.`,
+        effectivenessBonus > 0
+            ? `Includes +${formatNumber(effectivenessBonus)}% Attack Reduction Effectiveness from ${effectivenessTrait?.name ?? "the selected trait"}.`
+            : null,
         durationLabel ? `Lasts ${durationLabel}.` : null,
         effect.condition ? `Requires: ${effect.condition}.` : null,
     ].filter(Boolean).join(" ");
@@ -346,10 +361,28 @@ function DamageDecreaseEffect({ effect }: { effect: SkillStatusEffect }) {
                     <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#f08a91]">Damage Decrease</p>
                     <InfoTooltip label="Explain Damage Decrease" text={tooltip} />
                 </div>
-                <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
-                    -{amountLabel}
+                <p className="mt-0.5 flex flex-wrap items-center text-sm font-bold text-[#f6f8fc]">
+                    <span
+                        style={effectivenessBonus > 0 ? {
+                            display: "inline-block",
+                            backgroundImage: "linear-gradient(90deg, #ff2f7f, #a24cff 27%, #15d3ff 50%, #4dff70 72%, #ffb12e)",
+                            backgroundClip: "text",
+                            WebkitBackgroundClip: "text",
+                            color: "transparent",
+                            WebkitTextFillColor: "transparent",
+                        } : undefined}
+                        className={effectivenessBonus > 0 ? "vitiate-rainbow-value" : undefined}
+                    >-{amountLabel}</span>
                     <span className="ml-1.5 text-xs font-semibold text-[#d8a1a5]">{targetLabel}</span>
                     {durationLabel && <span className="ml-1.5 text-xs font-semibold text-[#8e99ad]">• {durationLabel}</span>}
+                    {effectivenessBonus > 0 && effectivenessTrait && (
+                        <span
+                            className="ml-1 inline-flex scale-[0.68] origin-center"
+                            title={`${effectivenessTrait.name}: +${formatNumber(effectivenessBonus)}% Attack Reduction Effectiveness`}
+                        >
+                            <TraitIcon trait={effectivenessTrait} size="combat" />
+                        </span>
+                    )}
                 </p>
                 {effect.condition && (
                     <p className="mt-0.5 truncate text-[10px] text-[#c7a2a5]" title={effect.condition}>
@@ -982,7 +1015,9 @@ function SkillDamagePanel({
         getDamageHealingPercent(skill.notes) !== null ||
         getHealthHealingPercent(skill.notes) !== null;
     const skillHasCooldown = skill.cooldown !== null && skill.cooldown > 0;
-    const appliesAttackReduction = /attack.{0,20}(reduc|lower)|(?:reduc|lower).{0,20}attack/.test(notes);
+    const appliesAttackReduction =
+        (skill.statusEffects ?? []).some((effect) => effect.type === "damageDecrease") ||
+        /attack.{0,20}(reduc|lower)|(?:reduc|lower).{0,20}attack/.test(notes);
     const appliesVulnerability = notes.includes("vulnerab") || skill.id === "root-spike";
     const appliesBurn = notes.includes("burn");
     const traitSkillEffects = selectedTrait?.effects
@@ -1200,6 +1235,7 @@ function SkillDamagePanel({
     const skillIconPath = `/skill-icons/${skillIconId}.png`;
     const elementIconPath = `/element-icons/${skill.element.toLowerCase()}.png`;
     const burnDurationBonus = getTraitEffectValue(build.traitId, "burnDuration");
+    const attackReductionEffectiveness = getTraitEffectValue(build.traitId, "attackReductionEffectiveness");
     const damageIncreaseEffects = (skill.statusEffects ?? []).filter(
         (effect) => effect.type === "damageIncrease",
     );
@@ -1620,6 +1656,8 @@ function SkillDamagePanel({
                         <DamageDecreaseEffect
                             key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.maxAmountPercent}-${effect.durationSeconds}-${index}`}
                             effect={effect}
+                            effectivenessBonus={attackReductionEffectiveness}
+                            effectivenessTrait={attackReductionEffectiveness > 0 ? selectedTrait : null}
                         />
                     ))}
                 </div>
