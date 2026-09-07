@@ -58,6 +58,29 @@ function scoreFor(progress?: MonsterProgress) {
     return rankPoints + bonusPoints;
 }
 
+// Plans contain targets; collected progress always wins when a target is reached.
+function plannedProgress(current: MonsterProgress = {}, target: MonsterProgress = {}): MonsterProgress {
+    const rank = target.rank && RANKS.indexOf(target.rank) > (current.rank ? RANKS.indexOf(current.rank) : -1)
+        ? target.rank : current.rank;
+    const bonuses = { ...current.bonuses };
+    BONUSES.forEach(({ id }) => { if (target.bonuses?.[id]) bonuses[id] = true; });
+    return { ...current, rank, bonuses, gender: target.gender ?? current.gender };
+}
+
+function sanitizePlans(value: unknown): TrackerProgress {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+    const result: TrackerProgress = {};
+    for (const monster of GENERATED_MONSTERS) {
+        const candidate = (value as Record<string, MonsterProgress>)[monster.id];
+        if (!candidate || typeof candidate !== "object") continue;
+        const rank = RANKS.includes(candidate.rank as Rank) ? candidate.rank : undefined;
+        const bonuses = Object.fromEntries(BONUSES.filter(({ id }) => candidate.bonuses?.[id] === true).map(({ id }) => [id, true]));
+        const gender = candidate.gender === "male" || candidate.gender === "female" ? candidate.gender : undefined;
+        if (rank || gender || Object.keys(bonuses).length) result[monster.id] = { rank, bonuses, gender };
+    }
+    return result;
+}
+
 function rankTone(rank?: Rank) {
     if (rank === "SS") return "text-[#ff5757]";
     if (rank === "S") return "text-transparent";
@@ -108,6 +131,8 @@ function emptyBulkBonusActions(): Record<BonusId, BulkBonusAction> {
 
 export function IndexTracker() {
     const [progress, setProgress] = useState<TrackerProgress>({});
+    const [plans, setPlans] = useState<TrackerProgress>({});
+    const [planningMode, setPlanningMode] = useState(false);
     const [hasLoaded, setHasLoaded] = useState(false);
     const [selectedId, setSelectedId] = useState(GENERATED_MONSTERS[0]?.id ?? "");
     const [search, setSearch] = useState("");
@@ -126,6 +151,7 @@ export function IndexTracker() {
     const [bulkGenderAction, setBulkGenderAction] = useState<BulkGenderAction>("keep");
     const [bulkBonusActions, setBulkBonusActions] = useState<Record<BonusId, BulkBonusAction>>(emptyBulkBonusActions);
     const [mobileEditorOpen, setMobileEditorOpen] = useState(false);
+    const progressEditorRef = useRef<HTMLElement>(null);
     const [showClearConfirmation, setShowClearConfirmation] = useState(false);
     const [importMessage, setImportMessage] = useState<{ tone: "success" | "error"; text: string } | null>(null);
     const importInputRef = useRef<HTMLInputElement>(null);
@@ -147,24 +173,22 @@ export function IndexTracker() {
     }, []);
 
     useEffect(() => {
+        try {
+            setPlans(sanitizePlans(JSON.parse(window.localStorage.getItem(`${STORAGE_KEY}-plans`) ?? "{}")));
+        } catch { /* A damaged plan must not affect collected progress. */ }
+    }, []);
+
+    useEffect(() => {
+        if (hasLoaded) window.localStorage.setItem(`${STORAGE_KEY}-plans`, JSON.stringify(plans));
+    }, [hasLoaded, plans]);
+
+    useEffect(() => {
         if (hasLoaded) {
             window.localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
         }
     }, [hasLoaded, progress]);
 
-    useEffect(() => {
-        if (!mobileEditorOpen || !window.matchMedia("(max-width: 1279px)").matches) return;
-        const previousOverflow = document.body.style.overflow;
-        const closeOnEscape = (event: KeyboardEvent) => {
-            if (event.key === "Escape") setMobileEditorOpen(false);
-        };
-        document.body.style.overflow = "hidden";
-        window.addEventListener("keydown", closeOnEscape);
-        return () => {
-            document.body.style.overflow = previousOverflow;
-            window.removeEventListener("keydown", closeOnEscape);
-        };
-    }, [mobileEditorOpen]);
+    useCompactEditor(mobileEditorOpen && !bulkMode, progressEditorRef, () => setMobileEditorOpen(false));
 
     const monsters = useMemo(
         () => GENERATED_MONSTERS
@@ -386,9 +410,10 @@ export function IndexTracker() {
     const exportTracker = () => {
         const payload = {
             app: "Cam Lab Index Tracker",
-            version: 2,
+            version: 3,
             exportedAt: new Date().toISOString(),
             progress,
+            plans,
         };
         const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
         const url = URL.createObjectURL(blob);
@@ -405,8 +430,8 @@ export function IndexTracker() {
         if (!file) return;
 
         try {
-            const parsed = JSON.parse(await file.text()) as { version?: unknown; progress?: unknown };
-            if ((parsed.version !== 1 && parsed.version !== 2) || !parsed.progress || typeof parsed.progress !== "object" || Array.isArray(parsed.progress)) {
+            const parsed = JSON.parse(await file.text()) as { version?: unknown; progress?: unknown; plans?: unknown };
+            if ((parsed.version !== 1 && parsed.version !== 2 && parsed.version !== 3) || !parsed.progress || typeof parsed.progress !== "object" || Array.isArray(parsed.progress)) {
                 throw new Error("Invalid tracker backup");
             }
 
@@ -429,6 +454,7 @@ export function IndexTracker() {
             });
 
             setProgress(imported);
+            if (parsed.version === 3) setPlans(sanitizePlans(parsed.plans));
             setImportMessage({ tone: "success", text: `Imported progress for ${Object.keys(imported).length} monsters.` });
         } catch {
             setImportMessage({ tone: "error", text: "That file is not a valid Cam Lab tracker backup." });
@@ -477,50 +503,14 @@ export function IndexTracker() {
                 </aside>
             </section>
 
-            <section className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                <div className="flex gap-1 overflow-x-auto pb-1">
-                    {filters.map((item) => (
-                        <button key={item.id} type="button" onClick={() => setFilter(item.id)} className={`shrink-0 rounded-md border px-3 py-2 text-xs font-semibold sm:text-sm ${filter === item.id ? "border-[#168fff] bg-[#0c2941] text-[#42b6ff]" : "border-[#344050] bg-[#111923] text-[#aab4c4] hover:text-white"}`}>
-                            {item.label} ({item.count})
-                        </button>
-                    ))}
-                </div>
-                <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:flex-wrap lg:justify-end">
-                    <label className="flex min-w-0 items-center rounded-md border border-[#344050] bg-[#0c131d] px-3 focus-within:border-[#168fff] lg:w-72">
-                        <span aria-hidden="true" className="text-[#7f8b9e]">⌕</span>
-                        <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search monsters..." className="min-w-0 flex-1 bg-transparent px-2 py-2 text-sm text-white outline-none placeholder:text-[#677386]" />
-                    </label>
-                    <select value={genderFilter} onChange={(event) => setGenderFilter(event.target.value as GenderFilter)} aria-label="Filter by gender" className="rounded-md border border-[#344050] bg-[#0c131d] px-3 py-2 text-sm text-[#d5dce6] outline-none focus:border-[#168fff]">
-                        <option value="all">Gender: All</option>
-                        <option value="female">Gender: Female</option>
-                        <option value="male">Gender: Male</option>
-                    </select>
-                    <select value={rankFilter} onChange={(event) => setRankFilter(event.target.value as RankFilter)} aria-label="Filter by rank" className="rounded-md border border-[#344050] bg-[#0c131d] px-3 py-2 text-sm text-[#d5dce6] outline-none focus:border-[#168fff]">
-                        <option value="all">Rank: All</option>
-                        <option value="unranked">Rank: Unranked</option>
-                        {RANKS.map((rank) => <option key={rank} value={rank}>Rank: {rank}</option>)}
-                    </select>
-                    <select value={locationFilter} onChange={(event) => setLocationFilter(event.target.value as LocationFilter)} aria-label="Filter by island" className="rounded-md border border-[#344050] bg-[#0c131d] px-3 py-2 text-sm text-[#d5dce6] outline-none focus:border-[#168fff]">
-                        <option value="all">Island: All</option>
-                        {ISLANDS.map((island) => <option key={island} value={island}>{island}</option>)}
-                    </select>
-                    <select value={sortBy} onChange={(event) => setSortBy(event.target.value as SortOption)} aria-label="Sort monsters" className="rounded-md border border-[#344050] bg-[#0c131d] px-3 py-2 text-sm text-[#d5dce6] outline-none focus:border-[#168fff]">
-                        <option value="index">Sort: Index Order</option>
-                        <option value="missing-most">Sort: Most Missing</option>
-                        <option value="closest">Sort: Closest to Complete</option>
-                        <option value="score-high">Sort: Highest Score</option>
-                        <option value="mutation">Sort: Mutation Priority</option>
-                        <option value="name">Sort: Name A–Z</option>
-                    </select>
-                    <button type="button" onClick={() => setBulkModeActive(!bulkMode)} aria-pressed={bulkMode} className={`rounded-md border px-3 py-2 text-sm font-semibold transition ${bulkMode ? "border-[#27bdff] bg-[#0d4771] text-white" : "border-[#405b70] bg-[#132536] text-[#d8e0ea] hover:border-[#2eacff] hover:text-white"}`}>
-                        {bulkMode ? "Done Editing" : "Bulk Edit"}
-                    </button>
-                    <div className="grid grid-cols-2 rounded-md border border-[#344050] bg-[#0c131d] p-1" aria-label="View mode">
-                        <button type="button" onClick={() => setViewMode("grid")} aria-label="Grid view" aria-pressed={viewMode === "grid"} className={`rounded px-3 py-1 text-sm ${viewMode === "grid" ? "bg-[#174a73] text-white" : "text-[#7f8b9e] hover:text-white"}`}>▦</button>
-                        <button type="button" onClick={() => setViewMode("list")} aria-label="List view" aria-pressed={viewMode === "list"} className={`rounded px-3 py-1 text-sm ${viewMode === "list" ? "bg-[#174a73] text-white" : "text-[#7f8b9e] hover:text-white"}`}>☷</button>
-                    </div>
-                </div>
-            </section>
+            <div className="mb-4 flex gap-2" aria-label="Tracker mode">
+                {([false, true] as const).map((planning) => <button key={String(planning)} type="button" aria-pressed={planningMode === planning} onClick={() => { setPlanningMode(planning); setBulkModeActive(false); }} className={`rounded-lg border px-4 py-2 text-sm font-bold ${planningMode === planning ? "border-[#2eacff] bg-[#123653] text-white" : "border-[#344050] bg-[#0b141e] text-[#aeb8c8]"}`}>{planning ? "Planning" : "Collected"}</button>)}
+            </div>
+            {planningMode ? <IndexPlanner monsters={monsters} progress={progress} plans={plans} setPlans={setPlans} onAchieved={(id) => {
+                setProgress((current) => ({ ...current, [id]: plannedProgress(current[id], plans[id]) }));
+                setPlans((current) => { const next = { ...current }; delete next[id]; return next; });
+            }} /> : <>
+            <TrackerToolbar search={search} setSearch={setSearch} genderFilter={genderFilter} setGenderFilter={setGenderFilter} rankFilter={rankFilter} setRankFilter={setRankFilter} locationFilter={locationFilter} setLocationFilter={setLocationFilter} filter={filter} setFilter={setFilter} statusOptions={filters} sortBy={sortBy} setSortBy={setSortBy} bulkMode={bulkMode} onToggleBulk={() => setBulkModeActive(!bulkMode)} viewMode={viewMode} setViewMode={setViewMode} />
 
             {bulkMode && (
                 <section className="mb-4 rounded-xl border border-[#237bb0] bg-[#0a1925] p-4 shadow-[inset_0_0_24px_rgba(34,170,255,0.06)]">
@@ -648,10 +638,10 @@ export function IndexTracker() {
                     )}
                 </section>
 
-                {!bulkMode && selectedMonster && mobileEditorOpen && <button type="button" aria-label="Close monster progress" onClick={() => setMobileEditorOpen(false)} className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm xl:hidden" />}
+                {!bulkMode && selectedMonster && mobileEditorOpen && <button type="button" aria-label="Close monster progress" onClick={() => setMobileEditorOpen(false)} className="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm xl:hidden" />}
 
                 {!bulkMode && selectedMonster && (
-                    <aside role="dialog" aria-modal={mobileEditorOpen ? "true" : undefined} aria-label={`${selectedMonster.name} index progress`} className={`${mobileEditorOpen ? "fixed inset-x-3 bottom-3 top-16 z-50 overflow-y-auto" : "hidden"} rounded-xl border border-[#344050] bg-[#0b141e] p-4 shadow-2xl xl:sticky xl:inset-auto xl:top-4 xl:z-auto xl:block xl:max-h-[calc(100vh-2rem)] xl:overflow-y-auto`}>
+                    <aside ref={progressEditorRef} tabIndex={-1} role="dialog" aria-label={`${selectedMonster.name} index progress`} className={`${mobileEditorOpen ? "fixed left-1/2 top-1/2 z-[100] w-[calc(100%-2rem)] max-w-[480px] max-h-[85dvh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain" : "hidden"} rounded-xl border border-[#344050] bg-[#0b141e] p-4 shadow-2xl xl:sticky xl:inset-auto xl:top-4 xl:z-auto xl:block xl:w-auto xl:max-w-none xl:translate-x-0 xl:translate-y-0 xl:max-h-[calc(100vh-2rem)] xl:overflow-y-auto`}>
                         <div className="flex items-center justify-between gap-3">
                             <div>
                                 <p className="text-xs font-bold uppercase tracking-wider text-[#2eacff]">Monster Progress</p>
@@ -735,6 +725,8 @@ export function IndexTracker() {
                 )}
             </div>
 
+            </>}
+
             <section className="mt-5 flex flex-col gap-3 rounded-lg border border-[#254159] bg-[#0b1a26] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <p className="text-sm text-[#cad3df]"><span className="font-bold text-[#ffd84a]">Tip:</span> Your tracker saves automatically in this browser. Export a backup before clearing browser data.</p>
@@ -783,4 +775,295 @@ function SummaryCard({ label, value, detail, tone, labelTone, progress }: { labe
             )}
         </div>
     );
+}
+
+function IndexPlanner({ monsters, progress, plans, setPlans, onAchieved }: {
+    monsters: (typeof GENERATED_MONSTERS)[number][];
+    progress: TrackerProgress;
+    plans: TrackerProgress;
+    setPlans: (update: (current: TrackerProgress) => TrackerProgress) => void;
+    onAchieved: (id: string) => void;
+}) {
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const editorRef = useRef<HTMLElement>(null);
+    const [query, setQuery] = useState("");
+    const [plannedOnly, setPlannedOnly] = useState(false);
+    const [location, setLocation] = useState<LocationFilter>("all");
+    const [genderFilter, setGenderFilter] = useState<GenderFilter>("all");
+    const [rankFilter, setRankFilter] = useState<RankFilter>("all");
+    const [filter, setFilter] = useState<Filter>("all");
+    const [sortBy, setSortBy] = useState<SortOption>("index");
+    const [viewMode, setViewMode] = useState<ViewMode>("grid");
+    const [bulkMode, setBulkMode] = useState(false);
+    const [selected, setSelected] = useState<Set<string>>(() => new Set());
+    const [bulkRank, setBulkRank] = useState<BulkRankAction | "next">("keep");
+    const [bulkGender, setBulkGender] = useState<BulkGenderAction>("keep");
+    const [bulkBonuses, setBulkBonuses] = useState<Record<BonusId, BulkBonusAction>>(emptyBulkBonusActions);
+    const [message, setMessage] = useState("");
+    useCompactEditor(Boolean(editingId) && !bulkMode, editorRef, () => setEditingId(null));
+    const hasPlan = (id: string) => gainFor(id) > 0 || Boolean(plans[id]?.gender && plans[id].gender !== progress[id]?.gender);
+    const gainFor = (id: string) => scoreFor(plannedProgress(progress[id], plans[id])) - scoreFor(progress[id]);
+    const pending = monsters.filter((monster) => hasPlan(monster.id));
+    const gain = pending.reduce((sum, monster) => sum + gainFor(monster.id), 0);
+    const currentScore = monsters.reduce((sum, monster) => sum + scoreFor(progress[monster.id]), 0);
+    // Filter and sort by the projected state, falling back to collected values.
+    const visible = monsters.filter((monster) => {
+        const projected = plannedProgress(progress[monster.id], plans[monster.id]);
+        const score = scoreFor(projected);
+        return monster.name.toLowerCase().includes(query.trim().toLowerCase())
+            && (!plannedOnly || hasPlan(monster.id))
+            && (location === "all" || monster.sources.some((source) => source.location === location))
+            && (genderFilter === "all" || projected.gender === genderFilter)
+            && (rankFilter === "all" || (rankFilter === "unranked" ? !projected.rank : projected.rank === rankFilter))
+            && (filter === "all" || (filter === "complete" ? score === 21 : filter === "incomplete" ? score < 21 : filter === "missing-monster" ? !projected.rank : BONUSES.some(({ id }) => !projected.bonuses?.[id])));
+    }).sort((a, b) => {
+        const ap = plannedProgress(progress[a.id], plans[a.id]);
+        const bp = plannedProgress(progress[b.id], plans[b.id]);
+        const as = scoreFor(ap), bs = scoreFor(bp);
+        if (sortBy === "name") return a.name.localeCompare(b.name);
+        if (sortBy === "missing-most") return as - bs || a.indexPosition - b.indexPosition;
+        if (sortBy === "score-high") return bs - as || a.indexPosition - b.indexPosition;
+        if (sortBy === "closest") return (as === 21 ? 22 : 21 - as) - (bs === 21 ? 22 : 21 - bs) || a.indexPosition - b.indexPosition;
+        if (sortBy === "mutation") return compareMutationPriority(ap, bp) || a.indexPosition - b.indexPosition;
+        return a.indexPosition - b.indexPosition;
+    });
+    const selectedVisible = visible.filter(({ id }) => selected.has(id));
+    const writeTarget = (next: TrackerProgress, id: string, target: MonsterProgress) => {
+        const owned = progress[id];
+        const rank = target.rank && RANKS.indexOf(target.rank) > (owned?.rank ? RANKS.indexOf(owned.rank) : -1) ? target.rank : undefined;
+        const gender = target.gender && target.gender !== owned?.gender ? target.gender : undefined;
+        const bonuses = Object.fromEntries(BONUSES.filter(({ id: bonus }) => target.bonuses?.[bonus] && !owned?.bonuses?.[bonus]).map(({ id: bonus }) => [bonus, true]));
+        if (rank || gender || Object.keys(bonuses).length) next[id] = { rank, bonuses, gender };
+        else delete next[id];
+    };
+    const update = (id: string, target: MonsterProgress) => setPlans((current) => {
+        const next = { ...current };
+        writeTarget(next, id, target);
+        return next;
+    });
+    const hasBulkChanges = bulkRank !== "keep" || bulkGender !== "keep" || BONUSES.some(({ id }) => bulkBonuses[id] !== "keep");
+    const applyBulk = () => {
+        if (!selectedVisible.length || !hasBulkChanges) return;
+        setPlans((current) => {
+            const next = { ...current };
+            selectedVisible.forEach(({ id }) => {
+                const target = current[id] ?? {};
+                const owned = progress[id];
+                const rank = bulkRank === "keep" ? target.rank : bulkRank === "clear" ? undefined : bulkRank === "next" ? RANKS[Math.min((owned?.rank ? RANKS.indexOf(owned.rank) : -1) + 1, RANKS.length - 1)] : bulkRank;
+                const gender = bulkGender === "keep" ? target.gender : bulkGender === "clear" ? undefined : bulkGender;
+                const bonuses = { ...target.bonuses };
+                BONUSES.forEach(({ id: bonus }) => {
+                    if (bulkBonuses[bonus] === "add") bonuses[bonus] = true;
+                    if (bulkBonuses[bonus] === "remove") delete bonuses[bonus];
+                });
+                writeTarget(next, id, { rank, gender, bonuses });
+            });
+            return next;
+        });
+        setMessage(`Updated plans for ${selectedVisible.length} monsters. Collected progress is unchanged.`);
+        setSelected(new Set());
+        setBulkRank("keep"); setBulkGender("keep"); setBulkBonuses(emptyBulkBonusActions());
+    };
+    const control = "min-w-0 max-w-full rounded-md border border-[#405066] bg-[#131d28] px-3 py-2 text-sm text-white";
+    return <section>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+            <div><h2 className="text-sm font-bold uppercase tracking-wide text-[#32b5ff]">Upgrade plans</h2><p className="mt-1 text-xs text-[#aeb8c8]">{bulkMode ? "Click cards to select monsters, then apply shared goals below." : "Click a monster to edit its goals."}</p></div>
+            <div className="flex flex-wrap gap-5 text-sm">
+                <div className="text-[#aeb8c8]">Planned monsters<p className="text-xl font-black text-white">{pending.length}</p></div>
+                <div className="text-[#aeb8c8]">Planned gain<p className="text-xl font-black text-[#ffd84a]">+{gain.toLocaleString()}</p></div>
+                <div className="text-[#aeb8c8]">Projected score<p className="text-xl font-black text-[#32b5ff]">{(currentScore + gain).toLocaleString()}</p></div>
+            </div>
+        </div>
+        <div className="mt-4">
+            <TrackerToolbar search={query} setSearch={setQuery} genderFilter={genderFilter} setGenderFilter={setGenderFilter} rankFilter={rankFilter} setRankFilter={setRankFilter} locationFilter={location} setLocationFilter={setLocation} filter={filter} setFilter={setFilter} sortBy={sortBy} setSortBy={setSortBy} bulkMode={bulkMode} onToggleBulk={() => { setBulkMode(!bulkMode); setEditingId(null); setSelected(new Set()); setMessage(""); }} viewMode={viewMode} setViewMode={setViewMode} />
+        </div>
+        <div className="mb-3"><button type="button" aria-pressed={plannedOnly} onClick={() => setPlannedOnly(!plannedOnly)} className={`${control} ${plannedOnly ? "!border-[#2eacff] !bg-[#123653]" : ""}`}>Planned only ({pending.length})</button></div>
+        <p className="mb-3 text-xs text-[#aeb8c8]">Blue + icons = planned · Green icons = collected · Filters use projected values.</p>
+        {bulkMode && <div className="mb-4 rounded-xl border border-[#159fce] bg-[#0a1b27] p-4">
+            <div className="mb-3 flex flex-wrap items-center gap-2"><div className="mr-auto"><p className="text-[11px] font-bold uppercase text-[#32b5ff]">Bulk plan</p><b className="text-base text-white">{selectedVisible.length} monsters selected</b></div><button type="button" onClick={() => setSelected(new Set(visible.map(({ id }) => id)))} className={control}>Select all results ({visible.length})</button><button type="button" onClick={() => setSelected(new Set())} className={control}>Deselect all</button></div>
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-7">
+                <label className="grid gap-1 rounded-md border border-[#304356] bg-[#0c1822] p-2 text-[10px] font-bold uppercase text-[#cbd3df]">Rank goal<select value={bulkRank} onChange={(event) => setBulkRank(event.target.value as BulkRankAction | "next")} className={control}><option value="keep">Keep unchanged</option><option value="next">Next collected rank</option><option value="clear">Remove rank goal</option>{RANKS.map((rank) => <option key={rank} value={rank}>{rank}</option>)}</select></label>
+                <label className="grid gap-1 rounded-md border border-[#304356] bg-[#0c1822] p-2 text-[10px] font-bold uppercase text-[#cbd3df]">Gender goal<select value={bulkGender} onChange={(event) => setBulkGender(event.target.value as BulkGenderAction)} className={control}><option value="keep">Keep unchanged</option><option value="clear">Remove gender goal</option><option value="female">Female</option><option value="male">Male</option></select></label>
+                {BONUSES.map((bonus) => <label key={bonus.id} className="grid gap-1 rounded-md border border-[#304356] bg-[#0c1822] p-2 text-[10px] font-bold uppercase text-[#cbd3df]"><span className="flex items-center gap-2"><img src={assetPath(bonus.icon)} alt="" className="size-5 object-contain" />{bonus.label}</span><select value={bulkBonuses[bonus.id]} onChange={(event) => setBulkBonuses((current) => ({ ...current, [bonus.id]: event.target.value as BulkBonusAction }))} className={control}><option value="keep">Keep unchanged</option><option value="add">Plan mutation</option><option value="remove">Remove goal</option></select></label>)}
+                <button type="button" disabled={!selectedVisible.length || !hasBulkChanges} onClick={applyBulk} className="self-stretch min-h-12 rounded-md border border-[#2eacff] bg-[#145182] px-4 py-2 text-sm font-bold text-white disabled:opacity-40">Apply to {selectedVisible.length} plans</button>
+            </div>
+            <p className="mt-2 text-xs text-[#aeb8c8]">Applies only to selected monsters in the current results. Owned ranks and mutations are skipped.</p>
+
+        </div>}
+        {message && <p role="status" className="mb-3 text-sm text-[#80c998]">{message}</p>}
+        <div className={`grid items-start gap-4 ${!bulkMode && editingId ? "xl:grid-cols-[minmax(0,1fr)_340px]" : ""}`}>
+            <div className={`grid gap-2 ${viewMode === "list" ? "grid-cols-1" : !bulkMode && editingId ? "grid-cols-2 md:grid-cols-3 2xl:grid-cols-4" : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5"}`}>
+                {visible.map((monster) => {
+                    const owned = progress[monster.id] ?? {};
+                    const target = plans[monster.id] ?? {};
+                    const projected = plannedProgress(owned, target);
+                    const gain = gainFor(monster.id);
+                    const planned = hasPlan(monster.id);
+                    const active = bulkMode ? selected.has(monster.id) : editingId === monster.id;
+                    const rankGoal = projected.rank !== owned.rank;
+                    const genderGoal = projected.gender !== owned.gender;
+                    const goals = [rankGoal ? `${owned.rank ?? "—"} → ${projected.rank}` : "", ...BONUSES.filter(({ id }) => target.bonuses?.[id] && !owned.bonuses?.[id]).map(({ label }) => label), genderGoal && projected.gender ? GENDERS[projected.gender].label : ""].filter(Boolean);
+                    return <button key={monster.id} type="button" aria-pressed={active} aria-label={`${bulkMode ? "Select" : "Edit plan for"} ${monster.name}${goals.length ? `: ${goals.join(", ")}` : ""}`} onClick={() => {
+                        if (bulkMode) setSelected((current) => { const next = new Set(current); if (next.has(monster.id)) next.delete(monster.id); else next.add(monster.id); return next; });
+                        else setEditingId(monster.id);
+                    }} className={`group relative min-w-0 overflow-hidden rounded-lg border p-3 text-left transition focus-visible:outline-2 focus-visible:outline-[#2eacff] ${active ? "border-[#42baff] bg-[#123653] ring-2 ring-[#2eacff] shadow-[0_0_14px_#168fff33]" : planned ? "border-[#347dba] bg-[#0c1c2b] hover:border-[#64bfff]" : "border-[#344050] bg-[#0c141c] hover:border-[#68849e]"} ${viewMode === "list" ? "flex items-center gap-3" : ""}`}>
+                        {bulkMode && active && <span className="absolute right-2 top-2 z-20 grid size-6 place-items-center rounded-full bg-[#2eacff] text-sm font-black text-white">✓</span>}
+                        <span className={`${viewMode === "list" ? "w-16 shrink-0 text-lg" : "absolute left-3 top-2 z-10 text-2xl"} font-black`}><span className={rankTone(owned.rank)} style={rankLabelStyle(owned.rank)}>{owned.rank ?? "—"}</span>{rankGoal && <span className="block text-xs font-bold text-[#65c8ff]">→ {projected.rank}</span>}</span>
+                        {monster.image && <img src={assetPath(monster.image)} alt="" loading="lazy" className={`${viewMode === "list" ? "size-14 shrink-0" : "mx-auto h-28 w-full px-7"} object-contain drop-shadow-[0_6px_6px_#0008]`} />}
+                        <div className={`${viewMode === "list" ? "min-w-0 flex-1" : "mt-2"}`}>
+                            <h3 className="truncate text-sm font-bold text-white">{monster.name}</h3>
+                            <p className="mt-1 text-xs text-[#9da8b8]"><b className="text-[#ffb138]">{scoreFor(owned)}</b>{gain > 0 && <span className="font-bold text-[#65c8ff]"> → {scoreFor(projected)}</span>} / 21 {gain > 0 && <b className="ml-1 text-[#ffd84a]">+{gain}</b>}</p>
+                            <p title={goals.join(" · ")} className={`mt-1 truncate text-[11px] ${planned ? "text-[#65c8ff]" : "text-[#758394]"}`}>{goals.length ? goals.join(" · ") : "No plan"}</p>
+                        </div>
+                        <div className={`${viewMode === "list" ? "flex shrink-0 gap-1" : "absolute right-2 top-9 flex flex-col gap-1"}`}>
+                            {BONUSES.map((bonus) => {
+                                const isPlanned = target.bonuses?.[bonus.id] && !owned.bonuses?.[bonus.id];
+                                const collected = owned.bonuses?.[bonus.id];
+                                return <span key={bonus.id} title={`${bonus.label}: ${isPlanned ? "planned" : collected ? "collected" : "missing"}`} className={`relative grid size-6 place-items-center rounded border bg-[#080d13] p-0.5 ${isPlanned ? "border-[#42baff] shadow-[0_0_5px_#2eacff66]" : collected ? "border-[#35bd70]" : "border-[#344050] opacity-30 grayscale"}`}><img src={assetPath(bonus.icon)} alt={`${bonus.label} ${isPlanned ? "planned" : collected ? "collected" : "missing"}`} className="size-full object-contain" />{isPlanned && <b className="absolute -right-1 -top-1 rounded bg-[#1268a2] px-0.5 text-[9px] leading-3 text-white">+</b>}</span>;
+                            })}
+                        </div>
+                        {projected.gender && <img src={assetPath(GENDERS[projected.gender].icon)} alt={`${genderGoal ? "Planned" : "Collected"} ${projected.gender}`} className={`${viewMode === "list" ? "size-6" : "absolute right-10 top-2 size-7"} object-contain ${genderGoal ? "rounded border border-[#42baff]" : "opacity-60"}`} />}
+                    </button>;
+                })}
+            </div>
+            {!bulkMode && editingId && <button type="button" aria-label="Close plan editor" onClick={() => setEditingId(null)} className="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm xl:hidden" />}
+            {!bulkMode && editingId && (() => {
+                const monster = monsters.find(({ id }) => id === editingId);
+                if (!monster) return null;
+                const owned = progress[monster.id] ?? {};
+                const target = plans[monster.id] ?? {};
+                const gain = gainFor(monster.id);
+                const currentRankIndex = owned.rank ? RANKS.indexOf(owned.rank) : -1;
+                const targetRank = target.rank && RANKS.indexOf(target.rank) > currentRankIndex ? target.rank : "";
+                return <aside ref={editorRef} tabIndex={-1} role="dialog" aria-labelledby="planning-editor-title" className="fixed left-1/2 top-1/2 z-[100] w-[calc(100%-2rem)] max-w-[480px] max-h-[85dvh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain rounded-xl border border-[#344050] bg-[#0b141e] p-4 shadow-2xl xl:order-last xl:sticky xl:inset-auto xl:top-4 xl:z-auto xl:w-auto xl:max-w-none xl:translate-x-0 xl:translate-y-0 xl:max-h-[calc(100vh-2rem)]">
+                    <div className="mb-3 flex items-center justify-between"><p className="text-xs font-bold uppercase tracking-wide text-[#32b5ff]">Monster plan</p><button type="button" aria-label="Close plan editor" onClick={() => setEditingId(null)} className="grid size-8 place-items-center rounded border border-[#405066] text-lg text-[#cbd3df]">×</button></div>
+                    <div className="flex items-center gap-3">
+                        {monster.image && <img src={assetPath(monster.image)} alt="" loading="lazy" className="size-16 object-contain" />}
+                        <div className="min-w-0 flex-1"><h3 id="planning-editor-title" className="font-bold text-white">{monster.name}</h3><p className="text-xs text-[#aeb8c8]">Collected: {owned.rank ?? "No rank"} · {scoreFor(owned)} / 21</p></div>
+                        {gain > 0 && <span className="text-sm font-black text-[#ffd84a]">+{gain} points</span>}
+                    </div>
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                        <label className="flex items-center gap-2 text-sm text-[#cbd3df]">Target rank
+                            <select aria-label={`${monster.name} target rank`} value={targetRank} onChange={(event) => update(monster.id, { ...target, rank: event.target.value ? event.target.value as Rank : undefined })} className={control}>
+                                <option value="">No rank goal</option>{RANKS.filter((rank) => RANKS.indexOf(rank) > currentRankIndex).map((rank) => <option key={rank} value={rank}>{rank} (+{RANK_POINTS[rank] - (owned.rank ? RANK_POINTS[owned.rank] : 0)})</option>)}
+                            </select>
+                        </label>
+                        {currentRankIndex < RANKS.length - 1 && <button type="button" onClick={() => update(monster.id, { ...target, rank: RANKS[currentRankIndex + 1] })} className={`${control} text-xs`}>Next rank</button>}
+                    </div>
+                    <div className="mt-3">
+                        <p className="mb-2 text-xs text-[#aeb8c8]">Gender goal · Collected: {owned.gender ? GENDERS[owned.gender].label : "Unset"}</p>
+                        <div className="flex flex-wrap gap-2"><button type="button" aria-pressed={!target.gender || target.gender === owned.gender} onClick={() => update(monster.id, { ...target, gender: undefined })} className={control}>No gender goal</button>{(["female", "male"] as const).map((gender) => <button key={gender} type="button" disabled={owned.gender === gender} aria-pressed={target.gender === gender && owned.gender !== gender} onClick={() => update(monster.id, { ...target, gender: target.gender === gender ? undefined : gender })} className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm ${target.gender === gender || owned.gender === gender ? GENDERS[gender].tone : "border-[#405066] bg-[#131d28] text-[#b4bdca]"}`}><img src={assetPath(GENDERS[gender].icon)} alt="" className="size-5 object-contain" />{GENDERS[gender].label}{owned.gender === gender ? " ✓" : ""}</button>)}</div>
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                        {BONUSES.map((bonus) => {
+                            const collected = Boolean(owned.bonuses?.[bonus.id]);
+                            const planned = !collected && Boolean(target.bonuses?.[bonus.id]);
+                            return <button key={bonus.id} type="button" disabled={collected} aria-pressed={planned} aria-label={`${monster.name}: ${bonus.label}, ${collected ? "collected" : planned ? "planned" : "not planned"}`} onClick={() => update(monster.id, { ...target, bonuses: { ...target.bonuses, [bonus.id]: !planned } })} className={`flex items-center gap-2 rounded-md border px-2 py-2 text-left text-xs ${collected ? "border-[#294a3b] bg-[#11251c] text-[#80c998]" : planned ? "border-[#2eacff] bg-[#123653] text-white" : "border-[#405066] bg-[#131d28] text-[#b4bdca]"}`}>
+                                <img src={assetPath(bonus.icon)} alt="" className="size-6 object-contain" /><span>{bonus.label}<span className="block text-[10px]">{collected ? "✓ Collected" : planned ? `✓ Planned · +${bonus.points}` : `Plan · +${bonus.points}`}</span></span>
+                            </button>;
+                        })}
+                    </div>
+                    {hasPlan(monster.id) && <div className="mt-3 flex flex-wrap items-center gap-2"><button type="button" onClick={() => onAchieved(monster.id)} className="rounded-md border border-[#3eac6b] bg-[#153c28] px-3 py-2 text-sm font-bold text-[#a3f5bf]">Mark achieved</button><button type="button" onClick={() => update(monster.id, {})} className={control}>Remove plan</button><span className="text-xs text-[#aeb8c8]">Target: {scoreFor(owned) + gain} / 21</span></div>}
+                    {scoreFor(owned) === 21 && <p className="mt-3 text-xs text-[#80c998]">Index complete</p>}
+
+                </aside>;
+            })()}
+        </div>
+        {visible.length === 0 && <p className="py-12 text-center text-sm text-[#aeb8c8]">{plannedOnly ? "No planned upgrades match. Switch off Planned only to choose monsters." : "No monsters match your search."}</p>}
+    </section>;
+}
+
+function TrackerToolbar({ search, setSearch, genderFilter, setGenderFilter, rankFilter, setRankFilter, locationFilter, setLocationFilter, filter, setFilter, sortBy, setSortBy, bulkMode, onToggleBulk, viewMode, setViewMode, statusOptions = [
+    { id: "all", label: "All" }, { id: "incomplete", label: "Incomplete" }, { id: "complete", label: "Complete" }, { id: "missing-monster", label: "Missing Monster" }, { id: "missing-bonuses", label: "Missing Bonuses" },
+] }: {
+    search: string; setSearch: (value: string) => void;
+    genderFilter: GenderFilter; setGenderFilter: (value: GenderFilter) => void;
+    rankFilter: RankFilter; setRankFilter: (value: RankFilter) => void;
+    locationFilter: LocationFilter; setLocationFilter: (value: LocationFilter) => void;
+    filter: Filter; setFilter: (value: Filter) => void;
+    sortBy: SortOption; setSortBy: (value: SortOption) => void;
+    bulkMode: boolean; onToggleBulk: () => void;
+    viewMode: ViewMode; setViewMode: (value: ViewMode) => void;
+    statusOptions?: Array<{ id: Filter; label: string; count?: number }>;
+}) {
+    return <div className="mb-4 flex min-w-0 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-stretch">
+                    <label className="flex min-w-0 items-center rounded-md border border-[#344050] bg-[#0c131d] px-3 focus-within:border-[#168fff] w-full sm:min-w-56 sm:flex-1">
+                        <span aria-hidden="true" className="text-[#7f8b9e]">⌕</span>
+                        <input aria-label="Search monsters" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search monsters..." className="min-w-0 flex-1 bg-transparent px-2 py-2 text-sm text-white outline-none placeholder:text-[#677386]" />
+                    </label>
+                    <select value={genderFilter} onChange={(event) => setGenderFilter(event.target.value as GenderFilter)} aria-label="Filter by gender" className="rounded-md border border-[#344050] bg-[#0c131d] px-3 py-2 text-sm text-[#d5dce6] outline-none focus:border-[#168fff]">
+                        <option value="all">Gender: All</option>
+                        <option value="female">Gender: Female</option>
+                        <option value="male">Gender: Male</option>
+                    </select>
+                    <select value={rankFilter} onChange={(event) => setRankFilter(event.target.value as RankFilter)} aria-label="Filter by rank" className="rounded-md border border-[#344050] bg-[#0c131d] px-3 py-2 text-sm text-[#d5dce6] outline-none focus:border-[#168fff]">
+                        <option value="all">Rank: All</option>
+                        <option value="unranked">Rank: Unranked</option>
+                        {RANKS.map((rank) => <option key={rank} value={rank}>Rank: {rank}</option>)}
+                    </select>
+                    <select value={locationFilter} onChange={(event) => setLocationFilter(event.target.value as LocationFilter)} aria-label="Filter by island" className="rounded-md border border-[#344050] bg-[#0c131d] px-3 py-2 text-sm text-[#d5dce6] outline-none focus:border-[#168fff]">
+                        <option value="all">Island: All</option>
+                        {ISLANDS.map((island) => <option key={island} value={island}>{island}</option>)}
+                    </select>
+                    <select value={filter} onChange={(event) => setFilter(event.target.value as Filter)} aria-label="Filter by status" className="min-w-0 rounded-md border border-[#344050] bg-[#0c131d] px-3 py-2 text-sm text-[#d5dce6] outline-none focus:border-[#168fff]">
+                        {statusOptions.map((item) => <option key={item.id} value={item.id}>Status: {item.label}{item.count === undefined ? "" : ` (${item.count})`}</option>)}
+                    </select>
+                    <select value={sortBy} onChange={(event) => setSortBy(event.target.value as SortOption)} aria-label="Sort monsters" className="rounded-md border border-[#344050] bg-[#0c131d] px-3 py-2 text-sm text-[#d5dce6] outline-none focus:border-[#168fff]">
+                        <option value="index">Sort: Index Order</option>
+                        <option value="missing-most">Sort: Most Missing</option>
+                        <option value="closest">Sort: Closest to Complete</option>
+                        <option value="score-high">Sort: Highest Score</option>
+                        <option value="mutation">Sort: Mutation Priority</option>
+                        <option value="name">Sort: Name A–Z</option>
+                    </select>
+                    <button type="button" onClick={onToggleBulk} aria-pressed={bulkMode} className={`rounded-md border px-3 py-2 text-sm font-semibold transition ${bulkMode ? "border-[#27bdff] bg-[#0d4771] text-white" : "border-[#405b70] bg-[#132536] text-[#d8e0ea] hover:border-[#2eacff] hover:text-white"}`}>
+                        {bulkMode ? "Done Editing" : "Bulk Edit"}
+                    </button>
+                    <div className="grid grid-cols-2 rounded-md border border-[#344050] bg-[#0c131d] p-1" aria-label="View mode">
+                        <button type="button" onClick={() => setViewMode("grid")} aria-label="Grid view" aria-pressed={viewMode === "grid"} className={`rounded px-3 py-1 text-sm ${viewMode === "grid" ? "bg-[#174a73] text-white" : "text-[#7f8b9e] hover:text-white"}`}>▦</button>
+                        <button type="button" onClick={() => setViewMode("list")} aria-label="List view" aria-pressed={viewMode === "list"} className={`rounded px-3 py-1 text-sm ${viewMode === "list" ? "bg-[#174a73] text-white" : "text-[#7f8b9e] hover:text-white"}`}>☷</button>
+                    </div>
+
+    </div>;
+}
+
+// Both editors share narrow-screen scroll locking and keyboard behavior.
+function useCompactEditor(open: boolean, ref: { current: HTMLElement | null }, onClose: () => void) {
+    const closeRef = useRef(onClose);
+    useEffect(() => { closeRef.current = onClose; }, [onClose]);
+    useEffect(() => {
+        if (!open) return;
+        const media = window.matchMedia("(max-width: 1279px)");
+        let release: (() => void) | undefined;
+        const sync = () => {
+            release?.();
+            release = undefined;
+            const panel = ref.current;
+            if (!media.matches || !panel) return;
+            const previousFocus = document.activeElement as HTMLElement | null;
+            const previousOverflow = document.body.style.overflow;
+            document.body.style.overflow = "hidden";
+            panel.setAttribute("aria-modal", "true");
+            panel.focus({ preventScroll: true });
+            const onKeyDown = (event: KeyboardEvent) => {
+                if (event.key === "Escape") { event.preventDefault(); closeRef.current(); }
+                if (event.key !== "Tab") return;
+                const controls = Array.from(panel.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), select:not(:disabled), [tabindex="0"]')).filter((element) => element.getClientRects().length > 0);
+                const first = controls[0], last = controls[controls.length - 1];
+                if (!first) { event.preventDefault(); panel.focus(); return; }
+                if (event.shiftKey && (document.activeElement === first || document.activeElement === panel)) { event.preventDefault(); last.focus(); }
+                else if (!event.shiftKey && (document.activeElement === last || document.activeElement === panel)) { event.preventDefault(); first.focus(); }
+            };
+            document.addEventListener("keydown", onKeyDown);
+            release = () => {
+                document.body.style.overflow = previousOverflow;
+                panel.removeAttribute("aria-modal");
+                document.removeEventListener("keydown", onKeyDown);
+                if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
+            };
+        };
+        sync();
+        media.addEventListener("change", sync);
+        return () => { release?.(); media.removeEventListener("change", sync); };
+    }, [open, ref]);
 }
