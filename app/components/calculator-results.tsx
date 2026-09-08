@@ -1,3 +1,5 @@
+import { formatNumber, formatStatNumber } from "../lib/format-numbers";
+import { calculateSkillDps, calculateSkillSummary } from "../lib/calculations/skill-summary";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -48,53 +50,6 @@ import type { Trait } from "../types/trait";
 import { MonsterOverviewCard } from "./monster-overview-card";
 import { Panel } from "./panel";
 import { TraitIcon } from "./trait-icon";
-
-function formatNumber(value: number): string {
-    return new Intl.NumberFormat("en-US", {
-        maximumFractionDigits: 2,
-    }).format(value);
-}
-
-function roundToSignificantFigures(value: number, figures = 4): number {
-    if (value === 0 || !Number.isFinite(value)) return value;
-
-    const magnitude = Math.floor(Math.log10(Math.abs(value)));
-    const precision = figures - magnitude - 1;
-    const factor = 10 ** precision;
-
-    return Math.round((value + Number.EPSILON) * factor) / factor;
-}
-
-function formatStatNumber(value: number): string {
-    if (!Number.isFinite(value)) return "—";
-
-    const roundedValue = roundToSignificantFigures(value);
-    const absoluteValue = Math.abs(roundedValue);
-    const units = [
-        { threshold: 1_000_000_000_000_000, suffix: "Qd" },
-        { threshold: 1_000_000_000_000, suffix: "T" },
-        { threshold: 1_000_000_000, suffix: "B" },
-        { threshold: 1_000_000, suffix: "M" },
-        { threshold: 100_000, suffix: "K" },
-    ];
-    const unit = units.find(({ threshold }) => absoluteValue >= threshold);
-
-    if (!unit) {
-        return new Intl.NumberFormat("en-US", {
-            maximumFractionDigits: Math.max(
-                0,
-                4 - Math.floor(Math.log10(absoluteValue || 1)) - 1,
-            ),
-        }).format(roundedValue);
-    }
-
-    const scaledValue = roundedValue / unit.threshold;
-    const scaledMagnitude = Math.floor(Math.log10(Math.abs(scaledValue)));
-
-    return `${new Intl.NumberFormat("en-US", {
-        maximumFractionDigits: Math.max(0, 4 - scaledMagnitude - 1),
-    }).format(scaledValue)}${unit.suffix}`;
-}
 
 function DamageIncreaseEffect({ effect }: { effect: SkillStatusEffect }) {
     const targetLabel = effect.target === "Team" ? "Team" : "Self";
@@ -885,94 +840,6 @@ const mutationSummary: Record<Mutation, { label: string; icon: string }> = {
     "fairy-x": { label: "Fairy X", icon: "/icons/fairy-x.png" },
 };
 
-function calculateSkillDps(
-    monster: Monster,
-    skill: NonNullable<ReturnType<typeof getSkill>>,
-    stats: CalculatedStats,
-    build: Build,
-    effectivePassives: MonsterPassive[],
-): number | null {
-    if (skill.damageInstances.length === 0 || skill.cooldown === null || skill.cooldown <= 0) {
-        return null;
-    }
-
-    const totalMultiplier = getSkillTotalMultiplier(skill);
-
-    const attributeEffects = calculateSkillAttributeEffects(
-        build,
-        skill.element,
-    );
-
-    const accountRiftDamageMultiplier =
-        build.combatContext === "rift"
-            ? stats.accountRiftDamageMultiplier
-            : 1;
-
-    const traitDamageMultiplier = getTraitDamageMultiplier(
-        build.traitId,
-        {
-            targetStatused: build.targetStatused,
-        },
-    );
-    const teammateSkillIdGroups = build.teammateMonsterIds.flatMap((monsterId) => {
-        const teammate = monsters.find((candidate) => candidate.id === monsterId);
-        return teammate ? [teammate.skillIds] : [];
-    });
-    const rallyingWarCryDamageIncrease = getActiveRallyingWarCryDamageIncrease(
-        monster.skillIds,
-        teammateSkillIdGroups,
-    );
-    const rallyingWarCryMultiplier = build.rallyingWarCryActive
-        ? 1 + rallyingWarCryDamageIncrease / 100
-        : 1;
-    const ownVulnerability = getEnemyVulnerability(monster.skillIds);
-    const activeVulnerability = getActiveEnemyVulnerability(monster.skillIds, teammateSkillIdGroups);
-    const vulnerabilityEffectiveness = ownVulnerability >= activeVulnerability
-        ? getTraitEffectValue(build.traitId, "vulnerabilityEffectiveness")
-        : 0;
-    const effectiveVulnerability = activeVulnerability * (1 + vulnerabilityEffectiveness / 100);
-    const vulnerabilityMultiplier = build.vulnerabilityActive ? 1 + effectiveVulnerability / 100 : 1;
-
-    const combatDamage = calculateCombatDamage({
-        monster,
-        baseDamage:
-            stats.damage *
-            totalMultiplier *
-            traitDamageMultiplier *
-            rallyingWarCryMultiplier *
-            vulnerabilityMultiplier *
-            attributeEffects.skillDamageMultiplier *
-            accountRiftDamageMultiplier,
-        critMultiplier: stats.critMultiplier,
-        combatContext: build.combatContext,
-        targetIsBoss: build.targetIsBoss,
-        currentHpPercent: build.currentHpPercent,
-        passives: effectivePassives,
-    });
-
-    const cooldownMultiplier =
-        getMutationCooldownMultiplier(build.mutations) *
-        getTraitCooldownMultiplier(build.traitId);
-
-    const displayedCooldown =
-        skill.cooldown * cooldownMultiplier;
-
-    if (displayedCooldown <= 0) {
-        return null;
-    }
-
-    const critChance = Math.min(
-        Math.max(stats.critChance / 100, 0),
-        1,
-    );
-
-    const expectedDamage =
-        combatDamage.normalDamage * (1 - critChance) +
-        combatDamage.criticalDamage * critChance;
-
-    return expectedDamage / displayedCooldown;
-}
-
 type SkillDamagePanelProps = {
     monster: Monster;
     skill: NonNullable<ReturnType<typeof getSkill>>;
@@ -1091,15 +958,8 @@ function SkillDamagePanel({
                 ? { color: hastenCooldownColor }
                 : { color: "#e3e8f1" };
 
-    const combatDamage = calculateCombatDamage({
-        monster,
-        baseDamage: stats.damage * totalMultiplier * traitDamageMultiplier * rallyingWarCryMultiplier * vulnerabilityMultiplier * attributeEffects.skillDamageMultiplier * accountRiftDamageMultiplier,
-        critMultiplier: stats.critMultiplier,
-        combatContext: build.combatContext,
-        targetIsBoss: build.targetIsBoss,
-        currentHpPercent: build.currentHpPercent,
-        passives: effectivePassives,
-    });
+    const skillSummary = calculateSkillSummary(monster, skill, stats, build, effectivePassives);
+    const combatDamage = skillSummary.combatDamage;
     const monsterDamageIncrease = getMonsterDamageIncrease(monster.skillIds);
     const damageIncreaseCombatDamage = isDamagingSkill && monsterDamageIncrease > 0
         ? calculateCombatDamage({
@@ -1205,12 +1065,7 @@ function SkillDamagePanel({
             combatDamage.criticalDamage * critChance
             : null;
 
-    const skillDps =
-        expectedDamage !== null &&
-        displayedCooldown !== null &&
-        displayedCooldown > 0
-            ? expectedDamage / displayedCooldown
-            : null;
+    const skillDps = skillSummary.dps;
     const damageIncreaseDps =
         damageIncreaseCombatDamage !== null &&
         displayedCooldown !== null &&

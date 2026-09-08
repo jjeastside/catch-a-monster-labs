@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { createContext, useContext, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { PASSIVE_DEFINITIONS } from "../data/passives";
 import { assetPath } from "../lib/asset-path";
@@ -34,7 +34,10 @@ const rarityPortraitClasses: Record<Monster["rarity"], string> = {
     Void: "border-[#35e9d0] from-[#123c43] to-[#101d2b]",
 };
 
+const BrowserPortalContext = createContext<() => HTMLElement>(() => document.body);
+
 type MonsterBrowserProps = {
+    portalContainer?: () => HTMLElement;
     monsters: Monster[];
     selectedMonster: Monster | null;
     favoriteMonsterIds: string[];
@@ -48,6 +51,7 @@ type SortMode = "index" | "dps" | "damage" | "health";
 const selectClassName = "min-w-0 rounded-md border border-[#344050] bg-[#141c28] px-3 py-2 text-xs text-[#bfc7d5] outline-none focus:border-[#7182ff]";
 
 function InfoTooltip({ label, children }: { label: string; children: string }) {
+    const getPortalContainer = useContext(BrowserPortalContext);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const [open, setOpen] = useState(false);
     const [position, setPosition] = useState({ top: 0, left: 0 });
@@ -107,13 +111,14 @@ function InfoTooltip({ label, children }: { label: string; children: string }) {
                     >
                         {children}
                     </div>,
-                    document.body,
+                    getPortalContainer(),
                 )}
         </>
     );
 }
 
 function HoverInfo({ text, children }: { text: string; children: React.ReactNode }) {
+    const getPortalContainer = useContext(BrowserPortalContext);
     const anchorRef = useRef<HTMLSpanElement | null>(null);
     const [open, setOpen] = useState(false);
     const [position, setPosition] = useState({ top: 0, left: 0 });
@@ -166,7 +171,7 @@ function HoverInfo({ text, children }: { text: string; children: React.ReactNode
                 >
                     {text}
                 </div>,
-                document.body,
+                getPortalContainer(),
             )}
         </span>
     );
@@ -179,6 +184,7 @@ type BrowserEvolutionMultiplierEditorProps = {
 };
 
 function BrowserEvolutionMultiplierEditor({ value, onChange }: BrowserEvolutionMultiplierEditorProps) {
+    const getPortalContainer = useContext(BrowserPortalContext);
     const [inputDraft, setInputDraft] = useState<string | null>(null);
     const [dragPreview, setDragPreview] = useState<number | null>(null);
     const [precisionRange, setPrecisionRange] = useState<{ min: number; max: number } | null>(null);
@@ -298,7 +304,7 @@ function BrowserEvolutionMultiplierEditor({ value, onChange }: BrowserEvolutionM
                                 />
                             </div>
                         </div>,
-                        document.body,
+                        getPortalContainer(),
                     )}
 
                 <div className="relative rounded-md border border-[#f4d4b3]/75 bg-[#343434] p-[2px] shadow-inner">
@@ -556,7 +562,7 @@ function MonsterOption({ monster, selected, favorite, onSelect, onToggleFavorite
     );
 }
 
-export function MonsterBrowser({
+function MonsterBrowserContent({
                                    monsters,
                                    selectedMonster,
                                    favoriteMonsterIds,
@@ -1039,4 +1045,8 @@ export function MonsterBrowser({
             )}
         </>
     );
+}
+
+export function MonsterBrowser(props: MonsterBrowserProps) {
+    return <BrowserPortalContext.Provider value={props.portalContainer ?? (() => document.body)}><MonsterBrowserContent {...props} /></BrowserPortalContext.Provider>;
 }

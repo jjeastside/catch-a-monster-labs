@@ -11,6 +11,7 @@ import { assetPath } from "../lib/asset-path";
 
 const navItems = [
     { label: "Calculator", href: "/", icon: "/icons/monster-calculator.png" },
+    { label: "Monster Compare", href: "/compare", icon: "/icons/monster-compare.png" },
     { label: "Monster Database", href: "/monster-database", icon: "/icons/monster-database.png" },
     { label: "Index Tracker", href: "/index-tracker", icon: "/icons/index.png" },
     { label: "Patch Notes", href: "/updates", icon: "/icons/patch-notes.png" },

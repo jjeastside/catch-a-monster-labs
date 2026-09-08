@@ -8,7 +8,7 @@ type MonsterOverviewCardProps = {
     onToggleFavorite: () => void;
 };
 
-const rarityBadgeClasses: Record<Monster["rarity"], string> = {
+export const rarityBadgeClasses: Record<Monster["rarity"], string> = {
     Common: "border-[#707070] bg-[#2b2b2b] text-[#d1d1d1]",
     Uncommon: "border-[#28a745] bg-[#123d1d] text-[#65e47a]",
     Rare: "border-[#299ddd] bg-[#102f46] text-[#6bc8ff]",
@@ -23,7 +23,7 @@ const rarityBadgeClasses: Record<Monster["rarity"], string> = {
         "border-[#28e9c5] bg-[linear-gradient(135deg,#4acb28,#16b879_45%,#078fa8)] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]",
 };
 
-const rarityImageClasses: Record<Monster["rarity"], string> = {
+export const rarityImageClasses: Record<Monster["rarity"], string> = {
     Common:
         "border-[#707070] bg-gradient-to-br from-[#353535] to-[#171717]",
     Uncommon:
