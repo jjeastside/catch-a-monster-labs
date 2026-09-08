@@ -10,9 +10,22 @@ export const metadata: Metadata = {
 
 const releases = [
     {
+        version: "v1.0.10",
+        date: "September 8, 2026",
+        label: "Latest",
+        changes: [
+            "Added Index Tracker Planning mode for setting future rank, mutation, and Male/Female breeding goals separately from collected progress.",
+            "Added planned point gains, projected Index Score, a Planned Only filter, and Mark Achieved to move completed goals into collected progress.",
+            "Added automatic plan saving and included plans in tracker backup exports and imports.",
+            "Added bulk planning for ranks, mutations, and genders, with highlighted monster-card selection and shared editing controls.",
+            "Condensed planning cards to show more monsters at once, with visible upgrade goals and a dedicated editor for the selected monster.",
+            "Unified Collected and Planning filter bars with matching search, gender, rank, island, status, sorting, and grid/list controls. Moved completion filters into the Status dropdown.",
+            "Improved both individual editors on narrower screens with compact centered popups, internal scrolling, and backdrop or Escape dismissal.",
+        ],
+    },
+    {
         version: "v1.0.9",
         date: "September 5, 2026",
-        label: "Latest",
         changes: [
             "Added the new pets Nexil and Stellawulf.",
             "Refreshed the Patch Notes, Monster Database, Changelog, and About Cam Lab page headers with dedicated artwork for a more consistent site-wide look.",
