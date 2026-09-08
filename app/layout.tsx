@@ -15,11 +15,11 @@ export const metadata: Metadata = {
         "Build and compare Catch a Monster builds with combat stats, skill damage, DPS, equipment, traits, mutations, passives, and account multipliers.",
     icons: {
         icon: [
-            { url: "/favicon.ico" },
-            { url: "/icon.png", type: "image/png" },
+            { url: "favicon.ico" },
+            { url: "icon.png", type: "image/png" },
         ],
-        shortcut: "/favicon.ico",
-        apple: "/apple-icon.png",
+        shortcut: "favicon.ico",
+        apple: "apple-icon.png",
     },
     openGraph: {
         title: "Cam Lab — Catch a Monster Build Calculator",

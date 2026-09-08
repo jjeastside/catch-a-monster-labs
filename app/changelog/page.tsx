@@ -21,6 +21,9 @@ const releases = [
             "Condensed planning cards to show more monsters at once, with visible upgrade goals and a dedicated editor for the selected monster.",
             "Unified Collected and Planning filter bars with matching search, gender, rank, island, status, sorting, and grid/list controls. Moved completion filters into the Status dropdown.",
             "Improved both individual editors on narrower screens with compact centered popups, internal scrolling, and backdrop or Escape dismissal.",
+            "Rebranded the top navigation with the new horizontal Catch a Monster Labs logo, decorative blue crystal edge artwork, and restored page icons for a more recognizable site identity.",
+            "Refined responsive navigation behavior so the logo stays centered within its available brand area while desktop links and the mobile menu adapt cleanly across screen sizes.",
+            "Replaced the browser favicon and app icons with the new Cam Lab potion-monster mark for clearer branding in tabs, bookmarks, and device shortcuts.",
         ],
     },
     {
