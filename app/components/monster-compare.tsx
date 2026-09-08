@@ -18,10 +18,12 @@ import { useCompareAccount } from "../lib/use-compare-account";
 import { PASSIVE_DEFINITIONS, getPassiveImagePath } from "../data/passives";
 import { MonsterBrowser } from "./monster-browser";
 import { EquipmentSelect } from "./equipment-select";
-import { PageHeading } from "./page-heading";
+import styles from "./monster-compare.module.css";
+import { CombatRank, rankColors } from "./calculator-results";
 import {
   rarityBadgeClasses,
   rarityImageClasses,
+  getMonsterPortraitStyles,
 } from "./monster-overview-card";
 
 const availableMonsters = monsters.filter((monster) =>
@@ -30,7 +32,7 @@ const availableMonsters = monsters.filter((monster) =>
 const defaults = () => ({ ...createDefaultBuild(), rank: "E" as Rank });
 const card = "rounded-xl border border-[#344050] bg-[#151e2b]";
 const control =
-  "w-full min-w-0 rounded-md border border-[#344050] bg-[#0f1620] px-1 py-1.5 text-xs text-[#f6f8fc]";
+  "w-full min-w-0 rounded-md border border-[#344050] bg-[#0f1620] h-7 px-1 py-1 text-xs text-[#f6f8fc]";
 const eyebrow =
   "text-[10px] font-bold uppercase tracking-[0.12em] text-[#8796ff]";
 const iconAliases: Record<string, string> = {
@@ -39,42 +41,172 @@ const iconAliases: Record<string, string> = {
   "soul-reap-chain-scareharvest": "soul-reap-chain-poison",
 };
 
+function Crown() {
+  return (
+    <svg
+      aria-label="Unique winner"
+      role="img"
+      viewBox="0 0 20 16"
+      className="size-3 shrink-0 text-[#edc96d]"
+      fill="currentColor"
+    >
+      <path d="M2 12 0 3l5 3L10 0l5 6 5-3-2 9H2Zm0 2h16v2H2Z" />
+    </svg>
+  );
+}
+function winnerClass(
+  best: boolean,
+  unique: boolean,
+  tone: "gold" | "green" = "gold",
+) {
+  if (!best) return "border-[#344050] bg-[#0f1620]";
+  if (tone === "green") {
+    return unique
+      ? "border-[#52d67d]/80 bg-[#0f221a]"
+      : "border-[#52d67d]/55 bg-[#0d1d18]";
+  }
+  return unique
+    ? "border-[#f1cf62]/85 bg-[#251f0c]"
+    : "border-[#f1cf62]/60 bg-[#1d180b]";
+}
 function Value({
   label,
   value,
   best,
+  peers,
   suffix = "",
   icon,
   inline = false,
+  tone = "gold",
 }: {
   label: string;
   value: number | null;
   best: boolean;
+  peers: (number | null)[];
   suffix?: string;
   icon?: string;
   inline?: boolean;
+  tone?: "gold" | "green";
 }) {
+  const unique = best && peers.filter((item) => item === value).length === 1;
   return (
     <div
       data-best={best}
-      className={`min-w-0 rounded-md border px-1.5 py-1.5 ${inline ? "flex items-center justify-between gap-2" : ""} ${best ? "border-[#54ba91]/65 bg-[#15352f]" : "border-[#344050] bg-[#0f1620]"}`}
-      title={best ? "Best value (including ties)" : undefined}
+      data-unique={unique}
+      data-tone={tone}
+      className={`relative min-w-0 rounded-md border px-1.5 py-1.5 ${inline ? "flex items-center justify-between gap-2 px-2 py-2" : ""} ${winnerClass(best, unique, tone)}`}
+      title={
+        unique ? "Unique best value" : best ? "Tied best value" : undefined
+      }
     >
       <div className="flex items-center gap-1 text-[9px] uppercase tracking-wide text-[#a9b7cd]">
         {icon && (
-          <img src={assetPath(icon)} alt="" className="size-4 object-contain" />
+          <img
+            src={assetPath(icon)}
+            alt=""
+            className="size-4 shrink-0 object-contain"
+          />
         )}
-        {label}
+        <span>{label}</span>
+        {unique && !inline && (
+          <span className="absolute -right-0.5 -top-1">
+            <Crown />
+          </span>
+        )}
       </div>
       <div
-        className={`mt-1 text-[15px] font-bold tabular-nums leading-tight ${best ? "text-[#92edbc]" : "text-[#f6f8fc]"}`}
+        className={`flex items-center gap-1.5 font-bold tabular-nums leading-tight ${inline ? "text-[22px]" : "mt-1 text-[18px] tracking-tight"} ${best ? tone === "green" ? unique ? "text-[#a4f0bf]" : "text-[#caf7d8]" : unique ? "text-[#fff2c4]" : "text-[#f6f8fc]" : "text-[#f6f8fc]"}`}
       >
+        {unique && inline && <Crown />}
         {value === null
           ? "—"
           : `${suffix === "%" || suffix === "×" ? formatNumber(value) : formatStatNumber(value)}${suffix}`}
       </div>
-      {best && <span className="sr-only">Best value</span>}
+      {best && (
+        <span className="sr-only">
+          {unique ? "Unique best value" : "Tied best value"}
+        </span>
+      )}
     </div>
+  );
+}
+function Cooldown({
+  value,
+  peers,
+}: {
+  value: number | null;
+  peers: (number | null)[];
+}) {
+  const best = isBestValue(value, peers, true);
+  const unique = best && peers.filter((item) => item === value).length === 1;
+  return (
+    <span
+      data-best={best}
+      data-unique={unique}
+      className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-1 text-[10px] ${winnerClass(best, unique, "gold")} ${best ? "text-[#f3e6bb]" : "text-[#a9b7cd]"}`}
+      title={
+        unique ? "Lowest cooldown" : best ? "Tied lowest cooldown" : "Cooldown"
+      }
+    >
+      {unique && <Crown />}
+      {value === null ? "Triggered / unknown" : `${formatNumber(value)}s CD`}
+    </span>
+  );
+}
+
+
+type CompareSelectOption = {
+  value: number | string;
+  label: string;
+};
+
+function CompareSelect({
+  label,
+  value,
+  onChange,
+  options,
+  ariaLabel,
+  icon,
+  compact = false,
+  accent = "default",
+}: {
+  label: string;
+  value: number | string;
+  onChange: (value: string) => void;
+  options: CompareSelectOption[];
+  ariaLabel: string;
+  icon?: string;
+  compact?: boolean;
+  accent?: "default" | "blue";
+}) {
+  return (
+    <label className="text-xs text-[#a9b7cd]">
+      {label}
+      <span
+        className={`${styles.selectShell} ${compact ? styles.selectShellCompact : ""} ${icon ? styles.selectShellWithIcon : ""}`.trim()}
+      >
+        {icon && (
+          <img
+            src={assetPath(icon)}
+            alt=""
+            aria-hidden="true"
+            className={`${styles.selectIcon} ${accent === "blue" ? styles.selectIconBlue : ""}`.trim()}
+          />
+        )}
+        <select
+          className={`${control} mt-1 ${styles.compareSelect} ${icon ? styles.compareSelectWithIcon : ""} ${accent === "blue" ? styles.compareSelectBlue : ""}`.trim()}
+          aria-label={ariaLabel}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+        >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </span>
+    </label>
   );
 }
 
@@ -99,7 +231,7 @@ function CompareBuildControls({
       }
     >
       <div
-        className={compact ? "grid grid-cols-5 items-end gap-1.5" : "contents"}
+        className={compact ? "grid grid-cols-5 items-end gap-1" : "contents"}
       >
         <label className="text-xs text-[#a9b7cd]">
           Level
@@ -126,6 +258,7 @@ function CompareBuildControls({
         </label>
         <label className="text-xs text-[#a9b7cd]">
           Rank
+          <span className={styles.rankControl}>
           <select
             className={`${control} mt-1`}
             aria-label="Rank"
@@ -133,62 +266,61 @@ function CompareBuildControls({
             onChange={(event) => update("rank", event.target.value as Rank)}
           >
             {["E", "D", "C", "B", "A", "S", "SS"].map((rank) => (
-              <option key={rank}>{rank}</option>
+              <option key={rank} style={{ color: rankColors[rank as Rank] }}>{rank}</option>
             ))}
           </select>
+          <span aria-hidden="true"><CombatRank rank={build.rank} /></span>
+          </span>
         </label>
-        <label className="text-xs text-[#a9b7cd]">
-          {compact ? "Enh" : "Enhancement"}
-          <select
-            className={`${control} mt-1`}
-            aria-label="Enhancement"
-            value={build.enhancement}
-            onChange={(event) =>
-              update("enhancement", Number(event.target.value))
-            }
-          >
-            {Array.from({ length: 11 }, (_, index) => (
-              <option key={index} value={index}>
-                +{index}
-              </option>
-            ))}
-          </select>
-        </label>
+        <CompareSelect
+          label={compact ? "Enh" : "Enhancement"}
+          ariaLabel="Enhancement"
+          value={build.enhancement}
+          compact={compact}
+          accent="blue"
+          onChange={(value) => update("enhancement", Number(value))}
+          options={Array.from({ length: 11 }, (_, index) => ({
+            value: index,
+            label: `+${index}`,
+          }))}
+        />
         {(
           [
-            ["damageGeneticPotential", "Damage"],
-            ["healthGeneticPotential", "HP"],
+            ["damageGeneticPotential", "Damage", "/icons/breed-attack.png"],
+            ["healthGeneticPotential", "HP", "/icons/breed-health.png"],
           ] as const
-        ).map(([key, label]) => (
-          <label key={key} className="text-xs text-[#a9b7cd]">
-            {compact
-              ? label === "Damage"
-                ? "GP DMG"
-                : "GP HP"
-              : `Genetic Potential ${label}`}
-            <select
-              className={`${control} mt-1`}
-              aria-label={`Genetic Potential ${label}`}
-              value={build[key]}
-              onChange={(event) => update(key, Number(event.target.value))}
-            >
-              {GENETIC_POTENTIAL_VALUES.map((value) => (
-                <option key={value} value={value}>
-                  {value}%
-                </option>
-              ))}
-            </select>
-          </label>
+        ).map(([key, label, icon]) => (
+          <CompareSelect
+            key={key}
+            label={
+              compact
+                ? label === "Damage"
+                  ? "GP DMG"
+                  : "GP HP"
+                : `Genetic Potential ${label}`
+            }
+            ariaLabel={`Genetic Potential ${label}`}
+            value={build[key]}
+            icon={icon}
+            compact={compact}
+            onChange={(value) => update(key, Number(value))}
+            options={GENETIC_POTENTIAL_VALUES.map((value) => ({
+              value,
+              label: `${value}%`,
+            }))}
+          />
         ))}
       </div>
-      <div className={compact ? "mt-2 grid grid-cols-2 gap-2" : "contents"}>
+      <div className={compact ? "mt-1 grid grid-cols-2 gap-2" : "contents"}>
         <EquipmentSelect
+          compact={compact}
           label="Weapon"
           items={WEAPONS}
           value={build.weaponId}
           onChangeAction={(value) => update("weaponId", value)}
         />
         <EquipmentSelect
+          compact={compact}
           label="Armor"
           items={ARMORS}
           value={build.armorId}
@@ -266,22 +398,22 @@ export function MonsterCompare() {
         ? "xl:grid-cols-3"
         : "xl:grid-cols-4";
   return (
-    <main className="mx-auto w-full max-w-[2000px] space-y-2.5 px-3 py-3 text-[#f6f8fc] sm:px-4 xl:px-5">
-      <PageHeading
-        id="compare-heading"
-        title="Monster Compare"
-        image="/icons/monster-compare.png"
-      >
-        Compare up to 4 monsters side by side with{" "}
-        <span className="text-[#8796ff]">
-          {mode === "shared" ? "shared settings" : "their own builds"}
-        </span>
-        .
-      </PageHeading>
-      <AccountMultipliers build={build} onBuildChangeAction={setBuild} />
+    <main className={`${styles.root} mx-auto w-full max-w-[2000px] space-y-2.5 px-3 py-3 text-[#f6f8fc] sm:px-4 xl:px-5`}>
+      <header className={styles.banner}>
+        <img src={assetPath("/icons/monster-compare.png")} alt="" />
+        <div>
+          <p className={styles.kicker}>Monster Tools</p>
+          <h1 id="compare-heading">Monster Compare</h1>
+          <p>Compare up to 4 monsters side by side with <span>{mode === "shared" ? "shared settings" : "their own builds"}</span>.</p>
+        </div>
+        <aside>Pick monsters to compare their stats, skills, DPS, and different builds with global account multipliers.</aside>
+      </header>
+      <div className={styles.account}>
+        <AccountMultipliers build={build} onBuildChangeAction={setBuild} />
+      </div>
       <section
         aria-label="Build mode"
-        className={`${card} flex flex-wrap items-center justify-between gap-2 px-3 py-2`}
+        className={`${styles.mode} ${card} flex flex-wrap items-center justify-between gap-2 px-3 py-2`}
       >
         <div>
           <h2 className={`${eyebrow} mb-1`}>Build Mode</h2>
@@ -332,7 +464,7 @@ export function MonsterCompare() {
         </div>
       </section>
       {mode === "shared" && (
-        <section aria-label="Shared build" className={`${card} p-2.5`}>
+        <section aria-label="Shared build" className={`${styles.sharedBuild} ${card} p-2.5`}>
           <CompareBuildControls build={build} onChange={setBuild} />
         </section>
       )}
@@ -341,16 +473,21 @@ export function MonsterCompare() {
           <article
             key={columnIndex}
             aria-label={`${column.monster.name} comparison`}
-            className="flex min-w-0 flex-col gap-1.5"
+            className={`${styles.column} flex min-w-0 flex-col gap-1`}
           >
             <header
-              className={`${card} flex min-h-24 items-center gap-3 p-2.5`}
+              className={`${card} relative flex min-h-24 items-center gap-3 p-2`}
             >
               <button
                 aria-label={`Replace ${column.monster.name} image`}
                 onClick={() => setPicker(columnIndex)}
-                className={`size-20 shrink-0 rounded-xl border-2 p-1 ${rarityImageClasses[column.monster.rarity]}`}
+                className={`h-[88px] w-[100px] shrink-0 rounded-xl border-2 p-1 ${rarityImageClasses[column.monster.rarity]}`}
+                style={getMonsterPortraitStyles(column.monster).portraitFrameStyle}
               >
+                <span
+                  className="grid h-full w-full place-items-center overflow-hidden rounded-[7px] bg-[#10141d]/85"
+                  style={getMonsterPortraitStyles(column.monster).portraitStyle}
+                >
                 <img
                   src={assetPath(
                     column.monster.image ?? "/icons/monster-database.png",
@@ -363,10 +500,11 @@ export function MonsterCompare() {
                   }}
                   className="h-full w-full object-contain"
                 />
+                </span>
               </button>
               <div className="min-w-0 flex-1">
                 <button
-                  className="text-left text-lg font-bold hover:text-[#a8b8ff]"
+                  className={`${styles.monsterName} pr-5 text-left text-xl font-extrabold leading-tight hover:text-[#a8b8ff]`}
                   onClick={() => setPicker(columnIndex)}
                   title="Click to replace monster"
                 >
@@ -401,7 +539,7 @@ export function MonsterCompare() {
                     current.filter((_, index) => index !== columnIndex),
                   );
                 }}
-                className="self-start rounded border border-[#344050] px-2 py-1 text-[#a9b7cd] disabled:opacity-25"
+                className="absolute right-2 top-2 rounded border border-[#344050] px-2 py-1 text-[#a9b7cd] disabled:opacity-25"
               >
                 ×
               </button>
@@ -428,7 +566,7 @@ export function MonsterCompare() {
               </section>
             )}
             <section className={`${card} p-2`}>
-              <h2 className={`${eyebrow} mb-2`}>Combat Stats</h2>
+              <h2 className={`${eyebrow} mb-1`}>Combat Stats</h2>
               <div className="grid grid-cols-4 gap-1">
                 {(
                   [
@@ -442,17 +580,19 @@ export function MonsterCompare() {
                     key={key}
                     label={label}
                     icon={`/account-icons/${icon}.png`}
+                    peers={columns.map((item) => item.stats[key])}
                     value={column.stats[key]}
                     suffix={suffix}
                     best={isBestValue(
                       column.stats[key],
                       columns.map((item) => item.stats[key]),
                     )}
+                    tone={key === "health" ? "green" : "gold"}
                   />
                 ))}
               </div>
             </section>
-            <section className={`${card} flex flex-1 flex-col overflow-hidden`}>
+            <section className={`${styles.skills} ${card} flex flex-1 flex-col overflow-hidden`}>
               <div className="flex items-center justify-between px-2 py-1.5">
                 <h2 className={eyebrow}>Skills &amp; Passives</h2>
                 <span className="text-[10px] text-[#a9b7cd]">
@@ -464,44 +604,25 @@ export function MonsterCompare() {
                   key={result.skill.id}
                   className="border-t border-[#344050] p-2"
                 >
-                  <div className="mb-1.5 flex min-h-9 items-center gap-2">
+                  <div className="mb-1.5 flex min-h-10 items-center gap-2">
                     <img
                       alt=""
                       src={assetPath(
                         `/skill-icons/${iconAliases[result.skill.id] ?? result.skill.id}.png`,
                       )}
-                      className="size-9 shrink-0 rounded-md border border-[#344050] object-contain"
+                      className="size-10 shrink-0 rounded-md border border-[#344050] object-contain"
                     />
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-sm font-bold">
+                      <h3 className="text-[15px] font-bold leading-tight">
                         {getSkillDisplayName(result.skill.name)}
                       </h3>
                     </div>
-                    <span
-                      data-best={isBestValue(
-                        result.cooldown,
-                        columns.map(
-                          (item) => item.skills[skillIndex]?.cooldown ?? null,
-                        ),
-                        true,
+                    <Cooldown
+                      value={result.cooldown}
+                      peers={columns.map(
+                        (item) => item.skills[skillIndex]?.cooldown ?? null,
                       )}
-                      className={`shrink-0 rounded-full border px-2 py-1 text-[10px] ${
-                        isBestValue(
-                          result.cooldown,
-                          columns.map(
-                            (item) => item.skills[skillIndex]?.cooldown ?? null,
-                          ),
-                          true,
-                        )
-                          ? "border-[#54ba91]/65 bg-[#15352f] text-[#92edbc]"
-                          : "border-[#344050] text-[#a9b7cd]"
-                      }`}
-                      title="Cooldown"
-                    >
-                      {result.cooldown === null
-                        ? "Triggered / unknown"
-                        : `${formatNumber(result.cooldown)}s CD`}
-                    </span>
+                    />
                   </div>
                   <div className="grid grid-cols-3 gap-1.5">
                     {(
@@ -514,6 +635,9 @@ export function MonsterCompare() {
                       <Value
                         key={key}
                         label={label}
+                        peers={columns.map(
+                          (item) => item.skills[skillIndex]?.[key] ?? null,
+                        )}
                         value={result[key]}
                         best={isBestValue(
                           result[key],
@@ -521,6 +645,7 @@ export function MonsterCompare() {
                             (item) => item.skills[skillIndex]?.[key] ?? null,
                           ),
                         )}
+                        tone="gold"
                       />
                     ))}
                   </div>
@@ -548,16 +673,18 @@ export function MonsterCompare() {
                 </div>
               )}
               {column.skills.length < maxSkills && <div className="flex-1" />}
-              <div className="mt-auto border-t border-[#344050] p-2">
+              <div className="mt-auto border-t border-[#52618a]/55 bg-[#101724] p-2">
                 <Value
                   inline
                   label="Total Skill DPS"
                   icon="/account-icons/damage.png"
+                  peers={columns.map((item) => item.total)}
                   value={column.total}
                   best={isBestValue(
                     column.total,
                     columns.map((item) => item.total),
                   )}
+                  tone="gold"
                 />
               </div>
             </section>

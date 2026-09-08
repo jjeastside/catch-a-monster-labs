@@ -676,7 +676,7 @@ function getHealthHealingPercent(notes: string | undefined): number | null {
     return match ? Number(match[1]) : null;
 }
 
-const rankColors: Record<Rank, string> = {
+export const rankColors: Record<Rank, string> = {
     E: "#a3a3aa",
     D: "#35d328",
     C: "#23bfd3",
@@ -686,7 +686,7 @@ const rankColors: Record<Rank, string> = {
     SS: "#ff5a62",
 };
 
-function CombatRank({ rank }: { rank: Rank | null }) {
+export function CombatRank({ rank }: { rank: Rank | null }) {
     if (!rank) return <span>—</span>;
 
     if (rank === "S") {

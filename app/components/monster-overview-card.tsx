@@ -205,12 +205,7 @@ function createDescription(monster: Monster): string {
     return `A ${monsterClassification} obtainable ${sourceText}.${skillText}`;
 }
 
-export function MonsterOverviewCard({
-                                        monster,
-                                        isFavorite,
-                                        onToggleFavorite,
-                                    }: MonsterOverviewCardProps) {
-    const elementIcon = elementIconPaths[monster.element];
+export function getMonsterPortraitStyles(monster: Monster) {
     const portraitStyle = monster.rarity === "Legendary"
         ? {
             background: "linear-gradient(to top, #c97813 0%, #a0520d 32%, #6b3009 53%, #351708 72%, #160c09 87%, #090808 100%)",
@@ -238,6 +233,12 @@ export function MonsterOverviewCard({
                     }
                     : undefined;
 
+    return { portraitStyle, portraitFrameStyle };
+}
+
+export function MonsterOverviewCard({ monster, isFavorite, onToggleFavorite }: MonsterOverviewCardProps) {
+    const elementIcon = elementIconPaths[monster.element];
+    const { portraitStyle, portraitFrameStyle } = getMonsterPortraitStyles(monster);
     return (
         <section className="relative flex min-w-0 flex-col gap-4 overflow-hidden rounded-xl border border-[#344050] bg-[#141c28] p-4 sm:flex-row sm:gap-6 sm:p-6">
             <div className="pointer-events-none absolute inset-y-0 left-0 w-64 bg-[radial-gradient(circle_at_left,rgba(117,133,255,0.09),transparent_70%)]" />
