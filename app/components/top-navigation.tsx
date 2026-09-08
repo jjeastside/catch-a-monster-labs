@@ -6,14 +6,15 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import camLabLogo from "../assets/cam-lab-logo.png";
+import { assetPath } from "../lib/asset-path";
 
 const navItems = [
-    { label: "Calculator", href: "/" },
-    { label: "Monster Database", href: "/monster-database" },
-    { label: "Index Tracker", href: "/index-tracker" },
-    { label: "Patch Notes", href: "/updates" },
-    { label: "Changelog", href: "/changelog" },
-    { label: "About", href: "/about" },
+    { label: "Calculator", href: "/", icon: "/icons/monster-calculator.png" },
+    { label: "Monster Database", href: "/monster-database", icon: "/icons/monster-database.png" },
+    { label: "Index Tracker", href: "/index-tracker", icon: "/icons/index.png" },
+    { label: "Patch Notes", href: "/updates", icon: "/icons/patch-notes.png" },
+    { label: "Changelog", href: "/changelog", icon: "/icons/changelog.png" },
+    { label: "About", href: "/about", icon: "/icons/changelog.png" },
 ];
 
 export function TopNavigation() {
@@ -56,13 +57,19 @@ export function TopNavigation() {
                             <Link
                                 key={item.label}
                                 href={item.href}
-                                className={`relative rounded-lg px-3 py-3 text-sm transition-colors ${
+                                className={`relative flex items-center gap-2 rounded-lg px-3 py-3 text-sm transition-colors ${
                                     isActive
                                         ? "bg-[#0a1931] text-[#5caaff] after:absolute after:inset-x-3 after:-bottom-1 after:h-[3px] after:rounded-full after:bg-[#5caaff]"
                                         : "text-[#a9b4ca] hover:bg-[#09162b] hover:text-white"
                                 }`}
                             >
-                                {item.label}
+                                <img
+                                    src={assetPath(item.icon)}
+                                    alt=""
+                                    aria-hidden="true"
+                                    className={`size-5 shrink-0 object-contain transition-opacity ${isActive ? "opacity-100" : "opacity-70"}`}
+                                />
+                                <span>{item.label}</span>
                             </Link>
                         );
                     })}
@@ -91,9 +98,15 @@ export function TopNavigation() {
                                 key={item.label}
                                 href={item.href}
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className={`rounded-md px-3 py-2 text-sm ${isActive ? "bg-[#1c2330] text-white" : "text-[#a5afc0] hover:bg-[#141c28] hover:text-white"}`}
+                                className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-sm ${isActive ? "bg-[#1c2330] text-white" : "text-[#a5afc0] hover:bg-[#141c28] hover:text-white"}`}
                             >
-                                {item.label}
+                                <img
+                                    src={assetPath(item.icon)}
+                                    alt=""
+                                    aria-hidden="true"
+                                    className={`size-6 shrink-0 object-contain ${isActive ? "opacity-100" : "opacity-80"}`}
+                                />
+                                <span>{item.label}</span>
                             </Link>
                         );
                     })}
