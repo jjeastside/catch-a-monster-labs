@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-import camLabLogo from "../assets/cam-lab-logo.png";
+import { assetPath } from "../lib/asset-path";
 import { SiteFooter } from "../components/site-footer";
 import { TopNavigation } from "../components/top-navigation";
 
@@ -165,7 +165,7 @@ export default function AboutPage() {
 
                         <div className="relative mx-auto flex h-[260px] w-full max-w-[430px] items-center justify-center sm:h-[330px] lg:h-[350px]">
                             <div aria-hidden="true" className="absolute size-64 rounded-full bg-[#243dff]/25 blur-3xl sm:size-80" />
-                            <Image src={camLabLogo} alt="Cam Lab monster inside a laboratory flask" priority unoptimized className="relative h-full w-full object-contain drop-shadow-[0_0_22px_rgba(83,99,255,.58)]" />
+                            <Image src={assetPath("/branding/cam-lab-logo.png")} width={256} height={256} alt="Cam Lab monster inside a laboratory flask" priority unoptimized className="relative h-full w-full object-contain drop-shadow-[0_0_22px_rgba(83,99,255,.58)]" />
                         </div>
                     </div>
 

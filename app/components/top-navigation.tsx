@@ -5,8 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-import camLabWideLogo from "../assets/cam-lab-logo-wide.png";
-import navCrystals from "../assets/nav-crystals.png";
 import { assetPath } from "../lib/asset-path";
 
 const navItems = [
@@ -36,7 +34,9 @@ export function TopNavigation() {
             <div className="pointer-events-none absolute -bottom-px left-0 z-0 opacity-80">
                 <div className="relative h-[92px] w-[106px] -translate-x-[46%] translate-y-[22%] sm:h-[104px] sm:w-[120px] sm:translate-y-[22%] md:h-[118px] md:w-[136px] md:translate-y-[20%] lg:h-[150px] lg:w-[172px] lg:translate-y-[18%] xl:h-[164px] xl:w-[188px] xl:translate-y-[18%]">
                     <Image
-                        src={navCrystals}
+                        src={assetPath("/branding/nav-crystals.png")}
+                        width={188}
+                        height={164}
                         alt=""
                         aria-hidden="true"
                         unoptimized
@@ -49,7 +49,9 @@ export function TopNavigation() {
             <div className="pointer-events-none absolute -bottom-px right-0 z-0 opacity-80">
                 <div className="relative h-[92px] w-[106px] translate-x-[46%] translate-y-[22%] sm:h-[104px] sm:w-[120px] sm:translate-y-[22%] md:h-[118px] md:w-[136px] md:translate-y-[20%] lg:h-[150px] lg:w-[172px] lg:translate-y-[18%] xl:h-[164px] xl:w-[188px] xl:translate-y-[18%]">
                     <Image
-                        src={navCrystals}
+                        src={assetPath("/branding/nav-crystals.png")}
+                        width={188}
+                        height={164}
                         alt=""
                         aria-hidden="true"
                         unoptimized
@@ -105,7 +107,9 @@ export function TopNavigation() {
                 >
                     <span className="relative block h-[40px] w-[150px] sm:h-[44px] sm:w-[164px] md:h-[50px] md:w-[186px] lg:h-[64px] lg:w-[244px] xl:h-[70px] xl:w-[272px] 2xl:h-[72px] 2xl:w-[280px]">
                         <Image
-                            src={camLabWideLogo}
+                            src={assetPath("/branding/cam-lab-logo-wide.png")}
+                            width={280}
+                            height={72}
                             alt="Cam Lab logo"
                             priority
                             unoptimized

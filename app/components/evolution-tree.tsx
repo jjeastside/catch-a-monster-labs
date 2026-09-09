@@ -17,14 +17,14 @@ function EvolutionNodeCard({
     depth,
     selectedMonsterId,
     compact,
-    onMonsterSelect,
+    onMonsterSelectAction,
     linkProfiles,
 }: {
     monster: GeneratedMonster;
     depth: number;
     selectedMonsterId: string;
     compact: boolean;
-    onMonsterSelect?: (monsterId: string) => void;
+    onMonsterSelectAction?: (monsterId: string) => void;
     linkProfiles: boolean;
 }) {
     const selected = monster.id === selectedMonsterId;
@@ -69,7 +69,7 @@ function EvolutionNodeCard({
         <button
             type="button"
             className={cardClass}
-            onClick={() => onMonsterSelect?.(monster.id)}
+            onClick={() => onMonsterSelectAction?.(monster.id)}
         >
             {content}
         </button>
@@ -81,14 +81,14 @@ function EvolutionBranch({
     depth,
     selectedMonsterId,
     compact,
-    onMonsterSelect,
+    onMonsterSelectAction,
     linkProfiles,
 }: {
     monster: GeneratedMonster;
     depth: number;
     selectedMonsterId: string;
     compact: boolean;
-    onMonsterSelect?: (monsterId: string) => void;
+    onMonsterSelectAction?: (monsterId: string) => void;
     linkProfiles: boolean;
 }) {
     const children = getEvolutionChildren(monster.id);
@@ -100,7 +100,7 @@ function EvolutionBranch({
                 depth={depth}
                 selectedMonsterId={selectedMonsterId}
                 compact={compact}
-                onMonsterSelect={onMonsterSelect}
+                onMonsterSelectAction={onMonsterSelectAction}
                 linkProfiles={linkProfiles}
             />
 
@@ -123,7 +123,7 @@ function EvolutionBranch({
                                     depth={depth + 1}
                                     selectedMonsterId={selectedMonsterId}
                                     compact={compact}
-                                    onMonsterSelect={onMonsterSelect}
+                                    onMonsterSelectAction={onMonsterSelectAction}
                                     linkProfiles={linkProfiles}
                                 />
                             </div>
@@ -139,13 +139,13 @@ export function EvolutionTree({
     rootMonster,
     selectedMonsterId,
     compact = false,
-    onMonsterSelect,
+    onMonsterSelectAction,
     linkProfiles = false,
 }: {
     rootMonster: GeneratedMonster;
     selectedMonsterId: string;
     compact?: boolean;
-    onMonsterSelect?: (monsterId: string) => void;
+    onMonsterSelectAction?: (monsterId: string) => void;
     linkProfiles?: boolean;
 }) {
     return (
@@ -156,7 +156,7 @@ export function EvolutionTree({
                     depth={0}
                     selectedMonsterId={selectedMonsterId}
                     compact={compact}
-                    onMonsterSelect={onMonsterSelect}
+                    onMonsterSelectAction={onMonsterSelectAction}
                     linkProfiles={linkProfiles}
                 />
             </div>

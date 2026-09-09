@@ -18,6 +18,9 @@ const releases = [
             "Temporarily removed Share Compare while the comparison workflow continues to be refined; Compare now focuses on local browser-saved setups instead of shared URLs.",
             "Corrected Evolution Multiplier display values in Compare to use the full 100.00%–220.00% range while keeping the compact 0% to +120% bonus scale beneath the slider.",
             "Removed About from the top navigation to keep the primary navigation focused on player tools; About remains available from the site footer.",
+            "Improved multi-hit Skill Analysis with clear per-hit/grouped damage, totals, Life Steal healing, and HPS while keeping single-hit skills equally compact.",
+            "Extended Life Steal to Damage Increase, Vulnerability, and Overload results, including Grace's boosted 13% Life Steal and matching advanced calculation breakdowns.",
+            "Refined Skill Analysis responsiveness so Normal, Critical, and DPS stay compact and three-across when space allows, with cleaner Overload cards and more readable descriptions.",
         ],
     },
     {

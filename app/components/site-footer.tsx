@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import camLabLogo from "../assets/cam-lab-logo.png";
+import { assetPath } from "../lib/asset-path";
 
 const exploreLinks = [
     { label: "Calculator", href: "/" },
@@ -86,7 +86,9 @@ export function SiteFooter() {
                         <div className="flex items-center gap-3">
                             <span className="grid size-12 place-items-center">
                                 <Image
-                                    src={camLabLogo}
+                                    src={assetPath("/branding/cam-lab-logo.png")}
+                                    width={128}
+                                    height={128}
                                     alt="Cam Lab logo"
                                     unoptimized
                                     className="h-full w-full object-contain"
