@@ -10,9 +10,19 @@ export const metadata: Metadata = {
 
 const releases = [
     {
+        version: "v1.0.12",
+        date: "September 9, 2026",
+        label: "Latest",
+        changes: [
+            "Changed Monster Compare persistence so the current comparison automatically saves in the browser and restores when players return to the Compare page.",
+            "Temporarily removed Share Compare while the comparison workflow continues to be refined; Compare now focuses on local browser-saved setups instead of shared URLs.",
+            "Corrected Evolution Multiplier display values in Compare to use the full 100.00%–220.00% range while keeping the compact 0% to +120% bonus scale beneath the slider.",
+            "Removed About from the top navigation to keep the primary navigation focused on player tools; About remains available from the site footer.",
+        ],
+    },
+    {
         version: "v1.0.11",
         date: "September 8, 2026",
-        label: "Latest",
         changes: [
             "Added the Monster Compare page for comparing 2–4 monsters side by side with combat stats, skills, cooldowns, and Total Skill DPS in one compact view.",
             "Added Shared Settings and Custom Builds modes so players can either apply one build across every compared monster or configure each monster independently.",

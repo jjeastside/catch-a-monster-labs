@@ -135,7 +135,7 @@ export function SiteFooter() {
                             Project
                         </h2>
                         <div className="mt-4 inline-flex rounded-lg border border-[#7046c8] bg-[#130c2c] px-6 py-2 text-sm font-bold text-[#a982ff]">
-                            v1.0.11
+                            v1.0.12
                         </div>
                         <p className="mt-4 text-sm text-[#8f99aa]">Created by</p>
                         <a
