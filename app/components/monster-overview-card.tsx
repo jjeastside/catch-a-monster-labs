@@ -1,11 +1,19 @@
+"use client";
+
+import {useEffect, useState} from "react";
+import {createPortal} from "react-dom";
+
 import type {Monster} from "../types/monster";
 import {getSkill, getSkillDisplayName} from "../data/skills";
 import {assetPath} from "../lib/asset-path";
+import {GENERATED_MONSTERS} from "../data/generated/monsters";
+import {EvolutionTree, getEvolutionFamily, getEvolutionRoot} from "./evolution-tree";
 
 type MonsterOverviewCardProps = {
     monster: Monster;
     isFavorite: boolean;
     onToggleFavorite: () => void;
+    onMonsterSelectAction?: (monster: Monster) => void;
 };
 
 export const rarityBadgeClasses: Record<Monster["rarity"], string> = {
@@ -236,8 +244,25 @@ export function getMonsterPortraitStyles(monster: Monster) {
     return { portraitStyle, portraitFrameStyle };
 }
 
-export function MonsterOverviewCard({ monster, isFavorite, onToggleFavorite }: MonsterOverviewCardProps) {
+export function MonsterOverviewCard({ monster, isFavorite, onToggleFavorite, onMonsterSelectAction }: MonsterOverviewCardProps) {
+    const [evolutionOpen, setEvolutionOpen] = useState(false);
     const elementIcon = elementIconPaths[monster.element];
+    const evolutionRoot = getEvolutionRoot(monster.id);
+    const evolutionFamily = evolutionRoot ? getEvolutionFamily(evolutionRoot) : [];
+    const hasEvolutionFamily = evolutionFamily.length > 1;
+    const evolutionSource = monster.sources.find((source) => source.type === "Evolution");
+    const evolutionLabel = evolutionSource
+        ? (evolutionSource.name.endsWith("Evolution") ? evolutionSource.name : `${evolutionSource.name} Evolution`)
+        : "Evolution available";
+
+    useEffect(() => {
+        if (!evolutionOpen) return;
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") setEvolutionOpen(false);
+        };
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
+    }, [evolutionOpen]);
     const { portraitStyle, portraitFrameStyle } = getMonsterPortraitStyles(monster);
     return (
         <section className="relative flex min-w-0 flex-col gap-4 overflow-hidden rounded-xl border border-[#344050] bg-[#141c28] p-4 sm:flex-row sm:gap-6 sm:p-6">
@@ -317,22 +342,33 @@ export function MonsterOverviewCard({ monster, isFavorite, onToggleFavorite }: M
                         </span>
                     )}
 
-                    {getUniqueSourceLabels(monster).map(
-                        (sourceLabel) => (
+                    {getUniqueSourceLabels(monster)
+                        .filter((sourceLabel) => !monster.sources.some((source) => source.type === "Evolution" && getSourceLabel(source) === sourceLabel))
+                        .map((sourceLabel) => (
                             <span
                                 key={`${monster.id}-${sourceLabel}`}
                                 className="rounded-md border border-[#344050] bg-[#0f1620] px-2.5 py-1 text-xs text-[#e3e8f1]"
                             >
                                 {sourceLabel}
                             </span>
-                        ),
-                    )}
+                        ))}
 
-                    {monster.hasEvolution && (
-                        <span
-                            className="rounded-md border border-[#7182ff]/30 bg-[#202846]/40 px-2.5 py-1 text-xs text-[#7182ff]">
-              Evolution available
-            </span>
+                    {hasEvolutionFamily && (
+                        <button
+                            type="button"
+                            onClick={() => setEvolutionOpen(true)}
+                            className="group inline-flex items-center gap-1.5 rounded-md border border-[#344050] bg-[#0f1620] px-2.5 py-1 text-xs font-medium text-[#e3e8f1] transition hover:border-[#7182ff]/70 hover:bg-[#151e2e] hover:text-white hover:shadow-[0_0_14px_rgba(113,130,255,0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7182ff]/60"
+                            aria-haspopup="dialog"
+                        >
+                            <img
+                                src={assetPath("/icons/evolution.png")}
+                                alt=""
+                                aria-hidden="true"
+                                className="h-5 w-5 shrink-0 object-contain opacity-100 transition group-hover:scale-105"
+                            />
+                            {evolutionLabel}
+                            <span aria-hidden="true" className="ml-0.5 text-[11px] text-[#7f8b9e] transition group-hover:text-[#aab5c8]">›</span>
+                        </button>
                     )}
                 </div>
 
@@ -341,6 +377,68 @@ export function MonsterOverviewCard({ monster, isFavorite, onToggleFavorite }: M
                 </p>
 
             </div>
+
+            {evolutionOpen && evolutionRoot && typeof document !== "undefined"
+                ? createPortal(
+                    <div
+                        className="fixed inset-0 z-[120] flex items-center justify-center bg-[#05080d]/75 p-3 backdrop-blur-[2px] sm:p-6"
+                        role="presentation"
+                        onMouseDown={(event) => {
+                            if (event.target === event.currentTarget) setEvolutionOpen(false);
+                        }}
+                    >
+                        <section
+                            role="dialog"
+                            aria-modal="true"
+                            aria-labelledby="evolution-tree-title"
+                            className="max-h-[88vh] w-full max-w-[850px] overflow-hidden rounded-2xl border border-[#41536c] bg-[#101925] shadow-[0_28px_80px_rgba(0,0,0,0.55)]"
+                        >
+                            <div className="flex items-start justify-between gap-4 border-b border-[#2f3c4e] px-4 py-4 sm:px-6">
+                                <div className="flex min-w-0 items-start gap-3">
+                                    <div className="mt-0.5 grid size-10 shrink-0 place-items-center rounded-lg border border-[#344050] bg-[#0f1620]">
+                                        <img
+                                            src={assetPath("/icons/evolution.png")}
+                                            alt=""
+                                            aria-hidden="true"
+                                            className="size-7 object-contain"
+                                        />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                                            <h2 id="evolution-tree-title" className="text-xl font-bold text-[#f5f7fb] sm:text-2xl">Evolution Tree</h2>
+                                            <span className="text-xs font-semibold text-[#8e99ad]">{evolutionFamily.length} forms</span>
+                                        </div>
+                                        <p className="mt-0.5 text-sm text-[#aab2c1]">{evolutionRoot.name} Evolution Line</p>
+                                        <p className="mt-2 text-xs text-[#7f8b9e]">Click a monster to view it in the calculator.</p>
+                                    </div>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => setEvolutionOpen(false)}
+                                    aria-label="Close evolution tree"
+                                    className="grid size-10 shrink-0 place-items-center rounded-lg border border-[#344050] bg-[#0d141e] text-xl text-[#c8d0dc] transition hover:border-[#5a6a80] hover:text-white"
+                                >
+                                    ×
+                                </button>
+                            </div>
+
+                            <div className="max-h-[calc(88vh-118px)] overflow-auto px-4 py-5 sm:px-6">
+                                <EvolutionTree
+                                    rootMonster={evolutionRoot}
+                                    selectedMonsterId={monster.id}
+                                    compact={false}
+                                    onMonsterSelectAction={(monsterId) => {
+                                        const selected = GENERATED_MONSTERS.find((candidate) => candidate.id === monsterId);
+                                        if (selected) onMonsterSelectAction?.(selected);
+                                        setEvolutionOpen(false);
+                                    }}
+                                />
+                            </div>
+                        </section>
+                    </div>,
+                    document.body,
+                )
+                : null}
         </section>
     );
 }
