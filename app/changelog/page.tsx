@@ -20,6 +20,7 @@ const releases = [
             "Removed About from the top navigation to keep the primary navigation focused on player tools; About remains available from the site footer.",
             "Improved multi-hit Skill Analysis with clear per-hit/grouped damage, totals, Life Steal healing, and HPS while keeping single-hit skills equally compact.",
             "Extended Life Steal to Damage Increase, Vulnerability, and Overload results, including Grace's boosted 13% Life Steal and matching advanced calculation breakdowns.",
+            "Corrected equipment Skill Damage attribute stacking so multiple applicable bonuses compound independently, matching in-game damage and Life Steal results more closely.",
             "Refined Skill Analysis responsiveness so Normal, Critical, and DPS stay compact and three-across when space allows, with cleaner Overload cards and more readable descriptions.",
         ],
     },
