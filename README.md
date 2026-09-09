@@ -244,6 +244,17 @@ The site also includes supporting pages around the calculator itself:
 
 ---
 
+
+## Development Project Board
+
+Cam Lab development is tracked publicly through the **Cam Lab Development** GitHub Project board. The board organizes active work across new features, bugs, design improvements, research, data verification, and maintenance.
+
+Issues move through a simple workflow from **Todo → In Progress → Done**, making it easy to see what is planned, what is actively being worked on, and what has recently been completed.
+
+**[View the Cam Lab Development Project Board](https://github.com/users/jjeastside/projects)**
+
+---
+
 ## Tech Stack
 
 | Technology | Purpose |
@@ -409,6 +420,12 @@ npm test
 - [x] Complete skill descriptions and structured skill-effect filtering
 - [x] Index Tracker with bulk editing, backups, and breeding-gender tracking
 - [x] Compact shared builds, short IDs, and rich preview cards
+- [x] Side-by-side Monster Compare with Shared Settings and Custom Builds
+- [x] Per-monster compare controls for rank, enhancement, Genetic Potential, weapon, and armor
+- [x] Global Account Multipliers support in Monster Compare
+- [x] Interactive evolution tree viewer in Calculator Results
+- [x] Index Tracker planning mode for future ranks and mutations
+- [x] Home page plus site-wide CAM Lab branding and navigation refresh
 - [x] Changelog, patch notes, Feedback, About, and Privacy pages
 - [x] GitHub Pages static deployment
 
@@ -420,7 +437,6 @@ npm test
 - [ ] Add an Enemy page with enemy locations, Health, and scaling information
 - [ ] Add an Egg page that shows all egg items
 - [ ] Add a trait, gear, and mutation optimization tool using equipment and team inputs
-- [ ] Add side-by-side build comparisons
 
 #### Research
 
