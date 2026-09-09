@@ -840,6 +840,170 @@ const mutationSummary: Record<Mutation, { label: string; icon: string }> = {
     "fairy-x": { label: "Fairy X", icon: "/icons/fairy-x.png" },
 };
 
+type SkillDamageInstance = {
+    multiplier: number;
+    hits: number;
+};
+
+function SkillDamageValue({
+    totalDamage,
+    damageInstances,
+    totalMultiplier,
+    accentClass,
+    lifeStealPercent = 0,
+}: {
+    totalDamage: number;
+    damageInstances: SkillDamageInstance[];
+    totalMultiplier: number;
+    accentClass: string;
+    lifeStealPercent?: number;
+}) {
+    const totalHits = damageInstances.reduce((sum, instance) => sum + instance.hits, 0);
+    const hasLifeSteal = lifeStealPercent > 0;
+    const totalHealed = totalDamage * (lifeStealPercent / 100);
+    const lifeStealTooltip = `Life Steal heals for ${formatNumber(lifeStealPercent)}% of this skill's damage. Multi-hit skills show the Life Steal amount for each hit and the total healed.`;
+
+    if (totalHits <= 1 || totalMultiplier <= 0) {
+        return (
+            <div className="mt-1.5 min-w-0">
+                <p
+                    className="min-w-0 whitespace-nowrap text-[clamp(1rem,2vw,1.25rem)] font-bold tracking-tight text-[#f6f8fc]"
+                    title={formatStatNumber(totalDamage)}
+                >
+                    {formatStatNumber(totalDamage)}
+                </p>
+                {hasLifeSteal && (
+                    <div className="mt-2 border-t border-[#39415a] pt-2">
+                        <div className="flex items-center gap-1.5 text-[#6ee7a8]">
+                            <img src={assetPath("/icons/life-steal.png")} alt="" className="size-4 shrink-0 object-contain" />
+                            <span className="text-[11px] font-bold uppercase tracking-[0.08em]">Life Steal</span>
+                            <InfoTooltip label="Explain Life Steal" text={lifeStealTooltip} />
+                        </div>
+                        <p className="mt-1 text-base font-bold text-[#82f0b7]" title={formatStatNumber(totalHealed)}>
+                            {formatStatNumber(totalHealed)}
+                        </p>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
+    const groupedHitBreakdown = damageInstances.reduce<{
+        startHit: number;
+        endHit: number;
+        hits: number;
+        damagePerHit: number;
+        healedPerHit: number;
+    }[]>((groups, instance) => {
+        const previousEndHit = groups.at(-1)?.endHit ?? 0;
+        const startHit = previousEndHit + 1;
+        const endHit = startHit + instance.hits - 1;
+        const damagePerHit = totalDamage * (instance.multiplier / totalMultiplier);
+
+        return [
+            ...groups,
+            {
+                startHit,
+                endHit,
+                hits: instance.hits,
+                damagePerHit,
+                healedPerHit: damagePerHit * (lifeStealPercent / 100),
+            },
+        ];
+    }, []);
+
+    if (damageInstances.length === 1) {
+        const damagePerHit = totalDamage / totalHits;
+        const healedPerHit = damagePerHit * (lifeStealPercent / 100);
+
+        return (
+            <div className="mt-1.5 min-w-0">
+                <div className="flex items-baseline gap-1.5">
+                    <p
+                        className="min-w-0 whitespace-nowrap text-[clamp(1rem,2vw,1.25rem)] font-bold tracking-tight text-[#f6f8fc]"
+                        title={`${formatStatNumber(damagePerHit)} per hit × ${totalHits} hits`}
+                    >
+                        {formatStatNumber(damagePerHit)}
+                    </p>
+                    <span className="text-sm font-semibold text-[#9aa6b8]">× {totalHits}</span>
+                </div>
+                <p className="mt-1 text-[11px] font-semibold text-[#8e99ad]">
+                    Total <span className={accentClass}>{formatStatNumber(totalDamage)}</span>
+                </p>
+                {hasLifeSteal && (
+                    <div className="mt-2 border-t border-[#39415a] pt-2">
+                        <div className="flex items-center gap-1.5 text-[#6ee7a8]">
+                            <img src={assetPath("/icons/life-steal.png")} alt="" className="size-4 shrink-0 object-contain" />
+                            <span className="text-[11px] font-bold uppercase tracking-[0.08em]">Life Steal</span>
+                            <InfoTooltip label="Explain Life Steal" text={lifeStealTooltip} />
+                        </div>
+                        <p className="mt-1 text-base font-bold text-[#82f0b7]" title={`${formatStatNumber(healedPerHit)} × ${totalHits}`}>
+                            {formatStatNumber(healedPerHit)} <span className="text-sm font-semibold text-[#9bdcb9]">× {totalHits}</span>
+                        </p>
+                        <p className="mt-0.5 text-[11px] font-semibold text-[#8e99ad]">
+                            Total <span className="text-[#82f0b7]">{formatStatNumber(totalHealed)}</span>
+                        </p>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
+    return (
+        <div className="mt-1.5 min-w-0">
+            <div className="space-y-1 text-[11px] font-semibold">
+                {groupedHitBreakdown.map((group) => {
+                    const hitLabel = group.startHit === group.endHit
+                        ? `Hit ${group.startHit}`
+                        : `Hit ${group.startHit}-${group.endHit}`;
+
+                    return (
+                        <div
+                            key={`${group.startHit}-${group.endHit}-${group.damagePerHit}`}
+                            className="grid grid-cols-[52px_minmax(0,1fr)] items-center gap-1.5"
+                        >
+                            <span className="whitespace-nowrap text-[#7f8b9e]">{hitLabel}</span>
+                            <span className="truncate text-[#f6f8fc]">{formatStatNumber(group.damagePerHit)}</span>
+                        </div>
+                    );
+                })}
+            </div>
+            <p className="mt-2 text-[11px] font-semibold text-[#8e99ad]">
+                Total <span className={accentClass}>{formatStatNumber(totalDamage)}</span>
+            </p>
+            {hasLifeSteal && (
+                <div className="mt-2 border-t border-[#39415a] pt-2">
+                    <div className="flex items-center gap-1.5 text-[#6ee7a8]">
+                        <img src={assetPath("/icons/life-steal.png")} alt="" className="size-4 shrink-0 object-contain" />
+                        <span className="text-[11px] font-bold uppercase tracking-[0.08em]">Life Steal</span>
+                        <InfoTooltip label="Explain Life Steal" text={lifeStealTooltip} />
+                    </div>
+                    <div className="mt-1 space-y-1 text-[11px] font-semibold text-[#82f0b7]">
+                        {groupedHitBreakdown.map((group) => (
+                            <div
+                                key={`heal-${group.startHit}-${group.endHit}-${group.healedPerHit}`}
+                                className="grid grid-cols-[52px_minmax(0,1fr)] items-center gap-1.5"
+                            >
+                                <span className="whitespace-nowrap text-[#5f9f79]">
+                                    {group.startHit === group.endHit
+                                        ? `Hit ${group.startHit}`
+                                        : `Hit ${group.startHit}-${group.endHit}`}
+                                </span>
+                                <span className="truncate">
+                                    {formatStatNumber(group.healedPerHit)}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                    <p className="mt-1 text-[11px] font-semibold text-[#8e99ad]">
+                        Total <span className="text-[#82f0b7]">{formatStatNumber(totalHealed)}</span>
+                    </p>
+                </div>
+            )}
+        </div>
+    );
+}
+
 type SkillDamagePanelProps = {
     monster: Monster;
     skill: NonNullable<ReturnType<typeof getSkill>>;
@@ -1028,6 +1192,9 @@ function SkillDamagePanel({
     const traitHealingEffectiveness = getTraitEffectValue(build.traitId, "healingEffectiveness");
     const totalHealingEffectiveness = attributeEffects.healEffectiveness + traitHealingEffectiveness;
     const healingEffectivenessMultiplier = 1 + totalHealingEffectiveness / 100;
+    // Grace increases Life Siphon healing by its +30% healing effectiveness,
+    // turning the base 10% Life Siphon into 13% while Grace is equipped.
+    const effectiveLifeSteal = attributeEffects.lifeSteal * (1 + traitHealingEffectiveness / 100);
     // Damage-based healing scales from the monster's base Damage stat,
     // not the skill's post-multiplier damage result.
     const healingDamageBase = stats.damage;
@@ -1041,8 +1208,8 @@ function SkillDamagePanel({
     const healingAmount = hasCalculatedHealing
         ? (damageHealingAmount + healthHealingAmount) * healingEffectivenessMultiplier
         : null;
-    const lifeStealAmount = combatDamage.normalDamage * (attributeEffects.lifeSteal / 100);
-    const criticalLifeStealAmount = combatDamage.criticalDamage * (attributeEffects.lifeSteal / 100);
+    const lifeStealAmount = combatDamage.normalDamage * (effectiveLifeSteal / 100);
+    const criticalLifeStealAmount = combatDamage.criticalDamage * (effectiveLifeSteal / 100);
 
     const damagePassiveDetails = combatDamage.activePassiveEffects.map((effect) => ({
         name: PASSIVE_DEFINITIONS[effect.name].name,
@@ -1053,6 +1220,10 @@ function SkillDamagePanel({
         skill.cooldown === null
             ? null
             : skill.cooldown * cooldownMultiplier;
+    const lifeStealHps =
+        effectiveLifeSteal > 0 && displayedCooldown !== null && displayedCooldown > 0
+            ? lifeStealAmount / displayedCooldown
+            : null;
     const critChance =
         Math.min(
             Math.max(stats.critChance / 100, 0),
@@ -1149,10 +1320,10 @@ function SkillDamagePanel({
     );
 
     return (
-        <section className="p-4">
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,18rem),1fr))] items-center gap-4">
-                <div className="flex min-w-0 items-center gap-3">
-                    <div className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-lg border border-[#41506a] bg-[#0d131d] p-0.5 shadow-[0_6px_14px_rgba(0,0,0,0.2)]">
+        <section className="skill-results-container p-3 sm:p-4">
+            <div className="skill-results-layout grid items-start gap-3">
+                <div className="flex min-w-0 items-start gap-3">
+                    <div className="grid size-11 shrink-0 place-items-center overflow-hidden rounded-lg border border-[#41506a] bg-[#0d131d] p-0.5 shadow-[0_6px_14px_rgba(0,0,0,0.2)]">
                         <img
                             src={assetPath(skillIconPath)}
                             alt={`${skillDisplayName} skill`}
@@ -1171,12 +1342,12 @@ function SkillDamagePanel({
                         </p>
 
                         <div className="mt-0.5 flex items-center gap-1.5">
-                            <h3 className="text-lg font-bold leading-tight tracking-tight text-[#f6f8fc]">
+                            <h3 className="text-base font-bold leading-tight tracking-tight text-[#f6f8fc]">
                                 {skillDisplayName}
                             </h3>
                         </div>
 
-                        <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-[#7f8b9e]">
+                        <div className="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[10px] text-[#7f8b9e]">
                             <span className="flex items-center gap-1">
                                 <img src={assetPath(elementIconPath)} alt="" className="size-3.5 object-contain" />
                                 {skill.element}
@@ -1233,13 +1404,16 @@ function SkillDamagePanel({
                         </div>
 
                         {skill.description?.trim() && (
-                            <p className="mt-2 text-[11px] leading-relaxed text-[#a3aec0]">
+                            <p
+                                className="mt-1 max-w-[30rem] text-[11px] leading-[1.2rem] text-[#a3aec0]"
+                                title={skill.description}
+                            >
                                 {skill.description}
                             </p>
                         )}
 
                         {isTriggeredSkill && skill.notes && skill.notes.trim() !== skill.description?.trim() && (
-                            <p className="mt-2 text-[10px] leading-4 text-[#8e99ad]">
+                            <p className="mt-1.5 max-w-3xl text-[10px] leading-4 text-[#8e99ad]">
                                 {skill.notes}
                             </p>
                         )}
@@ -1248,7 +1422,7 @@ function SkillDamagePanel({
                 </div>
 
                 {isDamagingSkill && (
-                    <div className="grid grid-cols-2 gap-2 lg:grid-cols-3">
+                    <div className="skill-results-grid grid min-w-0 gap-2">
                         <div className="min-w-0 rounded-lg border border-[#39415a] bg-[#1c2130] p-3">
                             <div className="flex items-center gap-1.5 text-[#aeb8ff]">
                                 <img src={assetPath("/account-icons/damage.png")} alt=""
@@ -1256,13 +1430,16 @@ function SkillDamagePanel({
                                 <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Normal</p>
                                 <InfoTooltip
                                     label="Explain total skill damage"
-                                    text="The total normal damage dealt by this skill after its skill multiplier, passive effects, and applicable attributes."
+                                    text="For multi-hit skills, shows damage per hit and hit count first, with total normal damage underneath. Single-hit skills show the final normal damage."
                                 />
                             </div>
-                            <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
-                               title={formatStatNumber(combatDamage.normalDamage)}>
-                                {formatStatNumber(combatDamage.normalDamage)}
-                            </p>
+                            <SkillDamageValue
+                                totalDamage={combatDamage.normalDamage}
+                                damageInstances={skill.damageInstances}
+                                totalMultiplier={totalMultiplier}
+                                accentClass="text-[#aeb8ff]"
+                                lifeStealPercent={effectiveLifeSteal}
+                            />
                         </div>
 
                         <div className="min-w-0 rounded-lg border border-[#ff7448]/35 bg-[#3a201b]/35 p-3">
@@ -1272,13 +1449,16 @@ function SkillDamagePanel({
                                 <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Critical</p>
                                 <InfoTooltip
                                     label="Explain critical damage"
-                                    text={`The total skill damage when a critical hit occurs, using the current ${formatNumber(stats.critMultiplier)}× critical multiplier.`}
+                                    text={`For multi-hit skills, shows critical damage per hit and hit count first, with total critical damage underneath, using the current ${formatNumber(stats.critMultiplier)}× critical multiplier.`}
                                 />
                             </div>
-                            <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
-                               title={formatStatNumber(combatDamage.criticalDamage)}>
-                                {formatStatNumber(combatDamage.criticalDamage)}
-                            </p>
+                            <SkillDamageValue
+                                totalDamage={combatDamage.criticalDamage}
+                                damageInstances={skill.damageInstances}
+                                totalMultiplier={totalMultiplier}
+                                accentClass="text-[#ff936d]"
+                                lifeStealPercent={effectiveLifeSteal}
+                            />
                         </div>
 
                         {skillDps !== null && (
@@ -1289,11 +1469,9 @@ function SkillDamagePanel({
                                         alt=""
                                         className="size-4 shrink-0 object-contain"
                                     />
-
                                     <p className="text-[9px] font-bold uppercase tracking-[0.1em]">
                                         DPS
                                     </p>
-
                                     <InfoTooltip
                                         label="Explain skill DPS"
                                         text="Expected damage per second using this skill's normal damage, critical damage, critical chance, and adjusted cooldown."
@@ -1301,7 +1479,7 @@ function SkillDamagePanel({
                                 </div>
 
                                 <p
-                                    className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
+                                    className="mt-1.5 min-w-0 whitespace-nowrap text-[clamp(1rem,2vw,1.25rem)] font-bold tracking-tight text-[#f6f8fc]"
                                     title={`${formatStatNumber(skillDps)} DPS`}
                                 >
                                     {formatStatNumber(skillDps)}
@@ -1309,6 +1487,23 @@ function SkillDamagePanel({
                                         /s
                                     </span>
                                 </p>
+
+                                {lifeStealHps !== null && (
+                                    <div className="mt-2 border-t border-[#39415a] pt-2">
+                                        <div className="flex items-center gap-1.5 text-[#6ee7a8]">
+                                            <img src={assetPath("/icons/life-steal.png")} alt="" className="size-4 shrink-0 object-contain" />
+                                            <span className="text-[11px] font-bold uppercase tracking-[0.08em]">HPS</span>
+                                            <InfoTooltip
+                                                label="Explain HPS"
+                                                text="Healing per second from Life Steal using the normal total Life Steal amount and this skill's adjusted cooldown."
+                                            />
+                                        </div>
+                                        <p className="mt-1 text-base font-bold text-[#82f0b7]" title={`${formatStatNumber(lifeStealHps)} HPS`}>
+                                            {formatStatNumber(lifeStealHps)}
+                                            <span className="ml-1 text-xs font-semibold text-[#9bdcb9]">/s</span>
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         )}
 
@@ -1327,10 +1522,13 @@ function SkillDamagePanel({
                                             text={`${skillDisplayName} with +${formatNumber(monsterDamageIncrease)}% Damage Increase. If the same effect is active under Combat Conditions, it is not stacked twice.`}
                                         />
                                     </div>
-                                    <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
-                                       title={formatStatNumber(damageIncreaseCombatDamage.normalDamage)}>
-                                        {formatStatNumber(damageIncreaseCombatDamage.normalDamage)}
-                                    </p>
+                                    <SkillDamageValue
+                                        totalDamage={damageIncreaseCombatDamage.normalDamage}
+                                        damageInstances={skill.damageInstances}
+                                        totalMultiplier={totalMultiplier}
+                                        accentClass="text-[#aeb8ff]"
+                                        lifeStealPercent={effectiveLifeSteal}
+                                    />
                                 </div>
 
                                 <div className="min-w-0 rounded-lg border border-[#ff7448]/45 bg-[#43231f]/45 p-3">
@@ -1346,10 +1544,13 @@ function SkillDamagePanel({
                                             text={`The critical ${skillDisplayName} result with +${formatNumber(monsterDamageIncrease)}% Damage Increase and the current ${formatNumber(stats.critMultiplier)}× critical multiplier.`}
                                         />
                                     </div>
-                                    <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
-                                       title={formatStatNumber(damageIncreaseCombatDamage.criticalDamage)}>
-                                        {formatStatNumber(damageIncreaseCombatDamage.criticalDamage)}
-                                    </p>
+                                    <SkillDamageValue
+                                        totalDamage={damageIncreaseCombatDamage.criticalDamage}
+                                        damageInstances={skill.damageInstances}
+                                        totalMultiplier={totalMultiplier}
+                                        accentClass="text-[#ff936d]"
+                                        lifeStealPercent={effectiveLifeSteal}
+                                    />
                                 </div>
 
                                 {damageIncreaseDps !== null && (
@@ -1364,7 +1565,7 @@ function SkillDamagePanel({
                                                 text={`Expected DPS for ${skillDisplayName} with +${formatNumber(monsterDamageIncrease)}% Damage Increase.`}
                                             />
                                         </div>
-                                        <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
+                                        <p className="mt-1.5 min-w-0 whitespace-nowrap text-[clamp(1rem,2vw,1.25rem)] font-bold tracking-tight text-[#f6f8fc]"
                                            title={`${formatStatNumber(damageIncreaseDps)} DPS`}>
                                             {formatStatNumber(damageIncreaseDps)}
                                             <span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
@@ -1382,7 +1583,13 @@ function SkillDamagePanel({
                                         <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Normal</p>
                                         <InfoTooltip label="Explain vulnerable skill damage" text={`${skillDisplayName} against an enemy affected by +${formatNumber(effectiveMonsterVulnerability)}% Vulnerability. If Vulnerability is active under Combat Conditions, it is not stacked twice.`} />
                                     </div>
-                                    <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]" title={formatStatNumber(vulnerabilityCombatDamage.normalDamage)}>{formatStatNumber(vulnerabilityCombatDamage.normalDamage)}</p>
+                                    <SkillDamageValue
+                                        totalDamage={vulnerabilityCombatDamage.normalDamage}
+                                        damageInstances={skill.damageInstances}
+                                        totalMultiplier={totalMultiplier}
+                                        accentClass="text-[#c99aff]"
+                                        lifeStealPercent={effectiveLifeSteal}
+                                    />
                                 </div>
 
                                 <div className="min-w-0 rounded-lg border border-[#ff7448]/45 bg-[#43231f]/45 p-3">
@@ -1391,7 +1598,13 @@ function SkillDamagePanel({
                                         <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Critical</p>
                                         <InfoTooltip label="Explain critical vulnerable skill damage" text={`The critical ${skillDisplayName} result against an enemy with +${formatNumber(effectiveMonsterVulnerability)}% Vulnerability and the current ${formatNumber(stats.critMultiplier)}× critical multiplier.`} />
                                     </div>
-                                    <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]" title={formatStatNumber(vulnerabilityCombatDamage.criticalDamage)}>{formatStatNumber(vulnerabilityCombatDamage.criticalDamage)}</p>
+                                    <SkillDamageValue
+                                        totalDamage={vulnerabilityCombatDamage.criticalDamage}
+                                        damageInstances={skill.damageInstances}
+                                        totalMultiplier={totalMultiplier}
+                                        accentClass="text-[#ff936d]"
+                                        lifeStealPercent={effectiveLifeSteal}
+                                    />
                                 </div>
 
                                 {vulnerabilityDps !== null && (
@@ -1401,7 +1614,7 @@ function SkillDamagePanel({
                                             <p className="text-[9px] font-bold uppercase tracking-[0.1em]">DPS</p>
                                             <InfoTooltip label="Explain vulnerable skill DPS" text={`Expected DPS for ${skillDisplayName} against an enemy with +${formatNumber(effectiveMonsterVulnerability)}% Vulnerability.`} />
                                         </div>
-                                        <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]" title={`${formatStatNumber(vulnerabilityDps)} DPS`}>
+                                        <p className="mt-1.5 min-w-0 whitespace-nowrap text-[clamp(1rem,2vw,1.25rem)] font-bold tracking-tight text-[#f6f8fc]" title={`${formatStatNumber(vulnerabilityDps)} DPS`}>
                                             {formatStatNumber(vulnerabilityDps)}<span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
                                         </p>
                                     </div>
@@ -1410,48 +1623,52 @@ function SkillDamagePanel({
                         )}
 
                         {hasOvervoltTempestOverload && alternateCombatDamage && alternateTotalMultiplier !== null && (
-                            <>
+                            <div className="col-span-2 grid min-w-0 grid-cols-2 gap-2">
                                 <div className="min-w-0 rounded-lg border border-[#5363a8]/45 bg-[#20263a] p-3">
-                                    <div className="flex items-center gap-1.5 text-[#aeb8ff]">
+                                    <div className="flex min-w-0 items-center gap-1.5 text-[#aeb8ff]">
                                         <img src={assetPath("/account-icons/damage.png")} alt=""
                                              className="size-4 shrink-0 object-contain"/>
-                                        <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Normal
-                                            (Overload)</p>
+                                        <p className="min-w-0 text-[9px] font-bold uppercase leading-tight tracking-[0.08em]">Normal <span className="whitespace-nowrap">(Overload)</span></p>
                                         <InfoTooltip
                                             label="Explain Overvolt Tempest Overload"
                                             text="The 25% chance Overvolt Tempest Overload cast. It uses the same 11-hit attack and cooldown with +100% damage, increasing each hit from 0.2× to 0.4× Attack."
                                         />
                                     </div>
-                                    <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
-                                       title={formatStatNumber(alternateCombatDamage.normalDamage)}>
-                                        {formatStatNumber(alternateCombatDamage.normalDamage)}
-                                    </p>
+                                    <SkillDamageValue
+                                        totalDamage={alternateCombatDamage.normalDamage}
+                                        damageInstances={[{ multiplier: 0.4, hits: 11 }]}
+                                        totalMultiplier={alternateTotalMultiplier}
+                                        accentClass="text-[#aeb8ff]"
+                                        lifeStealPercent={effectiveLifeSteal}
+                                    />
                                 </div>
 
                                 <div className="min-w-0 rounded-lg border border-[#ff7448]/45 bg-[#43231f]/45 p-3">
-                                    <div className="flex items-center gap-1.5 text-[#ff936d]">
+                                    <div className="flex min-w-0 items-center gap-1.5 text-[#ff936d]">
                                         <img src={assetPath("/account-icons/critical-damage.png")} alt=""
                                              className="size-4 shrink-0 object-contain"/>
-                                        <p className="text-[9px] font-bold uppercase tracking-[0.1em]">Critical
-                                            (Overload)</p>
+                                        <p className="min-w-0 text-[9px] font-bold uppercase leading-tight tracking-[0.08em]">Critical <span className="whitespace-nowrap">(Overload)</span></p>
                                         <InfoTooltip
                                             label="Explain critical Overvolt Tempest Overload"
                                             text={`The critical result for the 25% chance Overvolt Tempest Overload cast. It deals +100% skill damage and uses the current ${formatNumber(stats.critMultiplier)}× critical multiplier.`}
                                         />
                                     </div>
-                                    <p className="mt-1.5 truncate text-xl font-bold tracking-tight text-[#f6f8fc]"
-                                       title={formatStatNumber(alternateCombatDamage.criticalDamage)}>
-                                        {formatStatNumber(alternateCombatDamage.criticalDamage)}
-                                    </p>
+                                    <SkillDamageValue
+                                        totalDamage={alternateCombatDamage.criticalDamage}
+                                        damageInstances={[{ multiplier: 0.4, hits: 11 }]}
+                                        totalMultiplier={alternateTotalMultiplier}
+                                        accentClass="text-[#ff936d]"
+                                        lifeStealPercent={effectiveLifeSteal}
+                                    />
                                 </div>
-                            </>
+                            </div>
                         )}
                     </div>
                 )}
             </div>
 
             {damageIncreaseEffects.length > 0 && (
-                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                <div className="mt-2 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
                     {damageIncreaseEffects.map((effect, index) => (
                         <DamageIncreaseEffect
                             key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.durationSeconds}-${index}`}
@@ -1462,7 +1679,7 @@ function SkillDamagePanel({
             )}
 
             {vulnerabilityEffects.length > 0 && (
-                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                <div className="mt-2 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
                     {vulnerabilityEffects.map((effect, index) => (
                         <VulnerabilityEffect
                             key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.durationSeconds}-${index}`}
@@ -1476,7 +1693,7 @@ function SkillDamagePanel({
             )}
 
             {stunEffects.length > 0 && (
-                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                <div className="mt-2 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
                     {stunEffects.map((effect, index) => (
                         <StunEffect
                             key={`${effect.type}-${effect.target}-${effect.durationSeconds}-${index}`}
@@ -1487,7 +1704,7 @@ function SkillDamagePanel({
             )}
 
             {knockbackEffects.length > 0 && (
-                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                <div className="mt-2 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
                     {knockbackEffects.map((effect, index) => (
                         <KnockbackEffect
                             key={`${effect.type}-${effect.target}-${index}`}
@@ -1498,7 +1715,7 @@ function SkillDamagePanel({
             )}
 
             {tauntEffects.length > 0 && (
-                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                <div className="mt-2 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
                     {tauntEffects.map((effect, index) => (
                         <TauntEffect
                             key={`${effect.type}-${effect.target}-${effect.durationSeconds}-${index}`}
@@ -1509,7 +1726,7 @@ function SkillDamagePanel({
             )}
 
             {poisonEffects.length > 0 && (
-                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                <div className="mt-2 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
                     {poisonEffects.map((effect, index) => (
                         <PoisonEffect
                             key={`${effect.type}-${effect.stacks}-${effect.durationSeconds}-${effect.amountPercent}-${index}`}
@@ -1520,7 +1737,7 @@ function SkillDamagePanel({
             )}
 
             {burnEffects.length > 0 && (
-                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                <div className="mt-2 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
                     {burnEffects.map((effect, index) => (
                         <BurnEffect
                             key={`${effect.type}-${effect.stacks}-${effect.amountPercent}-${effect.durationSeconds}-${index}`}
@@ -1532,7 +1749,7 @@ function SkillDamagePanel({
             )}
 
             {damageDecreaseEffects.length > 0 && (
-                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                <div className="mt-2 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
                     {damageDecreaseEffects.map((effect, index) => (
                         <DamageDecreaseEffect
                             key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.maxAmountPercent}-${effect.durationSeconds}-${index}`}
@@ -1545,7 +1762,7 @@ function SkillDamagePanel({
             )}
 
             {damageReductionEffects.length > 0 && (
-                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                <div className="mt-2 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
                     {damageReductionEffects.map((effect, index) => (
                         <DamageReductionEffect
                             key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.durationSeconds}-${index}`}
@@ -1556,7 +1773,7 @@ function SkillDamagePanel({
             )}
 
             {healingEffects.length > 0 && (
-                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                <div className="mt-2 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
                     {(skill.id === "holy-aura-djinn-lampyr" ? healingEffects.slice(0, 1) : healingEffects).map((effect, index) => (
                         <HealingEffect
                             key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.scaling}-${index}`}
@@ -1579,7 +1796,7 @@ function SkillDamagePanel({
             )}
 
             {shieldEffects.length > 0 && (
-                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                <div className="mt-2 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
                     {shieldEffects.map((effect, index) => (
                         <ShieldEffect
                             key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.durationSeconds}-${effect.chancePercent}-${index}`}
@@ -1590,7 +1807,7 @@ function SkillDamagePanel({
             )}
 
             {damageReflectionEffects.length > 0 && (
-                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
+                <div className="mt-2 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] gap-2">
                     {damageReflectionEffects.map((effect, index) => (
                         <DamageReflectionEffect
                             key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.durationSeconds}-${index}`}
@@ -1615,7 +1832,7 @@ function SkillDamagePanel({
                             <button
                                 type="button"
                                 onClick={() => setShowDetails((current) => !current)}
-                                className="mt-3 flex w-full items-center justify-between rounded-lg border border-[#344050] bg-[#0f1620] px-3 py-2 text-left text-xs text-[#8e99ad] transition hover:border-[#465166] hover:text-[#e3e8f1]"
+                                className="mt-2 flex w-full items-center justify-between rounded-lg border border-[#344050] bg-[#0f1620] px-3 py-2 text-left text-xs text-[#8e99ad] transition hover:border-[#465166] hover:text-[#e3e8f1]"
                             >
                                 <span>{showDetails ? "Hide calculation details" : "View calculation details"}</span>
                                 <span className={`text-base transition-transform ${showDetails ? "rotate-180" : ""}`}>⌄</span>
@@ -1658,144 +1875,281 @@ function SkillDamagePanel({
                     <button
                         type="button"
                         onClick={() => setShowDetails((current) => !current)}
-                        className="mt-3 flex w-full items-center justify-between rounded-lg border border-[#344050] bg-[#0f1620] px-3 py-2 text-left text-xs text-[#8e99ad] transition hover:border-[#465166] hover:text-[#e3e8f1]"
+                        className="mt-2 flex w-full items-center justify-between rounded-lg border border-[#344050] bg-[#0f1620] px-3 py-2 text-left text-xs text-[#8e99ad] transition hover:border-[#465166] hover:text-[#e3e8f1]"
                     >
                         <span>{showDetails ? "Hide calculation details" : "View calculation details"}</span>
                         <span className={`text-base transition-transform ${showDetails ? "rotate-180" : ""}`}>⌄</span>
                     </button>
 
                     {showDetails && (
-                        <div className="mt-3 space-y-4 rounded-lg border border-[#344050] bg-[#0d131d]/45 p-4">
-                            <div>
-                                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Calculation</p>
-                                <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-[#8e99ad]">
-                                    <span className="rounded-lg border border-[#344050] bg-[#0f1620] px-3 py-2">Damage <strong className="ml-1 text-[#e3e8f1]">{formatStatNumber(stats.damage)}</strong></span>
-                                    <span className="text-base font-bold text-[#7f8b9e]">×</span>
-                                    <span className="rounded-lg border border-[#344050] bg-[#0f1620] px-3 py-2">Skill <strong className="ml-1 text-[#e3e8f1]">{formatNumber(totalMultiplier)}×</strong></span>
+                        <div className="mt-3 space-y-3 rounded-xl border border-[#33435b] bg-[#0b121c]/80 p-3 sm:p-4">
+                            <div className="rounded-xl border border-[#365486] bg-[linear-gradient(135deg,rgba(27,49,80,0.55),rgba(14,27,43,0.8))] p-3 sm:p-4">
+                                <div className="flex items-center gap-2">
+                                    <span className="grid h-7 w-7 place-items-center rounded-md border border-[#4f78bf]/50 bg-[#17305a]/70 text-sm text-[#8fb6ff]">▦</span>
+                                    <div>
+                                        <p className="text-sm font-bold text-[#e7edf8]">Formula Summary</p>
+                                        <p className="text-[11px] text-[#8e9db4]">Base damage and active skill multipliers</p>
+                                    </div>
+                                </div>
+
+                                <div className="mt-3 flex flex-wrap items-stretch gap-2 text-xs text-[#9ba8bc]">
+                                    <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d1724]/85 px-3 py-2.5">
+                                        <p className="text-[10px] uppercase tracking-[0.12em] text-[#7893bb]">Damage</p>
+                                        <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatStatNumber(stats.damage)}</p>
+                                    </div>
+                                    <span className="self-center px-1 text-lg font-bold text-[#6f9df0]">×</span>
+                                    <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d1724]/85 px-3 py-2.5">
+                                        <p className="text-[10px] uppercase tracking-[0.12em] text-[#7893bb]">Skill</p>
+                                        <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatNumber(totalMultiplier)}×</p>
+                                    </div>
                                     {combatDamage.passiveDamageMultiplier !== 1 && (
                                         <>
-                                            <span className="text-base font-bold text-[#7f8b9e]">×</span>
-                                            <span className="rounded-lg border border-[#344050] bg-[#0f1620] px-3 py-2">Passive <strong className="ml-1 text-[#e3e8f1]">{formatNumber(combatDamage.passiveDamageMultiplier)}×</strong></span>
+                                            <span className="self-center px-1 text-lg font-bold text-[#6f9df0]">×</span>
+                                            <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d1724]/85 px-3 py-2.5">
+                                                <p className="text-[10px] uppercase tracking-[0.12em] text-[#7893bb]">Passive</p>
+                                                <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatNumber(combatDamage.passiveDamageMultiplier)}×</p>
+                                            </div>
                                         </>
                                     )}
                                     {traitDamageMultiplier !== 1 && (
                                         <>
-                                            <span className="text-base font-bold text-[#7f8b9e]">×</span>
-                                            <span className="rounded-lg border border-[#344050] bg-[#0f1620] px-3 py-2">Trait <strong className="ml-1 text-[#e3e8f1]">{formatNumber(traitDamageMultiplier)}×</strong></span>
+                                            <span className="self-center px-1 text-lg font-bold text-[#6f9df0]">×</span>
+                                            <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d1724]/85 px-3 py-2.5">
+                                                <p className="text-[10px] uppercase tracking-[0.12em] text-[#7893bb]">Trait</p>
+                                                <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatNumber(traitDamageMultiplier)}×</p>
+                                            </div>
                                         </>
                                     )}
                                     {attributeEffects.skillDamageMultiplier !== 1 && (
                                         <>
-                                            <span className="text-base font-bold text-[#7f8b9e]">×</span>
-                                            <span className="rounded-lg border border-[#344050] bg-[#0f1620] px-3 py-2">Attribute <strong className="ml-1 text-[#e3e8f1]">{formatNumber(attributeEffects.skillDamageMultiplier)}×</strong></span>
+                                            <span className="self-center px-1 text-lg font-bold text-[#6f9df0]">×</span>
+                                            <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d1724]/85 px-3 py-2.5">
+                                                <p className="text-[10px] uppercase tracking-[0.12em] text-[#7893bb]">Attribute</p>
+                                                <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatNumber(attributeEffects.skillDamageMultiplier)}×</p>
+                                            </div>
                                         </>
                                     )}
                                     {accountRiftDamageMultiplier !== 1 && (
                                         <>
-                                            <span className="text-base font-bold text-[#7f8b9e]">×</span>
-                                            <span className="rounded-lg border border-[#344050] bg-[#0f1620] px-3 py-2">Account Rift <strong className="ml-1 text-[#e3e8f1]">{formatNumber(accountRiftDamageMultiplier)}×</strong></span>
+                                            <span className="self-center px-1 text-lg font-bold text-[#6f9df0]">×</span>
+                                            <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d1724]/85 px-3 py-2.5">
+                                                <p className="text-[10px] uppercase tracking-[0.12em] text-[#7893bb]">Account Rift</p>
+                                                <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatNumber(accountRiftDamageMultiplier)}×</p>
+                                            </div>
                                         </>
                                     )}
-                                    <span className="text-base font-bold text-[#7f8b9e]">=</span>
-                                    <span className="rounded-lg border border-[#7182ff]/45 bg-[#202846]/45 px-3 py-2 text-[#7182ff]">Total <strong className="ml-1">{formatStatNumber(combatDamage.normalDamage)}</strong></span>
+                                    <span className="self-center px-1 text-lg font-bold text-[#6f9df0]">=</span>
+                                    <div className="min-w-[9rem] flex-1 rounded-lg border border-[#4d75ff]/70 bg-[#1c2f62]/60 px-3 py-2.5 shadow-[inset_0_0_20px_rgba(78,111,255,0.08)]">
+                                        <p className="text-[10px] uppercase tracking-[0.12em] text-[#8aa5ff]">Total</p>
+                                        <p className="mt-1 text-base font-bold text-[#c8d3ff]">{formatStatNumber(combatDamage.normalDamage)}</p>
+                                    </div>
                                 </div>
                             </div>
 
                             {skillDps !== null && expectedDamage !== null && displayedCooldown !== null && (
-                                <div>
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">
-                                        DPS Calculation
-                                    </p>
-
-                                    <div className="mt-2 rounded-lg border border-[#344050] bg-[#0f1620] p-3">
-                                        <div className="flex flex-wrap items-center gap-2 text-xs text-[#8e99ad]">
-                                            <span className="rounded-lg border border-[#344050] bg-[#0d131d] px-3 py-2">
-                                                Normal
-                                                <strong className="ml-1 text-[#e3e8f1]">
-                                                    {formatStatNumber(combatDamage.normalDamage)}
-                                                </strong>
-                                            </span>
-
-                                            <span>×</span>
-
-                                            <span className="rounded-lg border border-[#344050] bg-[#0d131d] px-3 py-2">
-                                                Non-Crit
-                                                <strong className="ml-1 text-[#e3e8f1]">
-                                                    {formatNumber((1 - critChance) * 100)}%
-                                                </strong>
-                                            </span>
-
-                                            <span>+</span>
-
-                                            <span className="rounded-lg border border-[#ff7448]/30 bg-[#3a201b]/35 px-3 py-2">
-                                                Critical
-                                                <strong className="ml-1 text-[#ff936d]">
-                                                    {formatStatNumber(combatDamage.criticalDamage)}
-                                                </strong>
-                                            </span>
-
-                                            <span>×</span>
-
-                                            <span className="rounded-lg border border-[#ff7448]/30 bg-[#3a201b]/35 px-3 py-2">
-                                                Crit Chance
-                                                <strong className="ml-1 text-[#ff936d]">
-                                                    {formatNumber(stats.critChance)}%
-                                                </strong>
-                                            </span>
-
-                                            <span>=</span>
-
-                                            <span className="rounded-lg border border-[#7182ff]/45 bg-[#202846]/45 px-3 py-2">
-                                                Expected Damage
-                                                <strong className="ml-1 text-[#aeb8ff]">
-                                                    {formatStatNumber(expectedDamage)}
-                                                </strong>
-                                            </span>
-
+                                <div className="rounded-xl border border-[#365486] bg-[linear-gradient(135deg,rgba(15,29,46,0.9),rgba(10,19,30,0.95))] p-3 sm:p-4">
+                                    <div className="flex items-center gap-2">
+                                        <span className="grid h-7 w-7 place-items-center rounded-md border border-[#4f78bf]/50 bg-[#17305a]/70 text-sm text-[#8fb6ff]">▥</span>
+                                        <div>
+                                            <p className="text-sm font-bold text-[#e7edf8]">DPS Calculation</p>
+                                            <p className="text-[11px] text-[#8e9db4]">Expected damage based on critical chance, then adjusted by cooldown</p>
                                         </div>
+                                    </div>
 
-                                        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#344050] pt-3 text-xs text-[#8e99ad]">
-                                            <span className="rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 px-3 py-2">
-                                                {formatStatNumber(expectedDamage)}
-                                            </span>
+                                    <div className="mt-3 grid gap-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] lg:items-center">
+                                        <div className="rounded-lg border border-[#4d75ff]/60 bg-[#18264d]/55 p-2.5">
+                                            <p className="text-[10px] uppercase tracking-wide text-[#8ca4ff]">Normal Damage</p>
+                                            <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatStatNumber(combatDamage.normalDamage)}</p>
+                                        </div>
+                                        <span className="hidden text-center text-lg font-bold text-[#6f9df0] lg:block">×</span>
+                                        <div className="rounded-lg border border-[#3b5579] bg-[#0d1724]/85 p-2.5">
+                                            <p className="text-[10px] uppercase tracking-wide text-[#8293ac]">Non-Crit Chance</p>
+                                            <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatNumber((1 - critChance) * 100)}%</p>
+                                        </div>
+                                        <span className="hidden text-center text-lg font-bold text-[#6f9df0] lg:block">+</span>
+                                        <div className="rounded-lg border border-[#ff7448]/45 bg-[#3a201b]/40 p-2.5">
+                                            <p className="text-[10px] uppercase tracking-wide text-[#ff936d]">Critical Damage</p>
+                                            <p className="mt-1 text-base font-bold text-[#ffb09a]">{formatStatNumber(combatDamage.criticalDamage)}</p>
+                                        </div>
+                                        <span className="hidden text-center text-lg font-bold text-[#6f9df0] lg:block">×</span>
+                                        <div className="rounded-lg border border-[#3b5579] bg-[#0d1724]/85 p-2.5">
+                                            <p className="text-[10px] uppercase tracking-wide text-[#8293ac]">Crit Chance</p>
+                                            <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatNumber(stats.critChance)}%</p>
+                                        </div>
+                                    </div>
 
-                                            <span>÷</span>
+                                    <div className="mt-3 flex justify-center">
+                                        <div className="min-w-[12rem] rounded-lg border border-[#4d75ff]/70 bg-[#1c2f62]/55 px-4 py-2.5 text-center">
+                                            <p className="text-[10px] uppercase tracking-wide text-[#8ca4ff]">Expected Damage</p>
+                                            <p className="mt-1 text-lg font-bold text-[#c8d3ff]">{formatStatNumber(expectedDamage)}</p>
+                                        </div>
+                                    </div>
 
-                                            <span className="rounded-lg border border-[#344050] bg-[#0d131d] px-3 py-2">
-                                                {formatNumber(displayedCooldown)}s cooldown
-                                            </span>
-
-                                            <span>=</span>
-
-                                            <span className="rounded-lg border border-[#7182ff]/45 bg-[#202846]/45 px-3 py-2 font-bold text-[#aeb8ff]">
-                                                {formatStatNumber(skillDps)}/s
-                                            </span>
+                                    <div className="mt-3 grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-2 border-t border-[#33435b] pt-3 text-center">
+                                        <div className="rounded-lg border border-[#3b5579] bg-[#0d1724]/85 p-2.5">
+                                            <p className="text-sm font-bold text-[#c8d3ff]">{formatStatNumber(expectedDamage)}</p>
+                                            <p className="mt-0.5 text-[10px] text-[#8293ac]">Expected Damage</p>
+                                        </div>
+                                        <span className="font-bold text-[#6f9df0]">÷</span>
+                                        <div className="rounded-lg border border-[#3b5579] bg-[#0d1724]/85 p-2.5">
+                                            <p className="text-sm font-bold text-[#edf2fb]">{formatNumber(displayedCooldown)}s</p>
+                                            <p className="mt-0.5 text-[10px] text-[#8293ac]">Cooldown</p>
+                                        </div>
+                                        <span className="font-bold text-[#6f9df0]">=</span>
+                                        <div className="rounded-lg border border-[#4d75ff]/70 bg-[#1c2f62]/55 p-2.5">
+                                            <p className="text-sm font-bold text-[#c8d3ff]">{formatStatNumber(skillDps)}/s</p>
+                                            <p className="mt-0.5 text-[10px] text-[#8ca4ff]">DPS</p>
                                         </div>
                                     </div>
                                 </div>
                             )}
 
-                            {damagePassiveDetails.length > 0 && (
-                                <div>
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Passive Effects</p>
-                                    {damagePassiveDetails.map((passive, index) => (
-                                        <p key={`${passive.name}-${index}`} className="mt-1 text-xs text-[#8e99ad]">
-                                            {passive.name}: {formatNumber(passive.multiplier)}× {passiveEffectLabels[passive.stat]}
-                                        </p>
-                                    ))}
+                            {hasComplexBreakdown && (
+                                <div className="rounded-xl border border-[#365486] bg-[linear-gradient(135deg,rgba(15,29,46,0.9),rgba(10,19,30,0.95))] p-3 sm:p-4">
+                                    <div className="flex items-center gap-2">
+                                        <span className="grid h-7 w-7 place-items-center rounded-md border border-[#4f78bf]/50 bg-[#17305a]/70 text-sm text-[#8fb6ff]">☷</span>
+                                        <div>
+                                            <p className="text-sm font-bold text-[#e7edf8]">Per-Hit Breakdown</p>
+                                            <p className="text-[11px] text-[#8e9db4]">
+                                                {effectiveLifeSteal > 0
+                                                    ? `Damage and Life Siphon healing per hit at ${formatNumber(effectiveLifeSteal)}%`
+                                                    : skill.damageInstances.length === 1
+                                                        ? `${totalHits} identical hits at ${formatNumber(skill.damageInstances[0].multiplier * 100)}% of Attack each`
+                                                        : `${totalHits} hits with different Attack multipliers`}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-3 overflow-x-auto rounded-lg border border-[#33435b] bg-[#0b141f]">
+                                        <table className={`w-full text-left text-xs ${effectiveLifeSteal > 0 ? "min-w-[780px]" : "min-w-[560px]"}`}>
+                                            <thead className="bg-[#132236] text-[10px] uppercase tracking-[0.08em] text-[#8396b2]">
+                                                <tr>
+                                                    <th className="px-3 py-2.5 font-medium">Hit</th>
+                                                    <th className="px-3 py-2.5 font-medium">Attack Multiplier</th>
+                                                    <th className="px-3 py-2.5 font-medium text-[#8ca4ff]">Normal Damage</th>
+                                                    <th className="px-3 py-2.5 font-medium text-[#ff936d]">Critical Damage</th>
+                                                    {effectiveLifeSteal > 0 && (
+                                                        <>
+                                                            <th className="border-l border-[#285846] px-3 py-2.5 font-medium text-[#6ee7a8]">Life Steal</th>
+                                                            <th className="px-3 py-2.5 font-medium text-[#6ee7a8]">Critical Heal</th>
+                                                        </>
+                                                    )}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {skill.damageInstances.map((instance, index) => {
+                                                    const baseDamagePerHit =
+                                                        stats.damage *
+                                                        instance.multiplier *
+                                                        traitDamageMultiplier *
+                                                        rallyingWarCryMultiplier *
+                                                        vulnerabilityMultiplier *
+                                                        attributeEffects.skillDamageMultiplier *
+                                                        accountRiftDamageMultiplier;
+
+                                                    const combatDamagePerHit =
+                                                        calculateCombatDamage({
+                                                            monster,
+                                                            baseDamage: baseDamagePerHit,
+                                                            critMultiplier: stats.critMultiplier,
+                                                            combatContext: build.combatContext,
+                                                            targetIsBoss: build.targetIsBoss,
+                                                            currentHpPercent: build.currentHpPercent,
+                                                            passives: effectivePassives,
+                                                        });
+
+                                                    const damagePerHit = combatDamagePerHit.normalDamage;
+                                                    const criticalDamagePerHit = combatDamagePerHit.criticalDamage;
+                                                    const normalLifeStealPerHit = damagePerHit * (effectiveLifeSteal / 100);
+                                                    const criticalLifeStealPerHit = criticalDamagePerHit * (effectiveLifeSteal / 100);
+                                                    const firstHit = skill.damageInstances
+                                                        .slice(0, index)
+                                                        .reduce((sum, prior) => sum + prior.hits, 0) + 1;
+                                                    const lastHit = firstHit + instance.hits - 1;
+                                                    const hitLabel = instance.hits === 1
+                                                        ? `Hit ${firstHit}`
+                                                        : `Hits ${firstHit}–${lastHit}`;
+
+                                                    return (
+                                                        <tr key={`${instance.multiplier}-${instance.hits}-${index}`} className="border-t border-[#28384c] first:border-t-0">
+                                                            <td className="px-3 py-2.5">
+                                                                <span className="inline-flex rounded-full border border-[#355da2] bg-[#153464]/60 px-2.5 py-1 font-semibold text-[#a9c4ff]">
+                                                                    {hitLabel}
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-3 py-2.5 font-semibold text-[#dbe4f2]">
+                                                                {formatNumber(instance.multiplier * 100)}% of Attack
+                                                                {instance.hits > 1 && <span className="ml-1 font-normal text-[#7f8fa6]">each</span>}
+                                                            </td>
+                                                            <td className="px-3 py-2.5 font-bold text-[#8ca4ff]">{formatStatNumber(damagePerHit)}</td>
+                                                            <td className="px-3 py-2.5 font-bold text-[#ff936d]">{formatStatNumber(criticalDamagePerHit)}</td>
+                                                            {effectiveLifeSteal > 0 && (
+                                                                <>
+                                                                    <td className="border-l border-[#285846] bg-[#10251f]/35 px-3 py-2.5 font-bold text-[#6ee7a8]">{formatStatNumber(normalLifeStealPerHit)}</td>
+                                                                    <td className="bg-[#10251f]/35 px-3 py-2.5 font-bold text-[#82f0b7]">{formatStatNumber(criticalLifeStealPerHit)}</td>
+                                                                </>
+                                                            )}
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             )}
 
-                            {attributeEffects.active.length > 0 && (
-                                <div>
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Attribute Effects</p>
+                            {hasComplexBreakdown && (
+                                <div className={`grid gap-2 rounded-xl border border-[#365486] bg-[linear-gradient(135deg,rgba(15,29,46,0.9),rgba(10,19,30,0.95))] p-3 sm:p-4 ${effectiveLifeSteal > 0 ? "md:grid-cols-3" : "sm:grid-cols-2"}`}>
+                                    <div className="rounded-lg border border-[#4d75ff]/60 bg-[#18264d]/55 p-3">
+                                        <p className="text-[10px] font-bold uppercase tracking-wide text-[#8ca4ff]">Total Normal Damage</p>
+                                        <p className="mt-1 text-lg font-bold text-[#edf2fb]">{formatStatNumber(combatDamage.normalDamage)}</p>
+                                    </div>
+                                    <div className="rounded-lg border border-[#ff7448]/45 bg-[#3a201b]/40 p-3">
+                                        <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff936d]">Total Critical Damage</p>
+                                        <p className="mt-1 text-lg font-bold text-[#ffd0c2]">{formatStatNumber(combatDamage.criticalDamage)}</p>
+                                    </div>
+                                    {effectiveLifeSteal > 0 && (
+                                        <div className="rounded-lg border border-[#43c982]/45 bg-[#102c22]/55 p-3">
+                                            <p className="text-[10px] font-bold uppercase tracking-wide text-[#6ee7a8]">Total Life Steal</p>
+                                            <div className="mt-1 grid grid-cols-2 gap-3">
+                                                <div>
+                                                    <p className="text-[10px] text-[#78a993]">Normal Healed</p>
+                                                    <p className="text-base font-bold text-[#82f0b7]">{formatStatNumber(lifeStealAmount)}</p>
+                                                </div>
+                                                <div className="border-l border-[#285846] pl-3">
+                                                    <p className="text-[10px] text-[#78a993]">Critical Healed</p>
+                                                    <p className="text-base font-bold text-[#82f0b7]">{formatStatNumber(criticalLifeStealAmount)}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {damagePassiveDetails.length > 0 && (
+                                <div className="rounded-lg border border-[#33435b] bg-[#0d151f] p-3">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Passive Effects</p>
+                                    <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
+                                        {damagePassiveDetails.map((passive, index) => (
+                                            <p key={`${passive.name}-${index}`} className="text-xs text-[#8e99ad]">
+                                                <span className="font-semibold text-[#c3cede]">{passive.name}</span>: {formatNumber(passive.multiplier)}× {passiveEffectLabels[passive.stat]}
+                                            </p>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {(attributeEffects.cooldownSkipChance > 0 ||
+                                totalHealingEffectiveness > 0 ||
+                                attributeEffects.shieldEffectiveness > 0 ||
+                                attributeEffects.shieldDamage > 0 ||
+                                attributeEffects.skillResistance > 0 ||
+                                attributeEffects.damageRedirect > 0 ||
+                                attributeEffects.damageImmunitySeconds > 0 ||
+                                attributeEffects.maxHpRegenPerSecond > 0) && (
+                                <div className="rounded-lg border border-[#33435b] bg-[#0d151f] p-3">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Other Attribute Effects</p>
                                     <div className="mt-2 flex flex-wrap gap-2 text-xs">
-                                        {attributeEffects.lifeSteal > 0 && (
-                                            <span className="rounded bg-[#202846] px-2 py-1 text-[#7182ff]">
-                                                Life Siphon: {formatStatNumber(combatDamage.normalDamage)} × {formatNumber(attributeEffects.lifeSteal)}% = {formatStatNumber(lifeStealAmount)} healed
-                                                {" · "}{formatStatNumber(criticalLifeStealAmount)} on critical
-                                            </span>
-                                        )}
                                         {attributeEffects.cooldownSkipChance > 0 && <span className="rounded bg-[#201b35] px-2 py-1 text-[#c28cff]">{attributeEffects.cooldownSkipChance}% cooldown-skip chance</span>}
                                         {totalHealingEffectiveness > 0 && <span className="rounded bg-[#202846] px-2 py-1 text-[#7182ff]">+{formatNumber(totalHealingEffectiveness)}% healing effectiveness</span>}
                                         {attributeEffects.shieldEffectiveness > 0 && <span className="rounded bg-[#17283a] px-2 py-1 text-[#70b7ff]">+{attributeEffects.shieldEffectiveness}% shield gain</span>}
@@ -1809,123 +2163,21 @@ function SkillDamagePanel({
                             )}
 
                             {healingAmount !== null && (
-                                <div>
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Healing Calculation</p>
-                                    <div className="mt-2 rounded-lg border border-[#7182ff]/25 bg-[#202846]/35 p-3 text-xs text-[#8e99ad]">
-                                        <p>
-                                            {damageHealingPercent !== null && (
-                                                <>{formatStatNumber(healingDamageBase)} Damage × {formatNumber(damageHealingPercent)}%</>
-                                            )}
-                                            {damageHealingPercent !== null && healthHealingPercent !== null ? " + " : ""}
-                                            {healthHealingPercent !== null && (
-                                                <>{formatStatNumber(stats.health)} Health × {formatNumber(healthHealingPercent)}%</>
-                                            )}
-                                            {totalHealingEffectiveness > 0
-                                                ? ` × ${formatNumber(healingEffectivenessMultiplier)} healing effectiveness`
-                                                : ""}
-                                            {" = "}<strong className="text-[#aeb8ff]">{formatStatNumber(healingAmount)} healed</strong>
-                                        </p>
-                                    </div>
-                                </div>
-                            )}
-
-                            {hasComplexBreakdown && (
-                                <div>
-                                    <div className="flex flex-wrap items-end justify-between gap-2">
-                                        <div>
-                                            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Per-Hit Breakdown</p>
-                                            <p className="mt-1 text-xs text-[#8e99ad]">
-                                                {skill.damageInstances.length === 1
-                                                    ? `${totalHits} identical hits at ${formatNumber(skill.damageInstances[0].multiplier * 100)}% of Attack each`
-                                                    : `${totalHits} hits with different Attack multipliers`}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="mt-3 grid gap-2">
-                                        {skill.damageInstances.map((instance, index) => {
-                                            const baseDamagePerHit =
-                                                stats.damage *
-                                                instance.multiplier *
-                                                traitDamageMultiplier *
-                                                rallyingWarCryMultiplier *
-                                                vulnerabilityMultiplier *
-                                                attributeEffects.skillDamageMultiplier *
-                                                accountRiftDamageMultiplier;
-
-                                            const combatDamagePerHit =
-                                                calculateCombatDamage({
-                                                    monster,
-                                                    baseDamage: baseDamagePerHit,
-                                                    critMultiplier: stats.critMultiplier,
-                                                    combatContext: build.combatContext,
-                                                    targetIsBoss: build.targetIsBoss,
-                                                    currentHpPercent: build.currentHpPercent,
-                                                    passives: effectivePassives,
-                                                });
-
-                                            const damagePerHit =
-                                                combatDamagePerHit.normalDamage;
-
-                                            const criticalDamagePerHit =
-                                                combatDamagePerHit.criticalDamage;
-
-                                            const instanceTotalDamage =
-                                                damagePerHit *
-                                                instance.hits;
-
-                                            const instanceTotalCriticalDamage =
-                                                criticalDamagePerHit *
-                                                instance.hits;
-
-                                            return (
-                                                <div
-                                                    key={`${instance.multiplier}-${instance.hits}-${index}`}
-                                                    className="rounded-lg border border-[#344050] bg-[#0f1620] p-3"
-                                                >
-                                                    <div className="flex flex-wrap items-center justify-between gap-2">
-                                                        <p className="text-sm font-semibold text-[#e3e8f1]">
-                                                            {skill.damageInstances.length === 1 ? "Repeated Hits" : `Damage Part ${index + 1}`}
-                                                        </p>
-                                                        <span className="rounded-md border border-[#344050] bg-[#0d131d] px-2 py-1 text-xs text-[#8e99ad]">
-                                                    {instance.hits} {instance.hits === 1 ? "hit" : "hits"} · {formatNumber(instance.multiplier * 100)}% of Attack
-                                                </span>
-                                                    </div>
-
-                                                    <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                                                        <div className="rounded-md border border-[#7182ff]/25 bg-[#202846]/35 p-2.5">
-                                                            <p className="text-[10px] font-bold uppercase tracking-wide text-[#7182ff]">Normal {instance.hits > 1 ? "/ Hit" : "Damage"}</p>
-                                                            <p className="mt-1 text-sm font-semibold text-[#e3e8f1]">{formatStatNumber(damagePerHit)}</p>
-                                                        </div>
-                                                        <div className="rounded-md border border-[#ff7448]/25 bg-[#3a201b]/35 p-2.5">
-                                                            <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff936d]">Critical {instance.hits > 1 ? "/ Hit" : "Damage"}</p>
-                                                            <p className="mt-1 text-sm font-semibold text-[#e3e8f1]">{formatStatNumber(criticalDamagePerHit)}</p>
-                                                        </div>
-                                                    </div>
-
-                                                    {instance.hits > 1 && (
-                                                        <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 border-t border-[#344050] pt-2 text-xs text-[#8e99ad]">
-                                                            <span>All {instance.hits} hits: <strong className="text-[#7182ff]">{formatStatNumber(instanceTotalDamage)}</strong> normal</span>
-                                                            <span><strong className="text-[#ff936d]">{formatStatNumber(instanceTotalCriticalDamage)}</strong> critical</span>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-
-                                    {skill.damageInstances.length > 1 && (
-                                        <div className="mt-3 grid gap-2 rounded-lg border border-[#41506a] bg-[#0f1620] p-3 sm:grid-cols-2">
-                                            <div>
-                                                <p className="text-[10px] font-bold uppercase tracking-wide text-[#7182ff]">Total Normal Damage</p>
-                                                <p className="mt-1 text-lg font-bold text-[#e3e8f1]">{formatStatNumber(combatDamage.normalDamage)}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff936d]">Total Critical Damage</p>
-                                                <p className="mt-1 text-lg font-bold text-[#e3e8f1]">{formatStatNumber(combatDamage.criticalDamage)}</p>
-                                            </div>
-                                        </div>
-                                    )}
+                                <div className="rounded-lg border border-[#7182ff]/25 bg-[#202846]/25 p-3">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8ca4ff]">Healing Calculation</p>
+                                    <p className="mt-2 text-xs text-[#8e99ad]">
+                                        {damageHealingPercent !== null && (
+                                            <>{formatStatNumber(healingDamageBase)} Damage × {formatNumber(damageHealingPercent)}%</>
+                                        )}
+                                        {damageHealingPercent !== null && healthHealingPercent !== null ? " + " : ""}
+                                        {healthHealingPercent !== null && (
+                                            <>{formatStatNumber(stats.health)} Health × {formatNumber(healthHealingPercent)}%</>
+                                        )}
+                                        {totalHealingEffectiveness > 0
+                                            ? ` × ${formatNumber(healingEffectivenessMultiplier)} healing effectiveness`
+                                            : ""}
+                                        {" = "}<strong className="text-[#aeb8ff]">{formatStatNumber(healingAmount)} healed</strong>
+                                    </p>
                                 </div>
                             )}
                         </div>

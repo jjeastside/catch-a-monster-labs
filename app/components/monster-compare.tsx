@@ -1155,7 +1155,7 @@ export function MonsterCompare() {
             </button>
           </div>
           <MonsterBrowser
-            portalContainer={() => dialog.current ?? document.body}
+            portalContainerAction={() => dialog.current ?? document.body}
             monsters={availableMonsters}
             selectedMonster={columns[picker]?.monster ?? null}
             favoriteMonsterIds={favorites}

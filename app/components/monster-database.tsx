@@ -503,7 +503,7 @@ function DetailPanel({
                                     rootMonster={getEvolutionRoot(monster)}
                                     selectedMonsterId={monster.id}
                                     compact
-                                    onMonsterSelect={onMonsterSelect}
+                                    onMonsterSelectAction={onMonsterSelect}
                                 />
                             </div>
                         ) : (

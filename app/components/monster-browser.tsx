@@ -37,7 +37,7 @@ const rarityPortraitClasses: Record<Monster["rarity"], string> = {
 const BrowserPortalContext = createContext<() => HTMLElement>(() => document.body);
 
 type MonsterBrowserProps = {
-    portalContainer?: () => HTMLElement;
+    portalContainerAction?: () => HTMLElement;
     monsters: Monster[];
     selectedMonster: Monster | null;
     favoriteMonsterIds: string[];
@@ -1048,5 +1048,5 @@ function MonsterBrowserContent({
 }
 
 export function MonsterBrowser(props: MonsterBrowserProps) {
-    return <BrowserPortalContext.Provider value={props.portalContainer ?? (() => document.body)}><MonsterBrowserContent {...props} /></BrowserPortalContext.Provider>;
+    return <BrowserPortalContext.Provider value={props.portalContainerAction ?? (() => document.body)}><MonsterBrowserContent {...props} /></BrowserPortalContext.Provider>;
 }

@@ -83,3 +83,35 @@ textarea {
     animation: none;
   }
 }
+
+
+/* Calculator skill cards respond to the Results pane width, not the browser width. */
+.skill-results-container {
+  container-type: inline-size;
+}
+
+.skill-results-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.skill-results-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.75rem), 1fr));
+}
+
+/* Once the Results pane is genuinely wide enough, reserve a compact skill-info
+   column and guarantee Normal / Critical / DPS stay on one row. */
+@container (min-width: 44rem) {
+  .skill-results-layout {
+    grid-template-columns: minmax(14rem, 16rem) minmax(0, 1fr);
+  }
+
+  .skill-results-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@container (max-width: 43.999rem) {
+  .skill-results-layout > :first-child p[title] {
+    max-width: none;
+  }
+}
