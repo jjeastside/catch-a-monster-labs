@@ -64,11 +64,22 @@ export function calculateSkillAttributeEffects(
         .filter((attribute) => attribute.effectType === effectType)
         .reduce((sum, attribute) => sum + attribute.value, 0);
 
+    const skillDamageAttributes = applicable.filter(
+        (attribute) => attribute.effectType === "skill_damage",
+    );
+    const skillDamageMultiplier = skillDamageAttributes.reduce(
+        (multiplier, attribute) => multiplier * (1 + attribute.value / 100),
+        1,
+    );
+
     return {
         active,
         applicable,
-        skillDamageBonus: total("skill_damage"),
-        skillDamageMultiplier: 1 + total("skill_damage") / 100,
+        // Skill-damage attributes stack multiplicatively in-game. For example,
+        // Water Damage III (+18%) and All Damage II (+15%) combine to
+        // 1.18 * 1.15 = 1.357x, not 1 + (18 + 15)% = 1.33x.
+        skillDamageBonus: (skillDamageMultiplier - 1) * 100,
+        skillDamageMultiplier,
         skillResistance: total("skill_resistance"),
         shieldDamage: total("shield_damage"),
         healEffectiveness: total("heal_effectiveness"),
