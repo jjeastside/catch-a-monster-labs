@@ -8,6 +8,13 @@ import { WEAPONS, ARMORS } from "../data/equipments";
 import { calculateStats } from "../lib/calculations/stats";
 import { calculateSkillSummary } from "../lib/calculations/skill-summary";
 import { GENETIC_POTENTIAL_VALUES } from "../lib/calculations/genetic-potential";
+import {
+  clampEvolutionPercent,
+  getEvolutionBarFill,
+  MAX_EVOLUTION_PERCENT,
+  MIN_EVOLUTION_PERCENT,
+  EVOLUTION_STEP,
+} from "../lib/calculations/evolution";
 import { CURRENT_MAX_LEVEL, MIN_LEVEL } from "../lib/level-config";
 import { formatNumber, formatStatNumber } from "../lib/format-numbers";
 import { isBestValue } from "../lib/compare-values";
@@ -214,6 +221,322 @@ function CompareSelect({
   );
 }
 
+function SharedEvolutionMultiplier({
+  value,
+  onChange,
+  shared = true,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+  shared?: boolean;
+}) {
+  const [inputDraft, setInputDraft] = useState<string | null>(null);
+  const [dragPreview, setDragPreview] = useState<number | null>(null);
+  const [precisionRange, setPrecisionRange] = useState<{
+    min: number;
+    max: number;
+  } | null>(null);
+  const [precisionOverlay, setPrecisionOverlay] = useState<{
+    left: number;
+    top: number;
+    width: number;
+  } | null>(null);
+  const dragState = useRef<{
+    pointerId: number;
+    left: number;
+    top: number;
+    width: number;
+    overlayLeft: number;
+    overlayWidth: number;
+    startY: number;
+    preview: number;
+    precisionRange: { min: number; max: number } | null;
+    precisionStartX: number | null;
+    precisionStartValue: number | null;
+  } | null>(null);
+
+  const displayedValue = dragPreview ?? value;
+  const maxBonus = MAX_EVOLUTION_PERCENT - MIN_EVOLUTION_PERCENT;
+  const inputValue = inputDraft ?? displayedValue.toFixed(2);
+  const parsedValue = Number(inputValue);
+  const isNumeric = inputValue.trim() !== "" && Number.isFinite(parsedValue);
+  const isOutOfRange =
+    isNumeric &&
+    (parsedValue < MIN_EVOLUTION_PERCENT || parsedValue > MAX_EVOLUTION_PERCENT);
+  const fill = getEvolutionBarFill(displayedValue);
+  const precisionFill = precisionRange
+    ? ((displayedValue - precisionRange.min) /
+        Math.max(EVOLUTION_STEP, precisionRange.max - precisionRange.min)) *
+      100
+    : 0;
+
+  const formatEvolutionValue = (internalValue: number) =>
+    `${internalValue.toFixed(2)}%`;
+
+  const commitInputValue = () => {
+    const next = isNumeric ? clampEvolutionPercent(parsedValue) : value;
+    onChange(next);
+    setInputDraft(null);
+  };
+
+  const getCoarseValue = (clientX: number, left: number, width: number) => {
+    // The left half is the visual base area. The center is EM +0%, then the
+    // right half covers the usable +0% -> +120% evolution range.
+    const progress = Math.min(
+      1,
+      Math.max(0, (clientX - (left + width / 2)) / (width / 2)),
+    );
+    return clampEvolutionPercent(
+      MIN_EVOLUTION_PERCENT +
+        progress * (MAX_EVOLUTION_PERCENT - MIN_EVOLUTION_PERCENT),
+    );
+  };
+
+  return (
+    <div className={styles.sharedEvolution}>
+      <div className={styles.sharedEvolutionHeader}>
+        <div>
+          <span className={styles.sharedEvolutionLabel}>EM</span>
+          <span className={styles.sharedEvolutionHint}>
+            {shared
+              ? "Shared across evolved monsters · drag upward for 0.01% precision"
+              : "This monster only · drag upward for 0.01% precision"}
+          </span>
+        </div>
+        <label className={styles.sharedEvolutionInput}>
+          <input
+            aria-label={shared ? "Shared Evolution Multiplier percentage" : "Evolution Multiplier percentage"}
+            type="number"
+            min={MIN_EVOLUTION_PERCENT}
+            max={MAX_EVOLUTION_PERCENT}
+            step={EVOLUTION_STEP}
+            value={inputValue}
+            onChange={(event) => {
+              const nextInput = event.target.value;
+              const nextValue = Number(nextInput);
+              setInputDraft(nextInput);
+              if (
+                nextInput.trim() !== "" &&
+                Number.isFinite(nextValue) &&
+                nextValue >= MIN_EVOLUTION_PERCENT &&
+                nextValue <= MAX_EVOLUTION_PERCENT
+              ) {
+                onChange(clampEvolutionPercent(nextValue));
+              }
+            }}
+            onBlur={commitInputValue}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                commitInputValue();
+                event.currentTarget.blur();
+              }
+            }}
+            aria-invalid={!isNumeric || isOutOfRange}
+          />
+          <span>%</span>
+        </label>
+      </div>
+
+      <div className={styles.sharedEvolutionTrackWrap}>
+        {precisionRange && (
+          <div
+            className={styles.sharedEvolutionPrecision}
+            style={{
+              left: precisionOverlay?.left ?? 0,
+              top: precisionOverlay?.top ?? 0,
+              width: precisionOverlay?.width,
+            }}
+          >
+            <div className={styles.sharedEvolutionPrecisionTitle}>
+              Precision · 0.01%
+            </div>
+            <div className={styles.sharedEvolutionPrecisionValues}>
+              <span>{formatEvolutionValue(precisionRange.min)}</span>
+              <strong>{formatEvolutionValue(displayedValue)}</strong>
+              <span>{formatEvolutionValue(precisionRange.max)}</span>
+            </div>
+            <div className={styles.sharedEvolutionPrecisionTrack}>
+              <div style={{ width: `${precisionFill}%` }} />
+              <span style={{ left: `${precisionFill}%` }} />
+            </div>
+          </div>
+        )}
+
+        <div className={styles.sharedEvolutionTrack}>
+          <div
+            className={styles.sharedEvolutionFill}
+            style={{ width: `${fill}%` }}
+          />
+          <span className={styles.sharedEvolutionMidpoint} aria-hidden="true" />
+          <span className={styles.sharedEvolutionValue}>
+            EM: {formatEvolutionValue(displayedValue)}
+          </span>
+          <input
+            aria-label={shared ? "Shared Evolution Multiplier" : "Evolution Multiplier"}
+            type="range"
+            min={MIN_EVOLUTION_PERCENT}
+            max={MAX_EVOLUTION_PERCENT}
+            step={EVOLUTION_STEP}
+            value={value}
+            onPointerDown={(event) => {
+              event.preventDefault();
+              const track =
+                event.currentTarget.parentElement?.getBoundingClientRect();
+              if (!track) return;
+
+              const preview = getCoarseValue(
+                event.clientX,
+                track.left,
+                track.width,
+              );
+              const desiredWidth = Math.max(
+                track.width + 128,
+                track.width * 1.28,
+              );
+              const overlayWidth = Math.min(
+                desiredWidth,
+                window.innerWidth - 16,
+              );
+
+              dragState.current = {
+                pointerId: event.pointerId,
+                left: track.left,
+                top: track.top,
+                width: track.width,
+                overlayLeft: track.left + track.width / 2,
+                overlayWidth,
+                startY: event.clientY,
+                preview,
+                precisionRange: null,
+                precisionStartX: null,
+                precisionStartValue: null,
+              };
+              event.currentTarget.setPointerCapture(event.pointerId);
+              setPrecisionRange(null);
+              setPrecisionOverlay(null);
+              setDragPreview(preview);
+            }}
+            onPointerMove={(event) => {
+              const drag = dragState.current;
+              if (!drag || drag.pointerId !== event.pointerId) return;
+
+              if (!drag.precisionRange && drag.startY - event.clientY >= 24) {
+                const desiredWidth = Math.max(
+                  drag.width + 128,
+                  drag.width * 1.28,
+                );
+                const availableHalfWidth = Math.max(
+                  0,
+                  Math.min(
+                    event.clientX - 8,
+                    window.innerWidth - event.clientX - 8,
+                  ),
+                );
+
+                drag.overlayLeft = event.clientX;
+                drag.overlayWidth = Math.min(
+                  desiredWidth,
+                  availableHalfWidth * 2,
+                );
+                drag.precisionRange = {
+                  min: Math.max(
+                    MIN_EVOLUTION_PERCENT,
+                    drag.preview - 1,
+                  ),
+                  max: Math.min(
+                    MAX_EVOLUTION_PERCENT,
+                    drag.preview + 1,
+                  ),
+                };
+                drag.precisionStartX = event.clientX;
+                drag.precisionStartValue = drag.preview;
+                setPrecisionRange(drag.precisionRange);
+                setPrecisionOverlay({
+                  left: drag.overlayLeft,
+                  top: drag.top - 12,
+                  width: drag.overlayWidth,
+                });
+                setDragPreview(drag.preview);
+                return;
+              }
+
+              if (
+                drag.precisionRange &&
+                drag.precisionStartX !== null &&
+                drag.precisionStartValue !== null
+              ) {
+                const precisionSpan =
+                  drag.precisionRange.max - drag.precisionRange.min;
+                drag.preview = clampEvolutionPercent(
+                  Math.min(
+                    drag.precisionRange.max,
+                    Math.max(
+                      drag.precisionRange.min,
+                      drag.precisionStartValue +
+                        ((event.clientX - drag.precisionStartX) /
+                          drag.overlayWidth) *
+                          precisionSpan,
+                    ),
+                  ),
+                );
+              } else {
+                drag.preview = getCoarseValue(
+                  event.clientX,
+                  drag.left,
+                  drag.width,
+                );
+              }
+
+              setDragPreview(drag.preview);
+            }}
+            onPointerUp={(event) => {
+              const drag = dragState.current;
+              if (!drag || drag.pointerId !== event.pointerId) return;
+
+              onChange(drag.preview);
+              setInputDraft(null);
+              setDragPreview(null);
+              setPrecisionRange(null);
+              setPrecisionOverlay(null);
+              dragState.current = null;
+              event.currentTarget.releasePointerCapture(event.pointerId);
+            }}
+            onPointerCancel={() => {
+              dragState.current = null;
+              setDragPreview(null);
+              setPrecisionRange(null);
+              setPrecisionOverlay(null);
+            }}
+            onChange={(event) => {
+              if (dragState.current) return;
+              onChange(clampEvolutionPercent(Number(event.target.value)));
+              setInputDraft(null);
+            }}
+            aria-valuemin={MIN_EVOLUTION_PERCENT}
+            aria-valuemax={MAX_EVOLUTION_PERCENT}
+            aria-valuenow={displayedValue}
+            title="Drag upward while adjusting to open the 0.01% precision slider."
+            className={styles.sharedEvolutionRange}
+          />
+        </div>
+
+        <div className={styles.sharedEvolutionScale} aria-hidden="true">
+          <span>0%</span>
+          <span>+{maxBonus.toFixed(0)}%</span>
+        </div>
+      </div>
+
+      {(!isNumeric || isOutOfRange) && (
+        <p className={styles.sharedEvolutionError}>
+          {!isNumeric
+            ? "Enter a valid Evolution Multiplier."
+            : `Evolution Multiplier must be between ${MIN_EVOLUTION_PERCENT.toFixed(2)}% and ${MAX_EVOLUTION_PERCENT.toFixed(2)}%.`}
+        </p>
+      )}
+    </div>
+  );
+}
+
 function CompareBuildControls({
   build,
   onChange,
@@ -393,6 +716,10 @@ export function MonsterCompare() {
       previous?.focus();
     };
   }, [picker]);
+  const hasSharedEvolvedMonster = ids.some((id) =>
+    availableMonsters.find((monster) => monster.id === id)?.isEvolved,
+  );
+
   const columns = ids.map((id, index) => {
     const monster = availableMonsters.find((item) => item.id === id)!;
     const currentBuild = {
@@ -400,9 +727,13 @@ export function MonsterCompare() {
       monsterId: id,
       accountMultipliers: build.accountMultipliers,
     };
+    const calculationBuild = {
+      ...currentBuild,
+      evolutionPercent: monster.isEvolved ? currentBuild.evolutionPercent : 100,
+    };
     const stats = calculateStats(
       getMonsterStatData(id)!,
-      currentBuild,
+      calculationBuild,
       monster.passives ?? [],
     )!;
     const skills = monster.skillIds
@@ -414,7 +745,7 @@ export function MonsterCompare() {
           monster,
           skill,
           stats,
-          currentBuild,
+          calculationBuild,
           monster.passives ?? [],
         ),
       }));
@@ -539,6 +870,14 @@ export function MonsterCompare() {
       {mode === "shared" && (
         <section aria-label="Shared build" className={`${styles.sharedBuild} ${card} p-2.5`}>
           <CompareBuildControls build={build} onChange={setBuild} />
+          {hasSharedEvolvedMonster && (
+            <SharedEvolutionMultiplier
+              value={build.evolutionPercent}
+              onChange={(evolutionPercent) =>
+                setBuild((current) => ({ ...current, evolutionPercent }))
+              }
+            />
+          )}
         </section>
       )}
       <div className={`grid grid-cols-1 gap-3 md:grid-cols-2 ${gridClass}`}>
@@ -625,17 +964,34 @@ export function MonsterCompare() {
                 <h2 className="mb-1 text-xs font-semibold text-[#91a9ff]">
                   Build
                 </h2>
-                <CompareBuildControls
-                  compact
-                  build={customBuilds[columnIndex]}
-                  onChange={(next) =>
-                    setCustomBuilds((current) =>
-                      current.map((item, index) =>
-                        index === columnIndex ? next : item,
-                      ),
-                    )
-                  }
-                />
+                <div className={styles.customBuildBody}>
+                  <CompareBuildControls
+                    compact
+                    build={customBuilds[columnIndex]}
+                    onChange={(next) =>
+                      setCustomBuilds((current) =>
+                        current.map((item, index) =>
+                          index === columnIndex ? next : item,
+                        ),
+                      )
+                    }
+                  />
+                  {column.monster.isEvolved && (
+                    <SharedEvolutionMultiplier
+                      shared={false}
+                      value={customBuilds[columnIndex].evolutionPercent}
+                      onChange={(evolutionPercent) =>
+                        setCustomBuilds((current) =>
+                          current.map((item, index) =>
+                            index === columnIndex
+                              ? { ...item, evolutionPercent }
+                              : item,
+                          ),
+                        )
+                      }
+                    />
+                  )}
+                </div>
               </section>
             )}
             <section className={`${card} p-2`}>

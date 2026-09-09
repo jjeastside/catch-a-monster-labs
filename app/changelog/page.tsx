@@ -10,9 +10,27 @@ export const metadata: Metadata = {
 
 const releases = [
     {
-        version: "v1.0.10",
+        version: "v1.0.11",
         date: "September 8, 2026",
         label: "Latest",
+        changes: [
+            "Added the Monster Compare page for comparing 2–4 monsters side by side with combat stats, skills, cooldowns, and Total Skill DPS in one compact view.",
+            "Added Shared Settings and Custom Builds modes so players can either apply one build across every compared monster or configure each monster independently.",
+            "Added Compare support for level, rank, enhancement, Genetic Potential Damage and Health, weapon, armor, and global Account Multipliers.",
+            "Added Evolution Multiplier controls for evolved monsters, including one shared EM value in Shared Settings and independent EM values in Custom Builds.",
+            "Matched Compare EM controls to the calculator with a 0% base display and drag-up 0.01% precision adjustment for fine tuning evolved-monster builds.",
+            "Improved Compare build controls with rank-specific colors, blue enhancement styling, and dedicated breed-style icons inside the Genetic Potential Damage and Health fields.",
+            "Added best-value highlighting across combat stats and skill results, using crowns and restrained gold or green accents so winners stand out without overpowering the table.",
+            "Added lowest-cooldown highlighting and side-by-side skill rows for quickly comparing normal damage, critical damage, DPS, and cooldown differences.",
+            "Added rarity-aware monster portrait frames and badges so Compare cards match the visual language used throughout the Calculator and Monster Database.",
+            "Added Share Compare links that preserve the selected monsters, build mode, and calculator-relevant build state so comparisons can be reopened from a shared URL.",
+            "Added a dedicated Monster Compare social preview image so shared Compare links use Compare artwork instead of inheriting the main calculator preview.",
+            "Refined the Compare page layout, spacing, Account Multipliers panel, build controls, stat cards, skill sections, and responsive presentation to better match the rest of Cam Lab.",
+        ],
+    },
+    {
+        version: "v1.0.10",
+        date: "September 8, 2026",
         changes: [
             "Added Index Tracker Planning mode for setting future rank, mutation, and Male/Female breeding goals separately from collected progress.",
             "Added planned point gains, projected Index Score, a Planned Only filter, and Mark Achieved to move completed goals into collected progress.",
