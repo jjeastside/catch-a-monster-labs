@@ -19,10 +19,6 @@ import { CURRENT_MAX_LEVEL, MIN_LEVEL } from "../lib/level-config";
 import { formatNumber, formatStatNumber } from "../lib/format-numbers";
 import { isBestValue } from "../lib/compare-values";
 import { assetPath } from "../lib/asset-path";
-import {
-  createCompareShareUrl,
-  getSharedCompareFromLocation,
-} from "../lib/compare-sharing";
 import { createDefaultBuild, type Build, type Rank } from "../types/build";
 import { AccountMultipliers } from "./account-multipliers";
 import { useCompareAccount } from "../lib/use-compare-account";
@@ -51,6 +47,29 @@ const iconAliases: Record<string, string> = {
   "soul-reap-chain-vulnerability": "soul-reap-chain",
   "soul-reap-chain-scareharvest": "soul-reap-chain-poison",
 };
+const compareStorageKey = "cam-lab-monster-compare-v1";
+
+type SavedCompareState = {
+  ids: string[];
+  mode: "shared" | "custom";
+  build: Build;
+  customBuilds: Build[];
+};
+
+function normalizeSavedBuild(value: unknown): Build {
+  if (!value || typeof value !== "object") return defaults();
+  const saved = value as Partial<Build>;
+  return {
+    ...defaults(),
+    ...saved,
+    monsterId: null,
+    accountMultipliers:
+      saved.accountMultipliers &&
+      Array.isArray(saved.accountMultipliers.completedAchievementIds)
+        ? saved.accountMultipliers
+        : { completedAchievementIds: [] },
+  };
+}
 
 function Crown() {
   return (
@@ -668,38 +687,66 @@ export function MonsterCompare() {
     availableMonsters.slice(0, 2).map(() => defaults()),
   );
   const [customInitialized, setCustomInitialized] = useState(false);
-  const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "error">("idle");
-  const restoredSharedCompare = useRef(false);
+  const [storageReady, setStorageReady] = useState(false);
   useCompareAccount(build.accountMultipliers, setBuild);
 
   useEffect(() => {
-    if (restoredSharedCompare.current) return;
-    restoredSharedCompare.current = true;
+    try {
+      const raw = localStorage.getItem(compareStorageKey);
+      if (!raw) return;
 
-    const shared = getSharedCompareFromLocation();
-    if (!shared) return;
+      const saved = JSON.parse(raw) as Partial<SavedCompareState>;
+      if (!saved || typeof saved !== "object") return;
 
-    const restoredBuilds = shared.builds.map((item) => ({
-      ...defaults(),
-      ...item,
-      accountMultipliers: item.accountMultipliers ?? { completedAchievementIds: [] },
-    }));
-    const restoredIds = restoredBuilds
-      .map((item) => item.monsterId)
-      .filter((id): id is string => Boolean(id))
-      .slice(0, 4);
+      const restoredIds = Array.isArray(saved.ids)
+        ? saved.ids
+            .filter(
+              (id): id is string =>
+                typeof id === "string" &&
+                availableMonsters.some((monster) => monster.id === id),
+            )
+            .slice(0, 4)
+        : [];
 
-    if (restoredIds.length < 2) return;
+      if (restoredIds.length < 2) return;
 
-    setIds(restoredIds);
-    setMode(shared.mode);
-    setBuild({
-      ...restoredBuilds[0],
-      monsterId: null,
-    });
-    setCustomBuilds(restoredBuilds);
-    setCustomInitialized(shared.mode === "custom");
+      const restoredBuild = normalizeSavedBuild(saved.build);
+      const restoredCustomBuilds = restoredIds.map((_, index) =>
+        normalizeSavedBuild(saved.customBuilds?.[index] ?? restoredBuild),
+      );
+      const restoredMode = saved.mode === "custom" ? "custom" : "shared";
+
+      setIds(restoredIds);
+      setMode(restoredMode);
+      setBuild(restoredBuild);
+      setCustomBuilds(restoredCustomBuilds);
+      setCustomInitialized(restoredMode === "custom");
+    } catch {
+      // Compare still works if local storage is unavailable or malformed.
+    } finally {
+      setStorageReady(true);
+    }
   }, []);
+
+  useEffect(() => {
+    if (!storageReady) return;
+
+    const saved: SavedCompareState = {
+      ids,
+      mode,
+      build: { ...build, monsterId: null },
+      customBuilds: ids.map((_, index) => ({
+        ...(customBuilds[index] ?? build),
+        monsterId: null,
+      })),
+    };
+
+    try {
+      localStorage.setItem(compareStorageKey, JSON.stringify(saved));
+    } catch {
+      // Compare remains usable when browser storage is unavailable.
+    }
+  }, [storageReady, ids, mode, build, customBuilds]);
   const [picker, setPicker] = useState<number | null>(null);
   const [favorites, setFavorites] = useState<string[]>([]);
   const dialog = useRef<HTMLDialogElement>(null);
@@ -765,32 +812,6 @@ export function MonsterCompare() {
         ? "xl:grid-cols-3"
         : "xl:grid-cols-4";
 
-  async function shareCompare() {
-    const effectiveBuilds = columns.map((column) => column.build);
-    const shareUrl = createCompareShareUrl({ mode, builds: effectiveBuilds });
-
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setShareStatus("copied");
-    } catch {
-      try {
-        const textarea = document.createElement("textarea");
-        textarea.value = shareUrl;
-        textarea.style.position = "fixed";
-        textarea.style.opacity = "0";
-        document.body.appendChild(textarea);
-        textarea.focus();
-        textarea.select();
-        const copied = document.execCommand("copy");
-        textarea.remove();
-        setShareStatus(copied ? "copied" : "error");
-      } catch {
-        setShareStatus("error");
-      }
-    }
-
-    window.setTimeout(() => setShareStatus("idle"), 2200);
-  }
   return (
     <main className={`${styles.root} mx-auto w-full max-w-[2000px] space-y-2.5 px-3 py-3 text-[#f6f8fc] sm:px-4 xl:px-5`}>
       <header className={styles.banner}>
@@ -842,16 +863,6 @@ export function MonsterCompare() {
             onClick={() => setPicker(ids.length)}
           >
             + Add monster
-          </button>
-          <button
-            className="rounded-md border border-[#536aba] px-3 py-2 text-xs font-semibold text-[#a8b8ff] hover:border-[#6d87e2] hover:bg-[#122744]"
-            onClick={shareCompare}
-          >
-            {shareStatus === "copied"
-              ? "✓ Compare link copied"
-              : shareStatus === "error"
-                ? "Copy failed"
-                : "Share Compare"}
           </button>
           <button
             className="rounded-md border border-[#536aba] px-3 py-2 text-xs text-[#a8b8ff]"

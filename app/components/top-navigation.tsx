@@ -16,7 +16,6 @@ const navItems = [
     { label: "Index Tracker", href: "/index-tracker", icon: "/icons/index.png" },
     { label: "Patch Notes", href: "/updates", icon: "/icons/patch-notes.png" },
     { label: "Changelog", href: "/changelog", icon: "/icons/changelog.png" },
-    { label: "About", href: "/about", icon: "/icons/changelog.png" },
 ] as const;
 
 export function TopNavigation() {
