@@ -1320,9 +1320,9 @@ function SkillDamagePanel({
     );
 
     return (
-        <section className="skill-results-container p-3 sm:p-4">
-            <div className="skill-results-layout grid items-start gap-3">
-                <div className="flex min-w-0 items-start gap-3">
+        <section className="p-3 sm:p-4">
+            <div className="flex flex-wrap items-start gap-3">
+                <div className="flex min-w-[14rem] flex-[0_1_16rem] items-start gap-3">
                     <div className="grid size-11 shrink-0 place-items-center overflow-hidden rounded-lg border border-[#41506a] bg-[#0d131d] p-0.5 shadow-[0_6px_14px_rgba(0,0,0,0.2)]">
                         <img
                             src={assetPath(skillIconPath)}
@@ -1422,7 +1422,7 @@ function SkillDamagePanel({
                 </div>
 
                 {isDamagingSkill && (
-                    <div className="skill-results-grid grid min-w-0 gap-2">
+                    <div className="grid min-w-[min(100%,26rem)] flex-[1_1_26rem] grid-cols-[repeat(auto-fit,minmax(min(100%,8.75rem),1fr))] gap-2">
                         <div className="min-w-0 rounded-lg border border-[#39415a] bg-[#1c2130] p-3">
                             <div className="flex items-center gap-1.5 text-[#aeb8ff]">
                                 <img src={assetPath("/account-icons/damage.png")} alt=""
