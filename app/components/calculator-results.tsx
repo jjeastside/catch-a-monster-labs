@@ -2821,6 +2821,7 @@ type CalculatorResultsProps = {
     build: Build;
     isFavorite: boolean;
     onToggleFavorite: () => void;
+    onMonsterSelectAction?: (monster: Monster) => void;
     onSharePreviewChange?: (preview: BuildSharePreview | null) => void;
 };
 
@@ -2829,6 +2830,7 @@ export function CalculatorResults({
                                       build,
                                       isFavorite,
                                       onToggleFavorite,
+                                      onMonsterSelectAction,
                                       onSharePreviewChange,
                                   }: CalculatorResultsProps) {
     const monsterSkills =
@@ -2971,6 +2973,7 @@ export function CalculatorResults({
                             monster={monster}
                             isFavorite={isFavorite}
                             onToggleFavorite={onToggleFavorite}
+                            onMonsterSelectAction={onMonsterSelectAction}
                         />
                         <BuildResultsPanel
                             monster={monster}

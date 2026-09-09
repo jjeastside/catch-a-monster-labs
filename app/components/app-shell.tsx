@@ -469,6 +469,18 @@ export function AppShell() {
         window.history.replaceState(null, "", getMonsterShareHash(monster));
     }
 
+    function selectEvolutionMonster(monster: Monster) {
+        setBuild((current) => ({
+            ...current,
+            monsterId: monster.id,
+            selectedSkillId: monster.skillIds[0] ?? null,
+        }));
+
+        // Evolution browsing is a comparison-like action, so keep the current
+        // build settings while updating the directly-linkable monster hash.
+        window.history.replaceState(null, "", getMonsterShareHash(monster));
+    }
+
     function resetBuild() {
         if (!selectedMonster) {
             setBuild((current) => ({
@@ -714,6 +726,7 @@ export function AppShell() {
                                 : false
                         }
                         onToggleFavorite={toggleSelectedMonsterFavorite}
+                        onMonsterSelectAction={selectEvolutionMonster}
                         onSharePreviewChange={setSharePreview}
                     />
                 </div>
