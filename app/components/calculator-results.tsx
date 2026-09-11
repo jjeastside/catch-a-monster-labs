@@ -1344,7 +1344,7 @@ function SkillDamagePanel({
                         <img
                             src={assetPath(skillIconPath)}
                             alt={`${skillDisplayName} skill`}
-                            className="h-full w-full scale-[1.4] rounded-md object-cover"
+                            className="h-full w-full rounded-md object-contain"
                             onError={(event) => {
                                 event.currentTarget.onerror = null;
                                 event.currentTarget.src = elementIconPath;
