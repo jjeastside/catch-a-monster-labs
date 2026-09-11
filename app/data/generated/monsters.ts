@@ -6249,8 +6249,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "skillIds": [
       "gravel-whirlwind",
-      "ex-rock-toss",
-      "claw-attack"
+      "ex-rock-toss"
     ],
     "passives": [],
     "hasEvolution": false,
@@ -6278,7 +6277,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "skillIds": [
       "inferno-maelstrom",
-      "ex-fireball"
+      "ex-fireball",
+      "claw-attack"
     ],
     "passives": [],
     "hasEvolution": false,
