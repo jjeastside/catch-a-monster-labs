@@ -6277,7 +6277,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     ],
     "skillIds": [
       "inferno-maelstrom",
-      "ex-fireball"
+      "ex-fireball",
+      "claw-attack"
     ],
     "passives": [],
     "hasEvolution": false,
