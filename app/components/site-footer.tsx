@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { assetPath } from "../lib/asset-path";
+import { latestVersion } from "../data/changelog-releases";
 
 const exploreLinks = [
     { label: "Calculator", href: "/" },
@@ -60,7 +61,7 @@ function FooterLink({ label, href, feedbackCategory }: FooterLinkProps) {
                     {content}
                 </button>
             ) : (
-                <Link href={href ?? "/"} className={className}>
+                <Link href={href ?? "/"} prefetch={false} className={className}>
                     {content}
                 </Link>
             )}
@@ -137,7 +138,7 @@ export function SiteFooter() {
                             Project
                         </h2>
                         <div className="mt-4 inline-flex rounded-lg border border-[#7046c8] bg-[#130c2c] px-6 py-2 text-sm font-bold text-[#a982ff]">
-                            v1.0.12
+                            {latestVersion}
                         </div>
                         <p className="mt-4 text-sm text-[#8f99aa]">Created by</p>
                         <a

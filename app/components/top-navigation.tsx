@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { assetPath } from "../lib/asset-path";
@@ -19,6 +19,7 @@ const navItems = [
 export function TopNavigation() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const pathname = usePathname();
+    const router = useRouter();
 
     const isItemActive = (href: string) =>
         href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -95,6 +96,9 @@ export function TopNavigation() {
                 {/* Logo */}
                 <Link
                     href="/"
+                    prefetch={false}
+                    onMouseEnter={() => router.prefetch("/")}
+                    onFocus={() => router.prefetch("/")}
                     aria-label="Go to Cam Lab home"
                     className="
                         col-start-2
@@ -138,6 +142,9 @@ export function TopNavigation() {
                             <Link
                                 key={item.label}
                                 href={item.href}
+                                prefetch={false}
+                                onMouseEnter={() => router.prefetch(item.href)}
+                                onFocus={() => router.prefetch(item.href)}
                                 className={`relative flex items-center gap-1.5 rounded-xl px-2 py-2.5 text-[12px] transition-colors xl:gap-2 xl:px-2.5 xl:text-[13px] 2xl:px-3 2xl:text-sm ${
                                     isActive
                                         ? "bg-[#0a1931] text-[#5caaff] shadow-[0_0_0_1px_rgba(92,170,255,0.08)] after:absolute after:inset-x-3 after:-bottom-1 after:h-[3px] after:rounded-full after:bg-[#5caaff]"
@@ -200,6 +207,9 @@ export function TopNavigation() {
                                 <Link
                                     key={item.label}
                                     href={item.href}
+                                    prefetch={false}
+                                    onMouseEnter={() => router.prefetch(item.href)}
+                                    onFocus={() => router.prefetch(item.href)}
                                     onClick={() =>
                                         setIsMobileMenuOpen(false)
                                     }

@@ -319,7 +319,7 @@ export function MonsterOverviewCard({ monster, isFavorite, onToggleFavorite, onM
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-                    <span className="flex items-center gap-1.5 rounded-md border border-[#344050] bg-[#0f1620] px-2.5 py-1 text-xs text-[#e3e8f1]">
+                    <span className="inline-flex h-7 items-center gap-1.5 rounded-md border border-[#344050] bg-[#0f1620] px-2.5 text-xs leading-none text-[#e3e8f1]">
                         <img
                             src={assetPath(elementIcon)}
                             alt=""
@@ -329,7 +329,7 @@ export function MonsterOverviewCard({ monster, isFavorite, onToggleFavorite, onM
                     </span>
 
                     <span
-                        className={`rounded-md border px-2.5 py-1 text-xs font-semibold ${
+                        className={`inline-flex h-7 items-center justify-center rounded-md border px-2.5 text-xs font-semibold leading-none ${
                             rarityBadgeClasses[monster.rarity]
                         }`}
                     >

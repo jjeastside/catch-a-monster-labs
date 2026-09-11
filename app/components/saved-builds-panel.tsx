@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { getEquipment } from "../data/equipments";
 import { getMonsterStatData } from "../data/monster-stats";
@@ -14,8 +14,10 @@ import type { Monster } from "../types/monster";
 import { TraitIcon } from "./trait-icon";
 
 export type SavedBuildSlot = {
-    version: 1;
+    version: 2;
     savedAt: number;
+    name: string;
+    favorite: boolean;
     build: Build;
 };
 
@@ -26,9 +28,12 @@ type SavedBuildsPanelProps = {
     monsters: Monster[];
     slots: Array<SavedBuildSlot | null>;
     onCloseAction: () => void;
-    onSaveSlotAction: (slotIndex: number) => boolean;
+    onSaveSlotAction: (slotIndex: number, name?: string) => boolean;
     onLoadSlotAction: (slotIndex: number) => boolean;
     onClearSlotAction: (slotIndex: number) => void;
+    onRenameSlotAction: (slotIndex: number, name: string) => boolean;
+    onToggleFavoriteAction: (slotIndex: number) => boolean;
+    onCompareBuildsAction: (slotIndices: number[]) => boolean;
 };
 
 const mutationSummary: Record<Mutation, { label: string; icon: string }> = {
@@ -346,7 +351,16 @@ export function SavedBuildsPanel({
                                      onSaveSlotAction,
                                      onLoadSlotAction,
                                      onClearSlotAction,
+                                     onRenameSlotAction,
+                                     onToggleFavoriteAction,
+                                     onCompareBuildsAction,
                                  }: SavedBuildsPanelProps) {
+    const [search, setSearch] = useState("");
+    const [selectedCompare, setSelectedCompare] = useState<number[]>([]);
+    const [editingIndex, setEditingIndex] = useState<number | null>(null);
+    const [nameDraft, setNameDraft] = useState("");
+    const [saveName, setSaveName] = useState(currentMonster ? `${currentMonster.name} Build` : "New Build");
+
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === "Escape") onCloseAction();
@@ -356,9 +370,46 @@ export function SavedBuildsPanel({
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [onCloseAction]);
 
+    const usedCount = slots.filter(Boolean).length;
+    const indexedSlots = useMemo(() => {
+        const normalizedSearch = search.trim().toLowerCase();
+        return slots
+            .map((slot, index) => ({ slot, index }))
+            .filter(({ slot }) => {
+                if (!slot) return mode === "save" && !normalizedSearch;
+                if (!normalizedSearch) return true;
+                const monster = monsters.find(({ id }) => id === slot.build.monsterId);
+                return [slot.name, monster?.name, slot.build.rank, `+${slot.build.enhancement}`]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase()
+                    .includes(normalizedSearch);
+            })
+            .sort((a, b) => {
+                if (Boolean(a.slot?.favorite) !== Boolean(b.slot?.favorite)) return a.slot?.favorite ? -1 : 1;
+                if (a.slot && b.slot) return b.slot.savedAt - a.slot.savedAt;
+                if (a.slot) return -1;
+                if (b.slot) return 1;
+                return a.index - b.index;
+            });
+    }, [mode, monsters, search, slots]);
+
+    const toggleCompare = (index: number) => {
+        setSelectedCompare((current) => {
+            if (current.includes(index)) return current.filter((value) => value !== index);
+            if (current.length >= 4) return current;
+            return [...current, index];
+        });
+    };
+
+    const saveInto = (index: number, fallbackName?: string) => {
+        const name = (saveName.trim() || fallbackName || `${currentMonster?.name ?? "Monster"} Build`).slice(0, 40);
+        if (onSaveSlotAction(index, name)) onCloseAction();
+    };
+
     return (
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-[#050912]/78 p-4 backdrop-blur-[3px]"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-[#050912]/78 p-3 backdrop-blur-[3px] sm:p-4"
             role="dialog"
             aria-modal="true"
             aria-label={mode === "save" ? "Save build" : "Load build"}
@@ -366,19 +417,22 @@ export function SavedBuildsPanel({
                 if (event.currentTarget === event.target) onCloseAction();
             }}
         >
-            <div className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-[#3b4759] bg-[#101721] shadow-[0_30px_90px_rgba(0,0,0,0.72)]">
-                <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-[#344050] bg-[#101721]/95 px-5 py-4 backdrop-blur">
-                    <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7182ff]">
-                            Saved Builds
-                        </p>
-                        <h2 className="mt-0.5 text-xl font-bold text-[#f6f8fc]">
-                            {mode === "save" ? "Choose a slot to save" : "Choose a build to load"}
+            <div className="flex max-h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-[#3b4759] bg-[#101721] shadow-[0_30px_90px_rgba(0,0,0,0.72)]">
+                <div className="flex items-start justify-between gap-4 border-b border-[#344050] bg-[#101721]/97 px-4 py-4 sm:px-5">
+                    <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7182ff]">Build Library</p>
+                            <span className="rounded-full border border-[#344050] bg-[#141c28] px-2 py-0.5 text-[9px] font-semibold text-[#8e99ad]">
+                                {usedCount} / {slots.length} builds
+                            </span>
+                        </div>
+                        <h2 className="mt-1 text-xl font-bold text-[#f6f8fc]">
+                            {mode === "save" ? "Save current build" : "Saved builds"}
                         </h2>
                         <p className="mt-1 text-xs text-[#8993a5]">
                             {mode === "save"
-                                ? "Review the exact combat stats of your current build, then choose a slot."
-                                : "Review each saved build and its combat stats before loading it."}
+                                ? "Name this setup, then save it to a new card or overwrite an existing build."
+                                : "Search, favorite, load, rename, or send saved setups directly into Monster Compare."}
                         </p>
                     </div>
                     <button
@@ -391,92 +445,195 @@ export function SavedBuildsPanel({
                     </button>
                 </div>
 
-                <div className="p-5">
-                    {mode === "save" && (
-                        <div className="mb-5 rounded-xl border border-[#7585ff]/35 bg-[#202846]/45 p-4">
-                            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#aeb8ff]">
-                                Current Build — This is what will be saved
-                            </p>
+                <div className="border-b border-[#293647] bg-[#0d141e] px-4 py-3 sm:px-5">
+                    <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+                        {mode === "save" && (
+                            <label className="min-w-0 flex-1">
+                                <span className="mb-1 block text-[9px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Build name</span>
+                                <input
+                                    value={saveName}
+                                    maxLength={40}
+                                    onChange={(event) => setSaveName(event.target.value)}
+                                    className="w-full rounded-lg border border-[#344050] bg-[#111a26] px-3 py-2.5 text-sm font-semibold text-[#eef2fb] outline-none focus:border-[#7182ff]"
+                                    placeholder="e.g. Boss Build"
+                                />
+                            </label>
+                        )}
+                        <label className="min-w-0 flex-1">
+                            <span className="mb-1 block text-[9px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Search saved builds</span>
+                            <input
+                                value={search}
+                                onChange={(event) => setSearch(event.target.value)}
+                                className="w-full rounded-lg border border-[#344050] bg-[#111a26] px-3 py-2.5 text-sm text-[#eef2fb] outline-none placeholder:text-[#65738a] focus:border-[#7182ff]"
+                                placeholder="Monster, build name, rank..."
+                            />
+                        </label>
+                        {mode === "load" && (
+                            <button
+                                type="button"
+                                disabled={selectedCompare.length < 2}
+                                onClick={() => onCompareBuildsAction(selectedCompare)}
+                                className="mt-auto rounded-lg border border-[#7182ff]/55 bg-[#202846] px-4 py-2.5 text-xs font-bold text-[#d5dbff] transition hover:border-[#8290ff] hover:bg-[#263052] disabled:cursor-not-allowed disabled:opacity-40"
+                            >
+                                Compare Selected ({selectedCompare.length})
+                            </button>
+                        )}
+                    </div>
+                </div>
+
+                <div className="overflow-y-auto p-4 sm:p-5">
+                    {mode === "save" && currentMonster && (
+                        <div className="mb-4 rounded-xl border border-[#7585ff]/30 bg-[#202846]/28 p-3">
+                            <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.12em] text-[#aeb8ff]">Current build preview</p>
                             <BuildSnapshot build={currentBuild} monster={currentMonster} allMonsters={monsters} compact />
                         </div>
                     )}
 
-                    <div className="grid gap-3 md:grid-cols-3">
-                        {slots.map((slot, index) => {
+                    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                        {indexedSlots.map(({ slot, index }) => {
                             const savedMonster = slot
                                 ? monsters.find(({ id }) => id === slot.build.monsterId) ?? null
                                 : null;
+                            const selected = selectedCompare.includes(index);
+
+                            if (!slot) {
+                                return (
+                                    <button
+                                        key={index}
+                                        type="button"
+                                        onClick={() => saveInto(index)}
+                                        className="flex min-h-[180px] flex-col items-center justify-center rounded-xl border border-dashed border-[#41506a] bg-[#0d131d]/55 p-5 text-center transition hover:border-[#7182ff]/65 hover:bg-[#121a27]"
+                                    >
+                                        <span className="grid size-11 place-items-center rounded-xl border border-dashed border-[#48566d] bg-[#101721] text-xl text-[#7182ff]">+</span>
+                                        <span className="mt-3 text-sm font-bold text-[#d9e0eb]">New Build</span>
+                                        <span className="mt-1 text-[10px] text-[#69768a]">Save to slot {index + 1}</span>
+                                    </button>
+                                );
+                            }
 
                             return (
                                 <section
                                     key={index}
-                                    className={`flex min-h-[420px] min-w-0 flex-col rounded-xl border p-4 ${slot ? "border-[#344050] bg-[#0f1620]" : "border-dashed border-[#41506a] bg-[#0d131d]/55"}`}
+                                    className={`relative min-w-0 rounded-xl border p-3 transition ${selected ? "border-[#7182ff] bg-[#17213a] shadow-[0_0_0_1px_rgba(113,130,255,0.18)]" : "border-[#344050] bg-[#0f1620] hover:border-[#4d5c71]"}`}
                                 >
-                                    <div className="mb-3 flex items-center justify-between gap-2">
-                                        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7182ff]">
-                                            Slot {index + 1}
-                                        </p>
-                                        {slot && (
-                                            <span className="text-[9px] text-[#69768a]">
-                                                {formatSavedTime(slot.savedAt)}
-                                            </span>
+                                    <div className="flex items-start gap-3">
+                                        <div className="min-w-0 flex-1">
+                                            <div className="flex items-center gap-2">
+                                                {editingIndex === index ? (
+                                                    <input
+                                                        value={nameDraft}
+                                                        maxLength={40}
+                                                        autoFocus
+                                                        onChange={(event) => setNameDraft(event.target.value)}
+                                                        onKeyDown={(event) => {
+                                                            if (event.key === "Enter" && onRenameSlotAction(index, nameDraft)) setEditingIndex(null);
+                                                            if (event.key === "Escape") setEditingIndex(null);
+                                                        }}
+                                                        onBlur={() => {
+                                                            if (nameDraft.trim()) onRenameSlotAction(index, nameDraft);
+                                                            setEditingIndex(null);
+                                                        }}
+                                                        className="min-w-0 flex-1 rounded border border-[#7182ff] bg-[#111a26] px-2 py-1 text-sm font-bold text-white outline-none"
+                                                    />
+                                                ) : (
+                                                    <button
+                                                        type="button"
+                                                        title="Rename build"
+                                                        onClick={() => {
+                                                            setEditingIndex(index);
+                                                            setNameDraft(slot.name);
+                                                        }}
+                                                        className="min-w-0 truncate text-left text-sm font-bold text-[#f6f8fc] hover:text-[#aeb8ff]"
+                                                    >
+                                                        {slot.name}
+                                                    </button>
+                                                )}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => onToggleFavoriteAction(index)}
+                                                    title={slot.favorite ? "Unfavorite build" : "Favorite build"}
+                                                    className={`shrink-0 text-lg leading-none transition ${slot.favorite ? "text-[#ffd85a]" : "text-[#566276] hover:text-[#ffd85a]"}`}
+                                                >
+                                                    ★
+                                                </button>
+                                            </div>
+                                            <div className="mt-0.5 flex items-center gap-2 text-[9px] text-[#69768a]">
+                                                <span>Updated {formatSavedTime(slot.savedAt)}</span>
+                                                <span>•</span>
+                                                <span>Slot {index + 1}</span>
+                                            </div>
+                                        </div>
+                                        {mode === "load" && (
+                                            <button
+                                                type="button"
+                                                onClick={() => toggleCompare(index)}
+                                                className={`rounded-full border px-2 py-1 text-[9px] font-bold transition ${selected ? "border-[#7182ff] bg-[#283462] text-white" : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5a6980]"}`}
+                                            >
+                                                {selected ? "Selected" : "Compare"}
+                                            </button>
                                         )}
                                     </div>
 
-                                    {slot ? (
-                                        <>
-                                            <BuildSnapshot build={slot.build} monster={savedMonster} allMonsters={monsters} />
-                                            <div className="mt-auto pt-4">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        const succeeded = mode === "save"
-                                                            ? onSaveSlotAction(index)
-                                                            : onLoadSlotAction(index);
-                                                        if (succeeded) onCloseAction();
-                                                    }}
-                                                    className={`w-full rounded-md px-3 py-2.5 text-xs font-bold transition ${mode === "save" ? "bg-[#6f7cff] text-white hover:bg-[#7f8bff]" : "border border-[#6f7cff]/55 bg-[#202846] text-[#d0d5ff] hover:border-[#7f8bff]"}`}
-                                                >
-                                                    {mode === "save" ? "Overwrite Slot" : "Load Build"}
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => onClearSlotAction(index)}
-                                                    className="mt-2 w-full rounded-md px-3 py-1.5 text-[10px] font-semibold text-[#7f8b9e] transition hover:bg-[#141c28] hover:text-[#ff9a7f]"
-                                                >
-                                                    Clear Slot
-                                                </button>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <div className="flex flex-1 flex-col items-center justify-center py-8 text-center">
-                                            <div className="grid size-12 place-items-center rounded-xl border border-dashed border-[#3b4759] bg-[#101721] text-xl text-[#596477]">
-                                                +
-                                            </div>
-                                            <p className="mt-3 text-sm font-semibold text-[#bfc7d5]">Empty Slot</p>
-                                            <p className="mt-1 max-w-[12rem] text-[10px] leading-4 text-[#69768a]">
-                                                {mode === "save" ? "Save the current build here." : "No build has been saved here yet."}
-                                            </p>
-                                            {mode === "save" && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        if (onSaveSlotAction(index)) onCloseAction();
-                                                    }}
-                                                    className="mt-4 rounded-md bg-[#6f7cff] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#7f8bff]"
-                                                >
-                                                    Save Here
-                                                </button>
-                                            )}
-                                        </div>
-                                    )}
+                                    <div className="mt-3">
+                                        <BuildSnapshot build={slot.build} monster={savedMonster} allMonsters={monsters} compact />
+                                    </div>
+
+                                    <div className="mt-3 grid grid-cols-2 gap-2 border-t border-[#293647] pt-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                if (mode === "save") saveInto(index, slot.name);
+                                                else if (onLoadSlotAction(index)) onCloseAction();
+                                            }}
+                                            className="rounded-md bg-[#7182ff] px-3 py-2 text-[10px] font-bold text-white transition hover:bg-[#8290ff]"
+                                        >
+                                            {mode === "save" ? "Overwrite Build" : "Load Build"}
+                                        </button>
+                                        {mode === "load" ? (
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const another = indexedSlots.find(({ slot: other, index: otherIndex }) => other && otherIndex !== index)?.index;
+                                                    if (typeof another === "number") onCompareBuildsAction([index, another]);
+                                                }}
+                                                className="rounded-md border border-[#4b5d78] bg-[#141c28] px-3 py-2 text-[10px] font-bold text-[#c7d0df] transition hover:border-[#7182ff] hover:text-white"
+                                            >
+                                                Compare Build
+                                            </button>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setEditingIndex(index);
+                                                    setNameDraft(slot.name);
+                                                }}
+                                                className="rounded-md border border-[#4b5d78] bg-[#141c28] px-3 py-2 text-[10px] font-bold text-[#c7d0df] transition hover:border-[#7182ff] hover:text-white"
+                                            >
+                                                Rename
+                                            </button>
+                                        )}
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => onClearSlotAction(index)}
+                                        className="mt-2 w-full rounded-md py-1.5 text-[9px] font-semibold text-[#69768a] transition hover:bg-[#151d29] hover:text-[#ff9a7f]"
+                                    >
+                                        Delete saved build
+                                    </button>
                                 </section>
                             );
                         })}
                     </div>
 
+                    {indexedSlots.length === 0 && (
+                        <div className="rounded-xl border border-dashed border-[#344050] bg-[#0d131d] px-6 py-12 text-center">
+                            <p className="text-sm font-bold text-[#d6ddea]">No saved builds match that search.</p>
+                            <p className="mt-1 text-xs text-[#69768a]">Try the monster name or your custom build name.</p>
+                        </div>
+                    )}
+
                     <p className="mt-4 text-center text-[10px] text-[#69768a]">
-                        Builds are saved to this browser. Account multipliers are not changed when loading a build.
+                        Builds are stored in this browser. Account multipliers remain global and are not overwritten when a build is loaded.
                     </p>
                 </div>
             </div>

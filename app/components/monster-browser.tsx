@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useMemo, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { PASSIVE_DEFINITIONS } from "../data/passives";
 import { assetPath } from "../lib/asset-path";
@@ -584,7 +584,8 @@ function MonsterBrowserContent({
     const [browserEvolutionPercent, setBrowserEvolutionPercent] = useState(100);
     const [passiveCompareMode, setPassiveCompareMode] = useState<PassiveCompareMode>("always");
     const [showAllMonsters, setShowAllMonsters] = useState(false);
-    const [visibleMonsterCount, setVisibleMonsterCount] = useState(60);
+    const [visibleMonsterCount, setVisibleMonsterCount] = useState(36);
+    const [browserVisibleMonsterCount, setBrowserVisibleMonsterCount] = useState(32);
 
     const filterOptions = useMemo(() => ({
         islands: ISLANDS.filter((island) =>
@@ -646,6 +647,11 @@ function MonsterBrowserContent({
             return (aValue - bValue) * direction;
         });
     }, [monsters, searchQuery, sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, favoritesOnly, favoriteMonsterIds, sortMode, sortDescending, browserEvolutionPercent, passiveCompareMode]);
+
+    useEffect(() => {
+        setBrowserVisibleMonsterCount(32);
+        setVisibleMonsterCount(36);
+    }, [searchQuery, sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, favoritesOnly, sortMode, sortDescending, browserEvolutionPercent, passiveCompareMode]);
 
     const activeFilterCount = [sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter]
         .filter((value) => value !== "all").length + (favoritesOnly ? 1 : 0);
@@ -910,8 +916,18 @@ function MonsterBrowserContent({
                         )}
                     </div>
 
-                    <div className="flex h-[792px] min-h-64 max-h-[calc(100vh-22rem)] flex-none flex-col gap-2 overflow-y-scroll pr-1 lg:h-auto lg:min-h-0 lg:flex-1">
-                        {filteredMonsters.map((monster) => (
+                    <div
+                        className="flex h-[792px] min-h-64 max-h-[calc(100vh-22rem)] flex-none flex-col gap-2 overflow-y-scroll pr-1 lg:h-auto lg:min-h-0 lg:flex-1"
+                        onScroll={(event) => {
+                            const element = event.currentTarget;
+                            if (element.scrollHeight - element.scrollTop - element.clientHeight < 360) {
+                                setBrowserVisibleMonsterCount((count) =>
+                                    Math.min(count + 32, filteredMonsters.length),
+                                );
+                            }
+                        }}
+                    >
+                        {filteredMonsters.slice(0, browserVisibleMonsterCount).map((monster) => (
                             <MonsterOption
                                 key={monster.id}
                                 monster={monster}
@@ -922,6 +938,10 @@ function MonsterBrowserContent({
                             />
                         ))}
 
+                        {browserVisibleMonsterCount < filteredMonsters.length && (
+                            <p className="py-3 text-center text-[11px] text-[#69768a]">Keep scrolling to load more monsters</p>
+                        )}
+
                         {filteredMonsters.length === 0 && (
                             <p className="py-8 text-center text-sm text-[#7f8b9e]">No monsters match your search and filters.</p>
                         )}
@@ -931,7 +951,7 @@ function MonsterBrowserContent({
                         <button
                             type="button"
                             onClick={() => {
-                                setVisibleMonsterCount(60);
+                                setVisibleMonsterCount(36);
                                 setShowAllMonsters(true);
                             }}
                             className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#344050] bg-[#141c28] px-4 py-3 text-sm font-semibold text-[#e3e8f1] transition hover:border-[#5c6a80] hover:bg-[#1b202b]"
@@ -991,7 +1011,7 @@ function MonsterBrowserContent({
                                     value={searchQuery}
                                     onChange={(event) => {
                                         setSearchQuery(event.target.value);
-                                        setVisibleMonsterCount(60);
+                                        setVisibleMonsterCount(36);
                                     }}
                                     placeholder="Search all monsters"
                                     autoFocus
@@ -1006,7 +1026,7 @@ function MonsterBrowserContent({
                                 const element = event.currentTarget;
                                 if (element.scrollHeight - element.scrollTop - element.clientHeight < 320) {
                                     setVisibleMonsterCount((count) =>
-                                        Math.min(count + 60, filteredMonsters.length),
+                                        Math.min(count + 36, filteredMonsters.length),
                                     );
                                 }
                             }}

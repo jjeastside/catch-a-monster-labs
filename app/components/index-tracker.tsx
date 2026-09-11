@@ -8,6 +8,8 @@ import { assetPath } from "../lib/asset-path";
 import { ISLANDS, type Island } from "../types/monster";
 
 const STORAGE_KEY = "cam-lab-index-tracker-v1";
+const INITIAL_MONSTER_BATCH = 24;
+const MONSTER_BATCH_SIZE = 24;
 const RANKS = ["E", "D", "C", "B", "A", "S", "SS"] as const;
 const RANK_POINTS: Record<Rank, number> = {
     E: 3,
@@ -155,6 +157,8 @@ export function IndexTracker() {
     const [showClearConfirmation, setShowClearConfirmation] = useState(false);
     const [importMessage, setImportMessage] = useState<{ tone: "success" | "error"; text: string } | null>(null);
     const importInputRef = useRef<HTMLInputElement>(null);
+    const loadMoreRef = useRef<HTMLDivElement>(null);
+    const [renderedMonsterCount, setRenderedMonsterCount] = useState(INITIAL_MONSTER_BATCH);
 
     useEffect(() => {
         try {
@@ -244,7 +248,28 @@ export function IndexTracker() {
         });
     }, [bulkHiddenIds, bulkMode, filter, genderFilter, locationFilter, monsters, progress, rankFilter, search, showBulkHidden, sortBy]);
 
+    const displayedMonsters = visibleMonsters.slice(0, renderedMonsterCount);
+    const hasMoreMonsters = renderedMonsterCount < visibleMonsters.length;
     const bulkSelectableVisibleMonsters = visibleMonsters.filter((monster) => !bulkHiddenIds.has(monster.id));
+
+    useEffect(() => {
+        setRenderedMonsterCount(INITIAL_MONSTER_BATCH);
+    }, [bulkMode, filter, genderFilter, locationFilter, rankFilter, search, showBulkHidden, sortBy, viewMode]);
+
+    useEffect(() => {
+        if (!hasMoreMonsters || !loadMoreRef.current) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (!entries[0]?.isIntersecting) return;
+                setRenderedMonsterCount((current) => Math.min(current + MONSTER_BATCH_SIZE, visibleMonsters.length));
+            },
+            { rootMargin: "800px 0px" },
+        );
+
+        observer.observe(loadMoreRef.current);
+        return () => observer.disconnect();
+    }, [hasMoreMonsters, visibleMonsters.length]);
 
     const selectedMonster = monsters.find((monster) => monster.id === selectedId) ?? monsters[0];
     const selectedProgress = selectedMonster ? progress[selectedMonster.id] : undefined;
@@ -581,14 +606,14 @@ export function IndexTracker() {
                 <section>
                     {visibleMonsters.length > 0 ? (
                         <div className={viewMode === "grid" ? "grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4" : "grid grid-cols-1 gap-2 sm:grid-cols-2"}>
-                            {visibleMonsters.map((monster) => {
+                            {displayedMonsters.map((monster) => {
                                 const monsterProgress = progress[monster.id];
                                 const score = scoreFor(monsterProgress);
                                 const isHidden = bulkHiddenIds.has(monster.id);
                                 const isComplete = score === 21;
                                 const isSelected = bulkMode ? bulkSelectedIds.has(monster.id) : monster.id === selectedMonster?.id;
                                 return (
-                                    <div key={monster.id} className="flex min-w-0 flex-col gap-1">
+                                    <div key={monster.id} className="cam-defer-card flex min-w-0 flex-col gap-1">
                                         <button type="button" disabled={bulkMode && isHidden} onClick={() => { if (bulkMode) toggleBulkSelection(monster.id); else { setSelectedId(monster.id); setMobileEditorOpen(true); } }} aria-pressed={isSelected} aria-label={bulkMode ? `${isSelected ? "Deselect" : "Select"} ${monster.name}` : `Edit ${monster.name}`} className={`group relative w-full flex-1 overflow-hidden rounded-lg border bg-gradient-to-b from-[#101b27] to-[#0b121a] p-3 text-left transition ${viewMode === "grid" ? "min-h-48" : "grid min-h-28 grid-cols-[90px_1fr] items-center gap-3"} ${isComplete ? "border-[#58f58b] shadow-[0_0_10px_rgba(62,238,119,0.48),0_0_28px_rgba(255,214,61,0.18),inset_0_0_22px_rgba(62,238,119,0.08)] hover:border-[#91ffb2] hover:shadow-[0_0_14px_rgba(62,238,119,0.6),0_0_34px_rgba(255,214,61,0.24),inset_0_0_24px_rgba(62,238,119,0.1)]" : isSelected ? "border-[#16a1ff] shadow-[0_0_14px_rgba(22,161,255,0.38)]" : "border-[#334153] hover:border-[#64809f]"} ${isHidden ? "opacity-40 grayscale" : ""}`}>
                                             {isComplete && !isHidden && (
                                                 <>
@@ -603,7 +628,7 @@ export function IndexTracker() {
                                                 <img src={assetPath(GENDERS[monsterProgress.gender].icon)} alt={GENDERS[monsterProgress.gender].label} title={GENDERS[monsterProgress.gender].label} className="absolute right-11 top-2 z-10 size-8 object-contain drop-shadow-[0_2px_3px_rgba(0,0,0,0.8)]" />
                                             )}
                                             <div className={`flex items-end justify-center ${viewMode === "grid" ? "h-32" : "h-24"}`}>
-                                                {monster.image ? <img src={assetPath(monster.image)} alt="" loading="lazy" className={`${viewMode === "grid" ? "max-h-32" : "max-h-24"} ${score === 0 ? "grayscale opacity-55" : ""} ${isComplete ? "drop-shadow-[0_0_10px_rgba(77,255,139,0.42)]" : "drop-shadow-[0_8px_8px_rgba(0,0,0,0.55)]"} w-full object-contain transition-all group-hover:scale-105`} /> : null}
+                                                {monster.image ? <img src={assetPath(monster.image)} alt="" loading="lazy" decoding="async" fetchPriority="low" className={`${viewMode === "grid" ? "max-h-32" : "max-h-24"} ${score === 0 ? "grayscale opacity-55" : ""} ${isComplete ? "drop-shadow-[0_0_10px_rgba(77,255,139,0.42)]" : "drop-shadow-[0_8px_8px_rgba(0,0,0,0.55)]"} w-full object-contain transition-all group-hover:scale-105`} /> : null}
                                             </div>
                                             <div className="mt-1 flex items-end justify-between gap-2">
                                                 <div className="min-w-0">
@@ -635,6 +660,14 @@ export function IndexTracker() {
                         </div>
                     ) : (
                         <div className="rounded-xl border border-dashed border-[#344050] px-6 py-16 text-center text-sm text-[#8e99ad]">No monsters match this search and filter.</div>
+                    )}
+                    {hasMoreMonsters && (
+                        <div ref={loadMoreRef} className="flex min-h-24 items-center justify-center py-5" aria-hidden="true">
+                            <div className="flex items-center gap-2 rounded-full border border-[#304356] bg-[#0d1822] px-3 py-2 text-[11px] font-semibold text-[#8391a6]">
+                                <span className="size-3 animate-spin rounded-full border-2 border-[#41536b] border-t-[#2eacff]" />
+                                Loading more monsters…
+                            </div>
+                        </div>
                     )}
                 </section>
 
@@ -906,10 +939,10 @@ function IndexPlanner({ monsters, progress, plans, setPlans, onAchieved }: {
                     return <button key={monster.id} type="button" aria-pressed={active} aria-label={`${bulkMode ? "Select" : "Edit plan for"} ${monster.name}${goals.length ? `: ${goals.join(", ")}` : ""}`} onClick={() => {
                         if (bulkMode) setSelected((current) => { const next = new Set(current); if (next.has(monster.id)) next.delete(monster.id); else next.add(monster.id); return next; });
                         else setEditingId(monster.id);
-                    }} className={`group relative min-w-0 overflow-hidden rounded-lg border p-3 text-left transition focus-visible:outline-2 focus-visible:outline-[#2eacff] ${active ? "border-[#42baff] bg-[#123653] ring-2 ring-[#2eacff] shadow-[0_0_14px_#168fff33]" : planned ? "border-[#347dba] bg-[#0c1c2b] hover:border-[#64bfff]" : "border-[#344050] bg-[#0c141c] hover:border-[#68849e]"} ${viewMode === "list" ? "flex items-center gap-3" : ""}`}>
+                    }} className={`group cam-defer-card relative min-w-0 overflow-hidden rounded-lg border p-3 text-left transition focus-visible:outline-2 focus-visible:outline-[#2eacff] ${active ? "border-[#42baff] bg-[#123653] ring-2 ring-[#2eacff] shadow-[0_0_14px_#168fff33]" : planned ? "border-[#347dba] bg-[#0c1c2b] hover:border-[#64bfff]" : "border-[#344050] bg-[#0c141c] hover:border-[#68849e]"} ${viewMode === "list" ? "flex items-center gap-3" : ""}`}>
                         {bulkMode && active && <span className="absolute right-2 top-2 z-20 grid size-6 place-items-center rounded-full bg-[#2eacff] text-sm font-black text-white">✓</span>}
                         <span className={`${viewMode === "list" ? "w-16 shrink-0 text-lg" : "absolute left-3 top-2 z-10 text-2xl"} font-black`}><span className={rankTone(owned.rank)} style={rankLabelStyle(owned.rank)}>{owned.rank ?? "—"}</span>{rankGoal && <span className="block text-xs font-bold text-[#65c8ff]">→ {projected.rank}</span>}</span>
-                        {monster.image && <img src={assetPath(monster.image)} alt="" loading="lazy" className={`${viewMode === "list" ? "size-14 shrink-0" : "mx-auto h-28 w-full px-7"} object-contain drop-shadow-[0_6px_6px_#0008]`} />}
+                        {monster.image && <img src={assetPath(monster.image)} alt="" loading="lazy" decoding="async" fetchPriority="low" className={`${viewMode === "list" ? "size-14 shrink-0" : "mx-auto h-28 w-full px-7"} object-contain drop-shadow-[0_6px_6px_#0008]`} />}
                         <div className={`${viewMode === "list" ? "min-w-0 flex-1" : "mt-2"}`}>
                             <h3 className="truncate text-sm font-bold text-white">{monster.name}</h3>
                             <p className="mt-1 text-xs text-[#9da8b8]"><b className="text-[#ffb138]">{scoreFor(owned)}</b>{gain > 0 && <span className="font-bold text-[#65c8ff]"> → {scoreFor(projected)}</span>} / 21 {gain > 0 && <b className="ml-1 text-[#ffd84a]">+{gain}</b>}</p>
@@ -938,7 +971,7 @@ function IndexPlanner({ monsters, progress, plans, setPlans, onAchieved }: {
                 return <aside ref={editorRef} tabIndex={-1} role="dialog" aria-labelledby="planning-editor-title" className="fixed left-1/2 top-1/2 z-[100] w-[calc(100%-2rem)] max-w-[480px] max-h-[85dvh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain rounded-xl border border-[#344050] bg-[#0b141e] p-4 shadow-2xl xl:order-last xl:sticky xl:inset-auto xl:top-4 xl:z-auto xl:w-auto xl:max-w-none xl:translate-x-0 xl:translate-y-0 xl:max-h-[calc(100vh-2rem)]">
                     <div className="mb-3 flex items-center justify-between"><p className="text-xs font-bold uppercase tracking-wide text-[#32b5ff]">Monster plan</p><button type="button" aria-label="Close plan editor" onClick={() => setEditingId(null)} className="grid size-8 place-items-center rounded border border-[#405066] text-lg text-[#cbd3df]">×</button></div>
                     <div className="flex items-center gap-3">
-                        {monster.image && <img src={assetPath(monster.image)} alt="" loading="lazy" className="size-16 object-contain" />}
+                        {monster.image && <img src={assetPath(monster.image)} alt="" loading="lazy" decoding="async" fetchPriority="low" className="size-16 object-contain" />}
                         <div className="min-w-0 flex-1"><h3 id="planning-editor-title" className="font-bold text-white">{monster.name}</h3><p className="text-xs text-[#aeb8c8]">Collected: {owned.rank ?? "No rank"} · {scoreFor(owned)} / 21</p></div>
                         {gain > 0 && <span className="text-sm font-black text-[#ffd84a]">+{gain} points</span>}
                     </div>

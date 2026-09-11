@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from "react";
 
 import {
     EVOLUTION_STEP,
@@ -11,9 +11,10 @@ import {
 } from "../lib/calculations/evolution";
 import type { Build, CombatContext, Mutation, PassiveEffect, Rank } from "../types/build";
 import type { Monster } from "../types/monster";
+import type { SkillStatusEffect } from "../types/skill";
 import { ARMORS, WEAPONS, getEquipment } from "../data/equipments";
 import { monsters } from "../data/monsters";
-import { canSharePassiveFromTeammate, getPassiveImagePath, getTransferablePassiveFromTeammate } from "../data/passives";
+import { canSharePassiveFromTeammate, getPassiveDisplayName, getPassiveImagePath, getTransferablePassiveFromTeammate } from "../data/passives";
 import { getAttribute, getAttributesForGear } from "../data/attributes";
 import { getActiveAttributeIds, getAttributeSlotCount, getFixedAttributeIds } from "../lib/calculations/attributes";
 import { getTraitEffectValue } from "../lib/calculations/traits";
@@ -29,6 +30,7 @@ import {
     getActiveRallyingWarCryDamageIncrease,
     getEnemyVulnerability,
     getRallyingWarCryTeamDamageIncrease,
+    getSkill,
 } from "../data/skills";
 
 import { CollapsibleSection } from "./collapsible-section";
@@ -646,15 +648,83 @@ function EvolutionMultiplierEditor({
     );
 }
 
+type TeamEffectCategory =
+    | "passive"
+    | "damageIncrease"
+    | "healing"
+    | "shield"
+    | "vulnerability"
+    | "damageReduction"
+    | "damageDecrease"
+    | "damageReflection"
+    | "stun"
+    | "burn"
+    | "poison"
+    | "taunt"
+    | "knockback";
+
 type TeamPassiveContribution = {
     icon: string | null;
     text: string;
+    category: TeamEffectCategory;
+    target?: "Team" | "Enemy";
+    skillName?: string;
 };
 
 type TeamPassiveOption = {
     id: string;
     label: string;
+    image?: string;
+    rarity?: Monster["rarity"];
     contributions: TeamPassiveContribution[];
+    searchText: string;
+};
+
+const TEAM_EFFECT_FILTERS: Array<{ id: "all" | TeamEffectCategory; label: string; icon?: string | null }> = [
+    {id: "all", label: "All", icon: null},
+    {id: "damageIncrease", label: "Team Damage", icon: "/icons/damage-increase.png"},
+    {id: "healing", label: "Healing", icon: "/account-icons/health.png"},
+    {id: "shield", label: "Shielding", icon: "/icons/attribute-resistance.png"},
+    {id: "vulnerability", label: "Vulnerability", icon: "/icons/vulnerability.png"},
+    {id: "damageReduction", label: "Damage Reduction", icon: "/icons/attribute-resistance.png"},
+    {id: "damageDecrease", label: "Damage Decrease", icon: "/icons/damage-decrease.png"},
+    {id: "damageReflection", label: "Reflection", icon: "/icons/damage-reflection.png"},
+    {id: "stun", label: "Stun", icon: "/icons/stun-effect.png"},
+    {id: "burn", label: "Burn", icon: "/icons/burn-effect.png"},
+    {id: "poison", label: "Poison", icon: "/icons/poison-effect.png"},
+    {id: "taunt", label: "Taunt", icon: "/icons/taunt.png"},
+    {id: "knockback", label: "Knockback", icon: "/icons/knockback.png"},
+    {id: "passive", label: "Passives", icon: null},
+];
+
+const TEAM_EFFECT_ICONS: Partial<Record<TeamEffectCategory, string>> = {
+    damageIncrease: "/icons/damage-increase.png",
+    healing: "/account-icons/health.png",
+    shield: "/icons/attribute-resistance.png",
+    vulnerability: "/icons/vulnerability.png",
+    damageReduction: "/icons/attribute-resistance.png",
+    damageDecrease: "/icons/damage-decrease.png",
+    damageReflection: "/icons/damage-reflection.png",
+    stun: "/icons/stun-effect.png",
+    burn: "/icons/burn-effect.png",
+    poison: "/icons/poison-effect.png",
+    taunt: "/icons/taunt.png",
+    knockback: "/icons/knockback.png",
+};
+
+const TEAM_EFFECT_LABELS: Partial<Record<TeamEffectCategory, string>> = {
+    damageIncrease: "Damage Increase",
+    healing: "Healing",
+    shield: "Shield",
+    vulnerability: "Vulnerability",
+    damageReduction: "Damage Reduction",
+    damageDecrease: "Damage Decrease",
+    damageReflection: "Damage Reflection",
+    stun: "Stun",
+    burn: "Burn",
+    poison: "Poison",
+    taunt: "Taunt",
+    knockback: "Knockback",
 };
 
 function formatTeamPassiveEffect(effect: PassiveEffect): string {
@@ -689,6 +759,55 @@ function formatTeamPassiveEffect(effect: PassiveEffect): string {
     return `${sign}${amount}% ${labels[effect.stat]}`;
 }
 
+function formatTeamSkillEffect(effect: SkillStatusEffect): string {
+    const category = effect.type as TeamEffectCategory;
+    const label = TEAM_EFFECT_LABELS[category] ?? effect.type;
+
+    if (category === "knockback") {
+        return "Knockback";
+    }
+
+    const amount = typeof effect.amountPercent === "number" ? `${effect.amountPercent}% ` : "";
+    const stacks = typeof effect.stacks === "number" ? `${effect.stacks} stack${effect.stacks === 1 ? "" : "s"} ` : "";
+    const duration = typeof effect.durationSeconds === "number" ? ` · ${effect.durationSeconds}s` : "";
+    const target = effect.target === "Team" ? "Team" : "Enemy";
+    return `${amount}${stacks}${target} ${label}${duration}`;
+}
+
+function TeamContributionChip({
+    contribution,
+    compact = false,
+}: {
+    contribution: TeamPassiveContribution;
+    compact?: boolean;
+}) {
+    return (
+        <span
+            className={`flex max-w-full items-start gap-1.5 rounded-lg border border-[#31405a] bg-[#141d2b] ${compact ? "px-2 py-1.5" : "px-2.5 py-2"}`}
+        >
+            {contribution.icon ? (
+                <img
+                    src={assetPath(contribution.icon)}
+                    alt=""
+                    className={`${compact ? "size-3.5" : "size-4"} mt-0.5 shrink-0 object-contain`}
+                />
+            ) : (
+                <span className="mt-0.5 inline-flex size-3.5 shrink-0 items-center justify-center rounded-full bg-[#253149] text-[9px] text-[#c7cffc]">✦</span>
+            )}
+            <span className="min-w-0">
+                {contribution.skillName && (
+                    <span className={`${compact ? "text-[9px]" : "text-[10px]"} block whitespace-normal break-words font-semibold leading-tight text-[#eef2fb]`}>
+                        {contribution.skillName}
+                    </span>
+                )}
+                <span className={`${compact ? "text-[9px]" : "text-[10px]"} block whitespace-normal break-words font-medium leading-tight text-[#aeb8ff] ${contribution.skillName ? "mt-0.5" : ""}`}>
+                    {contribution.text}
+                </span>
+            </span>
+        </span>
+    );
+}
+
 function TeamPassiveSelect({
                                label,
                                options,
@@ -701,10 +820,48 @@ function TeamPassiveSelect({
     onChange: (value: string | null) => void;
 }) {
     const [open, setOpen] = useState(false);
+    const [query, setQuery] = useState("");
+    const [effectFilter, setEffectFilter] = useState<"all" | TeamEffectCategory>("all");
+    const containerRef = useRef<HTMLDivElement | null>(null);
     const selected = options.find((option) => option.id === value) ?? null;
 
+    useEffect(() => {
+        if (!open) return;
+
+        const handlePointerDown = (event: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        };
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handlePointerDown);
+        document.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            document.removeEventListener("mousedown", handlePointerDown);
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [open]);
+
+    const filteredOptions = useMemo(() => {
+        const normalizedQuery = query.trim().toLowerCase();
+        return options.filter((option) => {
+            const matchesQuery = !normalizedQuery || option.searchText.includes(normalizedQuery);
+            const matchesEffect = effectFilter === "all" || option.contributions.some(
+                (contribution) => contribution.category === effectFilter,
+            );
+            return matchesQuery && matchesEffect;
+        });
+    }, [effectFilter, options, query]);
+
     return (
-        <div className="relative min-w-0">
+        <div ref={containerRef} className="relative min-w-0">
             <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">
                 {label}
             </span>
@@ -713,83 +870,227 @@ function TeamPassiveSelect({
                 type="button"
                 onClick={() => setOpen((current) => !current)}
                 aria-expanded={open}
-                className="flex min-h-[42px] w-full items-center justify-between gap-2 rounded-md border border-[#344050] bg-[#141c28] px-2.5 py-2 text-left transition hover:border-[#5c6a80]"
+                className={`flex min-h-[58px] w-full items-start justify-between gap-2 rounded-lg border border-[#344050] bg-[linear-gradient(180deg,#141c28_0%,#101823_100%)] px-2.5 py-2.5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition ${open ? "border-[#6482ff] shadow-[0_0_0_1px_rgba(100,130,255,0.18)]" : "hover:border-[#5c6a80] hover:bg-[#172131]"}`}
             >
                 {selected ? (
-                    <span className="min-w-0">
-                        <span className="block truncate text-xs font-semibold text-[#e3e8f1]">
-                            {selected.label}
+                    <span className="flex min-w-0 flex-1 items-start gap-2">
+                        <span className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#31405a] bg-[radial-gradient(circle_at_50%_35%,rgba(80,113,184,0.28),rgba(14,22,35,0.9)_75%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                            {selected.image ? (
+                                <img
+                                    src={assetPath(selected.image)}
+                                    alt=""
+                                    className="h-12 w-12 object-contain drop-shadow-[0_5px_7px_rgba(0,0,0,0.45)]"
+                                />
+                            ) : (
+                                <span className="text-sm font-bold text-[#dfe5f6]">{selected.label.slice(0, 1)}</span>
+                            )}
                         </span>
-                        <span className="mt-1 flex flex-wrap items-center gap-1.5">
-                            {selected.contributions.map((contribution, index) => (
-                                <span key={`${contribution.text}-${index}`} className="inline-flex items-center gap-1 text-[10px] text-[#aeb8ff]">
-                                    {contribution.icon && (
-                                        <img
-                                            src={assetPath(contribution.icon)}
-                                            alt=""
-                                            className="size-4 shrink-0 object-contain"
-                                        />
-                                    )}
-                                    <span>{contribution.text}</span>
-                                </span>
-                            ))}
+                        <span className="min-w-0 flex-1">
+                            <span className="block truncate text-xs font-semibold text-[#eef2fb]">
+                                {selected.label}
+                            </span>
+                            <span className="mt-1.5 flex max-w-full flex-col gap-1.5">
+                                {selected.contributions.slice(0, 3).map((contribution, index) => (
+                                    <TeamContributionChip key={`${contribution.skillName ?? "effect"}-${contribution.text}-${index}`} contribution={contribution} compact />
+                                ))}
+                                {selected.contributions.length > 3 && (
+                                    <span className="pl-1 text-[10px] text-[#7f8b9e]">+{selected.contributions.length - 3} more</span>
+                                )}
+                            </span>
                         </span>
                     </span>
                 ) : (
-                    <span className="text-xs text-[#7f8b9e]">None</span>
+                    <span className="flex min-w-0 items-center gap-3">
+                        <span className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-dashed border-[#31405a] bg-[#101722] text-[#6e7d94]">
+                            +
+                        </span>
+                        <span>
+                            <span className="block text-sm font-medium text-[#dce2ee]">None</span>
+                            <span className="block text-[10px] text-[#7f8b9e]">Choose a teammate with transferable effects</span>
+                        </span>
+                    </span>
                 )}
-                <span className={`shrink-0 text-[10px] text-[#7f8b9e] transition-transform ${open ? "rotate-180" : ""}`}>
-                    ▼
+                <span className={`inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-[#31405a] bg-[#141c28] text-[#8e9bb0] transition-transform ${open ? "rotate-180" : ""}`}>
+                    <svg viewBox="0 0 20 20" className="size-3.5 fill-current" aria-hidden="true">
+                        <path d="M5.25 7.5 10 12.25 14.75 7.5" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                 </span>
             </button>
 
             {open && (
-                <div className="absolute z-[90] mt-1 max-h-72 w-full min-w-0 max-w-full overflow-y-auto rounded-md border border-[#344050] bg-[#0f1620] p-1 shadow-2xl">
-                    <button
-                        type="button"
-                        onClick={() => {
-                            onChange(null);
-                            setOpen(false);
-                        }}
-                        className="w-full rounded px-2.5 py-2 text-left text-xs text-[#7f8b9e] hover:bg-[#181f2b]"
-                    >
-                        None
-                    </button>
+                <div className="absolute left-0 z-[90] mt-2 w-full max-w-[calc(100vw-3rem)] overflow-hidden rounded-xl border border-[#344050] bg-[rgba(12,18,30,0.97)] shadow-[0_18px_50px_rgba(0,0,0,0.52)] backdrop-blur-sm">
+                    <div className="sticky top-0 z-10 border-b border-[#263142] bg-[rgba(12,18,30,0.98)] p-3">
+                        <div className="mb-2 flex items-center justify-between gap-3">
+                            <div>
+                                <div className="text-xs font-semibold uppercase tracking-[0.14em] text-[#98a7c0]">Select teammate</div>
+                                <div className="text-[11px] text-[#6f7e95]">{filteredOptions.length} match{filteredOptions.length === 1 ? "" : "es"}</div>
+                            </div>
+                            {(query || effectFilter !== "all") && (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setQuery("");
+                                        setEffectFilter("all");
+                                    }}
+                                    className="rounded-full border border-[#334255] bg-[#131c28] px-2.5 py-1 text-[10px] font-semibold text-[#b5c1d4] transition hover:border-[#5d6d83] hover:text-[#eef2fb]"
+                                >
+                                    Clear filters
+                                </button>
+                            )}
+                        </div>
+                        <div className="relative">
+                            <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-[#728198]">
+                                <svg viewBox="0 0 20 20" className="size-4 fill-current" aria-hidden="true">
+                                    <path fillRule="evenodd" d="M8.5 3.75a4.75 4.75 0 1 0 2.988 8.445l2.908 2.908a.75.75 0 1 0 1.06-1.06l-2.907-2.909A4.75 4.75 0 0 0 8.5 3.75Zm-3.25 4.75a3.25 3.25 0 1 1 6.5 0 3.25 3.25 0 0 1-6.5 0Z" clipRule="evenodd" />
+                                </svg>
+                            </span>
+                            <input
+                                value={query}
+                                onChange={(event) => setQuery(event.target.value)}
+                                placeholder="Search monster, skill, effect..."
+                                className="w-full rounded-lg border border-[#344050] bg-[#111a26] py-2.5 pl-9 pr-9 text-sm text-[#e3e8f1] outline-none placeholder:text-[#65738a] focus:border-[#7182ff]"
+                                autoFocus
+                            />
+                            {query && (
+                                <button
+                                    type="button"
+                                    onClick={() => setQuery("")}
+                                    className="absolute inset-y-0 right-2 flex items-center text-[#728198] transition hover:text-[#e3e8f1]"
+                                >
+                                    <svg viewBox="0 0 20 20" className="size-4 fill-current" aria-hidden="true">
+                                        <path d="M5.72 5.72a.75.75 0 0 1 1.06 0L10 8.94l3.22-3.22a.75.75 0 1 1 1.06 1.06L11.06 10l3.22 3.22a.75.75 0 1 1-1.06 1.06L10 11.06l-3.22 3.22a.75.75 0 1 1-1.06-1.06L8.94 10 5.72 6.78a.75.75 0 0 1 0-1.06Z" />
+                                    </svg>
+                                </button>
+                            )}
+                        </div>
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                            {TEAM_EFFECT_FILTERS.map((filter) => (
+                                <span key={filter.id} className="group/filter relative inline-flex">
+                                    <button
+                                        type="button"
+                                        onClick={() => setEffectFilter(filter.id)}
+                                        aria-label={`Filter by ${filter.label}`}
+                                        className={
+                                            "relative inline-flex size-9 items-center justify-center rounded-lg border transition " +
+                                            (effectFilter === filter.id
+                                                ? "border-[#7182ff] bg-[#202846] text-[#dde4ff] shadow-[0_0_0_1px_rgba(113,130,255,0.14)]"
+                                                : "border-[#2d3949] bg-[#141c28] text-[#8492a7] hover:border-[#526177] hover:bg-[#182131] hover:text-[#d6dce7]")
+                                        }
+                                    >
+                                        {filter.icon ? (
+                                            <img
+                                                src={assetPath(filter.icon)}
+                                                alt=""
+                                                className="size-4 object-contain"
+                                            />
+                                        ) : (
+                                            <span className="inline-flex size-4 items-center justify-center rounded-full bg-[#253149] text-[9px] text-[#c7cffc]">
+                                                {filter.id === "all" ? "•" : "✦"}
+                                            </span>
+                                        )}
+                                        <span className="absolute -right-1 -top-1 grid size-3.5 place-items-center rounded-full border border-[#46556c] bg-[#101722] text-[8px] font-black leading-none text-[#8795aa]">?</span>
+                                    </button>
+                                    <span
+                                        role="tooltip"
+                                        className="pointer-events-none absolute bottom-full left-1/2 z-[120] mb-2 w-max max-w-48 -translate-x-1/2 translate-y-1 rounded-md border border-[#344050] bg-[#0f1620] px-2 py-1.5 text-[10px] font-semibold text-[#d7deea] opacity-0 shadow-xl transition group-hover/filter:translate-y-0 group-hover/filter:opacity-100 group-focus-within/filter:translate-y-0 group-focus-within/filter:opacity-100"
+                                    >
+                                        {filter.label}
+                                    </span>
+                                </span>
+                            ))}
+                        </div>                    </div>
 
-                    {options.map((option) => (
+                    <div className="max-h-[360px] overflow-y-auto p-2">
                         <button
-                            key={option.id}
                             type="button"
                             onClick={() => {
-                                onChange(option.id);
+                                onChange(null);
                                 setOpen(false);
                             }}
-                            className={`w-full rounded px-2.5 py-2 text-left transition hover:bg-[#181f2b] ${
-                                value === option.id ? "bg-[#202846]" : ""
-                            }`}
+                            className={
+                                "mb-2 flex w-full items-center justify-between rounded-xl border px-3 py-3 text-left transition " +
+                                (value === null
+                                    ? "border-[#5c72ff] bg-[#18223a]"
+                                    : "border-[#233043] bg-[#111822] hover:border-[#44546a] hover:bg-[#151e2b]")
+                            }
                         >
-                            <span className="block truncate text-xs font-semibold text-[#e3e8f1]">
-                                {option.label}
+                            <span>
+                                <span className="block text-sm font-semibold text-[#edf1fb]">None</span>
+                                <span className="mt-0.5 block text-[11px] text-[#7f8b9e]">Do not use a teammate in this slot.</span>
                             </span>
-                            <span className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
-                                {option.contributions.map((contribution, index) => (
-                                    <span
-                                        key={`${option.id}-${contribution.text}-${index}`}
-                                        className="inline-flex items-center gap-1 text-[10px] font-medium text-[#aeb8ff]"
-                                    >
-                                        {contribution.icon && (
-                                            <img
-                                                src={assetPath(contribution.icon)}
-                                                alt=""
-                                                className="size-4 shrink-0 object-contain"
-                                            />
-                                        )}
-                                        <span>{contribution.text}</span>
-                                    </span>
-                                ))}
-                            </span>
+                            {value === null && (
+                                <span className="inline-flex size-6 items-center justify-center rounded-full bg-[#5c72ff]/20 text-[#dce2ff]">
+                                    <svg viewBox="0 0 20 20" className="size-3.5 fill-current" aria-hidden="true">
+                                        <path fillRule="evenodd" d="M16.53 5.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 1 1 1.06-1.06l2.97 2.97 6.97-6.97a.75.75 0 0 1 1.06 0Z" clipRule="evenodd" />
+                                    </svg>
+                                </span>
+                            )}
                         </button>
-                    ))}
+
+                        {filteredOptions.map((option) => (
+                            <button
+                                key={option.id}
+                                type="button"
+                                onClick={() => {
+                                    onChange(option.id);
+                                    setOpen(false);
+                                }}
+                                className={
+                                    "mb-2 w-full rounded-xl border px-3 py-3 text-left transition " +
+                                    (value === option.id
+                                        ? "border-[#5c72ff] bg-[#18223a] shadow-[0_0_0_1px_rgba(92,114,255,0.18)]"
+                                        : "border-[#233043] bg-[#111822] hover:border-[#44546a] hover:bg-[#151e2b]")
+                                }
+                            >
+                                <span className="flex items-start gap-3">
+                                    <span className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#2a3950] bg-[radial-gradient(circle_at_50%_35%,rgba(80,113,184,0.28),rgba(14,22,35,0.9)_75%)]">
+                                        {option.image ? (
+                                            <img src={assetPath(option.image)} alt="" className="h-10 w-10 object-contain drop-shadow-[0_6px_8px_rgba(0,0,0,0.5)]" />
+                                        ) : (
+                                            <span className="text-sm font-bold text-[#dfe5f6]">{option.label.slice(0, 1)}</span>
+                                        )}
+                                    </span>
+                                    <span className="min-w-0 flex-1">
+                                        <span className="flex items-start justify-between gap-3">
+                                            <span className="min-w-0">
+                                                <span className="block truncate text-sm font-semibold text-[#edf1fb]">{option.label}</span>
+                                                <span className="mt-0.5 block text-[10px] uppercase tracking-[0.12em] text-[#7f8b9e]">
+                                                    {option.contributions.length} effect{option.contributions.length === 1 ? "" : "s"}
+                                                </span>
+                                            </span>
+                                            {value === option.id && (
+                                                <span className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-[#5c72ff]/20 text-[#dce2ff]">
+                                                    <svg viewBox="0 0 20 20" className="size-3.5 fill-current" aria-hidden="true">
+                                                        <path fillRule="evenodd" d="M16.53 5.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 1 1 1.06-1.06l2.97 2.97 6.97-6.97a.75.75 0 0 1 1.06 0Z" clipRule="evenodd" />
+                                                    </svg>
+                                                </span>
+                                            )}
+                                        </span>
+                                        <span className="mt-2 flex flex-wrap gap-1.5">
+                                            {option.contributions.slice(0, 4).map((contribution, index) => (
+                                                <TeamContributionChip
+                                                    key={`${option.id}-${contribution.skillName ?? "effect"}-${contribution.text}-${index}`}
+                                                    contribution={contribution}
+                                                />
+                                            ))}
+                                            {option.contributions.length > 4 && (
+                                                <span className="inline-flex items-center rounded-full border border-[#2d3949] bg-[#141c28] px-2 py-1 text-[10px] font-medium text-[#7f8b9e]">
+                                                    +{option.contributions.length - 4} more
+                                                </span>
+                                            )}
+                                        </span>
+                                    </span>
+                                </span>
+                            </button>
+                        ))}
+
+                        {filteredOptions.length === 0 && (
+                            <div className="px-3 py-8 text-center">
+                                <div className="text-sm font-semibold text-[#dbe3f1]">No matching teammates</div>
+                                <div className="mt-1 text-[11px] text-[#65738a]">Try another search term or clear the current effect filter.</div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
         </div>
@@ -869,15 +1170,7 @@ export function BuildEditor({
         : 0;
     const effectiveVulnerability = activeVulnerability * (1 + vulnerabilityEffectiveness / 100);
     const teammateOptions: TeamPassiveOption[] = monsters
-        .filter((candidate) => {
-            if (candidate.id === monster?.id) {
-                return false;
-            }
-
-            return (candidate.passives ?? []).some(canSharePassiveFromTeammate) ||
-                getRallyingWarCryTeamDamageIncrease(candidate.skillIds) > 0 ||
-                getEnemyVulnerability(candidate.skillIds) > 0;
-        })
+        .filter((candidate) => candidate.id !== monster?.id)
         .map((candidate) => {
             const passiveContributions = (candidate.passives ?? [])
                 .map(getTransferablePassiveFromTeammate)
@@ -887,31 +1180,49 @@ export function BuildEditor({
                         .map((effect) => ({
                             icon: getPassiveImagePath(passive),
                             text: formatTeamPassiveEffect(effect),
+                            category: "passive" as const,
+                            skillName: getPassiveDisplayName(passive),
                         }))
                         .filter((contribution) => contribution.text.length > 0),
                 );
-            const rallyingWarCryTeamIncrease = getRallyingWarCryTeamDamageIncrease(candidate.skillIds);
-            const vulnerability = getEnemyVulnerability(candidate.skillIds);
-            const contributions = [
-                ...passiveContributions,
-                ...(rallyingWarCryTeamIncrease > 0 ? [
-                    {
-                        icon: "/icons/damage-increase.png",
-                        text: `Rallying War Cry: +${rallyingWarCryTeamIncrease}% Team Damage`,
-                    },
-                ] : []),
-                ...(vulnerability > 0 ? [
-                    {
-                        icon: "/icons/vulnerability.png",
-                        text: `Vulnerability: +${vulnerability}% Damage Taken`,
-                    },
-                ] : []),
-            ];
+
+            const skillSearchParts: string[] = [];
+            const skillContributions = candidate.skillIds.flatMap((skillId) => {
+                const skill = getSkill(skillId);
+                if (!skill) return [];
+
+                skillSearchParts.push(skill.name, skill.description ?? "", skill.notes ?? "");
+
+                return (skill.statusEffects ?? [])
+                    .filter((effect) => effect.target === "Team" || effect.target === "Enemy")
+                    .map((effect) => {
+                        const category = effect.type as TeamEffectCategory;
+                        return {
+                            icon: TEAM_EFFECT_ICONS[category] ?? null,
+                            text: formatTeamSkillEffect(effect),
+                            category,
+                            target: effect.target as "Team" | "Enemy",
+                            skillName: skill.name,
+                        };
+                    });
+            });
+
+            const contributions = [...passiveContributions, ...skillContributions];
+            const passiveSearchText = passiveContributions.map((contribution) => `${contribution.skillName ?? ""} ${contribution.text}`).join(" ");
+            const contributionSearchText = contributions.map((contribution) => contribution.text).join(" ");
 
             return {
                 id: candidate.id,
                 label: candidate.name,
+                image: candidate.image,
+                rarity: candidate.rarity,
                 contributions,
+                searchText: [
+                    candidate.name,
+                    passiveSearchText,
+                    contributionSearchText,
+                    ...skillSearchParts,
+                ].join(" ").toLowerCase(),
             };
         })
         .filter((option) => option.contributions.length > 0);
@@ -1505,11 +1816,21 @@ export function BuildEditor({
 
                 </CollapsibleSection>
 
-                <CollapsibleSection title="Team Effects">
-                    <p className="mb-2.5 text-[11px] leading-4 text-[#7f8b9e]">
-                        Add up to 2 monsters with transferable combat passives or team skill effects. Non-transferable progression and self-only passives are hidden.
-                    </p>
-                    <div className="grid gap-2 sm:grid-cols-2">
+                <CollapsibleSection
+                    title={
+                        <span className="flex items-center gap-2">
+                            <span>Team Effects</span>
+                            <span onClick={(event) => event.stopPropagation()}>
+                                <HelpTooltip
+                                    title="Team Effects"
+                                    text="Add up to 2 monsters with transferable combat passives or team skill effects. Non-transferable progression and self-only passives are hidden."
+                                    align="left"
+                                />
+                            </span>
+                        </span>
+                    }
+                >
+                    <div className="grid gap-2">
                         {([0, 1] as const).map((slot) => {
                             const otherSlot = slot === 0 ? 1 : 0;
                             const options = teammateOptions.filter(

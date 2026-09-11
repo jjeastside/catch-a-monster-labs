@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
-import { FeedbackWidget } from "./components/feedback-widget";
+import { DeferredFeedbackWidget } from "./components/deferred-feedback-widget";
+import { assetPath } from "./lib/asset-path";
 
 export const viewport: Viewport = {
     width: "device-width",
@@ -15,11 +16,11 @@ export const metadata: Metadata = {
         "Build and compare Catch a Monster builds with combat stats, skill damage, DPS, equipment, traits, mutations, passives, and account multipliers.",
     icons: {
         icon: [
-            { url: "favicon.ico" },
-            { url: "icon.png", type: "image/png" },
+            { url: assetPath("/favicon.ico") },
+            { url: assetPath("/icon.png"), type: "image/png" },
         ],
-        shortcut: "favicon.ico",
-        apple: "apple-icon.png",
+        shortcut: assetPath("/favicon.ico"),
+        apple: assetPath("/apple-icon.png"),
     },
     openGraph: {
         title: "Cam Lab — Catch a Monster Build Calculator",
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
         url: "https://jjeastside.github.io/catch-a-monster-labs/",
         images: [
             {
-                url: "/preview.png",
+                url: assetPath("/preview.png"),
                 width: 807,
                 height: 493,
                 alt: "Cam Lab — Catch a Monster Build Calculator",
@@ -48,7 +49,7 @@ export default function RootLayout({
         <html lang="en">
         <body>
         {children}
-        <FeedbackWidget />
+        <DeferredFeedbackWidget />
         </body>
         </html>
     );

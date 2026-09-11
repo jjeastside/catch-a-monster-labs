@@ -2,7 +2,7 @@
 import { PageHeading } from "./page-heading";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { EvolutionTree } from "./evolution-tree";
@@ -35,14 +35,44 @@ import type { Passive } from "../types/build";
 import type { GeneratedMonster, Rarity } from "../types/monster";
 
 const rarityClasses: Record<Rarity, string> = {
-    Common: "border-[#586273]",
-    Uncommon: "border-[#2f9d62]",
-    Rare: "border-[#299ddd]",
-    Epic: "border-[#bd45d8]",
-    Legendary: "border-[#ff9f43]",
-    Mythical: "border-[#8f7cff] shadow-[0_0_18px_rgba(113,130,255,0.16)]",
-    Secret: "border-[#712c37]",
-    Void: "border-[#28e9c5]",
+    Common: "border-[#515b69] bg-[#121a25]",
+    Uncommon: "border-[#2f8f4e] bg-[#121a25]",
+    Rare: "border-[#3788b9] bg-[#121a25]",
+    Epic: "border-[#9f4db0] bg-[#121a25]",
+    Legendary: "border-[#c9853c] bg-[#121a25]",
+    Mythical: "border-transparent [background:linear-gradient(#121a25,#121a25)_padding-box,linear-gradient(135deg,#db4653,#d98a38,#c9b73e,#4ca868,#3f86ad,#8d4ca5)_border-box] shadow-[0_0_16px_rgba(124,107,255,0.14)]",
+    Secret: "border-[#c83d49] bg-[#121a25]",
+    Void: "border-[#3f9d93] bg-[#121a25]",
+};
+
+// Keep every card anchored to the same dark Cam Lab surface, then add only a
+// restrained rarity tint behind the artwork. This avoids the image area feeling
+// like a separate brightly-coloured panel from the rest of the card.
+const rarityImageStyles: Record<Rarity, CSSProperties> = {
+    Common: {
+        background: "radial-gradient(circle at 50% 100%, rgba(145,155,170,0.14) 0%, rgba(18,26,37,0) 58%), linear-gradient(180deg,#151e2a 0%,#121a25 100%)",
+    },
+    Uncommon: {
+        background: "radial-gradient(circle at 50% 100%, rgba(40,167,69,0.22) 0%, rgba(40,167,69,0.07) 36%, rgba(18,26,37,0) 68%), linear-gradient(180deg,#151e2a 0%,#121a25 100%)",
+    },
+    Rare: {
+        background: "radial-gradient(circle at 50% 100%, rgba(41,157,221,0.22) 0%, rgba(41,157,221,0.07) 36%, rgba(18,26,37,0) 68%), linear-gradient(180deg,#151e2a 0%,#121a25 100%)",
+    },
+    Epic: {
+        background: "radial-gradient(circle at 50% 100%, rgba(189,69,216,0.23) 0%, rgba(189,69,216,0.07) 38%, rgba(18,26,37,0) 70%), linear-gradient(180deg,#151e2a 0%,#121a25 100%)",
+    },
+    Legendary: {
+        background: "radial-gradient(circle at 50% 100%, rgba(255,159,67,0.26) 0%, rgba(255,159,67,0.08) 40%, rgba(18,26,37,0) 72%), linear-gradient(180deg,#171d24 0%,#121a25 100%)",
+    },
+    Mythical: {
+        background: "radial-gradient(circle at 14% 100%, rgba(229,59,59,0.17) 0%, rgba(18,26,37,0) 42%), radial-gradient(circle at 50% 105%, rgba(53,201,92,0.14) 0%, rgba(18,26,37,0) 42%), radial-gradient(circle at 86% 100%, rgba(164,63,196,0.18) 0%, rgba(18,26,37,0) 44%), linear-gradient(180deg,#151e2a 0%,#121a25 100%)",
+    },
+    Secret: {
+        background: "radial-gradient(circle at 50% 100%, rgba(217,31,44,0.28) 0%, rgba(187,23,36,0.10) 40%, rgba(18,26,37,0) 72%), linear-gradient(180deg,#171b24 0%,#121a25 100%)",
+    },
+    Void: {
+        background: "radial-gradient(circle at 50% 100%, rgba(53,233,208,0.20) 0%, rgba(53,233,208,0.06) 38%, rgba(18,26,37,0) 70%), linear-gradient(180deg,#151e2a 0%,#121a25 100%)",
+    },
 };
 
 const elements = ["All", "Common", "Water", "Fire", "Grass", "Ice", "Ground"] as const;
@@ -216,6 +246,7 @@ function MonsterCard({
                          evolutionPercent,
                          passiveCompareMode,
                          sortBy,
+                         eagerImage = false,
                      }: {
     monster: GeneratedMonster;
     selected: boolean;
@@ -223,6 +254,7 @@ function MonsterCard({
     evolutionPercent: number;
     passiveCompareMode: PassiveCompareMode;
     sortBy: SortKey;
+    eagerImage?: boolean;
 }) {
     const skills = monster.skillIds.map((id) => getSkill(id)).filter(Boolean).slice(0, 3);
     const passive = monster.passives?.[0] ?? null;
@@ -234,22 +266,28 @@ function MonsterCard({
             id={`monster-${monster.id}`}
             type="button"
             onClick={onSelect}
-            className={`group min-w-0 overflow-hidden rounded-xl border bg-[#121a25] text-left transition hover:-translate-y-0.5 hover:border-[#7182ff]/70 hover:bg-[#151f2d] ${rarityClasses[monster.rarity]} ${
-                selected ? "border-[#8d9aff] bg-[#172136] ring-2 ring-[#7182ff] ring-offset-2 ring-offset-[#0d131d] shadow-[0_0_28px_rgba(113,130,255,0.24)]" : ""
+            className={`group cam-defer-card min-w-0 overflow-hidden rounded-xl border text-left shadow-[0_10px_24px_rgba(0,0,0,0.14)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.22)] ${rarityClasses[monster.rarity]} ${
+                selected ? "ring-1 ring-[#7182ff] ring-offset-2 ring-offset-[#0d131d] shadow-[0_0_24px_rgba(113,130,255,0.22)]" : ""
             }`}
         >
-            <div className="relative aspect-square overflow-hidden bg-[radial-gradient(circle_at_50%_35%,rgba(113,130,255,0.14),transparent_58%)] sm:aspect-[4/3]">
+            <div
+                className="relative aspect-square overflow-hidden sm:aspect-[4/3]"
+                style={rarityImageStyles[monster.rarity]}
+            >
                 {monster.image ? (
                     <img
                         src={assetPath(monster.image)}
                         alt={monster.name}
+                        loading={eagerImage ? "eager" : "lazy"}
+                        decoding="async"
+                        fetchPriority={eagerImage ? "high" : "auto"}
                         className="h-full w-full object-contain p-2 transition duration-200 group-hover:scale-[1.035] sm:p-3"
                     />
                 ) : null}
-                <span className={`absolute right-2 top-2 rounded-full border px-2 py-1 text-[10px] font-bold ${
+                <span className={`absolute right-2 top-2 rounded-full border px-2 py-0.5 text-[9px] font-bold backdrop-blur-sm sm:text-[10px] ${
                     sortBy === "index"
-                        ? "border-[#7182ff] bg-[#202846]/95 text-[#c7ccff] shadow-[0_0_12px_rgba(113,130,255,0.25)]"
-                        : "border-[#344050] bg-[#0d131d]/90 text-[#aeb9cb]"
+                        ? "border-[#7182ff]/80 bg-[#18213a]/90 text-[#d6d9ff] shadow-[0_0_10px_rgba(113,130,255,0.2)]"
+                        : "border-[#3a4657] bg-[#0b111a]/82 text-[#aeb9cb]"
                 }`}>
                     #{monster.indexPosition}
                 </span>
@@ -258,9 +296,10 @@ function MonsterCard({
                         Unobtainable
                     </span>
                 ) : null}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-[#121a25] via-[#121a25]/55 to-transparent" />
             </div>
 
-            <div className="p-2.5 sm:p-3">
+            <div className="border-t border-white/[0.035] bg-gradient-to-b from-[#121a25] to-[#101720] p-2.5 sm:p-3">
                 <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                         <h3 className="truncate text-xs font-bold text-[#f4f7fb] sm:text-sm">{monster.name}</h3>
@@ -271,15 +310,15 @@ function MonsterCard({
                 </div>
 
                 <div className="mt-2 grid grid-cols-3 gap-1 text-[9px] sm:mt-3 sm:gap-1.5 sm:text-[10px]">
-                    <div className={`min-w-0 rounded-md border px-1 py-1.5 sm:px-2 ${sortBy === "damage" ? "border-[#34d5ff]/70 bg-[#102631]" : "border-[#293443] bg-[#0e151f]"}`}>
+                    <div className={`min-w-0 rounded-md border px-1 py-1.5 sm:px-2 ${sortBy === "damage" ? "border-[#34d5ff]/70 bg-[#102631]" : "border-[#293443]/90 bg-[#0d141e]/80"}`}>
                         <span className={`block text-[8px] font-bold uppercase tracking-[0.06em] ${sortBy === "damage" ? "text-[#57dcff]" : "text-[#6f7c90]"}`}>DMG</span>
                         <span className={`mt-0.5 block truncate font-bold ${sortBy === "damage" ? "text-[#b8f3ff]" : "text-[#dbe2ee]"}`}>{compactNumber(comparisonStats.damage)}</span>
                     </div>
-                    <div className={`min-w-0 rounded-md border px-1 py-1.5 sm:px-2 ${sortBy === "health" ? "border-[#34d5ff]/70 bg-[#102631]" : "border-[#293443] bg-[#0e151f]"}`}>
+                    <div className={`min-w-0 rounded-md border px-1 py-1.5 sm:px-2 ${sortBy === "health" ? "border-[#34d5ff]/70 bg-[#102631]" : "border-[#293443]/90 bg-[#0d141e]/80"}`}>
                         <span className={`block text-[8px] font-bold uppercase tracking-[0.06em] ${sortBy === "health" ? "text-[#57dcff]" : "text-[#6f7c90]"}`}>HP</span>
                         <span className={`mt-0.5 block truncate font-bold ${sortBy === "health" ? "text-[#b8f3ff]" : "text-[#dbe2ee]"}`}>{compactNumber(comparisonStats.health)}</span>
                     </div>
-                    <div className={`min-w-0 rounded-md border px-1 py-1.5 sm:px-2 ${sortBy === "dps" ? "border-[#34d5ff]/70 bg-[#102631]" : "border-[#293443] bg-[#0e151f]"}`}>
+                    <div className={`min-w-0 rounded-md border px-1 py-1.5 sm:px-2 ${sortBy === "dps" ? "border-[#34d5ff]/70 bg-[#102631]" : "border-[#293443]/90 bg-[#0d141e]/80"}`}>
                         <span className={`block text-[8px] font-bold uppercase tracking-[0.06em] ${sortBy === "dps" ? "text-[#57dcff]" : "text-[#7182ff]"}`}>DPS</span>
                         <span className={`mt-0.5 block truncate font-bold ${sortBy === "dps" ? "text-[#b8f3ff]" : "text-[#dbe2ee]"}`}>{compactNumber(comparisonStats.dps)}</span>
                     </div>
@@ -291,6 +330,8 @@ function MonsterCard({
                             src={assetPath(passiveImage)}
                             alt={getPassiveUiName(passive)}
                             title={getPassiveUiName(passive)}
+                            loading="lazy"
+                            decoding="async"
                             className="size-6 rounded-md border border-[#344050] bg-[#0d131d] object-contain p-0.5 sm:size-7"
                         />
                     ) : null}
@@ -301,13 +342,15 @@ function MonsterCard({
                                 src={assetPath(getDatabaseSkillIconPath(skill.id))}
                                 alt={getSkillDisplayName(skill.name)}
                                 title={getSkillDisplayName(skill.name)}
+                                loading="lazy"
+                                decoding="async"
                                 className="size-6 rounded-md border border-[#344050] bg-[#0d131d] object-cover sm:size-7"
                             />
                         ) : null,
                     )}
                 </div>
 
-                <p className="mt-3 hidden truncate border-t border-[#293443] pt-2 text-[10px] font-medium text-[#7f8b9e] sm:block">
+                <p className="mt-3 hidden truncate border-t border-[#293443]/80 pt-2 text-[10px] font-medium text-[#8390a3] sm:block">
                     {sourceLabel(monster)}
                 </p>
             </div>
@@ -836,6 +879,8 @@ export function MonsterDatabase() {
     const [sortBy, setSortBy] = useState<SortKey>("index");
     const [selectedId, setSelectedId] = useState("");
     const [filtersOpen, setFiltersOpen] = useState(false);
+    const [visibleMonsterCount, setVisibleMonsterCount] = useState(30);
+    const loadMoreRef = useRef<HTMLDivElement>(null);
     const drawerRef = useRef<HTMLDivElement>(null);
     const inspectorRef = useRef<HTMLDivElement>(null);
     const inspectorShellRef = useRef<HTMLElement>(null);
@@ -976,6 +1021,27 @@ export function MonsterDatabase() {
                 }
             });
     }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, skillEffectFilter, evolutionFilter, sortBy, evolutionPercent, passiveCompareMode]);
+
+    useEffect(() => {
+        setVisibleMonsterCount(30);
+    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, skillEffectFilter, evolutionFilter, sortBy, evolutionPercent, passiveCompareMode]);
+
+    useEffect(() => {
+        const target = loadMoreRef.current;
+        if (!target || visibleMonsterCount >= filteredMonsters.length) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries.some((entry) => entry.isIntersecting)) {
+                    setVisibleMonsterCount((count) => Math.min(count + 30, filteredMonsters.length));
+                }
+            },
+            { rootMargin: "700px 0px" },
+        );
+
+        observer.observe(target);
+        return () => observer.disconnect();
+    }, [filteredMonsters.length, visibleMonsterCount]);
 
     const selectedMonster = selectedId
         ? GENERATED_MONSTERS.find((monster) => monster.id === selectedId) ?? null
@@ -1240,7 +1306,7 @@ export function MonsterDatabase() {
                     <section className="min-w-0">
                         {filteredMonsters.length ? (
                             <div className={`grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 ${selectedMonster ? "2xl:grid-cols-4" : "xl:grid-cols-4 2xl:grid-cols-5"}`}>
-                                {filteredMonsters.map((monster) => (
+                                {filteredMonsters.slice(0, visibleMonsterCount).map((monster, index) => (
                                     <MonsterCard
                                         key={monster.id}
                                         monster={monster}
@@ -1252,8 +1318,14 @@ export function MonsterDatabase() {
                                         evolutionPercent={evolutionPercent}
                                         passiveCompareMode={passiveCompareMode}
                                         sortBy={sortBy}
+                                        eagerImage={index < 8}
                                     />
                                 ))}
+                                {visibleMonsterCount < filteredMonsters.length && (
+                                    <div ref={loadMoreRef} className="col-span-full py-5 text-center text-xs text-[#69768a]">
+                                        Loading more monsters…
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <div className="grid min-h-64 place-items-center rounded-xl border border-dashed border-[#344050] bg-[#111925] p-8 text-center">

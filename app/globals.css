@@ -115,3 +115,27 @@ textarea {
     max-width: none;
   }
 }
+
+/* Defer paint/layout work for large off-screen card collections. */
+.cam-defer-card {
+  content-visibility: auto;
+  contain-intrinsic-size: 360px;
+}
+
+@keyframes cam-loading-slide {
+  0% { transform: translateX(-115%); }
+  50% { transform: translateX(95%); }
+  100% { transform: translateX(210%); }
+}
+
+.cam-loading-bar {
+  animation: cam-loading-slide 1.15s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cam-loading-bar {
+    animation: none;
+    width: 100%;
+    opacity: 0.7;
+  }
+}
