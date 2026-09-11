@@ -1066,10 +1066,13 @@ function SkillDamagePanel({
     const effectiveMonsterVulnerability = monsterVulnerability * (1 + getTraitEffectValue(build.traitId, "vulnerabilityEffectiveness") / 100);
     const vulnerabilityMultiplier = build.vulnerabilityActive ? 1 + effectiveActiveVulnerability / 100 : 1;
     const notes = skill.notes?.toLowerCase() ?? "";
+    const dragonRemainsLifeSiphonActive =
+        build.weaponId === "dragon-remains-staff" && isDamagingSkill;
     const skillHasHealing =
         (skill.statusEffects ?? []).some((effect) => effect.type === "healing") ||
         getDamageHealingPercent(skill.notes) !== null ||
-        getHealthHealingPercent(skill.notes) !== null;
+        getHealthHealingPercent(skill.notes) !== null ||
+        dragonRemainsLifeSiphonActive;
     const skillHasCooldown = skill.cooldown !== null && skill.cooldown > 0;
     const appliesAttackReduction =
         (skill.statusEffects ?? []).some((effect) => effect.type === "damageDecrease") ||
@@ -1223,6 +1226,20 @@ function SkillDamagePanel({
     const lifeStealHps =
         effectiveLifeSteal > 0 && displayedCooldown !== null && displayedCooldown > 0
             ? lifeStealAmount / displayedCooldown
+            : null;
+    const damageIncreaseLifeStealHps =
+        damageIncreaseCombatDamage !== null &&
+        effectiveLifeSteal > 0 &&
+        displayedCooldown !== null &&
+        displayedCooldown > 0
+            ? (damageIncreaseCombatDamage.normalDamage * (effectiveLifeSteal / 100)) / displayedCooldown
+            : null;
+    const vulnerabilityLifeStealHps =
+        vulnerabilityCombatDamage !== null &&
+        effectiveLifeSteal > 0 &&
+        displayedCooldown !== null &&
+        displayedCooldown > 0
+            ? (vulnerabilityCombatDamage.normalDamage * (effectiveLifeSteal / 100)) / displayedCooldown
             : null;
     const critChance =
         Math.min(
@@ -1570,6 +1587,22 @@ function SkillDamagePanel({
                                             {formatStatNumber(damageIncreaseDps)}
                                             <span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
                                         </p>
+                                        {damageIncreaseLifeStealHps !== null && (
+                                            <div className="mt-2 border-t border-[#39415a] pt-2">
+                                                <div className="flex items-center gap-1.5 text-[#6ee7a8]">
+                                                    <img src={assetPath("/icons/life-steal.png")} alt="" className="size-4 shrink-0 object-contain" />
+                                                    <span className="text-[11px] font-bold uppercase tracking-[0.08em]">HPS</span>
+                                                    <InfoTooltip
+                                                        label="Explain increased Life Steal HPS"
+                                                        text={`Healing per second from Life Steal using the +${formatNumber(monsterDamageIncrease)}% Damage Increase result and this skill's adjusted cooldown.`}
+                                                    />
+                                                </div>
+                                                <p className="mt-1 text-base font-bold text-[#82f0b7]" title={`${formatStatNumber(damageIncreaseLifeStealHps)} HPS`}>
+                                                    {formatStatNumber(damageIncreaseLifeStealHps)}
+                                                    <span className="ml-1 text-xs font-semibold text-[#9bdcb9]">/s</span>
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </>
@@ -1617,6 +1650,22 @@ function SkillDamagePanel({
                                         <p className="mt-1.5 min-w-0 whitespace-nowrap text-[clamp(1rem,2vw,1.25rem)] font-bold tracking-tight text-[#f6f8fc]" title={`${formatStatNumber(vulnerabilityDps)} DPS`}>
                                             {formatStatNumber(vulnerabilityDps)}<span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
                                         </p>
+                                        {vulnerabilityLifeStealHps !== null && (
+                                            <div className="mt-2 border-t border-[#39415a] pt-2">
+                                                <div className="flex items-center gap-1.5 text-[#6ee7a8]">
+                                                    <img src={assetPath("/icons/life-steal.png")} alt="" className="size-4 shrink-0 object-contain" />
+                                                    <span className="text-[11px] font-bold uppercase tracking-[0.08em]">HPS</span>
+                                                    <InfoTooltip
+                                                        label="Explain vulnerable Life Steal HPS"
+                                                        text={`Healing per second from Life Steal using the +${formatNumber(effectiveMonsterVulnerability)}% Vulnerability damage result and this skill's adjusted cooldown.`}
+                                                    />
+                                                </div>
+                                                <p className="mt-1 text-base font-bold text-[#82f0b7]" title={`${formatStatNumber(vulnerabilityLifeStealHps)} HPS`}>
+                                                    {formatStatNumber(vulnerabilityLifeStealHps)}
+                                                    <span className="ml-1 text-xs font-semibold text-[#9bdcb9]">/s</span>
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </>

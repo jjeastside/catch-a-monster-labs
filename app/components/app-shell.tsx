@@ -21,7 +21,7 @@ const SAVED_BUILDS_KEY = "cam-lab-saved-builds";
 const LEGACY_SAVED_BUILD_KEY = "cam-lab-saved-build";
 const ACTIVE_BUILD_KEY = "cam-lab-active-build";
 const LEGACY_SELECTED_MONSTER_KEY = "cam-lab-selected-monster";
-const SAVE_SLOT_COUNT = 3;
+const SAVE_SLOT_COUNT = 20;
 
 function emptySaveSlots(): Array<SavedBuildSlot | null> {
     return Array.from({ length: SAVE_SLOT_COUNT }, () => null);
@@ -394,9 +394,14 @@ export function AppShell() {
                             if (!candidateBuild?.monsterId) return;
                             if (!monsters.some(({ id }) => id === candidateBuild.monsterId)) return;
 
+                            const monster = monsters.find(({ id }) => id === candidateBuild.monsterId);
                             slots[index] = {
-                                version: 1,
+                                version: 2,
                                 savedAt: typeof candidate.savedAt === "number" ? candidate.savedAt : Date.now(),
+                                name: typeof candidate.name === "string" && candidate.name.trim()
+                                    ? candidate.name.trim().slice(0, 40)
+                                    : `${monster?.name ?? "Monster"} Build`,
+                                favorite: candidate.favorite === true,
                                 build: normalizeSavedBuild(candidateBuild),
                             };
                         });
@@ -413,8 +418,10 @@ export function AppShell() {
                 if (!legacyBuild.monsterId || !monsters.some(({ id }) => id === legacyBuild.monsterId)) return;
 
                 const migrated: SavedBuildSlot = {
-                    version: 1,
+                    version: 2,
                     savedAt: Date.now(),
+                    name: `${monsters.find(({ id }) => id === legacyBuild.monsterId)?.name ?? "Monster"} Build`,
+                    favorite: false,
                     build: normalizeSavedBuild(legacyBuild),
                 };
                 const slots = emptySaveSlots();
@@ -520,13 +527,16 @@ export function AppShell() {
         }
     }
 
-    function saveBuildToSlot(slotIndex: number): boolean {
+    function saveBuildToSlot(slotIndex: number, name?: string): boolean {
         if (!selectedMonster || slotIndex < 0 || slotIndex >= SAVE_SLOT_COUNT) return false;
 
+        const existing = savedBuildSlots[slotIndex];
         const nextSlots = [...savedBuildSlots];
         nextSlots[slotIndex] = {
-            version: 1,
+            version: 2,
             savedAt: Date.now(),
+            name: (name?.trim() || existing?.name || `${selectedMonster.name} Build`).slice(0, 40),
+            favorite: existing?.favorite === true,
             build: {
                 ...build,
                 accountMultipliers: { completedAchievementIds: [] },
@@ -575,6 +585,60 @@ export function AppShell() {
         const nextSlots = [...savedBuildSlots];
         nextSlots[slotIndex] = null;
         persistSavedBuildSlots(nextSlots);
+    }
+
+    function renameBuildSlot(slotIndex: number, name: string): boolean {
+        const slot = savedBuildSlots[slotIndex];
+        const trimmed = name.trim();
+        if (!slot || !trimmed || slotIndex < 0 || slotIndex >= SAVE_SLOT_COUNT) return false;
+
+        const nextSlots = [...savedBuildSlots];
+        nextSlots[slotIndex] = { ...slot, name: trimmed.slice(0, 40) };
+        return persistSavedBuildSlots(nextSlots);
+    }
+
+    function toggleBuildFavorite(slotIndex: number): boolean {
+        const slot = savedBuildSlots[slotIndex];
+        if (!slot || slotIndex < 0 || slotIndex >= SAVE_SLOT_COUNT) return false;
+
+        const nextSlots = [...savedBuildSlots];
+        nextSlots[slotIndex] = { ...slot, favorite: !slot.favorite };
+        return persistSavedBuildSlots(nextSlots);
+    }
+
+    function compareSavedBuilds(slotIndices: number[]): boolean {
+        const selected = slotIndices
+            .map((index) => savedBuildSlots[index])
+            .filter((slot): slot is SavedBuildSlot => Boolean(slot?.build.monsterId))
+            .slice(0, 4);
+
+        if (selected.length < 2) return false;
+
+        try {
+            const ids = selected.map((slot) => slot.build.monsterId as string);
+            const sharedBuild = {
+                ...createDefaultBuild(),
+                ...selected[0].build,
+                monsterId: null,
+                accountMultipliers: build.accountMultipliers,
+            };
+            const customBuilds = selected.map((slot) => ({
+                ...slot.build,
+                monsterId: null,
+                accountMultipliers: build.accountMultipliers,
+            }));
+
+            window.localStorage.setItem("cam-lab-monster-compare-v1", JSON.stringify({
+                ids,
+                mode: "custom",
+                build: sharedBuild,
+                customBuilds,
+            }));
+            window.location.assign(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/compare/`);
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     async function shareBuild() {
@@ -757,6 +821,9 @@ export function AppShell() {
                     onSaveSlotAction={saveBuildToSlot}
                     onLoadSlotAction={loadBuildFromSlot}
                     onClearSlotAction={clearBuildSlot}
+                    onRenameSlotAction={renameBuildSlot}
+                    onToggleFavoriteAction={toggleBuildFavorite}
+                    onCompareBuildsAction={compareSavedBuilds}
                 />
             )}
         </div>
