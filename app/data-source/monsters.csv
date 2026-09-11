@@ -267,52 +267,56 @@ Scarevine,Mythical,Grass,3114000,75000000,0,Scareaper,Standard,Leaf Blade,Grass 
 Scarewraith,Mythical,Ice,4672480,49998500,0,Scareaper,Standard,Ice Road,Wind Blast,,,Evolution | Scareaper Evolution |  | Current |  | Evolves from Scareaper.,197
 VivisDrake,Mythical,Grass,6528000,69855000,0,AbyssalDrake,Standard,Leaf Surge,Root Spike,,,Evolution | AbyssalDrake Evolution |  | Current |  | Evolves from AbyssalDrake.,198
 TerralDrake,Mythical,Ground,5440000,83826000,0,AbyssalDrake,Standard,Gravel Whirlwind,Ex Rock Toss,,,Evolution | AbyssalDrake Evolution |  | Current |  | Evolves from AbyssalDrake.,199
-Flaragblaze,Secret,Fire,25600,190500,15,Flaragon,Standard,Inferno Maelstrom,Ex Fireball,Claw Attack,,Evolution | Flaragon Evolution |  | Current |  | Evolves from Flaragon.,200
-GlazadonFroz,Secret,Ice,21360,228630,15,Glazadon,Standard,Frost Breath,Ice Surge,Ice Road,,Evolution | Glazadon Evolution |  | Current |  | Evolves from Glazadon.,201
-Fire Dragon Cannelloni,Secret,Fire,18450,100740,0,Dragon Cannelloni,Standard,Dragon's Breath,Fireball,,,Evolution | Dragon Cannelloni Evolution |  | Current |  | Evolves from Dragon Cannelloni.,202
-Necro Dragon Cannelloni,Secret,Fire,28826,157390,15,Dragon Cannelloni,Standard,Dragon's Breath (Ghost),Fireball (Ghost),,,Evolution | Dragon Cannelloni Evolution |  | Current |  | Evolves from Dragon Cannelloni.,203
-Titanusk,Secret,Grass,46610,498820,15,Mountusk,Standard,Holy Aura (Titan Tusk),Grass Tornado,Leaf Surge,,Evolution | Mountusk Evolution |  | Current |  | Evolves from Mountusk.,204
-Eclipse Knight,Secret,Common,142140,1520000,15,ShadeKnight,Standard,Bloodthirsty Aura,Reaper's Crescents,Void Orb,,Evolution | ShadeKnight Evolution |  | Current |  | Evolves from ShadeKnight.,205
-Lunavox,Secret,Common,85581,3662000,0,Noctane,Standard,Wind Disc (Purple),Lunar Taunt,Lunar Heal,,Evolution | Noctane Evolution |  | Current |  | Evolves from Noctane.,206
-Hydrolope,Secret,Water,309100,2300000,15,Hydribbit,Standard,Mighty Water Shuriken,Tsunami,,Rift Guard | 30,Evolution | Hydribbit Evolution |  | Current |  | Evolves from Hydribbit.,207
-Solron,Secret,Ground,239120,2558600,15,Gildron,Standard,Titan Slam,Ex Rock Toss,,Rift Dominance | 50,Evolution | Gildron Evolution |  | Current |  | Evolves from Gildron.,208
-Scythewing,Secret,Ground,298820,3200000,15,DustWing,Standard,GaleMoon Blade,Crimson Burst,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,209
-Celestide,Secret,Water,542600,2962000,15,TideVex,Standard,Healing Water Ball,Icicle Prison,,Rift Dominance | 50,Evolution | TideVex Evolution |  | Current |  | Evolves from TideVex.,210
-Doomgator,Secret,Common,629610,3437300,15,voltgator,Standard,Inferno Blast,Bloodthirsty Aura,,Trial Power | 50,Evolution | voltgator Evolution |  | Current |  | Evolves from voltgator.,211
+Viroopus,Mythical,Water,6312000,97259000,0,Beatopus,Standard,Root Spike,Healing Pulse,,,Evolution | Beatopus Evolution |  | Current |  | Evolves from Beatopus.,200
+Gelopus,Mythical,Water,7574000,81048000,0,Beatopus,Standard,Deadly Sonic Wave,Ripple Guard,,,Evolution | Beatopus Evolution |  | Current |  | Evolves from Beatopus.,201
+Flaragblaze,Secret,Fire,25600,190500,15,Flaragon,Standard,Inferno Maelstrom,Ex Fireball,Claw Attack,,Evolution | Flaragon Evolution |  | Current |  | Evolves from Flaragon.,202
+GlazadonFroz,Secret,Ice,21360,228630,15,Glazadon,Standard,Frost Breath,Ice Surge,Ice Road,,Evolution | Glazadon Evolution |  | Current |  | Evolves from Glazadon.,203
+Fire Dragon Cannelloni,Secret,Fire,18450,100740,0,Dragon Cannelloni,Standard,Dragon's Breath,Fireball,,,Evolution | Dragon Cannelloni Evolution |  | Current |  | Evolves from Dragon Cannelloni.,204
+Necro Dragon Cannelloni,Secret,Fire,28826,157390,15,Dragon Cannelloni,Standard,Dragon's Breath (Ghost),Fireball (Ghost),,,Evolution | Dragon Cannelloni Evolution |  | Current |  | Evolves from Dragon Cannelloni.,205
+Titanusk,Secret,Grass,46610,498820,15,Mountusk,Standard,Holy Aura (Titan Tusk),Grass Tornado,Leaf Surge,,Evolution | Mountusk Evolution |  | Current |  | Evolves from Mountusk.,206
+Eclipse Knight,Secret,Common,142140,1520000,15,ShadeKnight,Standard,Bloodthirsty Aura,Reaper's Crescents,Void Orb,,Evolution | ShadeKnight Evolution |  | Current |  | Evolves from ShadeKnight.,207
+Lunavox,Secret,Common,85581,3662000,0,Noctane,Standard,Wind Disc (Purple),Lunar Taunt,Lunar Heal,,Evolution | Noctane Evolution |  | Current |  | Evolves from Noctane.,208
+Hydrolope,Secret,Water,309100,2300000,15,Hydribbit,Standard,Mighty Water Shuriken,Tsunami,,Rift Guard | 30,Evolution | Hydribbit Evolution |  | Current |  | Evolves from Hydribbit.,209
+Solron,Secret,Ground,239120,2558600,15,Gildron,Standard,Titan Slam,Ex Rock Toss,,Rift Dominance | 50,Evolution | Gildron Evolution |  | Current |  | Evolves from Gildron.,210
+Scythewing,Secret,Ground,298820,3200000,15,DustWing,Standard,GaleMoon Blade,Crimson Burst,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,211
+Celestide,Secret,Water,542600,2962000,15,TideVex,Standard,Healing Water Ball,Icicle Prison,,Rift Dominance | 50,Evolution | TideVex Evolution |  | Current |  | Evolves from TideVex.,212
+Doomgator,Secret,Common,629610,3437300,15,voltgator,Standard,Inferno Blast,Bloodthirsty Aura,,Trial Power | 50,Evolution | voltgator Evolution |  | Current |  | Evolves from voltgator.,213
 Frostiel,Secret,Common,660500,28270000,20,,Standard,Void Collapse,Soul Reap Chain (Vulnerability),,Spire Guard | 30,"Egg | Frostiel's Egg | Cinderclaw Castle | Current |  | Normal and Hard Difficulty
-Chest | Mythical Chest | Limited Events | Current",212
+Chest | Mythical Chest | Limited Events | Current",214
 Steamforge,Secret,Fire,1920000,20500000,10,,Standard,Blaze Blast,Ex Fireball,,Boss Resistance | 25,"Egg | Steamforge's Egg | Cinderclaw Castle | Current |  | Nightmare Difficulty
-Chest | Mythical Chest | Limited Events | Current",213
-Mentawolf,Secret,Grass,403610,9716800,15,Mintwolf,Standard,Leaf Blade,Root Spike,,Dungeon Guard | 30,Evolution | Mintwolf Evolution |  | Current |  | Evolves from Mintwolf.,214
-Avalanchewyrm,Secret,Ice,1256000,5251400,15,Frostwyrm,Standard,Ex Ice Surge,Icicle Prison,,Boss Slayer | 40,Evolution | Frostwyrm Evolution |  | Current |  | Evolves from Frostwyrm.,215
-Poseidine,Secret,Water,1418000,10537000,15,Undine,Standard,Hydro Cannon,Healing Water Ball,,Rift Dominance | 50,Evolution | Undine Evolution |  | Current |  | Evolves from Undine.,216
-Armored Dracospike,Secret,Ground,1060000,32700000,15,Dracospike,Standard,Emergency Thorn Shield,Ion Blast,,Rift Guard | 30,Evolution | Dracospike Evolution |  | Current |  | Evolves from Dracospike.,217
+Chest | Mythical Chest | Limited Events | Current",215
+Mentawolf,Secret,Grass,403610,9716800,15,Mintwolf,Standard,Leaf Blade,Root Spike,,Dungeon Guard | 30,Evolution | Mintwolf Evolution |  | Current |  | Evolves from Mintwolf.,216
+Avalanchewyrm,Secret,Ice,1256000,5251400,15,Frostwyrm,Standard,Ex Ice Surge,Icicle Prison,,Boss Slayer | 40,Evolution | Frostwyrm Evolution |  | Current |  | Evolves from Frostwyrm.,217
+Poseidine,Secret,Water,1418000,10537000,15,Undine,Standard,Hydro Cannon,Healing Water Ball,,Rift Dominance | 50,Evolution | Undine Evolution |  | Current |  | Evolves from Undine.,218
+Armored Dracospike,Secret,Ground,1060000,32700000,15,Dracospike,Standard,Emergency Thorn Shield,Ion Blast,,Rift Guard | 30,Evolution | Dracospike Evolution |  | Current |  | Evolves from Dracospike.,219
 Soulguard,Secret,Fire,5040000,27531000,15,,Standard,Soul Slash,Ghost Fireball,,Spire Dominance | 50,"Egg | Soulguard's Egg | Cinderclaw Castle | Current |  | Nightmare Difficulty
-Chest | Mythical Chest | Limited Events | Current",218
-Motovok,Secret,Common,3827000,16010000,15,Mechavolt,Standard,Overvolt Tempest,Electro Nova,,Critical Chance | 30,Evolution | Mechavolt Evolution |  | Current |  | Evolves from Mechavolt.,219
-Crystalwing,Secret,Ice,859500,82776000,10,Cobaltwing,Standard,Glacial Wall,Healing Water Ball,,Dungeon Guard | 35,Evolution | Cobaltwing Evolution |  | Current |  | Evolves from Cobaltwing.,220
-Divineclaw,Secret,Ground,5351300,22367000,15,Thunderclaw,Standard,Divine Energy Blast,Rock Road,,Sacred Beetle | 35,Evolution | Thunderclaw Evolution |  | Current |  | Evolves from Thunderclaw.,221
-Djinn Lampyr,Secret,Common,5016000,37271000,15,Lampyr,Standard,Holy Aura (Djinn Lampyr),Thunder Stun,,Last Blessing | 80,Evolution | Lampyr Evolution |  | Current |  | Evolves from Lampyr.,222
+Chest | Mythical Chest | Limited Events | Current",220
+Motovok,Secret,Common,3827000,16010000,15,Mechavolt,Standard,Overvolt Tempest,Electro Nova,,Critical Chance | 30,Evolution | Mechavolt Evolution |  | Current |  | Evolves from Mechavolt.,221
+Crystalwing,Secret,Ice,859500,82776000,10,Cobaltwing,Standard,Glacial Wall,Healing Water Ball,,Dungeon Guard | 35,Evolution | Cobaltwing Evolution |  | Current |  | Evolves from Cobaltwing.,222
+Divineclaw,Secret,Ground,5351300,22367000,15,Thunderclaw,Standard,Divine Energy Blast,Rock Road,,Sacred Beetle | 35,Evolution | Thunderclaw Evolution |  | Current |  | Evolves from Thunderclaw.,223
+Djinn Lampyr,Secret,Common,5016000,37271000,15,Lampyr,Standard,Holy Aura (Djinn Lampyr),Thunder Stun,,Last Blessing | 80,Evolution | Lampyr Evolution |  | Current |  | Evolves from Lampyr.,224
 Necro Hydra Tortelloni,Secret,Fire,10064800,42066000,15,Necro Dragon Cannelloni,Standard,Dragon's Rage,,,"Dragon's Curse | 15
-Trial Power | 50",Evolution | Necro Dragon Cannelloni Evolution |  | Current |  | Evolves from Necro Dragon Cannelloni.,223
-Psyberion X,Secret,Common,1677800,161568500,10,Psyber,Standard,Violet Core Burst (Psyberion X),Lightning Thrust (Psyberion X),,Spire Guard | 35,Evolution | Psyber Evolution |  | Current |  | Evolves from Psyber.,224
-Celestian,Secret,Ground,13225000,141510000,15,,Standard,Soul Slash,Holy Aura (Frostvolf),,Critical Damage | 60,Egg | Celestian's Egg | Cinderclaw Castle | Current |  | Cataclysm Difficulty,225
-Scareharvest,Secret,Common,9139800,49896000,0,Scareaper,Standard,Reaper's Crescents (Scareharvest),Soul Reap Chain (Scareharvest),,Critical Chance | 30,Evolution | Scareaper Evolution |  | Current |  | Evolves from Scareaper.,226
-OblivionDrake,Secret,Fire,10604000,57892000,0,AbyssalDrake,Standard,Fire Dash,Earthshatter,,Spire Dominance | 50,Evolution | AbyssalDrake Evolution |  | Current |  | Evolves from AbyssalDrake.,227
+Trial Power | 50",Evolution | Necro Dragon Cannelloni Evolution |  | Current |  | Evolves from Necro Dragon Cannelloni.,225
+Psyberion X,Secret,Common,1677800,161568500,10,Psyber,Standard,Violet Core Burst (Psyberion X),Lightning Thrust (Psyberion X),,Spire Guard | 35,Evolution | Psyber Evolution |  | Current |  | Evolves from Psyber.,226
+Celestian,Secret,Ground,13225000,141510000,15,,Standard,Soul Slash,Holy Aura (Frostvolf),,Critical Damage | 60,Egg | Celestian's Egg | Cinderclaw Castle | Current |  | Cataclysm Difficulty,227
+Scareharvest,Secret,Common,9139800,49896000,0,Scareaper,Standard,Reaper's Crescents (Scareharvest),Soul Reap Chain (Scareharvest),,Critical Chance | 30,Evolution | Scareaper Evolution |  | Current |  | Evolves from Scareaper.,228
+OblivionDrake,Secret,Fire,10604000,57892000,0,AbyssalDrake,Standard,Fire Dash,Earthshatter,,Spire Dominance | 50,Evolution | AbyssalDrake Evolution |  | Current |  | Evolves from AbyssalDrake.,229
+Veloros,Secret,Dark,23883000,177470000,15,,Standard,Crimson Burst,Soul Reap Chain (Scareharvest),,Critical Chance | 30,Egg | Veloro's Egg | Cinderclaw Castle | Current |  | Cataclysm Difficulty,230
+Corsairopus,Secret,Water,4912000,210240000,0,Beatopus,Standard,Tsunami,Hydro Cannon,,Critical Damage | 60,Evolution | Beatopus Evolution |  | Current |  | Evolves from Beatopus.,231
 Void Noctane,Void,Common,2227000,12158000,0,,Standard,Air Bullet,Wind Disc,,Fortune Spirit | 35,"Event | Void Jars | Void Event 2025 | Legacy
-Chest | Memory Chest 2 | Abyss Shop | Current",228
-Void Dustwing,Void,Ground,1778100,19029000,0,,Standard,Barrier,Gravel Scatter Shot,,Mentor Spirit | 35,"Event | Void Jars | Void Event 2025 | Legacy
-Chest | Memory Chest 2 | Abyss Shop | Current",229
-Void Lunavox,Void,Common,687740,66232000,0,,Standard,Barrier,Lunar Taunt,Lunar Heal,,"Event | Void Jars | Void Event 2025 | Legacy
-Chest | Memory Chest 2 | Abyss Shop | Current",230
-Void Iceplate,Void,Ice,1482000,35672000,0,,Standard,Ice Road,Ex Iceball,,Capturer's Boon | 25,"Event | Void Jars | Void Event 2025 | Legacy
-Chest | Memory Chest 2 | Abyss Shop | Current",231
-Void Scythewing,Void,Ground,2484000,26585000,0,,Standard,GaleMoon Blade,Crimson Burst,Barrier,,"Event | Void Jars | Void Event 2025 | Legacy
 Chest | Memory Chest 2 | Abyss Shop | Current",232
-Void Shadecloak,Void,Common,1057070,11311000,0,,Standard,Barrier,Soul Reap Chain,,,Egg | Void Purple Egg | Blossom Haven | Current,233
+Void Dustwing,Void,Ground,1778100,19029000,0,,Standard,Barrier,Gravel Scatter Shot,,Mentor Spirit | 35,"Event | Void Jars | Void Event 2025 | Legacy
+Chest | Memory Chest 2 | Abyss Shop | Current",233
+Void Lunavox,Void,Common,687740,66232000,0,,Standard,Barrier,Lunar Taunt,Lunar Heal,,"Event | Void Jars | Void Event 2025 | Legacy
+Chest | Memory Chest 2 | Abyss Shop | Current",234
+Void Iceplate,Void,Ice,1482000,35672000,0,,Standard,Ice Road,Ex Iceball,,Capturer's Boon | 25,"Event | Void Jars | Void Event 2025 | Legacy
+Chest | Memory Chest 2 | Abyss Shop | Current",235
+Void Scythewing,Void,Ground,2484000,26585000,0,,Standard,GaleMoon Blade,Crimson Burst,Barrier,,"Event | Void Jars | Void Event 2025 | Legacy
+Chest | Memory Chest 2 | Abyss Shop | Current",236
+Void Shadecloak,Void,Common,1057070,11311000,0,,Standard,Barrier,Soul Reap Chain,,,Egg | Void Purple Egg | Blossom Haven | Current,237
 Void Strum Bones,Void,Common,2090000,89450000,10,,Standard,Demonic Lullaby,Healing Pulse,,"Mentor Spirit | 35
-Fortune Spirit | 35",Island Special Spawn | Special Spawn | Specter Shallows | Current,234
-Void Nightveil,Void,Common,3350000,18300000,15,Void Shadecloak,Standard,The Ring,Soul Reap Chain,,Trial Power | 60,Evolution | Void Shadecloak Evolution |  | Current |  | Evolves from Void Shadecloak.,235
+Fortune Spirit | 35",Island Special Spawn | Special Spawn | Specter Shallows | Current,238
+Void Nightveil,Void,Common,3350000,18300000,15,Void Shadecloak,Standard,The Ring,Soul Reap Chain,,Trial Power | 60,Evolution | Void Shadecloak Evolution |  | Current |  | Evolves from Void Shadecloak.,239
 Void Scareaper,Void,Common,1741000,167690000,0,,Standard,Fear Taunt,Reaper's Crescents,,Capturer's Boon | 25,"Egg | Scareaper's Egg | Specter Shallows | Current
-Chest | Memory Chest 1 | Abyss Shop | Current",236
-Icearia,Mythical,Ice,840000,13500000,20,,Standard,Icicle Prison,Frosty Dart,,,Contest | Art Contest |  | Unavailable,237
+Chest | Memory Chest 1 | Abyss Shop | Current",240
+Icearia,Mythical,Ice,840000,13500000,20,,Standard,Icicle Prison,Frosty Dart,,,Contest | Art Contest |  | Unavailable,241
