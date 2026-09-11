@@ -23,9 +23,48 @@ type Patch = {
 
 const patches: Patch[] = [
     {
+        version: "Update 0.48.1",
+        date: "September 11, 2026",
+        label: "Latest",
+        sections: [
+            {
+                title: "Hotfix & Codes",
+                changes: [
+                    "Fixed some bugs.",
+                    "New Code: pxpvef",
+                    "Old Code: veloros",
+                ],
+            },
+        ],
+    },
+    {
+        version: "Update 0.48",
+        date: "September 11, 2026",
+        sections: [
+            {
+                title: "PvP",
+                changes: [
+                    "PvP Mode is now live — teleport to PvP Island via the map.",
+                ],
+            },
+            {
+                title: "Dungeon & Evolution",
+                changes: [
+                    "Added a new boss to Dungeon Cataclysm difficulties.",
+                    "Beatopus has unlocked a new evolution.",
+                ],
+            },
+            {
+                title: "Events",
+                changes: [
+                    "Super Event Boosts are active during Admin Abuse and scheduled Wednesday time slots.",
+                ],
+            },
+        ],
+    },
+    {
         version: "Update 0.47",
         date: "September 5, 2026",
-        label: "Latest",
         sections: [
             {
                 title: "Rift Event",

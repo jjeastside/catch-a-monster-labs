@@ -264,6 +264,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "rarity": "Rare",
     "sources": [
       {
+        "type": "Rift",
+        "name": "Strange Rift",
+        "location": "Spire Shop",
+        "status": "Current"
+      },
+      {
         "type": "Chest",
         "name": "Rift Chest",
         "location": "Abyss Shop",
@@ -588,8 +594,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "skillIds": [
-      "gift-delivery",
-      "candy-bomb"
+      "candy-bomb",
+      "gift-delivery"
     ],
     "passives": [],
     "hasEvolution": false,
@@ -710,6 +716,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "element": "Grass",
     "rarity": "Epic",
     "sources": [
+      {
+        "type": "Rift",
+        "name": "Strange Rift",
+        "location": "Spire Shop",
+        "status": "Current"
+      },
       {
         "type": "Chest",
         "name": "Rift Chest",
@@ -861,7 +873,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "skillIds": [
-      "wind-disc",
+      "wind-disc-purple",
       "fireball"
     ],
     "passives": [],
@@ -1199,7 +1211,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "skillIds": [
-      "soul-reap-chain"
+      "soul-reap-chain",
+      "inferno-blast"
     ],
     "passives": [],
     "hasEvolution": false,
@@ -1669,6 +1682,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "rarity": "Legendary",
     "sources": [
       {
+        "type": "Rift",
+        "name": "Strange Rift",
+        "location": "Spire Shop",
+        "status": "Current"
+      },
+      {
         "type": "Chest",
         "name": "Rift Chest",
         "location": "Abyss Shop",
@@ -1767,7 +1786,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "skillIds": [
-      "wind-disc",
+      "wind-disc-purple",
       "leaf-surge"
     ],
     "passives": [],
@@ -2852,6 +2871,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "rarity": "Mythical",
     "sources": [
       {
+        "type": "Rift",
+        "name": "Strange Rift",
+        "location": "Spire Shop",
+        "status": "Current"
+      },
+      {
         "type": "Chest",
         "name": "Rift Chest",
         "location": "Abyss Shop",
@@ -3214,7 +3239,20 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       "ex-fireball",
       "charming-wind"
     ],
-    "passives": [],
+    "passives": [
+      {
+        "id": "spireGuard",
+        "effects": [
+          {
+            "stat": "spireIncomingDamage",
+            "value": -30
+          }
+        ],
+        "values": [
+          30
+        ]
+      }
+    ],
     "hasEvolution": false,
     "baseDamageELevel1": 335240,
     "baseHealthELevel1": 5165500,
@@ -3271,7 +3309,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "psyber",
     "name": "Psyber",
     "image": "/monster-artwork/psyber.png",
-    "element": "Common",
+    "element": "Mechanical",
     "rarity": "Mythical",
     "sources": [
       {
@@ -3414,7 +3452,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "netherdemon",
     "name": "Netherdemon",
     "image": "/monster-artwork/netherdemon.png",
-    "element": "Common",
+    "element": "Dark",
     "rarity": "Mythical",
     "sources": [
       {
@@ -3737,7 +3775,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "aetherpanther",
     "name": "Aetherpanther",
     "image": "/monster-artwork/aetherpanther.png",
-    "element": "Common",
+    "element": "Dark",
     "rarity": "Mythical",
     "sources": [
       {
@@ -3926,7 +3964,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "umbra-reaver",
     "name": "Umbra Reaver",
     "image": "/monster-artwork/umbra-reaver.png",
-    "element": "Common",
+    "element": "Dark",
     "rarity": "Mythical",
     "sources": [
       {
@@ -3971,7 +4009,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "lumen-knight",
     "name": "Lumen Knight",
     "image": "/monster-artwork/lumen-knight.png",
-    "element": "Common",
+    "element": "Mechanical",
     "rarity": "Mythical",
     "sources": [
       {
@@ -4093,7 +4131,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "scareaper",
     "name": "Scareaper",
     "image": "/monster-artwork/scareaper.png",
-    "element": "Common",
+    "element": "Dark",
     "rarity": "Mythical",
     "sources": [
       {
@@ -4170,7 +4208,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "gravion",
     "name": "Gravion",
     "image": "/monster-artwork/gravion.png",
-    "element": "Common",
+    "element": "Dark",
     "rarity": "Mythical",
     "sources": [
       {
@@ -4382,7 +4420,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "stormhorn",
     "name": "Stormhorn",
     "image": "/monster-artwork/stormhorn.png",
-    "element": "Common",
+    "element": "Electric",
     "rarity": "Mythical",
     "sources": [
       {
@@ -4472,7 +4510,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "violetaegis",
     "name": "Violetaegis",
     "image": "/monster-artwork/violetaegis.png",
-    "element": "Common",
+    "element": "Light",
     "rarity": "Mythical",
     "sources": [
       {
@@ -4564,7 +4602,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "vorturion",
     "name": "Vorturion",
     "image": "/monster-artwork/vorturion.png",
-    "element": "Common",
+    "element": "Mechanical",
     "rarity": "Mythical",
     "sources": [
       {
@@ -4654,7 +4692,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "plaguecannon",
     "name": "Plaguecannon",
     "image": "/monster-artwork/plaguecannon.png",
-    "element": "Common",
+    "element": "Mechanical",
     "rarity": "Mythical",
     "sources": [
       {
@@ -4680,7 +4718,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "turretor",
     "name": "Turretor",
     "image": "/monster-artwork/turretor.png",
-    "element": "Common",
+    "element": "Mechanical",
     "rarity": "Mythical",
     "sources": [
       {
@@ -4706,7 +4744,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "stellawulf",
     "name": "Stellawulf",
     "image": "/monster-artwork/stellawulf.png",
-    "element": "Common",
+    "element": "Dark",
     "rarity": "Mythical",
     "sources": [
       {
@@ -4784,7 +4822,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "dragon-cannelloni",
     "name": "Dragon Cannelloni",
     "image": "/monster-artwork/dragon-cannelloni.png",
-    "element": "Fire",
+    "element": "Dragon",
     "rarity": "Mythical",
     "sources": [
       {
@@ -5743,7 +5781,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "nightveil",
     "name": "Nightveil",
     "image": "/monster-artwork/nightveil.png",
-    "element": "Common",
+    "element": "Dark",
     "rarity": "Mythical",
     "sources": [
       {
@@ -5896,7 +5934,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "hornrexie",
     "name": "Hornrexie",
     "image": "/monster-artwork/hornrexie.png",
-    "element": "Ground",
+    "element": "Dragon",
     "rarity": "Mythical",
     "sources": [
       {
@@ -6464,7 +6502,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "eclipse-knight",
     "name": "Eclipse Knight",
     "image": "/monster-artwork/eclipse-knight.png",
-    "element": "Common",
+    "element": "Dark",
     "rarity": "Secret",
     "sources": [
       {
@@ -6673,7 +6711,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "doomgator",
     "name": "Doomgator",
     "image": "/monster-artwork/doomgator.png",
-    "element": "Common",
+    "element": "Mechanical",
     "rarity": "Secret",
     "sources": [
       {
@@ -6714,7 +6752,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "frostiel",
     "name": "Frostiel",
     "image": "/monster-artwork/frostiel.png",
-    "element": "Common",
+    "element": "Light",
     "rarity": "Secret",
     "sources": [
       {
@@ -6929,7 +6967,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "armored-dracospike",
     "name": "Armored Dracospike",
     "image": "/monster-artwork/armored-dracospike.png",
-    "element": "Ground",
+    "element": "Dragon",
     "rarity": "Secret",
     "sources": [
       {
@@ -7016,7 +7054,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "motovok",
     "name": "Motovok",
     "image": "/monster-artwork/motovok.png",
-    "element": "Common",
+    "element": "Electric",
     "rarity": "Secret",
     "sources": [
       {
@@ -7098,7 +7136,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "divineclaw",
     "name": "Divineclaw",
     "image": "/monster-artwork/divineclaw.png",
-    "element": "Ground",
+    "element": "Light",
     "rarity": "Secret",
     "sources": [
       {
@@ -7143,7 +7181,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "djinn-lampyr",
     "name": "Djinn Lampyr",
     "image": "/monster-artwork/djinn-lampyr.png",
-    "element": "Common",
+    "element": "Electric",
     "rarity": "Secret",
     "sources": [
       {
@@ -7184,7 +7222,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "necro-hydra-tortelloni",
     "name": "Necro Hydra Tortelloni",
     "image": "/monster-artwork/necro-hydra-tortelloni.png",
-    "element": "Fire",
+    "element": "Dragon",
     "rarity": "Secret",
     "sources": [
       {
@@ -7231,7 +7269,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "psyberion-x",
     "name": "Psyberion X",
     "image": "/monster-artwork/psyberion-x.png",
-    "element": "Common",
+    "element": "Mechanical",
     "rarity": "Secret",
     "sources": [
       {
@@ -7272,7 +7310,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "celestian",
     "name": "Celestian",
     "image": "/monster-artwork/celestian.png",
-    "element": "Ground",
+    "element": "Light",
     "rarity": "Secret",
     "sources": [
       {
@@ -7312,7 +7350,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "scareharvest",
     "name": "Scareharvest",
     "image": "/monster-artwork/scareharvest.png",
-    "element": "Common",
+    "element": "Dark",
     "rarity": "Secret",
     "sources": [
       {
@@ -7753,7 +7791,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "void-nightveil",
     "name": "Void Nightveil",
     "image": "/monster-artwork/void-nightveil.png",
-    "element": "Common",
+    "element": "Dark",
     "rarity": "Void",
     "sources": [
       {
@@ -7794,7 +7832,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "id": "void-scareaper",
     "name": "Void Scareaper",
     "image": "/monster-artwork/void-scareaper.png",
-    "element": "Common",
+    "element": "Dark",
     "rarity": "Void",
     "sources": [
       {

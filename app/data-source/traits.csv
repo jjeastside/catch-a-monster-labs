@@ -19,4 +19,4 @@ gallop,gallop.png,mythical,Gallop,Mount Speed,5,(+5) Mount Speed,,
 grace,grace.png,mythical,Grace,Healing Recieved,30,(+30%) Healing amount increased ,,rainimp
 vitiate,vitiate.png,mythical,Vitiate,Attack Reduction Effectiveness,50,(+50%) Attack reduction effect,,
 fragility-vulnerable,vitiate.png,mythical,Fragility,Vulnerability Effectiveness,50,(+50%) Vulnerability Effect,,sylvaris
-fragility-status,vitiate.png,mythical,Fragility,Damage,50,(+50%) damage to enemies with Burn/Poison effects,Target is Poisoned/Burning,
+fragility-status,vitiate.png,mythical,Fragility,Damage,50,(+50%) damage to enemies with Burn/Poison effects,Target is Poisoned/Burning,celestian | veloros

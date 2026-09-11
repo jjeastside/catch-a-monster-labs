@@ -35,6 +35,11 @@ const elementIconPaths: Record<Monster["element"], string> = {
     Fire: "/element-icons/fire.png",
     Ice: "/element-icons/ice.png",
     Ground: "/element-icons/ground.png",
+    Mechanical: "/element-icons/mechanical.png",
+    Dragon: "/element-icons/dragon.png",
+    Light: "/element-icons/light.png",
+    Dark: "/element-icons/dark.png",
+    Electric: "/element-icons/electric.png",
 };
 
 export function getEvolutionChildren(monsterId: string): GeneratedMonster[] {

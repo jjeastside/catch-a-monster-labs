@@ -75,7 +75,7 @@ const rarityImageStyles: Record<Rarity, CSSProperties> = {
     },
 };
 
-const elements = ["All", "Common", "Water", "Fire", "Grass", "Ice", "Ground"] as const;
+const elements = ["All", "Common", "Water", "Fire", "Grass", "Ice", "Ground", "Mechanical", "Dragon", "Light", "Dark", "Electric"] as const;
 const rarities = ["All", "Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythical", "Secret", "Void"] as const;
 type SortKey = "index" | "dps" | "damage" | "health";
 type ObtainabilityFilter = "all" | "obtainable" | "unobtainable";
@@ -102,7 +102,15 @@ function sourceLabel(monster: GeneratedMonster): string {
     const source = currentSource ?? monster.sources[0];
 
     if (!source) return "Unknown source";
-    if (source.location) return source.location;
+
+    // Island spawns are best identified by their island/location. Named
+    // sources such as Strange Rift, Rift Chest, shops, events, etc. should
+    // keep their actual source name instead of being replaced by the
+    // location where that source is found.
+    if (source.type === "Island Spawn") {
+        return source.location || source.name;
+    }
+
     return source.name;
 }
 
