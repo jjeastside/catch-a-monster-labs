@@ -7,9 +7,20 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.15",
+        date: "September 11, 2026",
+        label: "Latest",
+        changes: [
+            "Updated skill descriptions across Cam Lab for clearer and more accurate skill information, including improved GaleMoon Blade effect details and its 17.5% Team Shield for 6 seconds.",
+            "Added a dedicated Critical Chance effect filter to the Team Effects teammate picker while keeping Critical Chance effects available under the broader passive filtering behavior.",
+            "Optimized Save Build and Load Build with a cleaner 20-build library, automatic next-slot saving, favorites-only filtering, improved sorting, clearer overwrite controls, better empty and search states, and faster saved-monster lookups.",
+            "Improved quick saving by allowing Enter to save a named build into the next available slot and showing a clear full-library state when all 20 build slots are used.",
+            "Fixed the homepage social preview image on shared GitHub Pages links by using the full Cam Lab preview URL and matching Open Graph and Twitter image metadata.",
+        ],
+    },
+    {
         version: "v1.0.14",
         date: "September 10, 2026",
-        label: "Latest",
         changes: [
             "Improved Team Effects and build management with searchable and filterable teammate effects, clearer skill and passive labels, compact tooltips and icons, better narrow-screen layouts, and a new 20-build library with custom names, favorites, timestamps, overwrite/edit actions, and Compare integration.",
             "Polished monster presentation across Cam Lab by fixing rarity badge alignment, refining Monster Database rarity backgrounds, borders, selected states, and card cohesion, and improving skill-effect and teammate presentation throughout the calculator.",

@@ -21,7 +21,7 @@ export const GENERATED_SKILLS = {
     "id": "bale-breath",
     "name": "Bale Breath",
     "element": "Fire",
-    "description": "Sprays a stream of balefire forward, strengthening the caster and damaging enemies in front.",
+    "description": "Sprays a stream of balefire forward, increasing attack and damaging enemies in front.",
     "damageInstances": [
       {
         "multiplier": 0.4,
@@ -44,7 +44,7 @@ export const GENERATED_SKILLS = {
     "id": "barrier",
     "name": "Barrier",
     "element": "Common",
-    "description": "Forms a protective shield around all pets. This shield does not stack.",
+    "description": "Forms a protective shield around all pets.(No stack)",
     "damageInstances": [],
     "cooldown": 6,
     "statusEffects": [
@@ -87,7 +87,7 @@ export const GENERATED_SKILLS = {
     "id": "bloodthirsty-aura",
     "name": "Bloodthirsty Aura",
     "element": "Common",
-    "description": "Releases a bloodthirsty aura that shields and strengthens all pets. These effects do not stack.",
+    "description": "Releases a bloodthirsty aura that shields and strengthens all pets. (No stack)",
     "damageInstances": [],
     "cooldown": 8,
     "statusEffects": [
@@ -112,7 +112,7 @@ export const GENERATED_SKILLS = {
     "id": "candy-bomb",
     "name": "Candy Bomb",
     "element": "Common",
-    "description": "Throws a candy projectile at the enemy.",
+    "description": "Throws a candy at the enemy.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -149,7 +149,7 @@ export const GENERATED_SKILLS = {
     "id": "claw-attack",
     "name": "Claw Attack",
     "element": "Common",
-    "description": "Strikes the enemy with a close-range claw attack.",
+    "description": "Delivers two forward claw strikes.",
     "damageInstances": [
       {
         "multiplier": 0.6,
@@ -186,7 +186,7 @@ export const GENERATED_SKILLS = {
     "id": "dark-singularity",
     "name": "Dark Singularity",
     "element": "Common",
-    "description": "Creates a dark singularity that damages nearby enemies and briefly reduces their Attack.",
+    "description": "Creates a dark singularity that damages nearby enemies and reduces their Attack (15-25%) for a short duration.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -210,7 +210,7 @@ export const GENERATED_SKILLS = {
     "id": "dash",
     "name": "Dash",
     "element": "Common",
-    "description": "Gains heavy damage reduction, then dashes forward to damage and knock back enemies in the way.",
+    "description": "Gains 95% damage reduction, dashes forward rapidly, damaging and knocking back enemies in the way.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -259,7 +259,7 @@ export const GENERATED_SKILLS = {
     "id": "demonic-lullaby",
     "name": "Demonic Lullaby",
     "element": "Common",
-    "description": "Releases hypnotic sonic waves that damage and stun nearby enemies.",
+    "description": "Releases hypnotic sonic waves, stunning nearby enemies and dealing damage to them.",
     "damageInstances": [
       {
         "multiplier": 0.2,
@@ -281,7 +281,7 @@ export const GENERATED_SKILLS = {
     "id": "divine-energy-blast",
     "name": "Divine Energy Blast",
     "element": "Common",
-    "description": "Gains heavy damage reduction, then forms an energy orb that strikes and stuns enemies within range.",
+    "description": "Grants 90% damage reduction for 3s, then gathers energy in front of itself to form an energy orb that strikes and stuns enemies within range.",
     "damageInstances": [
       {
         "multiplier": 3.5,
@@ -294,7 +294,7 @@ export const GENERATED_SKILLS = {
         "type": "damageReduction",
         "target": "Self",
         "amountPercent": 90,
-        "durationSeconds": 4
+        "durationSeconds": 3
       },
       {
         "type": "stun",
@@ -302,14 +302,14 @@ export const GENERATED_SKILLS = {
         "durationSeconds": 2
       }
     ],
-    "notes": "Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 90% damage reduction 4 secs self",
+    "notes": "Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 90% damage reduction 3 secs self",
     "validationStatus": "Ready"
   },
   "dragons-breath": {
     "id": "dragons-breath",
     "name": "Dragon's Breath",
     "element": "Fire",
-    "description": "Continuously sprays flames forward.",
+    "description": "Spry flames continuously forward.",
     "damageInstances": [
       {
         "multiplier": 0.4,
@@ -324,7 +324,7 @@ export const GENERATED_SKILLS = {
     "id": "dragons-breath-ghost",
     "name": "Dragon's Breath (Ghost)",
     "element": "Fire",
-    "description": "Continuously sprays ghostly flames forward.",
+    "description": "Spry flames continuously forward.",
     "damageInstances": [
       {
         "multiplier": 0.4,
@@ -339,7 +339,7 @@ export const GENERATED_SKILLS = {
     "id": "dragons-rage",
     "name": "Dragon's Rage",
     "element": "Fire",
-    "description": "Sacrifices 40% of the caster's HP to deal 500% Attack damage to the enemy.",
+    "description": "Sacrifices 40% of the it's own HP to deal 500% Attack damage to the enemy.",
     "damageInstances": [
       {
         "multiplier": 5,
@@ -369,7 +369,7 @@ export const GENERATED_SKILLS = {
     "id": "earth-shatter",
     "name": "Earthshatter",
     "element": "Ground",
-    "description": "Smashes the ground to damage, knock back, and stun nearby enemies.",
+    "description": "Smashes the ground, damaging all nearby enemies, knocking back nearby enemies and stunning them.",
     "damageInstances": [
       {
         "multiplier": 2,
@@ -395,7 +395,7 @@ export const GENERATED_SKILLS = {
     "id": "egg-blast",
     "name": "Egg Blast",
     "element": "Common",
-    "description": "Throws an Easter egg and gains one random effect. Every listed effect can occur.",
+    "description": "Throw an Easter egg and gain one random effect. (All effects can appear!)",
     "damageInstances": [
       {
         "multiplier": 1.5,
@@ -470,7 +470,7 @@ export const GENERATED_SKILLS = {
     "id": "electric-beam",
     "name": "Electric Beam",
     "element": "Common",
-    "description": "Sprays an electric beam forward, damaging enemies in front.",
+    "description": "Sprays an Electric Beam forward, damaging enemies in front.",
     "damageInstances": [
       {
         "multiplier": 0.25,
@@ -485,7 +485,7 @@ export const GENERATED_SKILLS = {
     "id": "electro-nova",
     "name": "Electro Nova",
     "element": "Common",
-    "description": "Releases an electric ring that stuns and knocks back nearby enemies.",
+    "description": "Releases an electric ring around, stunning and knocking back nearby enemies.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -507,16 +507,10 @@ export const GENERATED_SKILLS = {
     "id": "emergency-thorn-shield",
     "name": "Emergency Thorn Shield",
     "element": "Common",
-    "description": "Quickly restores 20% HP and grants a Thorn Shield for a short time, reflecting damage to attackers.",
+    "description": "Quickly restores 20% HP and grants a Thorn Shield for a short time, reflects damage to attackers.",
     "damageInstances": [],
     "cooldown": 8,
     "statusEffects": [
-      {
-        "type": "damageReflection",
-        "target": "Self",
-        "amountPercent": 60,
-        "durationSeconds": 2
-      },
       {
         "type": "healing",
         "target": "Self",
@@ -531,7 +525,7 @@ export const GENERATED_SKILLS = {
     "id": "ex-air-bullet",
     "name": "Ex Air Bullet",
     "element": "Common",
-    "description": "Fires four air bullets at the enemy.",
+    "description": "Cast four air bullet at the enemy.",
     "damageInstances": [
       {
         "multiplier": 0.3,
@@ -546,7 +540,7 @@ export const GENERATED_SKILLS = {
     "id": "ex-candy-bomb",
     "name": "Ex Candy Bomb",
     "element": "Common",
-    "description": "Throws several candies at the enemy.",
+    "description": "Cast several candies at the enemy.",
     "damageInstances": [
       {
         "multiplier": 0.3,
@@ -561,7 +555,7 @@ export const GENERATED_SKILLS = {
     "id": "ex-fireball",
     "name": "Ex Fireball",
     "element": "Fire",
-    "description": "Casts four fireballs at the enemy and boosts the caster's Attack.",
+    "description": "Casts four fireballs at the enemy and boosts self Attack.",
     "damageInstances": [
       {
         "multiplier": 0.3,
@@ -584,7 +578,7 @@ export const GENERATED_SKILLS = {
     "id": "ex-gift-delivery",
     "name": "Ex Gift Delivery",
     "element": "Common",
-    "description": "Throws several gifts at the enemy.",
+    "description": "Cast several gifts at the enemy.",
     "damageInstances": [
       {
         "multiplier": 0.7,
@@ -599,7 +593,7 @@ export const GENERATED_SKILLS = {
     "id": "ex-ice-surge",
     "name": "Ex Ice Surge",
     "element": "Ice",
-    "description": "Gathers icy energy to strike enemies and make them vulnerable.",
+    "description": "Gathers icy energy to strike and applies vulnerable to enemies. ",
     "damageInstances": [
       {
         "multiplier": 0.2,
@@ -622,7 +616,7 @@ export const GENERATED_SKILLS = {
     "id": "ex-iceball",
     "name": "Ex Iceball",
     "element": "Ice",
-    "description": "Casts four iceballs at the enemy.",
+    "description": "Cast four iceball at the enemy.",
     "damageInstances": [
       {
         "multiplier": 0.3,
@@ -637,7 +631,7 @@ export const GENERATED_SKILLS = {
     "id": "ex-rock-toss",
     "name": "Ex Rock Toss",
     "element": "Ground",
-    "description": "Throws several rocks at the enemy.",
+    "description": "Cast several Rocks at the enemy.",
     "damageInstances": [
       {
         "multiplier": 0.5,
@@ -652,7 +646,7 @@ export const GENERATED_SKILLS = {
     "id": "ex-seed-grenade",
     "name": "Ex Seed Grenade",
     "element": "Grass",
-    "description": "Launches three explosive seeds.",
+    "description": "Launches three explosive seed.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -667,7 +661,7 @@ export const GENERATED_SKILLS = {
     "id": "ex-water-jet",
     "name": "Ex Water Jet",
     "element": "Water",
-    "description": "Fires four water jets at the enemy.",
+    "description": "Cast four water jet at the enemy.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -682,7 +676,7 @@ export const GENERATED_SKILLS = {
     "id": "ex-water-shuriken",
     "name": "Ex Water Shuriken",
     "element": "Water",
-    "description": "Throws four water shurikens at the enemy.",
+    "description": "Casts four water shurikens at the enemy.",
     "damageInstances": [
       {
         "multiplier": 0.3,
@@ -697,7 +691,7 @@ export const GENERATED_SKILLS = {
     "id": "fear-taunt",
     "name": "Fear Taunt",
     "element": "Common",
-    "description": "Reduces the target's Attack and forces nearby enemies to target the caster for a short duration.",
+    "description": "Reduces the target's Attack and forces all nearby enemies to target the pet for a short duration.",
     "damageInstances": [
       {
         "multiplier": 0.5,
@@ -725,7 +719,7 @@ export const GENERATED_SKILLS = {
     "id": "fire-dash",
     "name": "Fire Dash",
     "element": "Fire",
-    "description": "Gains heavy damage reduction, then dashes forward to damage and knock back enemies in the way.",
+    "description": "Gains 95% damage reduction, dashes forward rapidly, damaging and knocking back enemies in the way.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -752,7 +746,7 @@ export const GENERATED_SKILLS = {
     "id": "fire-dash-oblivion-drake",
     "name": "Fire Dash (Oblivion Drake)",
     "element": "Fire",
-    "description": "Gains heavy damage reduction, then dashes forward to damage and knock back enemies in the way.",
+    "description": "Gains 95% damage reduction, dashes forward rapidly, damaging and knocking back enemies in the way.",
     "damageInstances": [
       {
         "multiplier": 2,
@@ -779,7 +773,7 @@ export const GENERATED_SKILLS = {
     "id": "fire-dragon-flame-blast",
     "name": "Fire Dragon Flame Blast",
     "element": "Fire",
-    "description": "Launches a fire dragon at the enemy.",
+    "description": "Casts a Fire Dragon at the enemy.",
     "damageInstances": [
       {
         "multiplier": 2.5,
@@ -821,7 +815,7 @@ export const GENERATED_SKILLS = {
     "id": "fireball",
     "name": "Fireball",
     "element": "Fire",
-    "description": "Casts a fireball at the enemy.",
+    "description": "Casts a fireball at the enemy",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -851,7 +845,7 @@ export const GENERATED_SKILLS = {
     "id": "firecracker-pop",
     "name": "Firecracker Pop",
     "element": "Fire",
-    "description": "Throws several firecrackers at the enemy.",
+    "description": "Cast several Firecrackers at the enemy",
     "damageInstances": [
       {
         "multiplier": 0.3,
@@ -866,7 +860,7 @@ export const GENERATED_SKILLS = {
     "id": "flame-breath",
     "name": "Flame Breath",
     "element": "Fire",
-    "description": "Breathes scorching flames forward, damaging enemies in front.",
+    "description": "Fires a scorching flame breath, damaging enemies in front.",
     "damageInstances": [
       {
         "multiplier": 0.4,
@@ -881,7 +875,7 @@ export const GENERATED_SKILLS = {
     "id": "flame-detonation",
     "name": "Flame Detonation",
     "element": "Fire",
-    "description": "Summons a lingering fireball that continuously damages nearby enemies and makes them vulnerable.",
+    "description": "Summons a lingering fireball that deals continuous damage to nearby enemies.",
     "damageInstances": [
       {
         "multiplier": 0.2,
@@ -915,7 +909,7 @@ export const GENERATED_SKILLS = {
     "id": "frost-beam",
     "name": "Frost Beam",
     "element": "Ice",
-    "description": "Sprays an icy beam forward, damaging enemies in front.",
+    "description": "Sprays an ice Beam forward, damaging enemies in front.",
     "damageInstances": [
       {
         "multiplier": 0.4,
@@ -930,7 +924,7 @@ export const GENERATED_SKILLS = {
     "id": "frost-breath",
     "name": "Frost Breath",
     "element": "Ice",
-    "description": "Fires a freezing atomic beam that damages enemies in front.",
+    "description": "Fires a freezing atomic beam, damaging enemies in front.",
     "damageInstances": [
       {
         "multiplier": 0.4,
@@ -945,7 +939,7 @@ export const GENERATED_SKILLS = {
     "id": "frosty-dart",
     "name": "Frosty Dart",
     "element": "Ice",
-    "description": "Casts a fast iceball at the enemy.",
+    "description": "Casts an iceball at the enemy.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -960,7 +954,7 @@ export const GENERATED_SKILLS = {
     "id": "frozen-nova",
     "name": "Frozen Nova",
     "element": "Ice",
-    "description": "Unleashes a fan of ice spikes that stuns and slows enemies in the area.",
+    "description": "Unleash a fan of ice spikes forward, stuns and slows enemies in the area.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -982,7 +976,7 @@ export const GENERATED_SKILLS = {
     "id": "galecut",
     "name": "Galecut",
     "element": "Grass",
-    "description": "Launches several wind blades that slash enemies along their path.",
+    "description": "Launch several wind blades, slash enemies along the path.",
     "damageInstances": [
       {
         "multiplier": 1,
@@ -997,7 +991,7 @@ export const GENERATED_SKILLS = {
     "id": "galemoon-blade",
     "name": "GaleMoon Blade",
     "element": "Common",
-    "description": "Unleashes four wave slashes, gaining a shield and making struck enemies vulnerable.",
+    "description": "Unleashes four wave slash forward, gains shield and inflicts vulnerability on enemies hit.",
     "damageInstances": [
       {
         "multiplier": 0.4,
@@ -1011,16 +1005,22 @@ export const GENERATED_SKILLS = {
         "target": "Enemy",
         "amountPercent": 20,
         "durationSeconds": 10
+      },
+      {
+        "type": "shield",
+        "target": "Team",
+        "amountPercent": 16.67,
+        "durationSeconds": 6
       }
     ],
-    "notes": "Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs; Stagger",
+    "notes": "Target: Enemy | Allies. Enemy effects: Vulnerability (20%) incoming damage for 10 secs; Stagger. Ally effects: 16.67% Team Shield for 6 secs.",
     "validationStatus": "Ready"
   },
   "ghost-fireball": {
     "id": "ghost-fireball",
     "name": "Ghost Fireball",
     "element": "Fire",
-    "description": "Casts four netherfire balls and makes the enemy vulnerable.",
+    "description": "Casts four Netherfire balls at the enemy, and applies vulnerable to the enemy.",
     "damageInstances": [
       {
         "multiplier": 0.3,
@@ -1043,7 +1043,7 @@ export const GENERATED_SKILLS = {
     "id": "ghost-impact",
     "name": "Ghost Impact",
     "element": "Common",
-    "description": "Unleashes a soul impact that strengthens all pets and damages nearby enemies.",
+    "description": "Unleash Soul Impact, increasing the attack of all Pets and damaging nearby enemies.",
     "damageInstances": [
       {
         "multiplier": 0.2,
@@ -1066,7 +1066,7 @@ export const GENERATED_SKILLS = {
     "id": "ghost-impact-vulnerability",
     "name": "Ghost Impact (Vulnerability)",
     "element": "Common",
-    "description": "Unleashes a soul impact that damages nearby enemies and makes them vulnerable.",
+    "description": "Unleash Soul Impact, applying Vulnerability and damaging nearby enemies.",
     "damageInstances": [
       {
         "multiplier": 0.5,
@@ -1127,7 +1127,7 @@ export const GENERATED_SKILLS = {
     "id": "glacial-wall",
     "name": "Glacial Wall",
     "element": "Ice",
-    "description": "Shields all pets and damages nearby enemies, with a chance to double the shield.",
+    "description": "Grants all pets a 30% max HP shield for 6s (25% chance to double), and damages nearby enemies.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -1158,7 +1158,7 @@ export const GENERATED_SKILLS = {
     "id": "grass-tornado",
     "name": "Grass Tornado",
     "element": "Grass",
-    "description": "Kicks up a swirling leaf cyclone that travels forward.",
+    "description": "Kicks up a swirling leaf cyclone forward.",
     "damageInstances": [
       {
         "multiplier": 1.8,
@@ -1179,7 +1179,7 @@ export const GENERATED_SKILLS = {
     "id": "gravel-scatter-shot",
     "name": "Gravel Scatter Shot",
     "element": "Ground",
-    "description": "Shoots a burst of stones forward, dealing area damage to enemies hit.",
+    "description": "Shoots a burst of stones forward, dealing area damage to hit enemies.",
     "damageInstances": [
       {
         "multiplier": 1,
@@ -1194,7 +1194,7 @@ export const GENERATED_SKILLS = {
     "id": "gravel-whirlwind",
     "name": "Gravel Whirlwind",
     "element": "Ground",
-    "description": "Summons two gravel whirlwinds that damage and knock away enemies along their paths.",
+    "description": "Summons two gravel whirlwinds, damage and knock away enemies along their path.",
     "damageInstances": [
       {
         "multiplier": 1,
@@ -1215,7 +1215,7 @@ export const GENERATED_SKILLS = {
     "id": "healing-pulse",
     "name": "Healing Pulse",
     "element": "Grass",
-    "description": "Releases a wave that instantly restores health to all pets within range.",
+    "description": "Releases a wave, instantly restores health to all pets within range.",
     "damageInstances": [],
     "cooldown": 6,
     "statusEffects": [
@@ -1233,7 +1233,7 @@ export const GENERATED_SKILLS = {
     "id": "healing-shuriken",
     "name": "Healing Shuriken",
     "element": "Water",
-    "description": "Gathers water to heal, then throws shurikens at the enemy.",
+    "description": "Gathers water flow to heal, then casts shuriken at the enemy.",
     "damageInstances": [
       {
         "multiplier": 0.2,
@@ -1256,7 +1256,7 @@ export const GENERATED_SKILLS = {
     "id": "healing-water-ball",
     "name": "Healing Water Ball",
     "element": "Water",
-    "description": "Uses water energy to heal the caster, then attacks with a water ball.",
+    "description": "Use water energy to heal self, then attack the enemy with a water ball.",
     "damageInstances": [
       {
         "multiplier": 1,
@@ -1284,7 +1284,7 @@ export const GENERATED_SKILLS = {
     "id": "holy-aura-djinn-lampyr",
     "name": "Holy Aura (Djinn Lampyr)",
     "element": "Common",
-    "description": "Releases a Holy Aura that heals and strengthens all pets. These effects do not stack.",
+    "description": "Release Holy Aura, healing and strengthening all Pets. (No Stack)",
     "damageInstances": [],
     "cooldown": 8,
     "statusEffects": [
@@ -1314,7 +1314,7 @@ export const GENERATED_SKILLS = {
     "id": "holy-aura-frostvolf",
     "name": "Holy Aura (Frostvolf)",
     "element": "Common",
-    "description": "Releases a Holy Aura that shields and strengthens all pets.",
+    "description": "Release Holy aura, shielding and stregthening all Pets. (No Stack)",
     "damageInstances": [],
     "cooldown": 8,
     "statusEffects": [
@@ -1339,7 +1339,7 @@ export const GENERATED_SKILLS = {
     "id": "holy-aura-titan-tusk",
     "name": "Holy Aura (Titan Tusk)",
     "element": "Common",
-    "description": "Releases a Holy Aura that shields and strengthens all pets. These effects do not stack.",
+    "description": "Release Holy aura, shielding and stregthening all Pets. (No Stack)",
     "damageInstances": [],
     "cooldown": 8,
     "statusEffects": [
@@ -1364,7 +1364,7 @@ export const GENERATED_SKILLS = {
     "id": "hydro-cannon",
     "name": "Hydro Cannon",
     "element": "Water",
-    "description": "Unleashes continuous water waves forward, damaging enemies and reducing their Attack.",
+    "description": "Unleashes continuous water waves forward, reducing the attack power of hit enemies.",
     "damageInstances": [
       {
         "multiplier": 0.4,
@@ -1387,7 +1387,7 @@ export const GENERATED_SKILLS = {
     "id": "ice-road",
     "name": "Ice Road",
     "element": "Ice",
-    "description": "Stomps the ground to unleash a timed line of ice spikes forward.",
+    "description": "Stomps the ground to unleash a line of ice spikes forward.",
     "damageInstances": [
       {
         "multiplier": 1.5,
@@ -1432,7 +1432,7 @@ export const GENERATED_SKILLS = {
     "id": "icicle-prison",
     "name": "Icicle Prison",
     "element": "Ice",
-    "description": "Summons a prison of icy spikes that damages and briefly stuns the target.",
+    "description": "Summons a prison of icy spikes to trap the target, dealing damage and stunning them for a short time.",
     "damageInstances": [
       {
         "multiplier": 2,
@@ -1454,7 +1454,7 @@ export const GENERATED_SKILLS = {
     "id": "inferno-blast",
     "name": "Inferno Blast",
     "element": "Common",
-    "description": "Stuns enemies within the electric field, then fires inferno beams.",
+    "description": "Stuns all enemies within the electric field first, then fires Inferno Beams.",
     "damageInstances": [
       {
         "multiplier": 1.5,
@@ -1469,7 +1469,7 @@ export const GENERATED_SKILLS = {
     "id": "inferno-maelstrom",
     "name": "Inferno Maelstrom",
     "element": "Fire",
-    "description": "Bursts with blazing fire, attacking nearby enemies and briefly increasing damage.",
+    "description": "A burst of blazing fire, attacks nearby enemies and briefly increases damage.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -1523,7 +1523,7 @@ export const GENERATED_SKILLS = {
     "id": "ion-blast",
     "name": "Ion Blast",
     "element": "Common",
-    "description": "Stuns enemies within the electric field, then fires ion beams.",
+    "description": "Stuns all enemies within the electric field first, then fires Ion Beams.",
     "damageInstances": [
       {
         "multiplier": 1,
@@ -1545,7 +1545,7 @@ export const GENERATED_SKILLS = {
     "id": "jokers-trick",
     "name": "Joker's Trick",
     "element": "Common",
-    "description": "Launches a red or black card, triggering a different effect based on the result.",
+    "description": "Launches red or black cards that trigger different effects.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -1576,7 +1576,7 @@ export const GENERATED_SKILLS = {
     "id": "leaf-blade",
     "name": "Leaf blade",
     "element": "Grass",
-    "description": "Launches leaf blades that make enemies vulnerable and heal the caster.",
+    "description": "Launches leaf blades, applying vulnerable to enemies and healing the pet.",
     "damageInstances": [
       {
         "multiplier": 1,
@@ -1605,7 +1605,7 @@ export const GENERATED_SKILLS = {
     "id": "leaf-surge",
     "name": "Leaf Surge",
     "element": "Grass",
-    "description": "Releases a ring of leaf energy that knocks back nearby enemies.",
+    "description": "Releases a ring of leaf energy to knock back nearby enemies.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -1613,14 +1613,20 @@ export const GENERATED_SKILLS = {
       }
     ],
     "cooldown": 6,
-    "notes": "Target: Enemy.",
+    "statusEffects": [
+      {
+        "type": "knockback",
+        "target": "Enemy"
+      }
+    ],
+    "notes": "Target: Enemy. Enemy effects: Knockback ",
     "validationStatus": "Ready"
   },
   "lightning-storm-blue": {
     "id": "lightning-storm-blue",
     "name": "Lightning Storm (Blue)",
     "element": "Common",
-    "description": "Unleashes continuous lightning forward, damaging enemies and granting the caster a shield.",
+    "description": "Unleashes continuous lightning in front, damaging enemies and granting a shield.",
     "damageInstances": [
       {
         "multiplier": 0.28,
@@ -1644,7 +1650,7 @@ export const GENERATED_SKILLS = {
     "id": "lightning-storm-purple",
     "name": "Lightning Storm (Purple)",
     "element": "Common",
-    "description": "Unleashes continuous lightning forward, damaging enemies and boosting the caster's Attack.",
+    "description": "Unleashes continuous lightning in front, damaging enemies and boosting self attack.",
     "damageInstances": [
       {
         "multiplier": 0.2,
@@ -1672,7 +1678,7 @@ export const GENERATED_SKILLS = {
     "id": "lightning-thrust",
     "name": "Lightning Thrust",
     "element": "Common",
-    "description": "Gains heavy damage reduction, then dashes forward to damage and knock back enemies in the way.",
+    "description": "Gains 95% damage reduction, dashes forward rapidly, damaging and knocking back enemies in the way.",
     "damageInstances": [
       {
         "multiplier": 1.5,
@@ -1695,7 +1701,7 @@ export const GENERATED_SKILLS = {
     "id": "lightning-thrust-psyberion-x",
     "name": "Lightning Thrust (Psyberion X)",
     "element": "Common",
-    "description": "Gains heavy damage reduction, then dashes forward to damage and knock back enemies in the way.",
+    "description": "Gains 95% damage reduction, dashes forward rapidly, damaging and knocking back enemies in the way.",
     "damageInstances": [
       {
         "multiplier": 2,
@@ -1722,7 +1728,7 @@ export const GENERATED_SKILLS = {
     "id": "lunar-heal",
     "name": "Lunar Heal",
     "element": "Common",
-    "description": "Channels lunar energy to instantly restore 18% of maximum health.",
+    "description": "Channels lunar energy, instantly restores 18% of maximum health.",
     "damageInstances": [],
     "cooldown": 8,
     "statusEffects": [
@@ -1740,7 +1746,7 @@ export const GENERATED_SKILLS = {
     "id": "lunar-taunt",
     "name": "Lunar Taunt",
     "element": "Common",
-    "description": "Forces all nearby monsters to target the caster for a short duration.",
+    "description": "Forces all nearby monsters to target the pet for a short duration.",
     "damageInstances": [
       {
         "multiplier": 0.75,
@@ -1762,7 +1768,7 @@ export const GENERATED_SKILLS = {
     "id": "mighty-rock-toss",
     "name": "Mighty Rock Toss",
     "element": "Ground",
-    "description": "Throws several rocks at the enemy, with each rock dealing increased damage.",
+    "description": "Casts several Rocks at the enemy, every rock deals increased damage.",
     "damageInstances": [
       {
         "multiplier": 0.5,
@@ -1789,7 +1795,7 @@ export const GENERATED_SKILLS = {
     "id": "mighty-water-shuriken",
     "name": "Mighty Water Shuriken",
     "element": "Water",
-    "description": "Throws five water shurikens at the enemy.",
+    "description": "Casts five water Shruikens at the enemy.",
     "damageInstances": [
       {
         "multiplier": 2,
@@ -1808,7 +1814,7 @@ export const GENERATED_SKILLS = {
     "id": "nether-fireball",
     "name": "Nether Fireball",
     "element": "Fire",
-    "description": "Casts four netherfire balls at the enemy.",
+    "description": "Casts four Netherfire balls at the enemy.",
     "damageInstances": [
       {
         "multiplier": 0.3,
@@ -1823,7 +1829,7 @@ export const GENERATED_SKILLS = {
     "id": "oblivion-beam",
     "name": "Oblivion Beam",
     "element": "Common",
-    "description": "Fires a devastating dark-energy beam that damages and makes enemies vulnerable.",
+    "description": "Fires a devastating beam of dark energy, dealing damage and inflicting Vulnerable on enemies hit.",
     "damageInstances": [
       {
         "multiplier": 0.4,
@@ -1846,7 +1852,7 @@ export const GENERATED_SKILLS = {
     "id": "overvolt-tempest",
     "name": "Overvolt Tempest",
     "element": "Common",
-    "description": "Unleashes a thunderstorm with a 25% chance to Overload and deal double damage.",
+    "description": "Unleash a thunderstorm, with a 25% chance to Overload and deal double damage.",
     "damageInstances": [
       {
         "multiplier": 0.2,
@@ -1861,7 +1867,7 @@ export const GENERATED_SKILLS = {
     "id": "overvolt-tempest-overload",
     "name": "Overvolt Tempest (Overload)",
     "element": "Common",
-    "description": "Unleashes the overloaded thunderstorm, dealing double damage.",
+    "description": "Unleash a thunderstorm, with a 25% chance to Overload and deal double damage.",
     "damageInstances": [
       {
         "multiplier": 0.4,
@@ -1876,7 +1882,7 @@ export const GENERATED_SKILLS = {
     "id": "petal-dance",
     "name": "Petal Dance",
     "element": "Grass",
-    "description": "Summons a petal whirlwind that attacks enemies within its range.",
+    "description": "Summon a Petal Whirlwind to attack enemies within its range.",
     "damageInstances": [
       {
         "multiplier": 0.3,
@@ -1891,7 +1897,7 @@ export const GENERATED_SKILLS = {
     "id": "poison-volley",
     "name": "Poison Volley",
     "element": "Fire",
-    "description": "Casts four poison orbs, with each orb applying a stack of Poison.",
+    "description": "Casts four poison orbs at the enemy, each orb applies a stack of Poison to enemies. ",
     "damageInstances": [
       {
         "multiplier": 0.3,
@@ -1917,7 +1923,7 @@ export const GENERATED_SKILLS = {
     "id": "rallying-war-cry-3-sec-50",
     "name": "Rallying War Cry (3 sec 50%)",
     "element": "Fire",
-    "description": "Howls at the sky, increasing the Attack of all pets.",
+    "description": "Howl at the sky, increasing the Attack of all pets.",
     "damageInstances": [],
     "cooldown": 3,
     "statusEffects": [
@@ -1935,7 +1941,7 @@ export const GENERATED_SKILLS = {
     "id": "rallying-war-cry-6-sec-40-self-70",
     "name": "Rallying War Cry (6 sec 40% self 70%)",
     "element": "Ground",
-    "description": "Howls at the sky, increasing the Attack of the caster and all allied pets.",
+    "description": "Howl at the sky, increasing the Attack of all pets.",
     "damageInstances": [],
     "cooldown": 6,
     "statusEffects": [
@@ -1959,7 +1965,7 @@ export const GENERATED_SKILLS = {
     "id": "rallying-war-cry-6-sec-50",
     "name": "Rallying War Cry (6 sec 50%)",
     "element": "Fire",
-    "description": "Howls at the sky, increasing the Attack of all pets.",
+    "description": "Howl at the sky, increasing the Attack of all pets.",
     "damageInstances": [],
     "cooldown": 6,
     "statusEffects": [
@@ -1977,7 +1983,7 @@ export const GENERATED_SKILLS = {
     "id": "reapers-crescents",
     "name": "Reaper's Crescents",
     "element": "Common",
-    "description": "Unleashes four wave slashes that damage every enemy in their path.",
+    "description": "Unleashes four waves of slashes forward, damaging all enemies in the path.",
     "damageInstances": [
       {
         "multiplier": 0.3,
@@ -1992,7 +1998,7 @@ export const GENERATED_SKILLS = {
     "id": "reapers-crescents-scareharvest",
     "name": "Reaper's Crescents (Scareharvest)",
     "element": "Common",
-    "description": "Unleashes four wave slashes that damage every enemy in their path.",
+    "description": "Unleashes four waves of slashes forward, with each wave dealing increasing damage to all enemies in its path.",
     "damageInstances": [
       {
         "multiplier": 0.5,
@@ -2019,7 +2025,7 @@ export const GENERATED_SKILLS = {
     "id": "ripple-guard",
     "name": "Ripple Guard",
     "element": "Common",
-    "description": "Gathers water to form a protective shield around all pets. This shield does not stack.",
+    "description": "Gathers water to form a protective shield around all pets. (No stack).",
     "damageInstances": [],
     "cooldown": 6,
     "statusEffects": [
@@ -2038,7 +2044,7 @@ export const GENERATED_SKILLS = {
     "id": "rock-road",
     "name": "Rock Road",
     "element": "Ground",
-    "description": "Stomps the ground to unleash a line of rock spikes forward.",
+    "description": "Stomp the ground to unleash a line of rock spikes forward.",
     "damageInstances": [
       {
         "multiplier": 3,
@@ -2053,7 +2059,7 @@ export const GENERATED_SKILLS = {
     "id": "rock-toss",
     "name": "Rock Toss",
     "element": "Ground",
-    "description": "Throws a rock at the enemy.",
+    "description": "Casts a Rock at the enemy.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -2102,7 +2108,7 @@ export const GENERATED_SKILLS = {
     "id": "root-spike",
     "name": "Root Spike",
     "element": "Grass",
-    "description": "Summons root spikes from underground to attack enemies in a straight line.",
+    "description": "Summons root spikes from underground to attack enemies in a straight line ahead.",
     "damageInstances": [
       {
         "multiplier": 3,
@@ -2117,7 +2123,7 @@ export const GENERATED_SKILLS = {
     "id": "scorching-fireball",
     "name": "Scorching Fireball",
     "element": "Fire",
-    "description": "Casts four fireballs, with each fireball applying a stack of Burn.",
+    "description": "Casts four fireballs at the enemy, each fireball applies a stack of Burn to enemies. ",
     "damageInstances": [
       {
         "multiplier": 0.3,
@@ -2142,7 +2148,7 @@ export const GENERATED_SKILLS = {
     "id": "seed-grenade",
     "name": "Seed Grenade",
     "element": "Grass",
-    "description": "Launches an explosive seed at the enemy.",
+    "description": "Launches an explosive seed.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -2193,7 +2199,7 @@ export const GENERATED_SKILLS = {
     "id": "soul-reap-chain",
     "name": "Soul Reap Chain",
     "element": "Common",
-    "description": "Summons chains that strike and stun enemies.",
+    "description": "Summon chains to strike enemies and apply one stack of Poison to enemies.",
     "damageInstances": [
       {
         "multiplier": 1.5,
@@ -2215,7 +2221,7 @@ export const GENERATED_SKILLS = {
     "id": "soul-reap-chain-vulnerability",
     "name": "Soul Reap Chain (Vulnerability)",
     "element": "Common",
-    "description": "Summons chains that strike enemies and make them vulnerable.",
+    "description": "Summon chains to strike, stun and applies vulnerable to enemies.",
     "damageInstances": [
       {
         "multiplier": 1.5,
@@ -2243,7 +2249,7 @@ export const GENERATED_SKILLS = {
     "id": "soul-reap-chain-scareharvest",
     "name": "Soul Reap Chain (Scareharvest)",
     "element": "Common",
-    "description": "Summons chains that strike enemies and apply one stack of Poison.",
+    "description": "Summons chains to strike enemies and apply one stack of Poison to enemies.",
     "damageInstances": [
       {
         "multiplier": 2.5,
@@ -2269,7 +2275,7 @@ export const GENERATED_SKILLS = {
     "id": "soul-slash",
     "name": "Soul Slash",
     "element": "Common",
-    "description": "Launches numerous surrounding slashes that damage and make enemies vulnerable.",
+    "description": "Luanch numerous surrounding slashes, deal damage to enemies.",
     "damageInstances": [
       {
         "multiplier": 0.2,
@@ -2284,7 +2290,7 @@ export const GENERATED_SKILLS = {
     "id": "sunder-taunt",
     "name": "Sunder Taunt",
     "element": "Ground",
-    "description": "Smashes the ground, launching and taunting nearby enemies.",
+    "description": "Smashes the ground, lauch and taunt nearby enemies.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -2310,7 +2316,7 @@ export const GENERATED_SKILLS = {
     "id": "taunt",
     "name": "Taunt",
     "element": "Common",
-    "description": "Forces nearby monsters to target the caster and grants temporary damage reduction.",
+    "description": "Forcing all nearby monsters to target the pet for a short duration, and gains 35% damage reduction for 10 seconds.",
     "damageInstances": [
       {
         "multiplier": 0.5,
@@ -2338,7 +2344,7 @@ export const GENERATED_SKILLS = {
     "id": "the-ring",
     "name": "The Ring",
     "element": "Common",
-    "description": "Unleashes ringing chimes that damage nearby enemies and lower their Attack.",
+    "description": "Unleash ringing chimes, damaging nearby enemies and lowering their attack.",
     "damageInstances": [
       {
         "multiplier": 0.3,
@@ -2361,7 +2367,7 @@ export const GENERATED_SKILLS = {
     "id": "thorn-shield",
     "name": "Thorn Shield",
     "element": "Common",
-    "description": "Grants a temporary Thorn Shield that reflects damage to attackers.",
+    "description": "Grants a Thorn Shield for a short time, reflects damage to attackers.",
     "damageInstances": [],
     "cooldown": 8,
     "statusEffects": [
@@ -2379,7 +2385,7 @@ export const GENERATED_SKILLS = {
     "id": "thunder-stun",
     "name": "Thunder Stun",
     "element": "Common",
-    "description": "Releases a lightning burst that strikes and stuns all nearby enemies.",
+    "description": "Releases a lightning burst, striking all nearby enemies and stunning them.",
     "damageInstances": [
       {
         "multiplier": 1,
@@ -2401,7 +2407,7 @@ export const GENERATED_SKILLS = {
     "id": "tidal-conch",
     "name": "Tidal Conch",
     "element": "Water",
-    "description": "Launches an explosive conch at the enemy.",
+    "description": "Launches an explosive conch.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -2416,7 +2422,7 @@ export const GENERATED_SKILLS = {
     "id": "titan-slam",
     "name": "Titan Slam",
     "element": "Ground",
-    "description": "Smashes the ground to damage nearby enemies, then shields and strengthens all pets.",
+    "description": "Smashes the ground, damaging all nearby enemies, knocking back nearby enemies and stunning them. (No Stack)",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -2445,7 +2451,7 @@ export const GENERATED_SKILLS = {
     "id": "toxic-grenade",
     "name": "Toxic Grenade",
     "element": "Grass",
-    "description": "Launches a toxic explosive seed at the enemy.",
+    "description": "Launches a Toxic explosive seed.",
     "damageInstances": [
       {
         "multiplier": 1,
@@ -2467,7 +2473,7 @@ export const GENERATED_SKILLS = {
     "id": "tsunami",
     "name": "Tsunami",
     "element": "Water",
-    "description": "Hurls a tsunami through the enemy.",
+    "description": "Hurls a Tsunami through the enemy.",
     "damageInstances": [
       {
         "multiplier": 1,
@@ -2488,7 +2494,7 @@ export const GENERATED_SKILLS = {
     "id": "urgent-aid",
     "name": "Urgent Aid",
     "element": "Common",
-    "description": "Targets the ally with the lowest HP and instantly restores 20% of their health.",
+    "description": "Targets the ally with the lowest HP, instantly restores 20% of his health.",
     "damageInstances": [],
     "cooldown": 6,
     "statusEffects": [
@@ -2506,7 +2512,7 @@ export const GENERATED_SKILLS = {
     "id": "violet-core-burst",
     "name": "Violet Core Burst",
     "element": "Common",
-    "description": "Creates a purple energy orb, gains heavy damage reduction, then explodes to damage nearby enemies.",
+    "description": "Creates a purple energy orb, taunts nearby enemies, gains 95% damage reduction, then explodes to damage nearby enemies.",
     "damageInstances": [
       {
         "multiplier": 0.2,
@@ -2537,7 +2543,7 @@ export const GENERATED_SKILLS = {
     "id": "violet-core-burst-psyberion-x",
     "name": "Violet Core Burst (Psyberion X)",
     "element": "Common",
-    "description": "Creates a purple energy orb, taunts nearby enemies, gains heavy damage reduction, then explodes.",
+    "description": "Creates a purple energy orb, gains 95% damage reduction, then explodes to damage nearby enemies.",
     "damageInstances": [
       {
         "multiplier": 0.5,
@@ -2569,7 +2575,7 @@ export const GENERATED_SKILLS = {
     "id": "void-collapse",
     "name": "Void Collapse",
     "element": "Common",
-    "description": "Twists space ahead, stunning and damaging nearby enemies.",
+    "description": "Twists the space in front, stunning and damaging nearby enemies.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -2591,7 +2597,7 @@ export const GENERATED_SKILLS = {
     "id": "void-orb",
     "name": "Void Orb",
     "element": "Common",
-    "description": "Fires a void orb that damages every enemy in a line.",
+    "description": "Fires a void orb and damages all enemies in a line.",
     "damageInstances": [
       {
         "multiplier": 1.25,
@@ -2612,7 +2618,7 @@ export const GENERATED_SKILLS = {
     "id": "void-orb-red",
     "name": "Void Orb (Red)",
     "element": "Common",
-    "description": "Fires a red void orb that damages every enemy in a line.",
+    "description": "Fires a red void orb and damages all enemies in a line.",
     "damageInstances": [
       {
         "multiplier": 1.25,
@@ -2633,7 +2639,7 @@ export const GENERATED_SKILLS = {
     "id": "vortex-nova",
     "name": "Vortex Nova",
     "element": "Water",
-    "description": "Summons a water vortex that pulls in, damages, and knocks up enemies.",
+    "description": "Summon a water vortex to pull enemies, attack and knock them up.",
     "damageInstances": [
       {
         "multiplier": 0.2,
@@ -2658,7 +2664,7 @@ export const GENERATED_SKILLS = {
     "id": "water-breath",
     "name": "Water Breath",
     "element": "Water",
-    "description": "Fires a high-pressure water jet that damages enemies in front.",
+    "description": "Fires a high-pressure water jet, damaging enemies in front.",
     "damageInstances": [
       {
         "multiplier": 0.4,
@@ -2688,7 +2694,7 @@ export const GENERATED_SKILLS = {
     "id": "water-jet",
     "name": "Water Jet",
     "element": "Water",
-    "description": "Shoots a high-speed water bullet at the enemy.",
+    "description": "Shoots a high-speed Water Bullet at the enemy.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -2703,7 +2709,7 @@ export const GENERATED_SKILLS = {
     "id": "water-pillar-blast",
     "name": "Water Pillar Blast",
     "element": "Water",
-    "description": "Conjures a spouting water pillar beneath the enemy's feet.",
+    "description": "Conjures a spouting water pillar under the enemy's feet.",
     "damageInstances": [
       {
         "multiplier": 1.8,
@@ -2724,7 +2730,7 @@ export const GENERATED_SKILLS = {
     "id": "water-shuriken",
     "name": "Water Shuriken",
     "element": "Water",
-    "description": "Throws a water shuriken at the enemy.",
+    "description": "Throw a Water Shuriken at the enemy.",
     "damageInstances": [
       {
         "multiplier": 1.2,
@@ -2739,7 +2745,7 @@ export const GENERATED_SKILLS = {
     "id": "wind-blast",
     "name": "Wind Blast",
     "element": "Common",
-    "description": "Blasts powerful wind that knocks back every enemy hit.",
+    "description": "Blasts with powerful wind, knocking back all hit enemies.",
     "damageInstances": [
       {
         "multiplier": 1,
@@ -2765,7 +2771,7 @@ export const GENERATED_SKILLS = {
     "id": "wind-disc",
     "name": "Wind Disc",
     "element": "Common",
-    "description": "Throws a piercing wind disc forward.",
+    "description": "Throw a piercing wind disc forward.",
     "damageInstances": [
       {
         "multiplier": 1,

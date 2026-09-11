@@ -157,19 +157,19 @@ function BuildSnapshot({
                            build,
                            monster,
                            compact = false,
-                           allMonsters,
+                           monsterById,
                        }: {
     build: Build;
     monster: Monster | null;
     compact?: boolean;
-    allMonsters: Monster[];
+    monsterById: ReadonlyMap<string, Monster>;
 }) {
     const weapon = getEquipment(build.weaponId);
     const armor = getEquipment(build.armorId);
     const trait = getTrait(build.traitId);
     const statData = monster ? getMonsterStatData(monster.id) : null;
     const teammateMonsters = (build.teammateMonsterIds ?? [null, null])
-        .map((id) => id ? allMonsters.find((candidate) => candidate.id === id) ?? null : null)
+        .map((id) => id ? monsterById.get(id) ?? null : null)
         .filter((candidate): candidate is Monster => candidate !== null);
     const effectivePassives = mergeUniquePassives(
         monster?.passives,
@@ -360,6 +360,13 @@ export function SavedBuildsPanel({
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [nameDraft, setNameDraft] = useState("");
     const [saveName, setSaveName] = useState(currentMonster ? `${currentMonster.name} Build` : "New Build");
+    const [favoritesOnly, setFavoritesOnly] = useState(false);
+    const [sortMode, setSortMode] = useState<"recent" | "name" | "monster">("recent");
+
+    const monsterById = useMemo(
+        () => new Map(monsters.map((monster) => [monster.id, monster] as const)),
+        [monsters],
+    );
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -371,14 +378,23 @@ export function SavedBuildsPanel({
     }, [onCloseAction]);
 
     const usedCount = slots.filter(Boolean).length;
+    const firstEmptySlotIndex = slots.findIndex((slot) => slot === null);
+    const hasEmptySlot = firstEmptySlotIndex !== -1;
+
     const indexedSlots = useMemo(() => {
         const normalizedSearch = search.trim().toLowerCase();
+
         return slots
             .map((slot, index) => ({ slot, index }))
+            // Empty slots are represented by one clear "Save New Build" action instead
+            // of rendering up to 20 large blank cards.
+            .filter(({ slot }) => Boolean(slot))
             .filter(({ slot }) => {
-                if (!slot) return mode === "save" && !normalizedSearch;
+                if (!slot) return false;
+                if (favoritesOnly && !slot.favorite) return false;
                 if (!normalizedSearch) return true;
-                const monster = monsters.find(({ id }) => id === slot.build.monsterId);
+
+                const monster = slot.build.monsterId ? monsterById.get(slot.build.monsterId) : null;
                 return [slot.name, monster?.name, slot.build.rank, `+${slot.build.enhancement}`]
                     .filter(Boolean)
                     .join(" ")
@@ -386,13 +402,19 @@ export function SavedBuildsPanel({
                     .includes(normalizedSearch);
             })
             .sort((a, b) => {
-                if (Boolean(a.slot?.favorite) !== Boolean(b.slot?.favorite)) return a.slot?.favorite ? -1 : 1;
-                if (a.slot && b.slot) return b.slot.savedAt - a.slot.savedAt;
-                if (a.slot) return -1;
-                if (b.slot) return 1;
-                return a.index - b.index;
+                if (!a.slot || !b.slot) return 0;
+                if (Boolean(a.slot.favorite) !== Boolean(b.slot.favorite)) return a.slot.favorite ? -1 : 1;
+
+                if (sortMode === "name") return a.slot.name.localeCompare(b.slot.name);
+                if (sortMode === "monster") {
+                    const aMonster = a.slot.build.monsterId ? monsterById.get(a.slot.build.monsterId)?.name ?? "" : "";
+                    const bMonster = b.slot.build.monsterId ? monsterById.get(b.slot.build.monsterId)?.name ?? "" : "";
+                    return aMonster.localeCompare(bMonster) || a.slot.name.localeCompare(b.slot.name);
+                }
+
+                return b.slot.savedAt - a.slot.savedAt;
             });
-    }, [mode, monsters, search, slots]);
+    }, [favoritesOnly, monsterById, search, slots, sortMode]);
 
     const toggleCompare = (index: number) => {
         setSelectedCompare((current) => {
@@ -431,7 +453,7 @@ export function SavedBuildsPanel({
                         </h2>
                         <p className="mt-1 text-xs text-[#8993a5]">
                             {mode === "save"
-                                ? "Name this setup, then save it to a new card or overwrite an existing build."
+                                ? "Save to the next open slot, or overwrite an existing setup below."
                                 : "Search, favorite, load, rename, or send saved setups directly into Monster Compare."}
                         </p>
                     </div>
@@ -446,38 +468,78 @@ export function SavedBuildsPanel({
                 </div>
 
                 <div className="border-b border-[#293647] bg-[#0d141e] px-4 py-3 sm:px-5">
-                    <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+                    <div className="flex flex-col gap-3">
                         {mode === "save" && (
+                            <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+                                <label className="min-w-0 flex-1">
+                                    <span className="mb-1 block text-[9px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Build name</span>
+                                    <input
+                                        value={saveName}
+                                        maxLength={40}
+                                        onChange={(event) => setSaveName(event.target.value)}
+                                        onKeyDown={(event) => {
+                                            if (event.key === "Enter" && hasEmptySlot) saveInto(firstEmptySlotIndex);
+                                        }}
+                                        className="w-full rounded-lg border border-[#344050] bg-[#111a26] px-3 py-2.5 text-sm font-semibold text-[#eef2fb] outline-none focus:border-[#7182ff]"
+                                        placeholder="e.g. Boss Build"
+                                    />
+                                </label>
+                                <button
+                                    type="button"
+                                    disabled={!hasEmptySlot}
+                                    onClick={() => {
+                                        if (hasEmptySlot) saveInto(firstEmptySlotIndex);
+                                    }}
+                                    className="rounded-lg bg-[#7182ff] px-5 py-2.5 text-xs font-bold text-white transition hover:bg-[#8290ff] disabled:cursor-not-allowed disabled:bg-[#2c3442] disabled:text-[#707b8e] sm:min-w-[160px]"
+                                >
+                                    {hasEmptySlot ? "Save New Build" : "20 / 20 Full"}
+                                </button>
+                            </div>
+                        )}
+
+                        <div className="flex flex-col gap-2 lg:flex-row lg:items-end">
                             <label className="min-w-0 flex-1">
-                                <span className="mb-1 block text-[9px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Build name</span>
+                                <span className="mb-1 block text-[9px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Search saved builds</span>
                                 <input
-                                    value={saveName}
-                                    maxLength={40}
-                                    onChange={(event) => setSaveName(event.target.value)}
-                                    className="w-full rounded-lg border border-[#344050] bg-[#111a26] px-3 py-2.5 text-sm font-semibold text-[#eef2fb] outline-none focus:border-[#7182ff]"
-                                    placeholder="e.g. Boss Build"
+                                    value={search}
+                                    onChange={(event) => setSearch(event.target.value)}
+                                    className="w-full rounded-lg border border-[#344050] bg-[#111a26] px-3 py-2.5 text-sm text-[#eef2fb] outline-none placeholder:text-[#65738a] focus:border-[#7182ff]"
+                                    placeholder="Monster, build name, rank..."
                                 />
                             </label>
-                        )}
-                        <label className="min-w-0 flex-1">
-                            <span className="mb-1 block text-[9px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Search saved builds</span>
-                            <input
-                                value={search}
-                                onChange={(event) => setSearch(event.target.value)}
-                                className="w-full rounded-lg border border-[#344050] bg-[#111a26] px-3 py-2.5 text-sm text-[#eef2fb] outline-none placeholder:text-[#65738a] focus:border-[#7182ff]"
-                                placeholder="Monster, build name, rank..."
-                            />
-                        </label>
-                        {mode === "load" && (
-                            <button
-                                type="button"
-                                disabled={selectedCompare.length < 2}
-                                onClick={() => onCompareBuildsAction(selectedCompare)}
-                                className="mt-auto rounded-lg border border-[#7182ff]/55 bg-[#202846] px-4 py-2.5 text-xs font-bold text-[#d5dbff] transition hover:border-[#8290ff] hover:bg-[#263052] disabled:cursor-not-allowed disabled:opacity-40"
-                            >
-                                Compare Selected ({selectedCompare.length})
-                            </button>
-                        )}
+
+                            <div className="flex flex-wrap items-center gap-2">
+                                <button
+                                    type="button"
+                                    aria-pressed={favoritesOnly}
+                                    onClick={() => setFavoritesOnly((current) => !current)}
+                                    className={`rounded-lg border px-3 py-2.5 text-xs font-bold transition ${favoritesOnly ? "border-[#ffd85a]/65 bg-[#3b3218] text-[#ffe27e]" : "border-[#344050] bg-[#141c28] text-[#9aa6b8] hover:border-[#56657a] hover:text-white"}`}
+                                >
+                                    ★ Favorites
+                                </button>
+                                <label className="sr-only" htmlFor="saved-build-sort">Sort saved builds</label>
+                                <select
+                                    id="saved-build-sort"
+                                    value={sortMode}
+                                    onChange={(event) => setSortMode(event.target.value as "recent" | "name" | "monster")}
+                                    className="rounded-lg border border-[#344050] bg-[#141c28] px-3 py-2.5 text-xs font-semibold text-[#c7d0df] outline-none focus:border-[#7182ff]"
+                                >
+                                    <option value="recent">Recently updated</option>
+                                    <option value="name">Build name</option>
+                                    <option value="monster">Monster</option>
+                                </select>
+                                {mode === "load" && (
+                                    <button
+                                        type="button"
+                                        disabled={selectedCompare.length < 2}
+                                        onClick={() => onCompareBuildsAction(selectedCompare)}
+                                        className="rounded-lg border border-[#7182ff]/55 bg-[#202846] px-4 py-2.5 text-xs font-bold text-[#d5dbff] transition hover:border-[#8290ff] hover:bg-[#263052] disabled:cursor-not-allowed disabled:opacity-40"
+                                    >
+                                        Compare Selected ({selectedCompare.length})
+                                    </button>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -485,31 +547,27 @@ export function SavedBuildsPanel({
                     {mode === "save" && currentMonster && (
                         <div className="mb-4 rounded-xl border border-[#7585ff]/30 bg-[#202846]/28 p-3">
                             <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.12em] text-[#aeb8ff]">Current build preview</p>
-                            <BuildSnapshot build={currentBuild} monster={currentMonster} allMonsters={monsters} compact />
+                            <BuildSnapshot build={currentBuild} monster={currentMonster} monsterById={monsterById} compact />
+                        </div>
+                    )}
+
+                    {mode === "save" && usedCount > 0 && (
+                        <div className="mb-2 flex items-center justify-between gap-3">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">
+                                Existing builds
+                            </p>
+                            <p className="text-[10px] text-[#69768a]">Choose one below to overwrite it.</p>
                         </div>
                     )}
 
                     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                         {indexedSlots.map(({ slot, index }) => {
                             const savedMonster = slot
-                                ? monsters.find(({ id }) => id === slot.build.monsterId) ?? null
+                                ? monsterById.get(slot.build.monsterId) ?? null
                                 : null;
                             const selected = selectedCompare.includes(index);
 
-                            if (!slot) {
-                                return (
-                                    <button
-                                        key={index}
-                                        type="button"
-                                        onClick={() => saveInto(index)}
-                                        className="flex min-h-[180px] flex-col items-center justify-center rounded-xl border border-dashed border-[#41506a] bg-[#0d131d]/55 p-5 text-center transition hover:border-[#7182ff]/65 hover:bg-[#121a27]"
-                                    >
-                                        <span className="grid size-11 place-items-center rounded-xl border border-dashed border-[#48566d] bg-[#101721] text-xl text-[#7182ff]">+</span>
-                                        <span className="mt-3 text-sm font-bold text-[#d9e0eb]">New Build</span>
-                                        <span className="mt-1 text-[10px] text-[#69768a]">Save to slot {index + 1}</span>
-                                    </button>
-                                );
-                            }
+                            if (!slot) return null;
 
                             return (
                                 <section
@@ -575,7 +633,7 @@ export function SavedBuildsPanel({
                                     </div>
 
                                     <div className="mt-3">
-                                        <BuildSnapshot build={slot.build} monster={savedMonster} allMonsters={monsters} compact />
+                                        <BuildSnapshot build={slot.build} monster={savedMonster} monsterById={monsterById} compact />
                                     </div>
 
                                     <div className="mt-3 grid grid-cols-2 gap-2 border-t border-[#293647] pt-3">
@@ -627,8 +685,16 @@ export function SavedBuildsPanel({
 
                     {indexedSlots.length === 0 && (
                         <div className="rounded-xl border border-dashed border-[#344050] bg-[#0d131d] px-6 py-12 text-center">
-                            <p className="text-sm font-bold text-[#d6ddea]">No saved builds match that search.</p>
-                            <p className="mt-1 text-xs text-[#69768a]">Try the monster name or your custom build name.</p>
+                            <p className="text-sm font-bold text-[#d6ddea]">
+                                {usedCount === 0 ? "No saved builds yet." : "No saved builds match these filters."}
+                            </p>
+                            <p className="mt-1 text-xs text-[#69768a]">
+                                {usedCount === 0
+                                    ? mode === "save"
+                                        ? "Name the current setup above and choose Save New Build."
+                                        : "Save a build from the calculator and it will appear here."
+                                    : "Try another search or turn off Favorites."}
+                            </p>
                         </div>
                     )}
 
