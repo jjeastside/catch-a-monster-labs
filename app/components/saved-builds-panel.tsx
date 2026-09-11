@@ -562,7 +562,7 @@ export function SavedBuildsPanel({
 
                     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                         {indexedSlots.map(({ slot, index }) => {
-                            const savedMonster = slot
+                            const savedMonster = slot?.build.monsterId
                                 ? monsterById.get(slot.build.monsterId) ?? null
                                 : null;
                             const selected = selectedCompare.includes(index);
