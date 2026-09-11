@@ -4,13 +4,16 @@ import "./globals.css";
 import { DeferredFeedbackWidget } from "./components/deferred-feedback-widget";
 import { assetPath } from "./lib/asset-path";
 
+const homeUrl = "https://jjeastside.github.io/catch-a-monster-labs/";
+const homePreviewUrl = `${homeUrl}preview.png`;
+
 export const viewport: Viewport = {
     width: "device-width",
     initialScale: 1,
 };
 
 export const metadata: Metadata = {
-    metadataBase: new URL("https://jjeastside.github.io/catch-a-monster-labs/"),
+    metadataBase: new URL(homeUrl),
     title: "Cam Lab — Catch a Monster Build Calculator",
     description:
         "Build and compare Catch a Monster builds with combat stats, skill damage, DPS, equipment, traits, mutations, passives, and account multipliers.",
@@ -28,15 +31,22 @@ export const metadata: Metadata = {
             "Build and compare Catch a Monster builds with combat stats, skill damage, DPS, equipment, traits, mutations, passives, and account multipliers.",
         siteName: "Cam Lab",
         type: "website",
-        url: "https://jjeastside.github.io/catch-a-monster-labs/",
+        url: homeUrl,
         images: [
             {
-                url: assetPath("/preview.png"),
+                url: homePreviewUrl,
                 width: 807,
                 height: 493,
                 alt: "Cam Lab — Catch a Monster Build Calculator",
             },
         ],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Cam Lab — Catch a Monster Build Calculator",
+        description:
+            "Build and compare Catch a Monster builds with combat stats, skill damage, DPS, equipment, traits, mutations, passives, and account multipliers.",
+        images: [homePreviewUrl],
     },
 };
 

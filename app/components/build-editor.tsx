@@ -650,6 +650,7 @@ function EvolutionMultiplierEditor({
 
 type TeamEffectCategory =
     | "passive"
+    | "criticalChance"
     | "damageIncrease"
     | "healing"
     | "shield"
@@ -682,6 +683,7 @@ type TeamPassiveOption = {
 
 const TEAM_EFFECT_FILTERS: Array<{ id: "all" | TeamEffectCategory; label: string; icon?: string | null }> = [
     {id: "all", label: "All", icon: null},
+    {id: "criticalChance", label: "Critical Chance", icon: "/account-icons/critical-chance.png"},
     {id: "damageIncrease", label: "Team Damage", icon: "/icons/damage-increase.png"},
     {id: "healing", label: "Healing", icon: "/account-icons/health.png"},
     {id: "shield", label: "Shielding", icon: "/icons/attribute-resistance.png"},
@@ -854,7 +856,9 @@ function TeamPassiveSelect({
         return options.filter((option) => {
             const matchesQuery = !normalizedQuery || option.searchText.includes(normalizedQuery);
             const matchesEffect = effectFilter === "all" || option.contributions.some(
-                (contribution) => contribution.category === effectFilter,
+                (contribution) =>
+                    contribution.category === effectFilter ||
+                    (effectFilter === "passive" && contribution.category === "criticalChance"),
             );
             return matchesQuery && matchesEffect;
         });
@@ -1180,7 +1184,7 @@ export function BuildEditor({
                         .map((effect) => ({
                             icon: getPassiveImagePath(passive),
                             text: formatTeamPassiveEffect(effect),
-                            category: "passive" as const,
+                            category: effect.stat === "critChance" ? "criticalChance" as const : "passive" as const,
                             skillName: getPassiveDisplayName(passive),
                         }))
                         .filter((contribution) => contribution.text.length > 0),
