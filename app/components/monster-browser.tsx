@@ -12,6 +12,8 @@ import { Panel } from "./panel";
 const elementColors: Record<string, string> = {
     Common: "#7f8b9e", Grass: "#79e3ae", Water: "#70b7ff",
     Fire: "#ff9d6c", Ice: "#9ee7ff", Ground: "#d6a66f",
+    Mechanical: "#18e7e0", Dragon: "#c64cff", Light: "#ffd84a",
+    Dark: "#ff2fae", Electric: "#f4ef28",
 };
 
 const elementIconPaths: Record<Monster["element"], string> = {
@@ -21,6 +23,11 @@ const elementIconPaths: Record<Monster["element"], string> = {
     Fire: "/element-icons/fire.png",
     Ice: "/element-icons/ice.png",
     Ground: "/element-icons/ground.png",
+    Mechanical: "/element-icons/mechanical.png",
+    Dragon: "/element-icons/dragon.png",
+    Light: "/element-icons/light.png",
+    Dark: "/element-icons/dark.png",
+    Electric: "/element-icons/electric.png",
 };
 
 const rarityPortraitClasses: Record<Monster["rarity"], string> = {

@@ -4,7 +4,12 @@ export type SkillElement =
     | "Water"
     | "Grass"
     | "Ground"
-    | "Ice";
+    | "Ice"
+    | "Mechanical"
+    | "Dragon"
+    | "Light"
+    | "Dark"
+    | "Electric";
 
 export type SkillDamageInstance = {
     multiplier: number;

@@ -185,7 +185,7 @@ export const GENERATED_SKILLS = {
   "dark-singularity": {
     "id": "dark-singularity",
     "name": "Dark Singularity",
-    "element": "Common",
+    "element": "Dark",
     "description": "Creates a dark singularity that damages nearby enemies and reduces their Attack (15-25%) for a short duration.",
     "damageInstances": [
       {
@@ -236,7 +236,7 @@ export const GENERATED_SKILLS = {
   "deadly-sonic-wave": {
     "id": "deadly-sonic-wave",
     "name": "Deadly Sonic Wave",
-    "element": "Common",
+    "element": "Dark",
     "description": "Beats a drum to emit continuous sonic waves that damage and stun surrounding enemies.",
     "damageInstances": [
       {
@@ -258,7 +258,7 @@ export const GENERATED_SKILLS = {
   "demonic-lullaby": {
     "id": "demonic-lullaby",
     "name": "Demonic Lullaby",
-    "element": "Common",
+    "element": "Dark",
     "description": "Releases hypnotic sonic waves, stunning nearby enemies and dealing damage to them.",
     "damageInstances": [
       {
@@ -280,7 +280,7 @@ export const GENERATED_SKILLS = {
   "divine-energy-blast": {
     "id": "divine-energy-blast",
     "name": "Divine Energy Blast",
-    "element": "Common",
+    "element": "Electric",
     "description": "Grants 90% damage reduction for 3s, then gathers energy in front of itself to form an energy orb that strikes and stuns enemies within range.",
     "damageInstances": [
       {
@@ -338,7 +338,7 @@ export const GENERATED_SKILLS = {
   "dragons-rage": {
     "id": "dragons-rage",
     "name": "Dragon's Rage",
-    "element": "Fire",
+    "element": "Dragon",
     "description": "Sacrifices 40% of the it's own HP to deal 500% Attack damage to the enemy.",
     "damageInstances": [
       {
@@ -484,7 +484,7 @@ export const GENERATED_SKILLS = {
   "electro-nova": {
     "id": "electro-nova",
     "name": "Electro Nova",
-    "element": "Common",
+    "element": "Electric",
     "description": "Releases an electric ring around, stunning and knocking back nearby enemies.",
     "damageInstances": [
       {
@@ -1042,7 +1042,7 @@ export const GENERATED_SKILLS = {
   "ghost-impact": {
     "id": "ghost-impact",
     "name": "Ghost Impact",
-    "element": "Common",
+    "element": "Dark",
     "description": "Unleash Soul Impact, increasing the attack of all Pets and damaging nearby enemies.",
     "damageInstances": [
       {
@@ -1065,7 +1065,7 @@ export const GENERATED_SKILLS = {
   "ghost-impact-vulnerability": {
     "id": "ghost-impact-vulnerability",
     "name": "Ghost Impact (Vulnerability)",
-    "element": "Common",
+    "element": "Dark",
     "description": "Unleash Soul Impact, applying Vulnerability and damaging nearby enemies.",
     "damageInstances": [
       {
@@ -1453,7 +1453,7 @@ export const GENERATED_SKILLS = {
   "inferno-blast": {
     "id": "inferno-blast",
     "name": "Inferno Blast",
-    "element": "Common",
+    "element": "Dark",
     "description": "Stuns all enemies within the electric field first, then fires Inferno Beams.",
     "damageInstances": [
       {
@@ -1625,7 +1625,7 @@ export const GENERATED_SKILLS = {
   "lightning-storm-blue": {
     "id": "lightning-storm-blue",
     "name": "Lightning Storm (Blue)",
-    "element": "Common",
+    "element": "Electric",
     "description": "Unleashes continuous lightning in front, damaging enemies and granting a shield.",
     "damageInstances": [
       {
@@ -1649,7 +1649,7 @@ export const GENERATED_SKILLS = {
   "lightning-storm-purple": {
     "id": "lightning-storm-purple",
     "name": "Lightning Storm (Purple)",
-    "element": "Common",
+    "element": "Electric",
     "description": "Unleashes continuous lightning in front, damaging enemies and boosting self attack.",
     "damageInstances": [
       {
@@ -1677,7 +1677,7 @@ export const GENERATED_SKILLS = {
   "lightning-thrust": {
     "id": "lightning-thrust",
     "name": "Lightning Thrust",
-    "element": "Common",
+    "element": "Electric",
     "description": "Gains 95% damage reduction, dashes forward rapidly, damaging and knocking back enemies in the way.",
     "damageInstances": [
       {
@@ -1700,7 +1700,7 @@ export const GENERATED_SKILLS = {
   "lightning-thrust-psyberion-x": {
     "id": "lightning-thrust-psyberion-x",
     "name": "Lightning Thrust (Psyberion X)",
-    "element": "Common",
+    "element": "Electric",
     "description": "Gains 95% damage reduction, dashes forward rapidly, damaging and knocking back enemies in the way.",
     "damageInstances": [
       {
@@ -1745,7 +1745,7 @@ export const GENERATED_SKILLS = {
   "lunar-taunt": {
     "id": "lunar-taunt",
     "name": "Lunar Taunt",
-    "element": "Common",
+    "element": "Dark",
     "description": "Forces all nearby monsters to target the pet for a short duration.",
     "damageInstances": [
       {
@@ -1828,7 +1828,7 @@ export const GENERATED_SKILLS = {
   "oblivion-beam": {
     "id": "oblivion-beam",
     "name": "Oblivion Beam",
-    "element": "Common",
+    "element": "Dark",
     "description": "Fires a devastating beam of dark energy, dealing damage and inflicting Vulnerable on enemies hit.",
     "damageInstances": [
       {
@@ -1851,7 +1851,7 @@ export const GENERATED_SKILLS = {
   "overvolt-tempest": {
     "id": "overvolt-tempest",
     "name": "Overvolt Tempest",
-    "element": "Common",
+    "element": "Electric",
     "description": "Unleash a thunderstorm, with a 25% chance to Overload and deal double damage.",
     "damageInstances": [
       {
@@ -1982,7 +1982,7 @@ export const GENERATED_SKILLS = {
   "reapers-crescents": {
     "id": "reapers-crescents",
     "name": "Reaper's Crescents",
-    "element": "Common",
+    "element": "Dark",
     "description": "Unleashes four waves of slashes forward, damaging all enemies in the path.",
     "damageInstances": [
       {
@@ -1997,7 +1997,7 @@ export const GENERATED_SKILLS = {
   "reapers-crescents-scareharvest": {
     "id": "reapers-crescents-scareharvest",
     "name": "Reaper's Crescents (Scareharvest)",
-    "element": "Common",
+    "element": "Dark",
     "description": "Unleashes four waves of slashes forward, with each wave dealing increasing damage to all enemies in its path.",
     "damageInstances": [
       {
@@ -2198,7 +2198,7 @@ export const GENERATED_SKILLS = {
   "soul-reap-chain": {
     "id": "soul-reap-chain",
     "name": "Soul Reap Chain",
-    "element": "Common",
+    "element": "Dark",
     "description": "Summon chains to strike enemies and apply one stack of Poison to enemies.",
     "damageInstances": [
       {
@@ -2248,7 +2248,7 @@ export const GENERATED_SKILLS = {
   "soul-reap-chain-scareharvest": {
     "id": "soul-reap-chain-scareharvest",
     "name": "Soul Reap Chain (Scareharvest)",
-    "element": "Common",
+    "element": "Dark",
     "description": "Summons chains to strike enemies and apply one stack of Poison to enemies.",
     "damageInstances": [
       {
@@ -2274,7 +2274,7 @@ export const GENERATED_SKILLS = {
   "soul-slash": {
     "id": "soul-slash",
     "name": "Soul Slash",
-    "element": "Common",
+    "element": "Dark",
     "description": "Luanch numerous surrounding slashes, deal damage to enemies.",
     "damageInstances": [
       {
@@ -2343,7 +2343,7 @@ export const GENERATED_SKILLS = {
   "the-ring": {
     "id": "the-ring",
     "name": "The Ring",
-    "element": "Common",
+    "element": "Dark",
     "description": "Unleash ringing chimes, damaging nearby enemies and lowering their attack.",
     "damageInstances": [
       {
@@ -2384,7 +2384,7 @@ export const GENERATED_SKILLS = {
   "thunder-stun": {
     "id": "thunder-stun",
     "name": "Thunder Stun",
-    "element": "Common",
+    "element": "Electric",
     "description": "Releases a lightning burst, striking all nearby enemies and stunning them.",
     "damageInstances": [
       {
@@ -2596,7 +2596,7 @@ export const GENERATED_SKILLS = {
   "void-orb": {
     "id": "void-orb",
     "name": "Void Orb",
-    "element": "Common",
+    "element": "Electric",
     "description": "Fires a void orb and damages all enemies in a line.",
     "damageInstances": [
       {
@@ -2617,7 +2617,7 @@ export const GENERATED_SKILLS = {
   "void-orb-red": {
     "id": "void-orb-red",
     "name": "Void Orb (Red)",
-    "element": "Common",
+    "element": "Dark",
     "description": "Fires a red void orb and damages all enemies in a line.",
     "damageInstances": [
       {

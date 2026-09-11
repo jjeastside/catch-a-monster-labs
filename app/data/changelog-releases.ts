@@ -11,6 +11,10 @@ export const releases: readonly ChangelogRelease[] = [
         date: "September 11, 2026",
         label: "Latest",
         changes: [
+            "Added full Cam Lab support for the five new monster and skill elements: Mechanical, Dragon, Light, Dark, and Electric, including calculator typing, element icons, filters, and monster displays.",
+            "Fixed Fanglo's obtainment sources so Strange Rift at Spire Shop and Rift Chest at Abyss Shop both display correctly as current sources.",
+            "Added the new Update 0.48 monsters Veloros and Corsairopus to Cam Lab, including their stats, skills, sources, and Monster Database support.",
+            "Updated Patch Notes with Update 0.48 and 0.48.1, including PvP Mode, the new Cataclysm boss, Beatopus's new evolution, Super Event Boosts, bug fixes, and the latest codes.",
             "Updated skill descriptions across Cam Lab for clearer and more accurate skill information, including improved GaleMoon Blade effect details and its 17.5% Team Shield for 6 seconds.",
             "Added a dedicated Critical Chance effect filter to the Team Effects teammate picker while keeping Critical Chance effects available under the broader passive filtering behavior.",
             "Optimized Save Build and Load Build with a cleaner 20-build library, automatic next-slot saving, favorites-only filtering, improved sorting, clearer overwrite controls, better empty and search states, and faster saved-monster lookups.",

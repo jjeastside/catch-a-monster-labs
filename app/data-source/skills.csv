@@ -22,19 +22,19 @@ claw-attack,Claw Attack,Common,"[
 crimson-burst,Crimson Burst,Common,"[
   { multiplier: 0.2, hits: 11 },
 ]",8,"Bursts fire from beneath the earth, scorching all nearby enemies.",Target: Enemy. Enemy effects: Stun 1.5 secs; Stagger,Ready
-dark-singularity,Dark Singularity,Common,"[
+dark-singularity,Dark Singularity,Dark,"[
   { multiplier: 1.2, hits: 2 },
 ]",6,Creates a dark singularity that damages nearby enemies and reduces their Attack (15-25%) for a short duration.,Target: Enemy. Enemy effects: -15% to -25% damage  for 10 secs,Ready
 dash,Dash,Common,"[
   { multiplier: 1.2, hits: 1 },
 ]",8,"Gains 95% damage reduction, dashes forward rapidly, damaging and knocking back enemies in the way.",Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback,Ready
-deadly-sonic-wave,Deadly Sonic Wave,Common,"[
+deadly-sonic-wave,Deadly Sonic Wave,Dark,"[
   { multiplier: 1.2, hits: 2 },
 ]",8,Beats a drum to emit continuous sonic waves that damage and stun surrounding enemies.,Target: Enemy. Enemy effects: Stun 2 secs,Ready
-demonic-lullaby,Demonic Lullaby,Common,"[
+demonic-lullaby,Demonic Lullaby,Dark,"[
   { multiplier: 0.2, hits: 5 },
 ]",6,"Releases hypnotic sonic waves, stunning nearby enemies and dealing damage to them.",Target: Enemy. Enemy effects: Stun 2 secs,Ready
-divine-energy-blast,Divine Energy Blast,Common,"[
+divine-energy-blast,Divine Energy Blast,Electric,"[
   { multiplier: 3.5, hits: 1 },
 ]",6,"Grants 90% damage reduction for 3s, then gathers energy in front of itself to form an energy orb that strikes and stuns enemies within range.",Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 90% damage reduction 3 secs self,Ready
 dragons-breath,Dragon's Breath,Fire,"[
@@ -43,7 +43,7 @@ dragons-breath,Dragon's Breath,Fire,"[
 dragons-breath-ghost,Dragon's Breath (Ghost),Fire,"[
   { multiplier: 0.4, hits: 3 },
 ]",6,Spry flames continuously forward.,Target: Enemy.,Ready
-dragons-rage,Dragon's Rage,Fire,"[
+dragons-rage,Dragon's Rage,Dragon,"[
   { multiplier: 5, hits: 1 },
 ]",3,Sacrifices 40% of the it's own HP to deal 500% Attack damage to the enemy.,Target: Enemy | Self. Ally effects: Sacrifices 40% of Max HP each attack,Ready
 earth-smash,Earth Smash,Ground,"[
@@ -58,7 +58,7 @@ egg-blast,Egg Blast,Common,"[
 electric-beam,Electric Beam,Common,"[
   { multiplier: 0.25, hits: 5 },
 ]",8,"Sprays an Electric Beam forward, damaging enemies in front.",Target: Enemy.,Ready
-electro-nova,Electro Nova,Common,"[
+electro-nova,Electro Nova,Electric,"[
   { multiplier: 1.2, hits: 1 },
 ]",6,"Releases an electric ring around, stunning and knocking back nearby enemies.",Target: Enemy. Enemy effects: Stun 2 secs,Ready
 emergency-thorn-shield,Emergency Thorn Shield,Common,[],8,"Quickly restores 20% HP and grants a Thorn Shield for a short time, reflects damage to attackers.",Target: Self. Ally effects: 60% self Damage reflection for 2 secs; 20% of Max Health self heal,Ready
@@ -147,10 +147,10 @@ galemoon-blade,GaleMoon Blade,Common,"[
 ghost-fireball,Ghost Fireball,Fire,"[
   { multiplier: 0.3, hits: 4 },
 ]",6,"Casts four Netherfire balls at the enemy, and applies vulnerable to the enemy.",Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs,Ready
-ghost-impact,Ghost Impact,Common,"[
+ghost-impact,Ghost Impact,Dark,"[
   { multiplier: 0.2, hits: 4 },
 ]",6,"Unleash Soul Impact, increasing the attack of all Pets and damaging nearby enemies.",Target: Enemy | Allies. Ally effects: 50% Team Damage for 4 secs,Ready
-ghost-impact-vulnerability,Ghost Impact (Vulnerability),Common,"[
+ghost-impact-vulnerability,Ghost Impact (Vulnerability),Dark,"[
   { multiplier: 0.5, hits: 4 },
 ]",6,"Unleash Soul Impact, applying Vulnerability and damaging nearby enemies.",Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs; Stagger,Ready
 gift-delivery,Gift Delivery,Common,"[
@@ -196,7 +196,7 @@ iceball,Iceball,Ice,"[
 icicle-prison,Icicle Prison,Ice,"[
   { multiplier: 2, hits: 1 },
 ]",8,"Summons a prison of icy spikes to trap the target, dealing damage and stunning them for a short time.",Target: Enemy. Enemy effects: Stun 1 secs,Ready
-inferno-blast,Inferno Blast,Common,"[
+inferno-blast,Inferno Blast,Dark,"[
   { multiplier: 1.5, hits: 1 },
 ]",8,"Stuns all enemies within the electric field first, then fires Inferno Beams.",Target: Enemy.,Ready
 inferno-maelstrom,Inferno Maelstrom,Fire,"[
@@ -217,20 +217,20 @@ leaf-blade,Leaf blade,Grass,"[
 leaf-surge,Leaf Surge,Grass,"[
   { multiplier: 1.2, hits: 1 },
 ]",6,Releases a ring of leaf energy to knock back nearby enemies.,Target: Enemy. Enemy effects: Knockback ,Ready
-lightning-storm-blue,Lightning Storm (Blue),Common,"[
+lightning-storm-blue,Lightning Storm (Blue),Electric,"[
   { multiplier: 0.28, hits: 11 },
 ]",8,"Unleashes continuous lightning in front, damaging enemies and granting a shield.",Target: Enemy | Self. Enemy effects: Stagger Ally effects: 16.67% of Max HP self shield for 6 secs,Ready
-lightning-storm-purple,Lightning Storm (Purple),Common,"[
+lightning-storm-purple,Lightning Storm (Purple),Electric,"[
   { multiplier: 0.2, hits: 11 },
 ]",8,"Unleashes continuous lightning in front, damaging enemies and boosting self attack.",Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 25% self damage for 6 secs,Ready
-lightning-thrust,Lightning Thrust,Common,"[
+lightning-thrust,Lightning Thrust,Electric,"[
   { multiplier: 1.5, hits: 1 },
 ]",8,"Gains 95% damage reduction, dashes forward rapidly, damaging and knocking back enemies in the way.",Target: Enemy | Self. Ally effects: 95% damage reduction for 2 secs,Ready
-lightning-thrust-psyberion-x,Lightning Thrust (Psyberion X),Common,"[
+lightning-thrust-psyberion-x,Lightning Thrust (Psyberion X),Electric,"[
   { multiplier: 2, hits: 1 },
 ]",8,"Gains 95% damage reduction, dashes forward rapidly, damaging and knocking back enemies in the way.",Target: Enemy | Self. Enemy effects: Knockback Ally effects: 95% damage reduction for 2 secs,Ready
 lunar-heal,Lunar Heal,Common,[],8,"Channels lunar energy, instantly restores 18% of maximum health.",Target: Allies. Ally effects: Heal each ally for 18% of their Max HP,Ready
-lunar-taunt,Lunar Taunt,Common,"[
+lunar-taunt,Lunar Taunt,Dark,"[
   { multiplier: 0.75, hits: 1 },
 ]",8,Forces all nearby monsters to target the pet for a short duration.,Target: Enemy. Enemy effects: Taunt for 3 secs,Ready
 mighty-rock-toss,Mighty Rock Toss,Ground,"[
@@ -246,10 +246,10 @@ mighty-water-shuriken,Mighty Water Shuriken,Water,"[
 nether-fireball,Nether Fireball,Fire,"[
   { multiplier: 0.3, hits: 4 },
 ]",6,Casts four Netherfire balls at the enemy.,Target: Enemy.,Ready
-oblivion-beam,Oblivion Beam,Common,"[
+oblivion-beam,Oblivion Beam,Dark,"[
   { multiplier: 0.4, hits: 5 },
 ]",6,"Fires a devastating beam of dark energy, dealing damage and inflicting Vulnerable on enemies hit.",Target: Enemy. Enemy effects: Vulnerability (20%) incoming damage for 10 secs,Ready
-overvolt-tempest,Overvolt Tempest,Common,"[
+overvolt-tempest,Overvolt Tempest,Electric,"[
   { multiplier: 0.2, hits: 11 },
 ]",6,"Unleash a thunderstorm, with a 25% chance to Overload and deal double damage.",Target: Enemy. Enemy effects: Stagger Ally effects: 25% chance to trigger overvolt tempest overload deal 100% damage,Ready
 overvolt-tempest-overload,Overvolt Tempest (Overload),Common,"[
@@ -264,10 +264,10 @@ poison-volley,Poison Volley,Fire,"[
 rallying-war-cry-3-sec-50,Rallying War Cry (3 sec 50%),Fire,[],3,"Howl at the sky, increasing the Attack of all pets.",Target: Allies. Ally effects: 50% team damage for 3 secs,Ready
 rallying-war-cry-6-sec-40-self-70,Rallying War Cry (6 sec 40% self 70%),Ground,[],6,"Howl at the sky, increasing the Attack of all pets.",Target: Allies | Self. Ally effects: 40% team damage for 6 secs; 70% self damage for 6 secs,Ready
 rallying-war-cry-6-sec-50,Rallying War Cry (6 sec 50%),Fire,[],6,"Howl at the sky, increasing the Attack of all pets.",Target: Allies. Ally effects: 50% team damage for 6 secs,Ready
-reapers-crescents,Reaper's Crescents,Common,"[
+reapers-crescents,Reaper's Crescents,Dark,"[
   { multiplier: 0.3, hits: 4 },
 ]",6,"Unleashes four waves of slashes forward, damaging all enemies in the path.",Target: Enemy.,Ready
-reapers-crescents-scareharvest,Reaper's Crescents (Scareharvest),Common,"[
+reapers-crescents-scareharvest,Reaper's Crescents (Scareharvest),Dark,"[
   { multiplier: 0.5, hits: 1 },
   { multiplier: 0.6, hits: 1 },
   { multiplier: 0.7, hits: 1 },
@@ -298,16 +298,16 @@ solar-beam,Solar Beam,Grass,"[
 solar-breath,Solar Breath,Grass,"[
   { multiplier: 0.4, hits: 5 },
 ]",8,"Fires a concentrated solar beam, damaging enemies in front.",Target: Enemy. Enemy effects: Knockback,Ready
-soul-reap-chain,Soul Reap Chain,Common,"[
+soul-reap-chain,Soul Reap Chain,Dark,"[
   { multiplier: 1.5, hits: 1 },
 ]",6,Summon chains to strike enemies and apply one stack of Poison to enemies.,Target: Enemy. Enemy effects: Stun 2 secs;,Ready
 soul-reap-chain-vulnerability,Soul Reap Chain (Vulnerability),Common,"[
   { multiplier: 1.5, hits: 1 },
 ]",6,"Summon chains to strike, stun and applies vulnerable to enemies.",Target: Enemy. Enemy effects: Stun 2 secs; Vulnerability (20%) incoming damage for 10 secs,
-soul-reap-chain-scareharvest,Soul Reap Chain (Scareharvest),Common,"[
+soul-reap-chain-scareharvest,Soul Reap Chain (Scareharvest),Dark,"[
   { multiplier: 2.5, hits: 1 },
 ]",6,Summons chains to strike enemies and apply one stack of Poison to enemies.,Target: Enemy. Enemy effects: 1 stack of Poison,Ready
-soul-slash,Soul Slash,Common,"[
+soul-slash,Soul Slash,Dark,"[
   { multiplier: 0.2, hits: 11 },
 ]",8,"Luanch numerous surrounding slashes, deal damage to enemies.",Target: Enemy. Enemy effects: Stagger,Ready
 sunder-taunt,Sunder Taunt,Ground,"[
@@ -316,11 +316,11 @@ sunder-taunt,Sunder Taunt,Ground,"[
 taunt,Taunt,Common,"[
   { multiplier: 0.5, hits: 1 },
 ]",8,"Forcing all nearby monsters to target the pet for a short duration, and gains 35% damage reduction for 10 seconds.",Target: Enemy | Self. Enemy effects: Taunt for 2 secs Ally effects: 35% damage reduction for 10 secs,Ready
-the-ring,The Ring,Common,"[
+the-ring,The Ring,Dark,"[
   { multiplier: 0.3, hits: 3 },
 ]",6,"Unleash ringing chimes, damaging nearby enemies and lowering their attack.",Target: Enemy. Enemy effects: 15% decreased damage for 10 secs,Ready
 thorn-shield,Thorn Shield,Common,[],8,"Grants a Thorn Shield for a short time, reflects damage to attackers.",Target: Self. Ally effects: 60% Damage reflection for 6 secs,Ready
-thunder-stun,Thunder Stun,Common,"[
+thunder-stun,Thunder Stun,Electric,"[
   { multiplier: 1, hits: 1 },
 ]",8,"Releases a lightning burst, striking all nearby enemies and stunning them.",Target: Enemy. Enemy effects: Stun 2 secs,Ready
 tidal-conch,Tidal Conch,Water,"[
@@ -347,10 +347,10 @@ violet-core-burst-psyberion-x,Violet Core Burst (Psyberion X),Common,"[
 void-collapse,Void Collapse,Common,"[
   { multiplier: 1.2, hits: 2 },
 ]",6,"Twists the space in front, stunning and damaging nearby enemies.",Target: Enemy. Enemy effects: Stun 2 secs,Ready
-void-orb,Void Orb,Common,"[
+void-orb,Void Orb,Electric,"[
   { multiplier: 1.25, hits: 1 },
 ]",6,Fires a void orb and damages all enemies in a line.,Target: Enemy. Enemy effects: Knockback,Ready
-void-orb-red,Void Orb (Red),Common,"[
+void-orb-red,Void Orb (Red),Dark,"[
   { multiplier: 1.25, hits: 1 },
 ]",6,Fires a red void orb and damages all enemies in a line.,Target: Enemy. Enemy effects: Knockback,Ready
 vortex-nova,Vortex Nova,Water,"[

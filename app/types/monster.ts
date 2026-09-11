@@ -40,7 +40,12 @@ export type Element =
     | "Fire"
     | "Grass"
     | "Ice"
-    | "Ground";
+    | "Ground"
+    | "Mechanical"
+    | "Dragon"
+    | "Light"
+    | "Dark"
+    | "Electric";
 
 export type Rarity =
     | "Common"

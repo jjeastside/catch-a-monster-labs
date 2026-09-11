@@ -23,7 +23,7 @@ export const TRAITS: Trait[] = [
     { id: "fragility-vulnerable", name: "Fragility - Vulnerable", rarity: "mythical", image: "/trait-icons/fragility.png", symbolImage: "/trait-symbols/fragility.png", naturalSource: "Sylvaris", effects: [
             { type: "vulnerabilityEffectiveness", percentage: 50, description: "+50% Vulnerability Effectiveness" },
         ] },
-    { id: "fragility-status", name: "Fragility - Burn/Poison Damage", rarity: "mythical", image: "/trait-icons/fragility.png", symbolImage: "/trait-symbols/fragility.png", naturalSource: "Sylvaris", effects: [
+    { id: "fragility-status", name: "Fragility - Burn/Poison Damage", rarity: "mythical", image: "/trait-icons/fragility.png", symbolImage: "/trait-symbols/fragility.png", naturalSource: "Celestian & Veloros", effects: [
             { type: "damage", percentage: 50, description: "+50% Damage to Burning or Poisoned targets", condition: "targetStatused" },
         ] },
 ];
