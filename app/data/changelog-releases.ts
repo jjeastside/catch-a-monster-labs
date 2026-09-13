@@ -7,9 +7,19 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.16",
+        date: "September 13, 2026",
+        label: "Latest",
+        changes: [
+            "Added compact Mutation controls to Monster Compare for Huge, Shiny, Bloodlit, and Fairy builds.",
+            "Added Mutation support to both Shared Settings and Custom Builds so compared monsters can use shared or independent mutation setups.",
+            "Mutation selections now cycle through Normal, X, and Off states and immediately update Compare stats and skill calculations.",
+            "Compare Mutation selections are saved with the existing browser-persisted comparison state.",
+        ],
+    },
+    {
         version: "v1.0.15",
         date: "September 11, 2026",
-        label: "Latest",
         changes: [
             "Added full Cam Lab support for the five new monster and skill elements: Mechanical, Dragon, Light, Dark, and Electric, including calculator typing, element icons, filters, and monster displays.",
             "Fixed Fanglo's obtainment sources so Strange Rift at Spire Shop and Rift Chest at Abyss Shop both display correctly as current sources.",

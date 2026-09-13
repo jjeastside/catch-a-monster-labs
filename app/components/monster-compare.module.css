@@ -398,3 +398,131 @@
   .mode button { font-size: 12px; }
   .column .monsterName { font-size: 22px; }
 }
+
+.compareMutations {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  margin-top: 2px;
+  padding-top: 8px;
+  border-top: 1px solid #203e53;
+}
+.compareMutationsHeading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #9eb9d1;
+}
+.compareMutationsCount {
+  border: 1px solid #304c61;
+  border-radius: 999px;
+  background: #071521;
+  padding: 1px 5px;
+  font-size: 9px;
+  letter-spacing: 0;
+  color: #718ca4;
+}
+.compareMutationButtons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  width: min(100%, 620px);
+  min-width: 0;
+}
+.compareMutationButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  height: 34px;
+  border: 1px solid #2b4358;
+  border-radius: 7px;
+  background: #071521;
+  padding: 4px 7px;
+  color: #8296aa;
+  transition: border-color .15s ease, background .15s ease, color .15s ease, transform .15s ease;
+}
+.compareMutationButton:hover {
+  border-color: #47708f;
+  background: #0a1d2c;
+  color: #dbe8f5;
+}
+.compareMutationButton:active { transform: translateY(1px); }
+.compareMutationButton:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+.compareMutationButton img {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  object-fit: contain;
+  opacity: .55;
+  filter: saturate(.65);
+}
+.compareMutationButton span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 700;
+}
+.compareMutationButton b {
+  margin-left: auto;
+  flex: none;
+  font-size: 10px;
+  line-height: 1;
+}
+.compareMutationButtonActive {
+  background: #0d1824;
+  color: #eef3ff;
+}
+.compareMutationButtonActive img {
+  opacity: 1;
+  filter: none;
+}
+.compareMutationButtonX {
+  background: #111724;
+}
+.compareMutationsCompact {
+  margin-top: 6px;
+  padding-top: 6px;
+  gap: 6px;
+}
+.compareMutationsCompact .compareMutationsHeading {
+  font-size: 9px;
+}
+.compareMutationsCompact .compareMutationButtons {
+  width: 100%;
+  gap: 4px;
+}
+.compareMutationsCompact .compareMutationButton {
+  justify-content: center;
+  height: 30px;
+  padding: 3px 5px;
+}
+.compareMutationsCompact .compareMutationButton img {
+  width: 20px;
+  height: 20px;
+}
+.compareMutationsCompact .compareMutationButton span {
+  display: none;
+}
+.compareMutationsCompact .compareMutationButton b {
+  margin-left: 0;
+  font-size: 9px;
+}
+@media (max-width: 640px) {
+  .compareMutations { align-items: stretch; flex-direction: column; gap: 6px; }
+  .compareMutationButtons { width: 100%; }
+  .compareMutationButton { justify-content: center; }
+  .compareMutationButton span { display: none; }
+}
