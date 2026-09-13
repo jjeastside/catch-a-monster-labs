@@ -19,7 +19,7 @@ import { CURRENT_MAX_LEVEL, MIN_LEVEL } from "../lib/level-config";
 import { formatNumber, formatStatNumber } from "../lib/format-numbers";
 import { isBestValue } from "../lib/compare-values";
 import { assetPath } from "../lib/asset-path";
-import { createDefaultBuild, type Build, type Rank } from "../types/build";
+import { createDefaultBuild, type Build, type Mutation, type Rank } from "../types/build";
 import { AccountMultipliers } from "./account-multipliers";
 import { useCompareAccount } from "../lib/use-compare-account";
 import { PASSIVE_DEFINITIONS, getPassiveImagePath } from "../data/passives";
@@ -48,6 +48,20 @@ const iconAliases: Record<string, string> = {
   "soul-reap-chain-scareharvest": "soul-reap-chain-poison",
 };
 const compareStorageKey = "cam-lab-monster-compare-v1";
+const compareMutations: Array<{
+  id: Mutation;
+  xId: Mutation;
+  label: string;
+  icon: string;
+  xIcon: string;
+  accent: string;
+}> = [
+  { id: "huge", xId: "huge-x", label: "Huge", icon: "/icons/Huge.png", xIcon: "/icons/huge-x.png", accent: "#e954d8" },
+  { id: "shiny", xId: "shiny-x", label: "Shiny", icon: "/icons/Shiny.png", xIcon: "/icons/shiny-x.png", accent: "#e8df39" },
+  { id: "bloodlit", xId: "bloodlit-x", label: "Bloodlit", icon: "/icons/Bloodlit.png", xIcon: "/icons/bloodlit-x.png", accent: "#ff515b" },
+  { id: "fairy", xId: "fairy-x", label: "Fairy", icon: "/icons/Fairy.png", xIcon: "/icons/fairy-x.png", accent: "#9f6cff" },
+];
+
 
 type SavedCompareState = {
   ids: string[];
@@ -556,6 +570,75 @@ function SharedEvolutionMultiplier({
   );
 }
 
+function CompareMutations({
+  build,
+  onChange,
+  compact = false,
+}: {
+  build: Build;
+  onChange: (build: Build) => void;
+  compact?: boolean;
+}) {
+  const cycleMutation = (mutation: (typeof compareMutations)[number]) => {
+    const remaining = build.mutations.filter(
+      (value) => value !== mutation.id && value !== mutation.xId,
+    );
+
+    if (build.mutations.includes(mutation.xId)) {
+      onChange({ ...build, mutations: remaining });
+    } else if (build.mutations.includes(mutation.id)) {
+      onChange({ ...build, mutations: [...remaining, mutation.xId] });
+    } else {
+      onChange({ ...build, mutations: [...remaining, mutation.id] });
+    }
+  };
+
+  return (
+    <div className={`${styles.compareMutations} ${compact ? styles.compareMutationsCompact : ""}`.trim()}>
+      <div className={styles.compareMutationsHeading}>
+        <span>Mutations</span>
+        <span className={styles.compareMutationsCount}>{build.mutations.length}/4</span>
+      </div>
+      <div className={styles.compareMutationButtons}>
+        {compareMutations.map((mutation) => {
+          const isX = build.mutations.includes(mutation.xId);
+          const isSelected = isX || build.mutations.includes(mutation.id);
+          const state = isX ? "X" : isSelected ? "Normal" : "Off";
+          return (
+            <button
+              key={mutation.id}
+              type="button"
+              aria-pressed={isSelected}
+              aria-label={`${mutation.label} mutation: ${state}. Click to cycle Normal, X, Off.`}
+              title={`${mutation.label}: ${state} · Click to cycle Normal → X → Off`}
+              onClick={() => cycleMutation(mutation)}
+              className={`${styles.compareMutationButton} ${isSelected ? styles.compareMutationButtonActive : ""} ${isX ? styles.compareMutationButtonX : ""}`.trim()}
+              style={
+                isSelected
+                  ? {
+                      borderColor: `${mutation.accent}aa`,
+                      boxShadow: `inset 0 0 0 1px ${mutation.accent}33${isX ? `, 0 0 10px ${mutation.accent}22` : ""}`,
+                    }
+                  : undefined
+              }
+            >
+              <img
+                src={assetPath(isX ? mutation.xIcon : mutation.icon)}
+                alt=""
+                aria-hidden="true"
+              />
+              <span>{mutation.label}</span>
+              {isSelected && (
+                <b style={{ color: mutation.accent }}>{isX ? "X" : "N"}</b>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function CompareBuildControls({
   build,
   onChange,
@@ -673,6 +756,7 @@ function CompareBuildControls({
           onChangeAction={(value) => update("armorId", value)}
         />
       </div>
+      <CompareMutations build={build} onChange={onChange} compact={compact} />
     </div>
   );
 }
