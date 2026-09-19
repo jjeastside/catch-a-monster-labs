@@ -139,3 +139,17 @@ textarea {
     opacity: 0.7;
   }
 }
+
+/* Calculator-only visual alignment with Monster Compare. */
+.cam-calculator { color-scheme: dark; }
+.cam-calculator select, .cam-calculator option, .cam-calculator input,
+.cam-calculator textarea { color-scheme: dark; }
+.cam-calculator select option { background-color: #0f1620; color: #e9f3ff; }
+.cam-calculator :is(button, input, select, textarea):focus-visible {
+  outline: 2px solid #61aeff; outline-offset: 2px;
+}
+.cam-calculator :is(input, select, textarea)::placeholder { color: #94aec3; }
+.cam-calculator section { scrollbar-color: #41506a transparent; }
+@media (hover: hover) {
+ .cam-calculator button:not(:disabled) { transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease; }
+}

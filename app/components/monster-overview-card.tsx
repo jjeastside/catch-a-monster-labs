@@ -270,7 +270,7 @@ export function MonsterOverviewCard({ monster, isFavorite, onToggleFavorite, onM
     }, [evolutionOpen]);
     const { portraitStyle, portraitFrameStyle } = getMonsterPortraitStyles(monster);
     return (
-        <section className="relative flex min-w-0 flex-col gap-4 overflow-hidden rounded-xl border border-[#344050] bg-[#141c28] p-4 sm:flex-row sm:gap-6 sm:p-6">
+        <section className="relative flex min-w-0 flex-col gap-4 overflow-hidden rounded-xl border border-[#25475f] bg-[#0b2032] p-4 sm:flex-row sm:gap-6 sm:p-6">
             <div className="pointer-events-none absolute inset-y-0 left-0 w-64 bg-[radial-gradient(circle_at_left,rgba(117,133,255,0.09),transparent_70%)]" />
             <div
                 className={`relative grid size-28 shrink-0 place-items-center overflow-hidden rounded-2xl border-2 p-[3px] shadow-[0_12px_30px_rgba(0,0,0,0.28)] sm:size-40 xl:size-44 ${
@@ -317,14 +317,14 @@ export function MonsterOverviewCard({ monster, isFavorite, onToggleFavorite, onM
                         }
                         aria-pressed={isFavorite}
                         onClick={onToggleFavorite}
-                        className="grid size-10 shrink-0 place-items-center rounded-lg border border-[#344050] bg-[#0f1620] text-xl text-[#7182ff] transition hover:border-[#7182ff]"
+                        className="grid size-10 shrink-0 place-items-center rounded-lg border border-[#25475f] bg-[#041320] text-xl text-[#7182ff] transition hover:border-[#7182ff]"
                     >
                         {isFavorite ? "★" : "☆"}
                     </button>
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-                    <span className="inline-flex h-7 items-center gap-1.5 rounded-md border border-[#344050] bg-[#0f1620] px-2.5 text-xs leading-none text-[#e3e8f1]">
+                    <span className="inline-flex h-7 items-center gap-1.5 rounded-md border border-[#25475f] bg-[#041320] px-2.5 text-xs leading-none text-[#e3e8f1]">
                         <img
                             src={assetPath(elementIcon)}
                             alt=""
@@ -352,7 +352,7 @@ export function MonsterOverviewCard({ monster, isFavorite, onToggleFavorite, onM
                         .map((sourceLabel) => (
                             <span
                                 key={`${monster.id}-${sourceLabel}`}
-                                className="rounded-md border border-[#344050] bg-[#0f1620] px-2.5 py-1 text-xs text-[#e3e8f1]"
+                                className="rounded-md border border-[#25475f] bg-[#041320] px-2.5 py-1 text-xs text-[#e3e8f1]"
                             >
                                 {sourceLabel}
                             </span>
@@ -362,7 +362,7 @@ export function MonsterOverviewCard({ monster, isFavorite, onToggleFavorite, onM
                         <button
                             type="button"
                             onClick={() => setEvolutionOpen(true)}
-                            className="group inline-flex items-center gap-1.5 rounded-md border border-[#344050] bg-[#0f1620] px-2.5 py-1 text-xs font-medium text-[#e3e8f1] transition hover:border-[#7182ff]/70 hover:bg-[#151e2e] hover:text-white hover:shadow-[0_0_14px_rgba(113,130,255,0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7182ff]/60"
+                            className="group inline-flex items-center gap-1.5 rounded-md border border-[#25475f] bg-[#041320] px-2.5 py-1 text-xs font-medium text-[#e3e8f1] transition hover:border-[#7182ff]/70 hover:bg-[#141c28] hover:text-white hover:shadow-[0_0_14px_rgba(113,130,255,0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7182ff]/60"
                             aria-haspopup="dialog"
                         >
                             <img
@@ -400,7 +400,7 @@ export function MonsterOverviewCard({ monster, isFavorite, onToggleFavorite, onM
                         >
                             <div className="flex items-start justify-between gap-4 border-b border-[#2f3c4e] px-4 py-4 sm:px-6">
                                 <div className="flex min-w-0 items-start gap-3">
-                                    <div className="mt-0.5 grid size-10 shrink-0 place-items-center rounded-lg border border-[#344050] bg-[#0f1620]">
+                                    <div className="mt-0.5 grid size-10 shrink-0 place-items-center rounded-lg border border-[#25475f] bg-[#041320]">
                                         <img
                                             src={assetPath("/icons/evolution.png")}
                                             alt=""

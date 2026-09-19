@@ -97,7 +97,7 @@ export function TraitSelect({ value, onChangeAction }: TraitSelectProps) {
                 }}
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
-                className="flex min-h-[58px] w-full items-center gap-2 rounded-lg border border-[#344050] bg-[#141c28] px-2 py-1.5 text-left outline-none transition hover:border-[#5c6a80] focus:border-[#7182ff]"
+                className="flex min-h-[58px] w-full items-center gap-2 rounded-lg border border-[#25475f] bg-[#041320] px-2 py-1.5 text-left outline-none transition hover:border-[#3984af] focus:border-[#7182ff]"
             >
                 {selectedTrait ? (
                     <>
@@ -120,14 +120,14 @@ export function TraitSelect({ value, onChangeAction }: TraitSelectProps) {
                     role="listbox"
                     aria-label="Trait"
                     style={{ maxHeight: `${menuMaxHeight}px` }}
-                    className={`absolute left-0 z-50 w-full min-w-0 max-w-full overflow-y-auto rounded-lg border border-[#344050] bg-[#0f1620] p-1 shadow-2xl ${opensUpward ? "bottom-full mb-1" : "top-full mt-1"}`}
+                    className={`absolute left-0 z-50 w-full min-w-0 max-w-full overflow-y-auto rounded-lg border border-[#25475f] bg-[#041320] p-1 shadow-2xl ${opensUpward ? "bottom-full mb-1" : "top-full mt-1"}`}
                 >
                     <button
                         type="button"
                         role="option"
                         aria-selected={value === null}
                         onClick={() => selectTrait(null)}
-                        className={`w-full rounded-md px-2 py-2 text-left text-xs ${value === null ? "bg-[#202846] text-[#7182ff]" : "text-[#8e99ad] hover:bg-[#141c28]"}`}
+                        className={`w-full rounded-md px-2 py-2 text-left text-xs ${value === null ? "bg-[#102e48] text-[#7182ff]" : "text-[#8e99ad] hover:bg-[#102b40]"}`}
                     >
                         No Trait
                     </button>
@@ -141,7 +141,7 @@ export function TraitSelect({ value, onChangeAction }: TraitSelectProps) {
                                 role="option"
                                 aria-selected={selected}
                                 onClick={() => selectTrait(trait.id)}
-                                className={`flex w-full items-center gap-2 rounded-md p-2 text-left ${selected ? "bg-[#202846]" : "hover:bg-[#141c28]"}`}
+                                className={`flex w-full items-center gap-2 rounded-md p-2 text-left ${selected ? "bg-[#102e48]" : "hover:bg-[#102b40]"}`}
                             >
                                 <TraitIcon trait={trait} size="combat" />
                                 <span className="min-w-0 flex-1">

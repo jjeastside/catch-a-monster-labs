@@ -7,9 +7,33 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.17",
+        date: "September 19, 2026",
+        label: "Latest",
+        changes: [
+            "Added Twirly, the new World Boss monster, to Cam Lab with its skills and monster data.",
+            "Updated Patch Notes for Catch a Monster Update 0.49: World Boss Event and Trait Server Buffs, PvP Battle Pass, PvP Rank and Season Leaderboard Rewards, new Trait and Mythic Gear, Coilwork City achievements and quests, and code Twirly.",
+            "Added Coilwork City to Path of Progress as the 14th achievement, bringing the maximum Path of Progress Health bonus to +28%.",
+            "Expanded Team Composition with a three-monster builder, an owned-monster inventory, combined team statistics, team roles and effects, and optional recommendations with combat-goal context.",
+            "Added a 20-slot Save / Load Team library with named teams, three-monster previews, and load, overwrite, rename, and delete controls.",
+            "Added multiple owned copies of the same monster, each with an independently editable build, and support for using different copies in one team.",
+            "Refined Team Builder into compact, side-by-side Monster Compare-inspired cards with build summaries, mutations, Trait and equipment details, and Damage, Health, and Total Skill DPS previews.",
+            "Moved detailed per-monster build controls into a dedicated editor overlay to keep the Team Builder uncluttered; clicking outside or closing saves the edited build to inventory.",
+            "Made compact build details clickable, keeping a single corner edit indicator instead of repeated pencil icons; mutation icons cycle Off, Normal, and X directly without opening the editor.",
+            "Added consistent trait, weapon, armor, Genetic Potential, and mutation iconography to team build summaries; retained actual equipped-item artwork and the Calculator-style Trait symbol.",
+            "Added weapon and armor attributes to Team Builder editing and saved builds, including Secret fixed-attribute artwork such as Dual Cast.",
+            "Matched Team Builder editor colors to the Calculator without changing its dimensions, and made inventory and team status notices dismiss automatically.",
+            "Refined the Build Calculator to match Monster Compare's layered dark-navy styling across Monster Browser, Calculator Results, Build Editor, selectors, dropdowns, badges, and attribute panels without flooding every surface with blue.",
+            "Restored the original Build Calculator heading and removed the extra workspace banner; polished Trait dropdown and enhancement colors while preserving compact rank and enhancement controls.",
+            "Added Damage, Health, Total Skill DPS, Critical Chance, and Critical Multiplier to each compact Team Builder slot, with Calculator-style stat icons and darker stat cards.",
+            "Added a searchable monster picker from each team card's corner edit control and empty Add Monster slots, with the ability to select an owned copy or add a monster to the team.",
+            "Added inventory Hide / Show Hidden controls to set aside monsters that are not being used, without deleting their saved builds or removing existing team members; hidden monsters are excluded from browsing and recommendations.",
+            "Improved empty team slots with a centered Add Monster action, corrected the plus icon alignment, and kept the full empty slot clickable.",
+        ],
+    },
+    {
         version: "v1.0.16",
         date: "September 13, 2026",
-        label: "Latest",
         changes: [
             "Added compact Mutation controls to Monster Compare for Huge, Shiny, Bloodlit, and Fairy builds.",
             "Added Mutation support to both Shared Settings and Custom Builds so compared monsters can use shared or independent mutation setups.",

@@ -15,6 +15,7 @@ import { MonsterBrowser } from "./monster-browser";
 import { TopNavigation } from "./top-navigation";
 import { SiteFooter } from "./site-footer";
 import { SiteHeading } from "./site-heading";
+import { assetPath } from "../lib/asset-path";
 import { SavedBuildsPanel, type SavedBuildSlot } from "./saved-builds-panel";
 
 const SAVED_BUILDS_KEY = "cam-lab-saved-builds";
@@ -678,7 +679,7 @@ export function AppShell() {
     }
 
     return (
-        <div className="min-h-screen min-w-0 overflow-x-hidden bg-[#0b111a] text-[#f6f8fc]">
+        <div className="cam-calculator min-h-screen min-w-0 overflow-x-hidden bg-[radial-gradient(ellipse_at_50%_0,#071c2e_0%,#031322_65%,#041421_100%)] text-[#f6f8fc]">
             {isSharePreviewReady && sharePreview && (
                 <div
                     id="cam-lab-share-preview-data"
@@ -702,7 +703,7 @@ export function AppShell() {
             <TopNavigation />
             <SiteHeading />
 
-            <div className="mx-auto w-full max-w-[1800px] px-3 pt-2 sm:px-5 sm:pt-3 xl:px-7 2xl:px-8">
+            <div className="mx-auto w-full max-w-[1800px] space-y-3 px-3 pt-3 sm:px-5 xl:px-7 2xl:px-8">
                 <AccountMultipliers
                     build={build}
                     onBuildChangeAction={setBuild}
@@ -712,7 +713,7 @@ export function AppShell() {
                         role="status"
                         className={`mt-2 rounded-md border px-3 py-2 text-center text-xs font-semibold ${
                             shareBuildStatus === "copied"
-                                ? "border-[#7182ff]/40 bg-[#202846] text-[#c7ceff]"
+                                ? "border-[#7182ff]/40 bg-[#143452] text-[#c7ceff]"
                                 : "border-[#ff6b6b]/35 bg-[#3a1f25] text-[#ffb0b0]"
                         }`}
                     >
@@ -725,7 +726,7 @@ export function AppShell() {
 
             <nav
                 aria-label="Calculator sections"
-                className="sticky top-0 z-40 mx-3 mt-2 grid grid-cols-3 overflow-hidden rounded-lg border border-[#3b4759] bg-[#0d131d]/95 p-1 shadow-lg backdrop-blur sm:mx-5 sm:mt-3 lg:hidden"
+                className="sticky top-0 z-40 mx-3 mt-2 grid grid-cols-3 overflow-hidden rounded-lg border border-[#25475f] bg-[#041320]/95 p-1 shadow-lg backdrop-blur sm:mx-5 sm:mt-3 lg:hidden"
             >
                 {([
                     ["monster", "Monster"],
@@ -740,7 +741,7 @@ export function AppShell() {
                         className={`min-w-0 rounded-md px-1 py-2 text-xs font-semibold transition ${
                             mobilePanel === panel
                                 ? "bg-[#7182ff] text-white shadow-[0_4px_16px_rgba(113,130,255,0.28)]"
-                                : "text-[#8e99ad] hover:bg-[#141c28] hover:text-white"
+                                : "text-[#8e99ad] hover:bg-[#0b2336] hover:text-white"
                         }`}
                     >
                         {label}
@@ -754,15 +755,15 @@ export function AppShell() {
                     mx-auto
                     w-full
                     max-w-[1800px]
-                    gap-4
+                    gap-3
                     px-3
                     pb-5
                     pt-2
                     sm:px-5
-                    lg:h-[calc(100vh-233px)]
-                    lg:grid-cols-[minmax(250px,0.85fr)_minmax(420px,1.65fr)_minmax(280px,1fr)]
+                    lg:h-[calc(100vh-318px)] lg:min-h-[470px]
+                    lg:grid-cols-[minmax(240px,0.85fr)_minmax(380px,1.65fr)_minmax(290px,1fr)]
                     lg:overflow-hidden
-                    xl:gap-5
+                    xl:gap-3
                     xl:px-7
                     2xl:px-8
                 "

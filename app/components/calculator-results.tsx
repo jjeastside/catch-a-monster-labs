@@ -724,7 +724,7 @@ function BuildStat({
                        value,
                    }: BuildStatProps) {
     return (
-        <div className="rounded-lg border border-[#344050] bg-[#0f1620] p-4">
+        <div className="rounded-lg border border-[#25475f] bg-[#041320] p-4">
             <div className="flex items-center gap-2">
                 <img
                     src={assetPath(iconSrc)}
@@ -819,7 +819,7 @@ function InfoTooltip({ label, text, triggerText }: { label: string; text: string
                             width: 224,
                             zIndex: 9999,
                         }}
-                        className="pointer-events-none rounded-lg border border-[#41506a] bg-[#0d131d] px-3 py-2 text-left text-xs font-normal normal-case leading-5 tracking-normal text-[#bfc7d5] shadow-2xl"
+                        className="pointer-events-none rounded-lg border border-[#35617d] bg-[#0d131d] px-3 py-2 text-left text-xs font-normal normal-case leading-5 tracking-normal text-[#bfc7d5] shadow-2xl"
                     >
                         {text}
                     </div>,
@@ -873,7 +873,7 @@ function SkillDamageValue({
                     {formatStatNumber(totalDamage)}
                 </p>
                 {hasLifeSteal && (
-                    <div className="mt-2 border-t border-[#39415a] pt-2">
+                    <div className="mt-2 border-t border-[#305672] pt-2">
                         <div className="flex items-center gap-1.5 text-[#6ee7a8]">
                             <img src={assetPath("/icons/life-steal.png")} alt="" className="size-4 shrink-0 object-contain" />
                             <span className="text-[11px] font-bold uppercase tracking-[0.08em]">Life Steal</span>
@@ -931,7 +931,7 @@ function SkillDamageValue({
                     Total <span className={accentClass}>{formatStatNumber(totalDamage)}</span>
                 </p>
                 {hasLifeSteal && (
-                    <div className="mt-2 border-t border-[#39415a] pt-2">
+                    <div className="mt-2 border-t border-[#305672] pt-2">
                         <div className="flex items-center gap-1.5 text-[#6ee7a8]">
                             <img src={assetPath("/icons/life-steal.png")} alt="" className="size-4 shrink-0 object-contain" />
                             <span className="text-[11px] font-bold uppercase tracking-[0.08em]">Life Steal</span>
@@ -972,7 +972,7 @@ function SkillDamageValue({
                 Total <span className={accentClass}>{formatStatNumber(totalDamage)}</span>
             </p>
             {hasLifeSteal && (
-                <div className="mt-2 border-t border-[#39415a] pt-2">
+                <div className="mt-2 border-t border-[#305672] pt-2">
                     <div className="flex items-center gap-1.5 text-[#6ee7a8]">
                         <img src={assetPath("/icons/life-steal.png")} alt="" className="size-4 shrink-0 object-contain" />
                         <span className="text-[11px] font-bold uppercase tracking-[0.08em]">Life Steal</span>
@@ -1340,7 +1340,7 @@ function SkillDamagePanel({
         <section className="p-3 sm:p-4">
             <div className="flex flex-wrap items-start gap-3">
                 <div className="flex min-w-[14rem] flex-[0_1_16rem] items-start gap-3">
-                    <div className="grid size-11 shrink-0 place-items-center overflow-hidden rounded-lg border border-[#41506a] bg-[#0d131d] p-0.5 shadow-[0_6px_14px_rgba(0,0,0,0.2)]">
+                    <div className="grid size-11 shrink-0 place-items-center overflow-hidden rounded-lg border border-[#35617d] bg-[#0d131d] p-0.5 shadow-[0_6px_14px_rgba(0,0,0,0.2)]">
                         <img
                             src={assetPath(skillIconPath)}
                             alt={`${skillDisplayName} skill`}
@@ -1440,7 +1440,7 @@ function SkillDamagePanel({
 
                 {isDamagingSkill && (
                     <div className="grid min-w-[min(100%,26rem)] flex-[1_1_26rem] grid-cols-[repeat(auto-fit,minmax(min(100%,8.75rem),1fr))] gap-2">
-                        <div className="min-w-0 rounded-lg border border-[#39415a] bg-[#1c2130] p-3">
+                        <div className="min-w-0 rounded-lg border border-[#305672] bg-[#0e2a40] p-3">
                             <div className="flex items-center gap-1.5 text-[#aeb8ff]">
                                 <img src={assetPath("/account-icons/damage.png")} alt=""
                                      className="size-4 shrink-0 object-contain"/>
@@ -1506,7 +1506,7 @@ function SkillDamagePanel({
                                 </p>
 
                                 {lifeStealHps !== null && (
-                                    <div className="mt-2 border-t border-[#39415a] pt-2">
+                                    <div className="mt-2 border-t border-[#305672] pt-2">
                                         <div className="flex items-center gap-1.5 text-[#6ee7a8]">
                                             <img src={assetPath("/icons/life-steal.png")} alt="" className="size-4 shrink-0 object-contain" />
                                             <span className="text-[11px] font-bold uppercase tracking-[0.08em]">HPS</span>
@@ -1588,7 +1588,7 @@ function SkillDamagePanel({
                                             <span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
                                         </p>
                                         {damageIncreaseLifeStealHps !== null && (
-                                            <div className="mt-2 border-t border-[#39415a] pt-2">
+                                            <div className="mt-2 border-t border-[#305672] pt-2">
                                                 <div className="flex items-center gap-1.5 text-[#6ee7a8]">
                                                     <img src={assetPath("/icons/life-steal.png")} alt="" className="size-4 shrink-0 object-contain" />
                                                     <span className="text-[11px] font-bold uppercase tracking-[0.08em]">HPS</span>
@@ -1651,7 +1651,7 @@ function SkillDamagePanel({
                                             {formatStatNumber(vulnerabilityDps)}<span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
                                         </p>
                                         {vulnerabilityLifeStealHps !== null && (
-                                            <div className="mt-2 border-t border-[#39415a] pt-2">
+                                            <div className="mt-2 border-t border-[#305672] pt-2">
                                                 <div className="flex items-center gap-1.5 text-[#6ee7a8]">
                                                     <img src={assetPath("/icons/life-steal.png")} alt="" className="size-4 shrink-0 object-contain" />
                                                     <span className="text-[11px] font-bold uppercase tracking-[0.08em]">HPS</span>
@@ -1869,7 +1869,7 @@ function SkillDamagePanel({
             {!isDamagingSkill ? (
                 <>
                     {(skill.statusEffects?.length ?? 0) === 0 ? (
-                        <div className="mt-3 rounded-md border border-dashed border-[#344050] bg-[#0d131d]/45 p-3">
+                        <div className="mt-3 rounded-md border border-dashed border-[#25475f] bg-[#041320]/45 p-3">
                             <p className="text-sm text-[#8e99ad]">
                                 {skill.notes ?? "This skill does not deal damage."}
                             </p>
@@ -1881,14 +1881,14 @@ function SkillDamagePanel({
                             <button
                                 type="button"
                                 onClick={() => setShowDetails((current) => !current)}
-                                className="mt-2 flex w-full items-center justify-between rounded-lg border border-[#344050] bg-[#0f1620] px-3 py-2 text-left text-xs text-[#8e99ad] transition hover:border-[#465166] hover:text-[#e3e8f1]"
+                                className="mt-2 flex w-full items-center justify-between rounded-lg border border-[#25475f] bg-[#041320] px-3 py-2 text-left text-xs text-[#8e99ad] transition hover:border-[#38617b] hover:text-[#e3e8f1]"
                             >
                                 <span>{showDetails ? "Hide calculation details" : "View calculation details"}</span>
                                 <span className={`text-base transition-transform ${showDetails ? "rotate-180" : ""}`}>⌄</span>
                             </button>
 
                             {showDetails && (
-                                <div className="mt-3 rounded-lg border border-[#344050] bg-[#0f1620] p-3">
+                                <div className="mt-3 rounded-lg border border-[#25475f] bg-[#041320] p-3">
                                     <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">
                                         Healing Calculation
                                     </p>
@@ -1924,14 +1924,14 @@ function SkillDamagePanel({
                     <button
                         type="button"
                         onClick={() => setShowDetails((current) => !current)}
-                        className="mt-2 flex w-full items-center justify-between rounded-lg border border-[#344050] bg-[#0f1620] px-3 py-2 text-left text-xs text-[#8e99ad] transition hover:border-[#465166] hover:text-[#e3e8f1]"
+                        className="mt-2 flex w-full items-center justify-between rounded-lg border border-[#25475f] bg-[#041320] px-3 py-2 text-left text-xs text-[#8e99ad] transition hover:border-[#38617b] hover:text-[#e3e8f1]"
                     >
                         <span>{showDetails ? "Hide calculation details" : "View calculation details"}</span>
                         <span className={`text-base transition-transform ${showDetails ? "rotate-180" : ""}`}>⌄</span>
                     </button>
 
                     {showDetails && (
-                        <div className="mt-3 space-y-3 rounded-xl border border-[#33435b] bg-[#0b121c]/80 p-3 sm:p-4">
+                        <div className="mt-3 space-y-3 rounded-xl border border-[#284d69] bg-[#0b121c]/80 p-3 sm:p-4">
                             <div className="rounded-xl border border-[#365486] bg-[linear-gradient(135deg,rgba(27,49,80,0.55),rgba(14,27,43,0.8))] p-3 sm:p-4">
                                 <div className="flex items-center gap-2">
                                     <span className="grid h-7 w-7 place-items-center rounded-md border border-[#4f78bf]/50 bg-[#17305a]/70 text-sm text-[#8fb6ff]">▦</span>
@@ -1942,19 +1942,19 @@ function SkillDamagePanel({
                                 </div>
 
                                 <div className="mt-3 flex flex-wrap items-stretch gap-2 text-xs text-[#9ba8bc]">
-                                    <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d1724]/85 px-3 py-2.5">
+                                    <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d131d]/85 px-3 py-2.5">
                                         <p className="text-[10px] uppercase tracking-[0.12em] text-[#7893bb]">Damage</p>
                                         <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatStatNumber(stats.damage)}</p>
                                     </div>
                                     <span className="self-center px-1 text-lg font-bold text-[#6f9df0]">×</span>
-                                    <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d1724]/85 px-3 py-2.5">
+                                    <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d131d]/85 px-3 py-2.5">
                                         <p className="text-[10px] uppercase tracking-[0.12em] text-[#7893bb]">Skill</p>
                                         <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatNumber(totalMultiplier)}×</p>
                                     </div>
                                     {combatDamage.passiveDamageMultiplier !== 1 && (
                                         <>
                                             <span className="self-center px-1 text-lg font-bold text-[#6f9df0]">×</span>
-                                            <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d1724]/85 px-3 py-2.5">
+                                            <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d131d]/85 px-3 py-2.5">
                                                 <p className="text-[10px] uppercase tracking-[0.12em] text-[#7893bb]">Passive</p>
                                                 <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatNumber(combatDamage.passiveDamageMultiplier)}×</p>
                                             </div>
@@ -1963,7 +1963,7 @@ function SkillDamagePanel({
                                     {traitDamageMultiplier !== 1 && (
                                         <>
                                             <span className="self-center px-1 text-lg font-bold text-[#6f9df0]">×</span>
-                                            <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d1724]/85 px-3 py-2.5">
+                                            <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d131d]/85 px-3 py-2.5">
                                                 <p className="text-[10px] uppercase tracking-[0.12em] text-[#7893bb]">Trait</p>
                                                 <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatNumber(traitDamageMultiplier)}×</p>
                                             </div>
@@ -1972,7 +1972,7 @@ function SkillDamagePanel({
                                     {attributeEffects.skillDamageMultiplier !== 1 && (
                                         <>
                                             <span className="self-center px-1 text-lg font-bold text-[#6f9df0]">×</span>
-                                            <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d1724]/85 px-3 py-2.5">
+                                            <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d131d]/85 px-3 py-2.5">
                                                 <p className="text-[10px] uppercase tracking-[0.12em] text-[#7893bb]">Attribute</p>
                                                 <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatNumber(attributeEffects.skillDamageMultiplier)}×</p>
                                             </div>
@@ -1981,7 +1981,7 @@ function SkillDamagePanel({
                                     {accountRiftDamageMultiplier !== 1 && (
                                         <>
                                             <span className="self-center px-1 text-lg font-bold text-[#6f9df0]">×</span>
-                                            <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d1724]/85 px-3 py-2.5">
+                                            <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d131d]/85 px-3 py-2.5">
                                                 <p className="text-[10px] uppercase tracking-[0.12em] text-[#7893bb]">Account Rift</p>
                                                 <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatNumber(accountRiftDamageMultiplier)}×</p>
                                             </div>
@@ -2011,7 +2011,7 @@ function SkillDamagePanel({
                                             <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatStatNumber(combatDamage.normalDamage)}</p>
                                         </div>
                                         <span className="hidden text-center text-lg font-bold text-[#6f9df0] lg:block">×</span>
-                                        <div className="rounded-lg border border-[#3b5579] bg-[#0d1724]/85 p-2.5">
+                                        <div className="rounded-lg border border-[#3b5579] bg-[#0d131d]/85 p-2.5">
                                             <p className="text-[10px] uppercase tracking-wide text-[#8293ac]">Non-Crit Chance</p>
                                             <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatNumber((1 - critChance) * 100)}%</p>
                                         </div>
@@ -2021,7 +2021,7 @@ function SkillDamagePanel({
                                             <p className="mt-1 text-base font-bold text-[#ffb09a]">{formatStatNumber(combatDamage.criticalDamage)}</p>
                                         </div>
                                         <span className="hidden text-center text-lg font-bold text-[#6f9df0] lg:block">×</span>
-                                        <div className="rounded-lg border border-[#3b5579] bg-[#0d1724]/85 p-2.5">
+                                        <div className="rounded-lg border border-[#3b5579] bg-[#0d131d]/85 p-2.5">
                                             <p className="text-[10px] uppercase tracking-wide text-[#8293ac]">Crit Chance</p>
                                             <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatNumber(stats.critChance)}%</p>
                                         </div>
@@ -2034,13 +2034,13 @@ function SkillDamagePanel({
                                         </div>
                                     </div>
 
-                                    <div className="mt-3 grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-2 border-t border-[#33435b] pt-3 text-center">
-                                        <div className="rounded-lg border border-[#3b5579] bg-[#0d1724]/85 p-2.5">
+                                    <div className="mt-3 grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-2 border-t border-[#284d69] pt-3 text-center">
+                                        <div className="rounded-lg border border-[#3b5579] bg-[#0d131d]/85 p-2.5">
                                             <p className="text-sm font-bold text-[#c8d3ff]">{formatStatNumber(expectedDamage)}</p>
                                             <p className="mt-0.5 text-[10px] text-[#8293ac]">Expected Damage</p>
                                         </div>
                                         <span className="font-bold text-[#6f9df0]">÷</span>
-                                        <div className="rounded-lg border border-[#3b5579] bg-[#0d1724]/85 p-2.5">
+                                        <div className="rounded-lg border border-[#3b5579] bg-[#0d131d]/85 p-2.5">
                                             <p className="text-sm font-bold text-[#edf2fb]">{formatNumber(displayedCooldown)}s</p>
                                             <p className="mt-0.5 text-[10px] text-[#8293ac]">Cooldown</p>
                                         </div>
@@ -2069,7 +2069,7 @@ function SkillDamagePanel({
                                         </div>
                                     </div>
 
-                                    <div className="mt-3 overflow-x-auto rounded-lg border border-[#33435b] bg-[#0b141f]">
+                                    <div className="mt-3 overflow-x-auto rounded-lg border border-[#284d69] bg-[#0b141f]">
                                         <table className={`w-full text-left text-xs ${effectiveLifeSteal > 0 ? "min-w-[780px]" : "min-w-[560px]"}`}>
                                             <thead className="bg-[#132236] text-[10px] uppercase tracking-[0.08em] text-[#8396b2]">
                                                 <tr>
@@ -2176,7 +2176,7 @@ function SkillDamagePanel({
                             )}
 
                             {damagePassiveDetails.length > 0 && (
-                                <div className="rounded-lg border border-[#33435b] bg-[#0d151f] p-3">
+                                <div className="rounded-lg border border-[#284d69] bg-[#0d151f] p-3">
                                     <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Passive Effects</p>
                                     <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
                                         {damagePassiveDetails.map((passive, index) => (
@@ -2196,7 +2196,7 @@ function SkillDamagePanel({
                                 attributeEffects.damageRedirect > 0 ||
                                 attributeEffects.damageImmunitySeconds > 0 ||
                                 attributeEffects.maxHpRegenPerSecond > 0) && (
-                                <div className="rounded-lg border border-[#33435b] bg-[#0d151f] p-3">
+                                <div className="rounded-lg border border-[#284d69] bg-[#0d151f] p-3">
                                     <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Other Attribute Effects</p>
                                     <div className="mt-2 flex flex-wrap gap-2 text-xs">
                                         {attributeEffects.cooldownSkipChance > 0 && <span className="rounded bg-[#201b35] px-2 py-1 text-[#c28cff]">{attributeEffects.cooldownSkipChance}% cooldown-skip chance</span>}
@@ -2264,8 +2264,8 @@ function PassiveAnalysisPanel({
                     <div
                         className={`grid size-14 shrink-0 place-items-center overflow-hidden rounded-lg border shadow-[0_6px_14px_rgba(0,0,0,0.2)] ${
                             activation.active
-                                ? "border-[#41506a] bg-[#0d131d]"
-                                : "border-[#41506a] bg-[#0d131d]"
+                                ? "border-[#35617d] bg-[#0d131d]"
+                                : "border-[#35617d] bg-[#0d131d]"
                         }`}
                     >
                         {imagePath ? (
@@ -2297,7 +2297,7 @@ function PassiveAnalysisPanel({
                             {passive.id === "sacredBeetle" ? (
                                 <>
                                     {passive.effects.some((effect) => effect.stat === "stunImmunity") && (
-                                        <span className="rounded border border-[#41506a] bg-[#0f1620] px-1.5 py-0.5 font-semibold text-[#aeb8ff]">
+                                        <span className="rounded border border-[#35617d] bg-[#0f1620] px-1.5 py-0.5 font-semibold text-[#aeb8ff]">
                                             Stun Immunity always active
                                         </span>
                                     )}
@@ -2306,7 +2306,7 @@ function PassiveAnalysisPanel({
                                         <span
                                             className={`rounded border px-1.5 py-0.5 font-semibold ${
                                                 build.targetIsBoss
-                                                    ? "border-[#41506a] bg-[#0f1620] text-[#aeb8ff]"
+                                                    ? "border-[#35617d] bg-[#0f1620] text-[#aeb8ff]"
                                                     : "border-[#f4bd6a]/30 bg-[#342612]/45 text-[#f4bd6a]"
                                             }`}
                                         >
@@ -2320,7 +2320,7 @@ function PassiveAnalysisPanel({
                                 <span
                                     className={`rounded border px-1.5 py-0.5 font-semibold ${
                                         activation.active
-                                            ? "border-[#41506a] bg-[#0f1620] text-[#aeb8ff]"
+                                            ? "border-[#35617d] bg-[#0f1620] text-[#aeb8ff]"
                                             : "border-[#f4bd6a]/30 bg-[#342612]/45 text-[#f4bd6a]"
                                     }`}
                                 >
@@ -2338,7 +2338,7 @@ function PassiveAnalysisPanel({
                     {effects.map((effect, index) => (
                         <div
                             key={`${passive.id}-${effect}-${index}`}
-                            className={`min-w-0 rounded-lg border p-3 ${activation.active ? "border-[#41506a] bg-[#0f1620]" : "border-[#41506a] bg-[#0f1620]"}`}
+                            className={`min-w-0 rounded-lg border p-3 ${activation.active ? "border-[#35617d] bg-[#0f1620]" : "border-[#35617d] bg-[#0f1620]"}`}
                         >
                             <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#7f8b9e]">
                                 Effect {effects.length > 1 ? index + 1 : ""}
@@ -2369,7 +2369,7 @@ function AdvancedCalculations({
     const [activeStat, setActiveStat] = useState<"health" | "damage">("damage");
 
     return (
-        <section className="overflow-hidden rounded-lg border border-[#344050] bg-[#141c28]">
+        <section className="overflow-hidden rounded-lg border border-[#25475f] bg-[#071b2b]">
             <button
                 type="button"
                 onClick={() => setIsOpen((current) => !current)}
@@ -2393,7 +2393,7 @@ function AdvancedCalculations({
             {isOpen && (
                 <div className="border-t border-[#344050] p-3">
                     <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                        <div className="inline-flex rounded-lg border border-[#344050] bg-[#0d131d] p-1">
+                        <div className="inline-flex rounded-lg border border-[#25475f] bg-[#041320] p-1">
                             {(["health", "damage"] as const).map((stat) => (
                                 <button
                                     key={stat}
@@ -2437,7 +2437,7 @@ function FormulaBreakdown({ stats, build, activeStat }: FormulaBreakdownProps) {
 
     if (!stats) {
         return (
-            <section className="rounded-lg border border-dashed border-[#344050] bg-[#0d131d]/45 p-4">
+            <section className="rounded-lg border border-dashed border-[#25475f] bg-[#041320]/45 p-4">
                 <h3 className="text-sm font-semibold text-[#e3e8f1]">
                     Formula Breakdown
                 </h3>
@@ -2489,7 +2489,7 @@ function FormulaBreakdown({ stats, build, activeStat }: FormulaBreakdownProps) {
     };
 
     return (
-        <section className="min-w-0 rounded-xl border border-[#344050] bg-[#0f1620] p-4 sm:p-5">
+        <section className="min-w-0 rounded-xl border border-[#25475f] bg-[#041320] p-4 sm:p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                     <h3 className="text-sm font-semibold text-[#e3e8f1]">Formula Breakdown</h3>
@@ -2518,7 +2518,7 @@ function FormulaBreakdown({ stats, build, activeStat }: FormulaBreakdownProps) {
                 </button>
             </div>
 
-            <div className="mt-4 overflow-hidden rounded-lg border border-[#3b4759] text-xs">
+            <div className="mt-4 overflow-hidden rounded-lg border border-[#344050] text-xs">
                 {rows.map((row, index) => (
                     <div
                         key={row.label}
@@ -2535,7 +2535,7 @@ function FormulaBreakdown({ stats, build, activeStat }: FormulaBreakdownProps) {
                         </strong>
                     </div>
                 ))}
-                <div className={`grid grid-cols-[minmax(0,1fr)_minmax(4.75rem,auto)] items-center gap-2 border-t border-[#41506a] bg-[#191f2b] px-2.5 py-3 sm:grid-cols-[minmax(0,1fr)_6.5rem] sm:gap-3 sm:px-3 ${accent}`}>
+                <div className={`grid grid-cols-[minmax(0,1fr)_minmax(4.75rem,auto)] items-center gap-2 border-t border-[#35617d] bg-[#191f2b] px-2.5 py-3 sm:grid-cols-[minmax(0,1fr)_6.5rem] sm:gap-3 sm:px-3 ${accent}`}>
                     <strong className="min-w-0 break-words">= Final {isHealth ? "Health" : "Damage"}</strong>
                     <strong className="whitespace-nowrap text-right text-sm tabular-nums">
                         {formatStatNumber(finalValue)}
@@ -2598,7 +2598,7 @@ function GrowthPreview({ build, statData, activeStat }: GrowthPreviewProps) {
         );
 
     return (
-        <section className="min-w-0 rounded-xl border border-[#344050] bg-[#0f1620] p-4 sm:p-5">
+        <section className="min-w-0 rounded-xl border border-[#25475f] bg-[#041320] p-4 sm:p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                     <h3 className="text-sm font-semibold text-[#e3e8f1]">Growth Preview</h3>
@@ -2667,7 +2667,7 @@ function GrowthPreview({ build, statData, activeStat }: GrowthPreviewProps) {
                         cx={xForLevel(build.level)}
                         cy={yForValue(currentValue)}
                         r="4.5"
-                        fill="#0f1620"
+                        fill="#071b2b"
                         stroke={accent}
                         strokeWidth="2.5"
                     />
@@ -2700,8 +2700,8 @@ function BuildResultsPanel({
     const selectedTrait = getTrait(build.traitId);
 
     return (
-        <section className="overflow-hidden rounded-lg border border-[#344050] bg-[#141c28]">
-            <div className="border-b border-[#344050] px-4 py-3">
+        <section className="overflow-hidden rounded-lg border border-[#25475f] bg-[#0b2032]">
+            <div className="border-b border-[#25475f] px-4 py-3">
                 <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7182ff]">
                     Combat Stats
                 </p>
@@ -2849,7 +2849,7 @@ function BuildResultsPanel({
 function EmptyCalculatorState() {
     return (
         <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-            <div className="mb-5 grid size-16 place-items-center rounded-2xl border border-[#344050] bg-[#141c28] text-2xl text-[#7182ff]">
+            <div className="mb-5 grid size-16 place-items-center rounded-2xl border border-[#25475f] bg-[#071b2b] text-2xl text-[#7182ff]">
                 ✦
             </div>
 
@@ -3030,7 +3030,7 @@ export function CalculatorResults({
                             stats={stats}
                         />
                         {stats && (monsterSkills.length > 0 || effectivePassives.length > 0) && (
-                            <section className="overflow-hidden rounded-xl border border-[#344050] bg-[#141c28]">
+                            <section className="overflow-hidden rounded-xl border border-[#25475f] bg-[#0b2032]">
                                 <div className="flex flex-wrap items-end justify-between gap-3 border-b border-[#344050] px-4 py-3">
                                     <div>
                                         <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7182ff]">
@@ -3040,7 +3040,7 @@ export function CalculatorResults({
                                             Monster Skills & Passives
                                         </h2>
                                     </div>
-                                    <span className="rounded-full border border-[#344050] bg-[#0f1620] px-2.5 py-1 text-xs font-medium text-[#8e99ad]">
+                                    <span className="rounded-full border border-[#25475f] bg-[#041320] px-2.5 py-1 text-xs font-medium text-[#8e99ad]">
                                         {monsterSkills.length} {monsterSkills.length === 1 ? "skill" : "skills"}
                                         {effectivePassives.length > 0 && ` · ${effectivePassives.length} ${effectivePassives.length === 1 ? "passive" : "passives"}`}
                                     </span>
@@ -3061,7 +3061,7 @@ export function CalculatorResults({
                                     ))}
 
                                     {skillDpsValues.length > 1 && (
-                                        <div className="bg-[#151b24] px-4 py-4">
+                                        <div className="bg-[#071a2a] px-4 py-4">
                                             <div className="rounded-lg border border-[#7182ff]/35 bg-[#202846]/35 p-3">
                                                 <div className="flex flex-wrap items-center justify-between gap-3">
                                                     <div>
@@ -3102,7 +3102,7 @@ export function CalculatorResults({
 
                                     {effectivePassives.length > 0 && (
                                         <>
-                                            <div className="bg-[#151b24] px-4 py-3">
+                                            <div className="bg-[#071a2a] px-4 py-3">
                                                 <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7182ff]">
                                                     Passive Analysis
                                                 </p>

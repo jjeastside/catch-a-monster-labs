@@ -55,7 +55,7 @@ type MonsterBrowserProps = {
 type EvolutionFilter = "all" | "can-evolve" | "evolved" | "standard";
 type PassiveFilter = "all" | string;
 type SortMode = "index" | "dps" | "damage" | "health";
-const selectClassName = "min-w-0 rounded-md border border-[#344050] bg-[#141c28] px-3 py-2 text-xs text-[#bfc7d5] outline-none focus:border-[#7182ff]";
+const selectClassName = "min-w-0 rounded-md border border-[#25475f] bg-[#071b2b] px-3 py-2 text-xs text-[#bfc7d5] outline-none focus:border-[#7182ff]";
 
 function InfoTooltip({ label, children }: { label: string; children: string }) {
     const getPortalContainer = useContext(BrowserPortalContext);
@@ -114,7 +114,7 @@ function InfoTooltip({ label, children }: { label: string; children: string }) {
                             width: 256,
                             zIndex: 9999,
                         }}
-                        className="pointer-events-none rounded-lg border border-[#41506a] bg-[#0d131d] px-3 py-2 text-left text-xs font-normal normal-case leading-5 tracking-normal text-[#bfc7d5] shadow-2xl"
+                        className="pointer-events-none rounded-lg border border-[#35617d] bg-[#0d131d] px-3 py-2 text-left text-xs font-normal normal-case leading-5 tracking-normal text-[#bfc7d5] shadow-2xl"
                     >
                         {children}
                     </div>,
@@ -174,7 +174,7 @@ function HoverInfo({ text, children }: { text: string; children: React.ReactNode
                         width: 250,
                         zIndex: 9999,
                     }}
-                    className="pointer-events-none rounded-lg border border-[#41506a] bg-[#0d131d] px-3 py-2 text-left text-[11px] font-normal leading-4 text-[#bfc7d5] shadow-2xl"
+                    className="pointer-events-none rounded-lg border border-[#35617d] bg-[#0d131d] px-3 py-2 text-left text-[11px] font-normal leading-4 text-[#bfc7d5] shadow-2xl"
                 >
                     {text}
                 </div>,
@@ -228,7 +228,7 @@ function BrowserEvolutionMultiplierEditor({ value, onChange }: BrowserEvolutionM
         : 0;
 
     return (
-        <div className="mt-2 border-t border-[#273242] pt-2">
+        <div className="mt-2 border-t border-[#253044] pt-2">
             <div className="mb-1.5 flex items-center justify-between gap-2">
                 <div className="inline-flex min-w-0 items-center gap-1.5 leading-none">
                     <span className="inline-flex h-5 items-center text-[10px] font-medium uppercase tracking-[0.08em] leading-none text-[#8e99ad]">EM</span>
@@ -300,7 +300,7 @@ function BrowserEvolutionMultiplierEditor({ value, onChange }: BrowserEvolutionM
                                 </strong>
                                 <span>{precisionRange.max.toFixed(2)}%</span>
                             </div>
-                            <div className="relative h-1.5 rounded-full bg-[#283140]">
+                            <div className="relative h-1.5 rounded-full bg-[#18394f]">
                                 <div
                                     className="absolute inset-y-0 left-0 rounded-full bg-[#ff9d42]"
                                     style={{ width: `${precisionFill}%` }}
@@ -476,7 +476,7 @@ type MonsterOptionProps = {
 function MonsterOption({ monster, selected, favorite, onSelect, onToggleFavorite, compact = false }: MonsterOptionProps) {
     const color = elementColors[monster.element] ?? "#7f8b9e";
     const elementIcon = elementIconPaths[monster.element];
-    const portraitBackground = "bg-[#111722]/90";
+    const portraitBackground = "bg-[#071827]/90";
     const portraitStyle = monster.rarity === "Legendary"
         ? {
             background: "linear-gradient(to top, #c97813 0%, #a0520d 32%, #6b3009 53%, #351708 72%, #160c09 87%, #090808 100%)",
@@ -508,7 +508,7 @@ function MonsterOption({ monster, selected, favorite, onSelect, onToggleFavorite
         <button
             type="button"
             onClick={onSelect}
-            className={`group flex w-full items-center rounded-xl border text-left transition ${compact ? "min-h-[58px] gap-2 px-2.5 py-1.5" : "min-h-[72px] gap-3 px-3 py-2"} ${selected ? "border-[#7182ff] bg-[#202846] shadow-[inset_3px_0_0_#7182ff]" : "border-[#344050] bg-[#141c28] hover:border-[#5c6a80] hover:bg-[#1b202b]"}`}
+            className={`group flex w-full items-center rounded-xl border text-left transition ${compact ? "min-h-[58px] gap-2 px-2.5 py-1.5" : "min-h-[72px] gap-3 px-3 py-2"} ${selected ? "border-[#7182ff] bg-[#152e46] shadow-[inset_3px_0_0_#7182ff]" : "border-[#25475f] bg-[#0b2032] hover:border-[#3984af] hover:bg-[#102b40]"}`}
         >
             <span
                 className={`grid shrink-0 place-items-center overflow-hidden rounded-xl border bg-gradient-to-br p-[2px] ${compact ? "size-11" : "size-14"} ${rarityPortraitClasses[monster.rarity]}`}
@@ -678,7 +678,7 @@ function MonsterBrowserContent({
             <Panel
                 eyebrow="Select"
                 title="Monster Browser"
-                action={<span className="rounded-full bg-[#202632] px-2.5 py-1 text-xs text-[#8e99ad]">
+                action={<span className="rounded-full bg-[#123149] px-2.5 py-1 text-xs text-[#8e99ad]">
         {selectedMonster ? "1 selected" : "0 selected"}
       </span>}
             >
@@ -694,7 +694,7 @@ function MonsterBrowserContent({
                                 value={searchQuery}
                                 onChange={(event) => setSearchQuery(event.target.value)}
                                 placeholder="Search monsters"
-                                className="h-full w-full rounded-lg border border-[#344050] bg-[#0d131d] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#69768a] focus:border-[#7182ff]"
+                                className="h-full w-full rounded-lg border border-[#23465f] bg-[#041320] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#69768a] focus:border-[#7182ff]"
                             />
                         </label>
 
@@ -704,7 +704,7 @@ function MonsterBrowserContent({
                                 aria-label="Open monster stat filters: Index, DPS, Damage, Health, and Evolution Multiplier"
                                 aria-expanded={advancedFilterOpen}
                                 onClick={() => setAdvancedFilterOpen((open) => !open)}
-                                className={`grid w-11 shrink-0 place-items-center rounded-lg border transition ${advancedFilterOpen ? "border-[#7182ff] bg-[#202846] text-[#aeb8ff]" : "border-[#344050] bg-[#0d131d] text-[#8e99ad] hover:border-[#5c6a80] hover:text-white"}`}
+                                className={`grid w-11 shrink-0 place-items-center rounded-lg border transition ${advancedFilterOpen ? "border-[#3984af] bg-[#102b40] text-[#aeb8ff]" : "border-[#23465f] bg-[#041320] text-[#8e99ad] hover:border-[#3984af] hover:text-white"}`}
                             >
                                 <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M4 6h16" />
@@ -720,13 +720,13 @@ function MonsterBrowserContent({
                                 aria-label="Open browse filters for island, source, rarity, element, evolution, passive, and favorites"
                                 aria-expanded={browseFilterOpen}
                                 onClick={() => setBrowseFilterOpen((open) => !open)}
-                                className={`relative grid w-11 shrink-0 place-items-center rounded-lg border transition ${browseFilterOpen || activeFilterCount > 0 ? "border-[#7182ff] bg-[#202846] text-[#aeb8ff]" : "border-[#344050] bg-[#0d131d] text-[#8e99ad] hover:border-[#5c6a80] hover:text-white"}`}
+                                className={`relative grid w-11 shrink-0 place-items-center rounded-lg border transition ${browseFilterOpen || activeFilterCount > 0 ? "border-[#3984af] bg-[#102b40] text-[#aeb8ff]" : "border-[#23465f] bg-[#041320] text-[#8e99ad] hover:border-[#3984af] hover:text-white"}`}
                             >
                                 <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M4 5h16l-6.5 7.2V18l-3 1.5v-7.3L4 5Z" />
                                 </svg>
                                 {activeFilterCount > 0 && (
-                                    <span className="absolute -right-1 -top-1 grid size-4 place-items-center rounded-full border border-[#0d131d] bg-[#7182ff] text-[8px] font-black text-white">
+                                    <span className="absolute -right-1 -top-1 grid size-4 place-items-center rounded-full border border-[#041320] bg-[#7182ff] text-[8px] font-black text-white">
                                         {activeFilterCount}
                                     </span>
                                 )}
@@ -735,7 +735,7 @@ function MonsterBrowserContent({
                     </div>
 
                     {advancedFilterOpen && (
-                        <div className="rounded-xl border border-[#344050] bg-[#0d131d] p-2.5 shadow-[0_12px_30px_rgba(0,0,0,0.2)]">
+                        <div className="rounded-xl border border-[#25475f] bg-[#041320] p-2.5 shadow-[0_12px_30px_rgba(0,0,0,0.2)]">
                             <div className="mb-2 flex items-center justify-between gap-2">
                                 <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#69768a]">Sort by</span>
                             </div>
@@ -756,7 +756,7 @@ function MonsterBrowserContent({
                                                 setSortMode(value);
                                                 setSortDescending(value !== "index");
                                             }}
-                                            className={`flex h-8 min-w-0 items-center justify-center gap-1 rounded-md border px-1.5 transition ${sortMode === value ? "border-[#7182ff] bg-[#202846] text-[#c7ccff] shadow-[inset_0_0_0_1px_rgba(113,130,255,0.10)]" : "border-[#344050] bg-[#141c28] text-[#9aa5b8] hover:border-[#5c6a80] hover:bg-[#181f2b] hover:text-[#e3e8f1]"}`}
+                                            className={`flex h-8 min-w-0 items-center justify-center gap-1 rounded-md border px-1.5 transition ${sortMode === value ? "border-[#3984af] bg-[#102b40] text-[#c7ccff] shadow-[inset_0_0_0_1px_rgba(113,130,255,0.10)]" : "border-[#25475f] bg-[#071b2b] text-[#9aa5b8] hover:border-[#3984af] hover:bg-[#102b40] hover:text-[#e3e8f1]"}`}
                                         >
                                             <img
                                                 src={assetPath(icon)}
@@ -775,7 +775,7 @@ function MonsterBrowserContent({
                                     type="button"
                                     aria-label={sortDescending ? "Sort highest to lowest" : "Sort lowest to highest"}
                                     onClick={() => setSortDescending((current) => !current)}
-                                    className="grid size-8 shrink-0 place-items-center rounded-md border border-[#344050] bg-[#141c28] text-sm font-medium leading-none text-[#bfc7d5] transition hover:border-[#5c6a80] hover:bg-[#181f2b] hover:text-white"
+                                    className="grid size-8 shrink-0 place-items-center rounded-md border border-[#25475f] bg-[#071b2b] text-sm font-medium leading-none text-[#bfc7d5] transition hover:border-[#3984af] hover:bg-[#102b40] hover:text-white"
                                     title={sortDescending ? "Highest to lowest" : "Lowest to highest"}
                                 >
                                     {sortDescending ? "↓" : "↑"}
@@ -783,7 +783,7 @@ function MonsterBrowserContent({
                             </div>
 
                             {sortMode === "index" ? (
-                                <div className="mt-2 border-t border-[#273242] pt-2">
+                                <div className="mt-2 border-t border-[#253044] pt-2">
                                     <div className="flex items-center gap-1.5 text-[9px] font-medium text-[#69768a]">
                                         <img src={assetPath("/icons/index.png")} alt="" aria-hidden="true" className="size-3.5 shrink-0 object-contain opacity-70" />
                                         <span>Index uses database order only — EM and passives do not apply.</span>
@@ -791,7 +791,7 @@ function MonsterBrowserContent({
                                 </div>
                             ) : (
                                 <>
-                                    <div className="mt-2 border-t border-[#273242] pt-2">
+                                    <div className="mt-2 border-t border-[#253044] pt-2">
                                         <div className="mb-1.5 inline-flex h-5 items-center gap-1.5 leading-none">
                                             <span className="inline-flex h-5 items-center text-[9px] font-bold uppercase leading-none tracking-[0.08em] text-[#7f8b9e]">Passives</span>
                                             <span className="relative -top-px inline-flex h-5 items-center">
@@ -806,7 +806,7 @@ function MonsterBrowserContent({
                                                 onClick={() => setPassiveCompareMode("none")}
                                                 aria-pressed={passiveCompareMode === "none"}
                                                 title="No passives"
-                                                className={`flex h-7 min-w-0 items-center justify-center gap-1 rounded-md border px-1 text-[9px] font-bold transition ${passiveCompareMode === "none" ? "border-[#7182ff] bg-[#202846] text-[#c7ccff] shadow-[inset_0_0_0_1px_rgba(113,130,255,0.12)]" : "border-[#344050] bg-[#141c28] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-[#e3e8f1]"}`}
+                                                className={`flex h-7 min-w-0 items-center justify-center gap-1 rounded-md border px-1 text-[9px] font-bold transition ${passiveCompareMode === "none" ? "border-[#3984af] bg-[#102b40] text-[#c7ccff] shadow-[inset_0_0_0_1px_rgba(113,130,255,0.12)]" : "border-[#25475f] bg-[#071b2b] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-[#e3e8f1]"}`}
                                             >
                                                 <svg aria-hidden="true" viewBox="0 0 20 20" className="size-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.7">
                                                     <circle cx="10" cy="10" r="6.5" />
@@ -819,7 +819,7 @@ function MonsterBrowserContent({
                                                 onClick={() => setPassiveCompareMode("always")}
                                                 aria-pressed={passiveCompareMode === "always"}
                                                 title="Always-active self passives"
-                                                className={`flex h-7 min-w-0 items-center justify-center gap-1 rounded-md border px-1 text-[9px] font-bold transition ${passiveCompareMode === "always" ? "border-[#7182ff] bg-[#202846] text-[#c7ccff] shadow-[inset_0_0_0_1px_rgba(113,130,255,0.12)]" : "border-[#344050] bg-[#141c28] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-[#e3e8f1]"}`}
+                                                className={`flex h-7 min-w-0 items-center justify-center gap-1 rounded-md border px-1 text-[9px] font-bold transition ${passiveCompareMode === "always" ? "border-[#3984af] bg-[#102b40] text-[#c7ccff] shadow-[inset_0_0_0_1px_rgba(113,130,255,0.12)]" : "border-[#25475f] bg-[#071b2b] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-[#e3e8f1]"}`}
                                             >
                                                 <img src={assetPath("/passive-images/hard-carapace.png")} alt="" aria-hidden="true" className="size-4 shrink-0 object-contain" />
                                                 <span className="truncate text-[9px] font-bold uppercase leading-none tracking-[0.04em]">Always</span>
@@ -829,7 +829,7 @@ function MonsterBrowserContent({
                                                 onClick={() => setPassiveCompareMode("conditional")}
                                                 aria-pressed={passiveCompareMode === "conditional"}
                                                 title="Conditional self passive: Vital Surge active"
-                                                className={`flex h-7 min-w-0 items-center justify-center gap-1 rounded-md border px-1 text-[9px] font-bold transition ${passiveCompareMode === "conditional" ? "border-[#7182ff] bg-[#202846] text-[#c7ccff] shadow-[inset_0_0_0_1px_rgba(113,130,255,0.12)]" : "border-[#344050] bg-[#141c28] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-[#e3e8f1]"}`}
+                                                className={`flex h-7 min-w-0 items-center justify-center gap-1 rounded-md border px-1 text-[9px] font-bold transition ${passiveCompareMode === "conditional" ? "border-[#3984af] bg-[#102b40] text-[#c7ccff] shadow-[inset_0_0_0_1px_rgba(113,130,255,0.12)]" : "border-[#25475f] bg-[#071b2b] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-[#e3e8f1]"}`}
                                             >
                                                 <img src={assetPath("/passive-images/vital-surge.png")} alt="" aria-hidden="true" className="size-3.5 shrink-0 object-contain" />
                                                 <span className="truncate text-[9px] font-bold uppercase leading-none tracking-[0.04em]">Conditional</span>
@@ -847,7 +847,7 @@ function MonsterBrowserContent({
                     )}
 
                     {browseFilterOpen && (
-                        <div className="rounded-xl border border-[#344050] bg-[#0d131d] p-2.5 shadow-[0_12px_30px_rgba(0,0,0,0.2)]">
+                        <div className="rounded-xl border border-[#25475f] bg-[#041320] p-2.5 shadow-[0_12px_30px_rgba(0,0,0,0.2)]">
                             <div className="grid w-full min-w-0 grid-cols-[repeat(2,minmax(0,1fr))] gap-2">
                                 <label className="sr-only" htmlFor="island-filter">Island</label>
                                 <select id="island-filter" value={islandFilter} onChange={(event) => setIslandFilter(event.target.value)} className={selectClassName}>
@@ -888,12 +888,12 @@ function MonsterBrowserContent({
                                 </select>
                             </div>
 
-                            <div className="mt-2 flex items-center gap-2 border-t border-[#273242] pt-2">
+                            <div className="mt-2 flex items-center gap-2 border-t border-[#253044] pt-2">
                                 <button
                                     type="button"
                                     aria-pressed={favoritesOnly}
                                     onClick={() => setFavoritesOnly((current) => !current)}
-                                    className={`flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md border px-2 text-xs font-semibold transition ${favoritesOnly ? "border-[#7182ff] bg-[#202846] text-[#aeb8ff]" : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"}`}
+                                    className={`flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md border px-2 text-xs font-semibold transition ${favoritesOnly ? "border-[#3984af] bg-[#102b40] text-[#aeb8ff]" : "border-[#25475f] bg-[#071b2b] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"}`}
                                 >
                                     <span aria-hidden="true">★</span>
                                     <span>Favorites</span>
@@ -904,7 +904,7 @@ function MonsterBrowserContent({
                                     <button
                                         type="button"
                                         onClick={clearFilters}
-                                        className="h-8 shrink-0 rounded-md border border-[#344050] bg-[#141c28] px-2.5 text-[10px] font-semibold text-[#8e99ad] transition hover:border-[#5c6a80] hover:text-white"
+                                        className="h-8 shrink-0 rounded-md border border-[#25475f] bg-[#071b2b] px-2.5 text-[10px] font-semibold text-[#8e99ad] transition hover:border-[#5c6a80] hover:text-white"
                                         title="Clear browse filters"
                                     >
                                         Clear
@@ -961,7 +961,7 @@ function MonsterBrowserContent({
                                 setVisibleMonsterCount(36);
                                 setShowAllMonsters(true);
                             }}
-                            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#344050] bg-[#141c28] px-4 py-3 text-sm font-semibold text-[#e3e8f1] transition hover:border-[#5c6a80] hover:bg-[#1b202b]"
+                            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#25475f] bg-[#071b2b] px-4 py-3 text-sm font-semibold text-[#e3e8f1] transition hover:border-[#5c6a80] hover:bg-[#123149]"
                         >
                         <span aria-hidden="true" className="grid grid-cols-2 gap-0.5">
                             <span className="size-1.5 rounded-[1px] border border-current"/>
@@ -986,7 +986,7 @@ function MonsterBrowserContent({
                         if (event.target === event.currentTarget) setShowAllMonsters(false);
                     }}
                 >
-                    <section className="flex h-[92vh] max-h-[58rem] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-[#344050] bg-[#0f1620] shadow-2xl">
+                    <section className="flex h-[92vh] max-h-[58rem] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-[#25475f] bg-[#041320] shadow-2xl">
                         <div className="border-b border-[#344050] p-3 sm:px-4 sm:py-3">
                             <div className="flex items-start justify-between gap-4">
                                 <div>
@@ -1004,7 +1004,7 @@ function MonsterBrowserContent({
                                     type="button"
                                     onClick={() => setShowAllMonsters(false)}
                                     aria-label="Close all monsters"
-                                    className="grid size-9 shrink-0 place-items-center rounded-lg border border-[#344050] text-lg text-[#8e99ad] transition hover:bg-[#1b202b] hover:text-white"
+                                    className="grid size-9 shrink-0 place-items-center rounded-lg border border-[#344050] text-lg text-[#8e99ad] transition hover:bg-[#123149] hover:text-white"
                                 >
                                     ×
                                 </button>
@@ -1022,7 +1022,7 @@ function MonsterBrowserContent({
                                     }}
                                     placeholder="Search all monsters"
                                     autoFocus
-                                    className="w-full rounded-lg border border-[#344050] bg-[#0d131d] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#69768a] focus:border-[#7182ff]"
+                                    className="w-full rounded-lg border border-[#23465f] bg-[#041320] py-2.5 pl-9 pr-3 text-sm text-white outline-none placeholder:text-[#69768a] focus:border-[#7182ff]"
                                 />
                             </label>
                         </div>

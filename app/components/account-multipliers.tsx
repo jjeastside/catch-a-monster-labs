@@ -215,7 +215,7 @@ export function AccountMultipliers({
 
     return (
         <>
-            <section className="min-w-0 rounded-lg border border-[#3b4759] bg-[#0f1620] px-2.5 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.16)] sm:px-4 sm:py-3">
+            <section className="min-w-0 rounded-lg border border-[#344050] bg-[linear-gradient(115deg,#071b2b,#061725)] px-2.5 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.16)] sm:px-4 sm:py-3">
                 <div className="min-w-0 lg:hidden">
                     <div className="flex min-w-0 items-start justify-between gap-2">
                         <div className="min-w-0">
@@ -241,7 +241,7 @@ export function AccountMultipliers({
                             const mobileLabel = category === "path-of-progress" ? "Path" : category === "index-mania" ? "Index" : "Pet Quests";
 
                             return (
-                                <button key={category} type="button" onClick={() => { setExpandedCategory(category); setIsOpen(true); }} className="group min-w-0 rounded-lg border border-[#344050] bg-[#141c28] px-1.5 py-2 text-center transition hover:border-[#7182ff]">
+                                <button key={category} type="button" onClick={() => { setExpandedCategory(category); setIsOpen(true); }} className="group min-w-0 rounded-lg border border-[#284b65] bg-[linear-gradient(120deg,#061421,#081e30)] px-1.5 py-2 text-center transition hover:border-[#3984af]">
                                     <span className="relative mx-auto grid size-9 place-items-center">
                                         <img src={assetPath(categoryIcon)} alt="" className={`${category === "pet-quest" ? "absolute left-0 top-0 size-7" : "max-h-9 max-w-9"} object-contain`} />
                                         {category === "pet-quest" && <img src={assetPath("/account-icons/damage-up.png")} alt="" className="absolute bottom-0 right-0 size-6 object-contain" />}
@@ -278,7 +278,7 @@ export function AccountMultipliers({
                                 : "/account-icons/health-up.png";
 
                         return (
-                            <button key={category} type="button" onClick={() => { setExpandedCategory(category); setIsOpen(true); }} className="group flex min-w-0 items-center gap-3 rounded-lg border border-[#344050] bg-gradient-to-r from-[#141c28] to-[#121620] px-3 py-2 text-left transition hover:-translate-y-0.5 hover:border-[#4c5a70] hover:bg-[#1a202c]">
+                            <button key={category} type="button" onClick={() => { setExpandedCategory(category); setIsOpen(true); }} className="group flex min-w-0 items-center gap-3 rounded-lg border border-[#284b65] bg-[linear-gradient(120deg,#061421,#081e30)] px-3 py-2 text-left transition hover:-translate-y-0.5 hover:border-[#3984af] hover:bg-[#0b2940]">
                                 <span className="relative grid size-12 shrink-0 place-items-center">
                                     <img src={assetPath(categoryIcon)} alt="" className={`${category === "pet-quest" ? "absolute left-0 top-0 size-9" : "max-h-12 max-w-12"} object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]`} />
                                     {category === "pet-quest" && <img src={assetPath("/account-icons/damage-up.png")} alt="" className="absolute bottom-0 right-0 size-8 object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]" />}
@@ -305,8 +305,8 @@ export function AccountMultipliers({
                 <div className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-2 sm:p-4" onMouseDown={(event) => {
                     if (event.target === event.currentTarget) setIsOpen(false);
                 }}>
-                    <section role="dialog" aria-modal="true" aria-labelledby="account-multipliers-title" className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-xl border border-[#344050] bg-[#0f1620] shadow-2xl">
-                        <header className="sticky top-0 z-20 flex items-start justify-between gap-3 border-b border-[#3b4759] bg-[#0f1620] px-4 py-3 sm:px-5 sm:py-4">
+                    <section role="dialog" aria-modal="true" aria-labelledby="account-multipliers-title" className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-xl border border-[#344050] bg-[#071b2b] shadow-2xl">
+                        <header className="sticky top-0 z-20 flex items-start justify-between gap-3 border-b border-[#344050] bg-[#071b2b] px-4 py-3 sm:px-5 sm:py-4">
                             <div>
                                 {expandedCategory && (
                                     <button type="button" onClick={() => setExpandedCategory(null)} className="mb-2 text-xs font-bold text-[#7182ff] hover:text-white">
@@ -368,7 +368,7 @@ export function AccountMultipliers({
                                 })}
                             </div>
 
-                            <section className={`${expandedCategory ? "hidden" : "block"} rounded-xl border border-[#344050] bg-[#0d1118] p-3`}>
+                            <section className={`${expandedCategory ? "hidden" : "block"} rounded-xl border border-[#344050] bg-[#041320] p-3`}>
                                 <div className="mb-3 px-1">
                                     <div>
                                         <h3 className="text-sm font-black text-white">Additional Bonuses</h3>
@@ -407,7 +407,7 @@ export function AccountMultipliers({
                                                         {details.shortReward}
                                                     </span>
                                                 </span>
-                                                <span className={`grid size-7 shrink-0 place-items-center rounded-md border-2 text-sm font-black ${isSelected ? "border-[#3ee378] bg-[#26c965] text-[#07130b]" : "border-[#5c6a80] bg-[#0d1118] text-transparent"}`}>✓</span>
+                                                <span className={`grid size-7 shrink-0 place-items-center rounded-md border-2 text-sm font-black ${isSelected ? "border-[#3ee378] bg-[#26c965] text-[#07130b]" : "border-[#5c6a80] bg-[#041320] text-transparent"}`}>✓</span>
                                             </button>
                                         );
                                     })}
@@ -462,8 +462,8 @@ export function AccountMultipliers({
                                             {categoryAchievements.map((achievement) => {
                                                 const isSelected = selectedSet.has(achievement.id);
                                                 return (
-                                                    <button key={achievement.id} type="button" role="checkbox" aria-checked={isSelected} onClick={() => toggleAchievement(achievement)} className={`flex w-full items-center gap-3 border-b border-[#3b4759] px-4 py-3 text-left transition last:border-b-0 ${isSelected ? "bg-[#202846]" : "hover:bg-[#1b202c]"}`}>
-                                                        <span className={`grid size-7 shrink-0 place-items-center rounded-md border-2 text-sm font-black ${isSelected ? "border-[#3ee378] bg-[#26c965] text-[#07130b]" : "border-[#5c6a80] bg-[#0d1118] text-transparent"}`}>✓</span>
+                                                    <button key={achievement.id} type="button" role="checkbox" aria-checked={isSelected} onClick={() => toggleAchievement(achievement)} className={`flex w-full items-center gap-3 border-b border-[#344050] px-4 py-3 text-left transition last:border-b-0 ${isSelected ? "bg-[#202846]" : "hover:bg-[#1b202c]"}`}>
+                                                        <span className={`grid size-7 shrink-0 place-items-center rounded-md border-2 text-sm font-black ${isSelected ? "border-[#3ee378] bg-[#26c965] text-[#07130b]" : "border-[#5c6a80] bg-[#041320] text-transparent"}`}>✓</span>
                                                         <span className="min-w-0 flex-1">
                                                             <span className="block text-sm font-bold text-[#eef1f6]">{achievement.name}</span>
                                                             <span className="mt-0.5 block text-xs text-[#7f8b9e]">{achievementGoal(achievement)}</span>
@@ -519,7 +519,7 @@ export function AccountMultipliers({
                             </section>
                         </div>
 
-                        <footer className="sticky bottom-0 z-20 flex justify-between gap-3 border-t border-[#3b4759] bg-[#0f1620] px-5 py-4">
+                        <footer className="sticky bottom-0 z-20 flex justify-between gap-3 border-t border-[#344050] bg-[#071b2b] px-5 py-4">
                             {expandedCategory ? (
                                 <button type="button" onClick={() => setExpandedCategory(null)} className="rounded-md px-3 py-2 text-xs font-semibold text-[#7182ff] hover:text-white">← Back</button>
                             ) : (

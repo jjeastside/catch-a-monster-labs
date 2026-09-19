@@ -18,12 +18,12 @@ export function CollapsibleSection({
     const [isOpen, setIsOpen] = useState(defaultOpen);
 
     return (
-        <section className="w-full min-w-0 max-w-full rounded-lg border border-[#344050] bg-[#0d131d]/55">
+        <section className="w-full min-w-0 max-w-full rounded-lg border border-[#25475f] bg-[#0b2032]/95">
             <button
                 type="button"
                 onClick={() => setIsOpen((current) => !current)}
                 aria-expanded={isOpen}
-                className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left"
+                className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition-colors hover:bg-[#102b40]"
             >
                 <span>
                     <span className="block text-sm font-semibold text-[#e3e8f1]">
@@ -42,7 +42,7 @@ export function CollapsibleSection({
             </button>
 
             {isOpen && (
-                <div className="w-full min-w-0 max-w-full border-t border-[#3b4759] p-3">
+                <div className="w-full min-w-0 max-w-full border-t border-[#25475f] bg-[#071b2b] p-3">
                     {children}
                 </div>
             )}
