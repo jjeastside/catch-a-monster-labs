@@ -498,11 +498,10 @@ export function IndexTracker() {
 
     return (
         <main className="mx-auto w-full max-w-[1800px] px-3 py-5 sm:px-5 lg:px-6">
+            <div className="mb-4"><PageHeading title="Index Tracker" image="/icons/index.png">Track every monster and maximize your <span className="text-[#ffd53d]">Index Score.</span></PageHeading></div>
             <section className="mb-5 grid gap-4 xl:grid-cols-[1fr_560px]">
                 <div>
-                    <PageHeading title="Index Tracker" image="/icons/index.png">Track every monster and maximize your <span className="text-[#ffd53d]">Index Score.</span></PageHeading>
-
-                    <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4">
+                    <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
                         <SummaryCard label="Current Score" labelTone="text-[#32b5ff]" value={totals.score.toLocaleString()} detail={<span className="inline-flex items-center gap-1">of <span title={`${(monsters.length * 21).toLocaleString()} total points`} className="grid size-4 place-items-center rounded-full border border-[#6e7c90] text-[10px] font-bold text-[#c7d0dd]">?</span> (Max Possible)</span>} tone="text-[#28b9ff]" />
                         <SummaryCard label="Monsters" labelTone="text-[#b6ed42]" value={`${totals.collected} / ${monsters.length}`} detail={`${Math.round((totals.collected / Math.max(monsters.length, 1)) * 100)}% Collected`} tone="text-[#43ed65]" progress={(totals.collected / Math.max(monsters.length, 1)) * 100} />
                         <SummaryCard label="Average Index" labelTone="text-[#cf62ff]" value={(totals.score / Math.max(monsters.length, 1)).toFixed(1)} detail="out of 21" tone="text-[#c95cff]" />

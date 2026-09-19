@@ -221,11 +221,11 @@ export function AccountMultipliers({
                         <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-1.5">
                                 <h2 className="text-sm font-semibold text-[#e3e8f1]">Account Multipliers</h2>
-                                <span className="rounded border border-[#344050] bg-[#141c28] px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-[#7f8b9e]">Account-wide</span>
+                                <span className="rounded border border-[#29475d] bg-[#0b2032] px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-[#a6b8c9]">Account-wide</span>
                             </div>
                             <p className="mt-1 text-[10px] leading-4 text-[#7f8b9e]">Saved when you switch monsters or reset a build.</p>
                         </div>
-                        <button type="button" onClick={() => { setExpandedCategory(null); setIsOpen(true); }} className="shrink-0 rounded-md border border-[#344050] bg-[#141c28] px-2.5 py-1.5 text-[10px] font-semibold text-[#8e99ad]">
+                        <button type="button" onClick={() => { setExpandedCategory(null); setIsOpen(true); }} className="shrink-0 rounded-md border border-[#29475d] bg-[#0b2032] px-2.5 py-1.5 text-[10px] font-semibold text-[#c3d5e6] transition hover:border-[#3984af] hover:bg-[#102b40] hover:text-white">
                             Manage
                         </button>
                     </div>
@@ -259,11 +259,11 @@ export function AccountMultipliers({
                         <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-2">
                                 <h2 className="text-sm font-semibold text-[#e3e8f1] sm:whitespace-nowrap">Account Multipliers</h2>
-                                <span className="rounded border border-[#344050] bg-[#141c28] px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Account-wide</span>
+                                <span className="rounded border border-[#29475d] bg-[#0b2032] px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-[#a6b8c9]">Account-wide</span>
                             </div>
                             <p className="mt-1 text-[11px] text-[#7f8b9e]">Saved when you switch monsters or reset a build.</p>
                         </div>
-                        <button type="button" onClick={() => { setExpandedCategory(null); setIsOpen(true); }} className="shrink-0 rounded-md border border-[#344050] bg-[#141c28] px-2.5 py-1.5 text-[10px] font-semibold text-[#8e99ad] transition hover:border-[#7182ff] hover:text-[#7182ff]">
+                        <button type="button" onClick={() => { setExpandedCategory(null); setIsOpen(true); }} className="shrink-0 rounded-md border border-[#29475d] bg-[#0b2032] px-2.5 py-1.5 text-[10px] font-semibold text-[#c3d5e6] transition hover:border-[#3984af] hover:bg-[#102b40] hover:text-white">
                             Manage
                         </button>
                     </div>

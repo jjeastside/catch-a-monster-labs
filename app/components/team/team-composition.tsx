@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { AccountMultipliers } from "../account-multipliers";
+import { PageHeading } from "../page-heading";
 import { BUILD_RANK_VISUALS, EvolutionMultiplierEditor } from "../build-editor";
 import { getMonsterStatData } from "../../data/monster-stats";
 import { getSkill } from "../../data/skills";
@@ -494,19 +495,9 @@ export function TeamComposition() {
       {editingTeamSlot !== null ? <button type="button" className={styles.teamEditorBackdrop} onClick={closeTeamEditor} aria-label="Save build and close editor" tabIndex={-1} /> : null}
       <div className="mx-auto w-full max-w-[2000px] space-y-3 px-3 py-3 sm:px-4 xl:px-5">
         {storageError ? <p role="alert" className={styles.inventoryMessage}>{storageError}</p> : null}
-        <header className={styles.banner}>
-          <div className={styles.bannerIcon} aria-hidden="true">III</div>
-          <div>
-            <p className={styles.kicker}>Monster Tools</p>
-            <h1>Team Composition</h1>
-            <p className="mt-1 text-sm text-[#a8bad0]">
-              Build a three-monster team, save the monsters you actually own, and compare combined performance.
-            </p>
-          </div>
-          <aside className={styles.bannerAside}>
-            Inventory stores each monster&apos;s real build. Recommendations now explain why each monster was selected, show the goal weighting, and compare the tradeoffs of close alternatives.
-          </aside>
-        </header>
+        <PageHeading title="Team Composition" image="/team-builder.png">
+          Build a three-monster team, save the monsters you actually own, and compare combined performance.
+        </PageHeading>
 
         <section className={styles.panel}>
           <AccountMultipliers build={accountBuild} onBuildChangeAction={setAccountBuild} />

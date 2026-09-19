@@ -26,6 +26,7 @@ import { PASSIVE_DEFINITIONS, getPassiveImagePath } from "../data/passives";
 import { MonsterBrowser } from "./monster-browser";
 import { EquipmentSelect } from "./equipment-select";
 import styles from "./monster-compare.module.css";
+import { PageHeading } from "./page-heading";
 import { CombatRank, rankColors } from "./calculator-results";
 import {
   rarityBadgeClasses,
@@ -898,15 +899,9 @@ export function MonsterCompare() {
 
   return (
     <main className={`${styles.root} mx-auto w-full max-w-[2000px] space-y-2.5 px-3 py-3 text-[#f6f8fc] sm:px-4 xl:px-5`}>
-      <header className={styles.banner}>
-        <img src={assetPath("/icons/monster-compare.png")} alt="" />
-        <div>
-          <p className={styles.kicker}>Monster Tools</p>
-          <h1 id="compare-heading">Monster Compare</h1>
-          <p>Compare up to 4 monsters side by side with <span>{mode === "shared" ? "shared settings" : "their own builds"}</span>.</p>
-        </div>
-        <aside>Pick monsters to compare their stats, skills, DPS, and different builds with global account multipliers.</aside>
-      </header>
+      <PageHeading id="compare-heading" title="Monster Compare" image="/icons/monster-compare.png" aside="Pick monsters to compare their stats, skills, DPS, and different builds with global account multipliers.">
+        Compare up to 4 monsters side by side with {mode === "shared" ? "shared settings" : "their own builds"}.
+      </PageHeading>
       <div className={styles.account}>
         <AccountMultipliers build={build} onBuildChangeAction={setBuild} />
       </div>

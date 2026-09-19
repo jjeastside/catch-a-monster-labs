@@ -1070,11 +1070,8 @@ export function MonsterDatabase() {
     return (
         <main className="min-h-screen bg-[#0d131d] text-white">
             <div className="mx-auto w-full max-w-[1800px] px-4 py-6 sm:px-6 lg:px-8">
-                <div className="flex flex-col gap-3 border-b border-[#293443] pb-5 sm:flex-row sm:items-end sm:justify-between">
-                    <PageHeading title="Monster Database" image="/icons/monster-database.png">Discover every monster and explore its <span className="text-[#69dfaa]">skills, stats, and locations.</span></PageHeading>
-                    <div className="rounded-full border border-[#344050] bg-[#111925] px-3 py-1.5 text-xs font-bold text-[#aeb9cb]">
-                        {filteredMonsters.length} / {GENERATED_MONSTERS.length} monsters
-                    </div>
+                <div className="mb-4">
+                    <PageHeading title="Monster Database" image="/icons/monster-database.png" aside={<span>{filteredMonsters.length} / {GENERATED_MONSTERS.length} monsters</span>}>Discover every monster and explore its <span className="text-[#69dfaa]">skills, stats, and locations.</span></PageHeading>
                 </div>
 
                 <div className="sticky top-0 z-30 -mx-4 mt-4 border-y border-[#293443] bg-[#0d131d]/95 px-4 py-3 backdrop-blur md:hidden">
