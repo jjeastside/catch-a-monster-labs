@@ -1,0 +1,2055 @@
+.root {
+  --panel: #101a29;
+  --panel-soft: #0b1422;
+  --border: #2f4158;
+  --muted: #91a1b8;
+  --blue: #58aaff;
+  min-height: calc(100vh - 92px);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(25, 92, 176, 0.15), transparent 34rem),
+    #08111d;
+}
+
+.banner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(260px, 390px);
+  align-items: center;
+  gap: 18px;
+  border: 1px solid #26476d;
+  border-radius: 14px;
+  background: linear-gradient(100deg, #0b2136 0%, #0b1a2c 52%, #0a1625 100%);
+  padding: 16px 18px;
+}
+
+.bannerIcon {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  border: 2px solid #149eff;
+  border-radius: 999px;
+  background: #082238;
+  color: #62b7ff;
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.banner h1 {
+  font-size: clamp(24px, 2.3vw, 36px);
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.bannerAside {
+  border: 1px solid #28455f;
+  border-radius: 9px;
+  background: rgba(6, 18, 31, 0.72);
+  padding: 12px 14px;
+  color: #b4c3d8;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.kicker {
+  margin-bottom: 4px;
+  color: #7b8cff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr) 320px;
+  gap: 12px;
+  align-items: start;
+}
+
+.panel {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel);
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+  padding: 12px 14px;
+}
+
+.panelHeader h2 {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.inventoryBody,
+.recommendBody {
+  padding: 10px;
+}
+
+.search {
+  width: 100%;
+  border: 1px solid #34475e;
+  border-radius: 8px;
+  background: #091321;
+  padding: 9px 10px;
+  color: white;
+  font-size: 12px;
+  outline: none;
+}
+
+.inventoryList {
+  margin-top: 8px;
+  max-height: 645px;
+  overflow-y: auto;
+  padding-right: 3px;
+}
+
+.inventoryRow {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 6px;
+  border: 1px solid #2c3d52;
+  border-radius: 9px;
+  background: #0b1523;
+  padding: 7px;
+}
+
+.inventoryPortrait {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #3c526e;
+  border-radius: 8px;
+  background: #0a1018;
+}
+
+.inventoryPortrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.inventoryName {
+  overflow: hidden;
+  color: #f5f8fc;
+  font-size: 12px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inventoryMeta {
+  margin-top: 2px;
+  color: #8495ad;
+  font-size: 10px;
+}
+
+.rowActions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.smallButton,
+.primaryButton,
+.ghostButton {
+  border-radius: 7px;
+  font-weight: 700;
+  transition: 120ms ease;
+}
+
+.smallButton {
+  border: 1px solid #3b5878;
+  background: #102238;
+  padding: 4px 7px;
+  color: #a8ceff;
+  font-size: 10px;
+}
+
+.smallButton:hover,
+.ghostButton:hover {
+  border-color: #5d83af;
+  color: white;
+}
+
+.smallButton:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.ownedButton {
+  border-color: #347855;
+  background: #0d2b20;
+  color: #79e7a8;
+}
+
+.primaryButton {
+  border: 1px solid #5aa7ff;
+  background: linear-gradient(#1672d6, #125cb3);
+  padding: 8px 12px;
+  color: white;
+  font-size: 12px;
+}
+
+.ghostButton {
+  border: 1px solid #405574;
+  background: #0d1827;
+  padding: 7px 10px;
+  color: #afc1d9;
+  font-size: 11px;
+}
+
+.center {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.teamSlots {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+}
+
+.slot {
+  position: relative;
+  min-width: 0;
+  border: 1px solid #36506d;
+  border-radius: 11px;
+  background: linear-gradient(180deg, #14243a, #0c1725);
+  padding: 9px;
+}
+
+.slotTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slotPortrait {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: hidden;
+  border: 2px solid #4a6991;
+  border-radius: 10px;
+  background: #0a1019;
+}
+
+.slotPortrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.slotTitle {
+  min-width: 0;
+  flex: 1;
+}
+
+.slotTitle strong {
+  display: block;
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slotTitle span {
+  display: block;
+  margin-top: 3px;
+  color: #91a6c1;
+  font-size: 10px;
+}
+
+.removeButton {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  color: #7890aa;
+  font-size: 15px;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  margin-top: 0;
+}
+
+.control label {
+  display: block;
+  margin-bottom: 3px;
+  color: #8598b1;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.control input,
+.control select {
+  width: 100%;
+  height: 30px;
+  border: 1px solid #31455f;
+  border-radius: 6px;
+  background: #081321;
+  padding: 0 7px;
+  color: white;
+  font-size: 11px;
+}
+
+.buildGroup {
+  margin-top: 7px;
+  overflow: hidden;
+  border: 1px solid #31445b;
+  border-radius: 8px;
+  background: #0d1724;
+  padding: 7px;
+}
+
+.buildGroupTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: -7px -7px 7px;
+  border-bottom: 1px solid #2c3c50;
+  padding: 6px 8px;
+  color: #e6edf7;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.buildGroupTitle b {
+  border: 1px solid #40516a;
+  border-radius: 999px;
+  background: #151f2d;
+  padding: 1px 6px;
+  color: #8e9db2;
+  font-size: 8px;
+}
+
+.evolutionControl {
+  margin-top: 8px;
+  border-top: 1px solid #23465f;
+  padding-top: 8px;
+}
+
+.levelControl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.compactFieldLabel,
+.compactFieldHeader {
+  margin: 7px 0 4px;
+  color: #b6d3ea;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.compactFieldHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.compactFieldHeader span:last-child {
+  color: #7f9ab2;
+  font-weight: 500;
+}
+
+.rankStrip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid #284b65;
+  border-radius: 6px;
+  background: #041320;
+}
+
+.rankStrip button {
+  min-width: 0;
+  height: 28px;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 900;
+  transition: background .12s ease;
+}
+
+.rankStrip button:hover { background: #092035; }
+.rankStrip button span { display: inline-block; line-height: 1; transform: scaleX(1.08); }
+.rankDivider { border-left: 1px solid #284b65; }
+
+.enhancementStepper {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 32px;
+  overflow: hidden;
+  height: 29px;
+  border: 1px solid #284b65;
+  border-radius: 6px;
+  background: #041320;
+}
+
+.enhancementStepper button {
+  color: #8eabc4;
+  font-size: 13px;
+}
+
+.enhancementStepper button:first-child { border-right: 1px solid #284b65; }
+.enhancementStepper button:last-child { border-left: 1px solid #284b65; }
+.enhancementStepper button:hover:not(:disabled) { background: #092035; color: white; }
+.enhancementStepper button:disabled { cursor: not-allowed; opacity: .3; }
+.enhancementStepper strong { display: grid; place-items: center; background: #061725; color: #e3e8f1; font-size: 11px; font-weight: 900; }
+.enhancementStepper .enhancementActive { color: #4d96ff; }
+
+.compactDisclosure {
+  margin-top: 7px;
+  border: 1px solid #31445b;
+  border-radius: 7px;
+  background: #111c2a;
+}
+
+.compactDisclosure summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  cursor: pointer;
+  list-style: none;
+  padding: 5px 8px;
+  color: #dce5f2;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.compactDisclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.compactDisclosure summary::after {
+  content: "▾";
+  margin-left: 2px;
+  color: #788aa2;
+  transition: transform .15s ease;
+}
+
+.compactDisclosure[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.disclosureLabel {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+}
+
+.disclosureLabel img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.disclosureValue {
+  margin-left: auto;
+  color: #8395ab;
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+}
+
+.gpControls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  border-top: 1px solid #31445b;
+  padding: 7px;
+}
+
+.cycleHint {
+  margin: -1px 0 6px;
+  color: #75869d;
+  font-size: 8px;
+}
+
+.mutationGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.mutationTile {
+  display: flex;
+  min-width: 0;
+  min-height: 42px;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #31445b;
+  border-radius: 7px;
+  background: #111c2a;
+  padding: 5px;
+  color: #dce5f2;
+  text-align: left;
+}
+
+.mutationTile:hover {
+  border-color: #536982;
+  background: #152235;
+}
+
+.mutationTile img {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  border: 1px solid #3b4d64;
+  border-radius: 5px;
+  background: #0a121d;
+  object-fit: contain;
+}
+
+.mutationTile span {
+  min-width: 0;
+}
+
+.mutationTile strong,
+.mutationTile small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mutationTile strong {
+  font-size: 9px;
+}
+
+.mutationTile small {
+  margin-top: 2px;
+  color: #76889e;
+  font-size: 7px;
+}
+
+.traitControl select,
+.equipmentGrid select {
+  width: 100%;
+  height: 30px;
+  min-width: 0;
+  border: 1px solid #31455f;
+  border-radius: 6px;
+  background: #081321;
+  padding: 0 7px;
+  color: white;
+  font-size: 10px;
+}
+
+.equipmentGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.equipmentGrid label {
+  min-width: 0;
+  color: #8395ab;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.equipmentGrid select {
+  display: block;
+  margin-top: 3px;
+}
+
+.compactStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 7px;
+}
+
+.compactStats .slotStat {
+  padding: 6px;
+}
+
+.compactStats .slotStat span {
+  font-size: 7px;
+}
+
+.compactStats .slotStat strong {
+  font-size: 11px;
+}
+
+.slotStats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.slotStat {
+  border: 1px solid #293e56;
+  border-radius: 7px;
+  background: #09131f;
+  padding: 7px 8px;
+}
+
+.slotStat span {
+  display: block;
+  color: #8094af;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.slotStat strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+}
+
+.emptySlot {
+  display: grid;
+  min-height: 202px;
+  place-items: center;
+  border: 1px dashed #3b5575;
+  border-radius: 11px;
+  background: #0a1421;
+  color: #7190b5;
+}
+
+/* Apply the circular button only to the plus, not to the content wrapper. */
+.emptySlot .emptySlotPlus {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid #4b73a1;
+  border-radius: 999px;
+  color: #75bfff;
+  font-size: 24px;
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: 12px;
+}
+
+.overviewCard {
+  border: 1px solid #31465f;
+  border-radius: 9px;
+  background: #0b1522;
+  padding: 10px;
+}
+
+.overviewCard span {
+  color: #8da0b7;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.overviewCard strong {
+  display: block;
+  margin-top: 5px;
+  font-size: clamp(18px, 2vw, 26px);
+}
+
+.recommendCard {
+  margin-bottom: 8px;
+  border: 1px solid #314a66;
+  border-radius: 9px;
+  background: #0b1625;
+  padding: 10px;
+}
+
+.recommendCard h3 {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.recommendMonsters {
+  display: flex;
+  gap: 6px;
+  margin: 9px 0;
+}
+
+.recommendMonster {
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  border: 1px solid #496587;
+  border-radius: 8px;
+  background: #08111c;
+}
+
+.recommendMonster img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.helper {
+  color: #7f94ad;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1250px) {
+  .layout {
+    grid-template-columns: 260px minmax(0, 1fr);
+  }
+
+  .recommendations {
+    grid-column: 1 / -1;
+  }
+
+  .recommendBody {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+@media (max-width: 900px) {
+  .banner {
+    grid-template-columns: auto 1fr;
+  }
+
+  .bannerAside {
+    grid-column: 1 / -1;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .inventoryList {
+    max-height: 360px;
+  }
+
+  .teamSlots {
+    grid-template-columns: 1fr;
+  }
+
+  .overviewGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 540px) {
+  .bannerIcon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .recommendBody {
+    grid-template-columns: 1fr;
+  }
+
+  .controls {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.advancedControls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.advancedControls .control:nth-child(3),
+.advancedControls .control:nth-child(4),
+.advancedControls .control:nth-child(5) {
+  grid-column: span 2;
+}
+
+.mutationRow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.mutationButton {
+  border: 1px solid #31455f;
+  border-radius: 6px;
+  background: #091321;
+  padding: 6px 4px;
+  color: #8fa4bd;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.mutationActive {
+  border-color: #7c65ff;
+  background: #211a46;
+  color: #d7ceff;
+  box-shadow: inset 0 0 0 1px rgba(124, 101, 255, 0.18);
+}
+
+.goalPicker {
+  margin-bottom: 8px;
+}
+
+.goalPicker label {
+  display: block;
+  margin-bottom: 4px;
+  color: #8498b1;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.goalPicker select {
+  width: 100%;
+  height: 34px;
+  border: 1px solid #3b5575;
+  border-radius: 7px;
+  background: #091321;
+  padding: 0 9px;
+  color: #eef5ff;
+  font-size: 11px;
+}
+
+.inventoryRowOwned {
+  border-color: #355c55;
+  background: linear-gradient(90deg, rgba(28, 92, 68, 0.13), #0b1523 34%);
+}
+
+.inventoryBuildMeta {
+  margin-top: 4px;
+  overflow: hidden;
+  color: #7fc4a3;
+  font-size: 9px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slotFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 9px;
+  padding-top: 9px;
+  border-top: 1px solid #263b52;
+}
+
+.saveState {
+  min-width: 0;
+  color: #d6a75a;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.saveStateSaved {
+  color: #72dca2;
+}
+
+.saveButton {
+  flex: 0 0 auto;
+  border: 1px solid #40658c;
+  border-radius: 6px;
+  background: #10233a;
+  padding: 5px 8px;
+  color: #b6d8ff;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.saveButton:hover {
+  border-color: #64a8ec;
+  color: #ffffff;
+}
+
+.recommendList {
+  display: grid;
+  gap: 6px;
+  margin: 9px 0;
+}
+
+.recommendRow {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #263e58;
+  border-radius: 8px;
+  background: #09131f;
+  padding: 6px;
+}
+
+.recommendDetails {
+  min-width: 0;
+}
+
+.recommendDetails strong,
+.recommendDetails span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recommendDetails strong {
+  color: #f5f8fc;
+  font-size: 11px;
+}
+
+.recommendDetails span {
+  margin-top: 2px;
+  color: #8399b4;
+  font-size: 9px;
+}
+
+.teamAnalysis {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(250px, .85fr);
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+
+.analysisBlock {
+  border: 1px solid #2d435d;
+  border-radius: 9px;
+  background: #09131f;
+  padding: 10px;
+}
+
+.analysisHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.analysisHeading h3 {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.analysisHeading > span {
+  color: #71859f;
+  font-size: 9px;
+  text-align: right;
+}
+
+.roleGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.roleCard {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  border: 1px solid #29415c;
+  border-radius: 8px;
+  background: #0c1826;
+  padding: 6px;
+}
+
+.roleCard img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.roleCard strong,
+.roleCard small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.roleCard strong {
+  font-size: 11px;
+}
+
+.roleCard small {
+  margin-top: 3px;
+  color: #7f93ad;
+  font-size: 8px;
+}
+
+.rolePill {
+  display: inline-flex;
+  margin-top: 3px;
+  border: 1px solid #455c88;
+  border-radius: 999px;
+  background: #17213b;
+  padding: 2px 6px;
+  color: #aebdff;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.utilityBadges,
+.skillEffects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.utilityBadges span,
+.skillEffects span {
+  border: 1px solid #35516f;
+  border-radius: 999px;
+  background: #102039;
+  padding: 3px 6px;
+  color: #a8c9ee;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.emptyAnalysis {
+  color: #73879f;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.monsterBreakdowns {
+  display: grid;
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+
+.monsterBreakdown {
+  overflow: hidden;
+  border: 1px solid #304861;
+  border-radius: 9px;
+  background: #0a1421;
+}
+
+.breakdownHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid #283d54;
+  padding: 8px 10px;
+  background: linear-gradient(90deg, rgba(47, 92, 148, .16), rgba(9, 19, 31, .2));
+}
+
+.breakdownHeader > strong {
+  color: #77bfff;
+  font-size: 12px;
+}
+
+.breakdownMonster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.breakdownMonster img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.breakdownMonster span,
+.breakdownMonster strong {
+  display: block;
+}
+
+.breakdownMonster span {
+  color: #7f90ff;
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.breakdownMonster strong {
+  margin-top: 1px;
+  font-size: 13px;
+}
+
+.skillList {
+  display: grid;
+}
+
+.skillRow {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #22364b;
+  padding: 7px 9px;
+}
+
+.skillRow:last-child {
+  border-bottom: 0;
+}
+
+.skillIcon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #334a65;
+  border-radius: 7px;
+  background: #08111c;
+}
+
+.skillIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.skillMain {
+  min-width: 0;
+}
+
+.skillMain > strong {
+  display: block;
+  overflow: hidden;
+  margin-bottom: 4px;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skillNumbers {
+  min-width: 92px;
+  text-align: right;
+}
+
+.skillNumbers span,
+.skillNumbers strong,
+.skillNumbers small {
+  display: block;
+}
+
+.skillNumbers span {
+  color: #90a5be;
+  font-size: 9px;
+}
+
+.skillNumbers strong {
+  margin-top: 1px;
+  color: #eaf4ff;
+  font-size: 10px;
+}
+
+.skillNumbers small {
+  margin-top: 1px;
+  color: #70859f;
+  font-size: 8px;
+}
+
+.passiveList {
+  display: grid;
+  gap: 5px;
+  border-top: 1px solid #263a50;
+  padding: 8px 9px;
+  background: rgba(10, 22, 36, .72);
+}
+
+.passiveRow {
+  display: grid;
+  grid-template-columns: minmax(90px, .35fr) minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+}
+
+.passiveRow strong {
+  color: #d7ddff;
+  font-size: 9px;
+}
+
+.passiveRow span {
+  color: #8195ad;
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .teamAnalysis {
+    grid-template-columns: 1fr;
+  }
+
+  .roleGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 540px) {
+  .skillRow {
+    grid-template-columns: 32px minmax(0, 1fr);
+  }
+
+  .skillNumbers {
+    grid-column: 2;
+    min-width: 0;
+    text-align: left;
+  }
+
+  .passiveRow {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
+.recommendTitleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.compositionScore {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid #4b72a0;
+  border-radius: 999px;
+  background: #10243c;
+  color: #8dc8ff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.recommendMetrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.recommendMetrics > div {
+  border: 1px solid #29425d;
+  border-radius: 7px;
+  background: #09131f;
+  padding: 7px;
+}
+
+.recommendMetrics span,
+.recommendMetrics strong {
+  display: block;
+}
+
+.recommendMetrics span {
+  color: #7188a4;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.recommendMetrics strong {
+  margin-top: 2px;
+  color: #eef6ff;
+  font-size: 12px;
+}
+
+.recommendReasons {
+  margin: 8px 0;
+  border-top: 1px solid #263e58;
+  padding-top: 8px;
+}
+
+.reasonLabel {
+  display: block;
+  margin-bottom: 5px;
+  color: #7288a3;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.alternativeList {
+  display: grid;
+  gap: 5px;
+  margin-top: 10px;
+  border-top: 1px solid #263e58;
+  padding-top: 8px;
+}
+
+.alternativeRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid #293f58;
+  border-radius: 7px;
+  background: #09131f;
+  padding: 6px 7px;
+}
+
+.alternativeRow span {
+  overflow: hidden;
+  color: #8fa3ba;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.alternativeRow strong {
+  color: #79bfff;
+  font-size: 10px;
+}
+
+.recommendDetails em {
+  display: block;
+  margin-top: 4px;
+  overflow: hidden;
+  color: #a7c8ec;
+  font-size: 8px;
+  font-style: normal;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scoreBreakdown {
+  display: grid;
+  gap: 6px;
+  margin-top: 9px;
+  border: 1px solid #29425d;
+  border-radius: 8px;
+  background: #09131f;
+  padding: 8px;
+}
+
+.scoreRow {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 7px;
+}
+
+.scoreRow > div:first-child span,
+.scoreRow > div:first-child small {
+  display: block;
+}
+
+.scoreRow > div:first-child span {
+  color: #c6d8ec;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.scoreRow > div:first-child small {
+  margin-top: 1px;
+  color: #667d98;
+  font-size: 7px;
+}
+
+.scoreTrack {
+  height: 6px;
+  overflow: hidden;
+  border: 1px solid #29425d;
+  border-radius: 999px;
+  background: #07101b;
+}
+
+.scoreTrack > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2e72ba, #65b9ff);
+}
+
+.scoreRow > strong {
+  color: #85c7ff;
+  font-size: 9px;
+  text-align: right;
+}
+
+.alternativeCard {
+  display: grid;
+  gap: 6px;
+  border: 1px solid #293f58;
+  border-radius: 8px;
+  background: #09131f;
+  padding: 7px;
+}
+
+.alternativeHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 8px;
+}
+
+.alternativeHeader strong,
+.alternativeHeader span {
+  display: block;
+}
+
+.alternativeHeader strong {
+  color: #dbeaff;
+  font-size: 9px;
+}
+
+.alternativeHeader span {
+  margin-top: 2px;
+  overflow: hidden;
+  color: #7188a3;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.alternativeHeader b {
+  color: #79bfff;
+  font-size: 10px;
+}
+
+.tradeoffRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.tradeoffRow span {
+  border: 1px solid #31455d;
+  border-radius: 999px;
+  background: #0d1a29;
+  padding: 2px 6px;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.positiveDelta {
+  color: #79dca4;
+}
+
+.negativeDelta {
+  color: #e5a47f;
+}
+
+.tradeoffUtility {
+  display: grid;
+  gap: 2px;
+  color: #7f95ae;
+  font-size: 8px;
+  line-height: 1.35;
+}
+
+@media (max-width: 540px) {
+  .scoreRow {
+    grid-template-columns: 64px minmax(0, 1fr) 26px;
+  }
+}
+
+.inventoryToolbar {
+  display: flex;
+  gap: 7px;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.inventoryFilters {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  gap: 5px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.filterChip {
+  flex: 0 0 auto;
+  border: 1px solid #334a65;
+  border-radius: 999px;
+  background: #0b1726;
+  padding: 5px 8px;
+  color: #90a5c0;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.filterChipActive {
+  border-color: #2d91f5;
+  background: #12365b;
+  color: #d9edff;
+}
+
+.inventorySort {
+  width: 76px;
+  border: 1px solid #334a65;
+  border-radius: 7px;
+  background: #0a1421;
+  padding: 5px 6px;
+  color: #c1d3e9;
+  font-size: 9px;
+}
+
+.indexImportButton {
+  width: 100%;
+  margin-top: 7px;
+  border: 1px solid #2d5f8d;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #102b47, #0c2137);
+  padding: 7px 8px;
+  color: #a9d4ff;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.indexImportButton:hover {
+  border-color: #4c94d6;
+  color: white;
+}
+
+.inventoryMessage {
+  margin-top: 6px;
+  border-radius: 6px;
+  background: #0a2034;
+  padding: 6px 8px;
+  color: #8fc8ff;
+  font-size: 9px;
+}
+
+.inventoryEditorBackdrop {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(2, 8, 16, 0.78);
+  padding: 18px;
+  backdrop-filter: blur(4px);
+}
+
+.inventoryEditor {
+  width: min(720px, 100%);
+  max-height: min(760px, calc(100vh - 36px));
+  overflow-y: auto;
+  border: 1px solid #3b638d;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #132238, #0a1421);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+}
+
+.inventoryEditorHeader,
+.inventoryEditorFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.inventoryEditorHeader {
+  border-bottom: 1px solid #30455f;
+}
+
+.inventoryEditorFooter {
+  border-top: 1px solid #30455f;
+  color: #8398b3;
+  font-size: 10px;
+}
+
+.editorMonsterTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.editorMonsterTitle img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  border: 1px solid #496789;
+  border-radius: 9px;
+  background: #09111b;
+}
+
+.editorMonsterTitle div {
+  display: grid;
+  gap: 2px;
+}
+
+.editorMonsterTitle span,
+.editorMonsterTitle small {
+  color: #8299b5;
+  font-size: 9px;
+}
+
+.editorMonsterTitle strong {
+  font-size: 16px;
+}
+
+.inventoryEditorGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 16px;
+}
+
+.inventoryEditorGrid label {
+  display: grid;
+  gap: 5px;
+  color: #9db0c8;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.inventoryEditorGrid input,
+.inventoryEditorGrid select {
+  width: 100%;
+  border: 1px solid #334a65;
+  border-radius: 7px;
+  background: #091321;
+  padding: 8px 9px;
+  color: white;
+  font-size: 11px;
+}
+
+.editorMutationRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 0 16px 16px;
+}
+
+@media (max-width: 640px) {
+  .inventoryEditorGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .inventoryToolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .inventorySort {
+    width: 100%;
+  }
+}
+
+.teamPresetControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.teamPresetSelect {
+  min-width: 130px;
+  border: 1px solid #405574;
+  border-radius: 7px;
+  background: #0d1827;
+  padding: 7px 9px;
+  color: #d7e5f7;
+  font-size: 11px;
+  font-weight: 700;
+  outline: none;
+}
+
+.teamPresetSelect:focus {
+  border-color: #5aa7ff;
+}
+
+.teamPresetMessage {
+  margin: 8px 12px 0;
+  border: 1px solid #294d72;
+  border-radius: 7px;
+  background: #0b2036;
+  padding: 7px 10px;
+  color: #9dccff;
+  font-size: 11px;
+}
+
+@media (max-width: 760px) {
+  .teamPresetControls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .teamPresetSelect {
+    flex: 1 1 150px;
+  }
+}
+
+.teamPresetControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.teamPresetSelect {
+  min-width: 130px;
+  border: 1px solid #405574;
+  border-radius: 7px;
+  background: #0d1827;
+  padding: 7px 9px;
+  color: #d7e5f7;
+  font-size: 11px;
+  font-weight: 700;
+  outline: none;
+}
+
+.teamPresetSelect:focus {
+  border-color: #5aa7ff;
+}
+
+.teamPresetMessage {
+  margin: 8px 12px 0;
+  border: 1px solid #294d72;
+  border-radius: 7px;
+  background: #0b2036;
+  padding: 7px 10px;
+  color: #9dccff;
+  font-size: 11px;
+}
+
+@media (max-width: 760px) {
+  .teamPresetControls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .teamPresetSelect {
+    flex: 1 1 150px;
+  }
+}
+
+/* Native modal keeps focus and pointer interaction inside the inventory editor. */
+.inventoryEditor {
+  margin: auto;
+  width: min(720px, calc(100vw - 36px));
+  color: #f6f8fc;
+}
+.inventoryEditor::backdrop {
+  background: rgba(2, 8, 16, 0.78);
+  backdrop-filter: blur(4px);
+}
+
+/* Shared dark cards and image-rich saved-team library */
+.libraryBackdrop{position:fixed;inset:0;z-index:100;background:rgba(2,7,16,.84);display:grid;place-items:center;padding:14px}
+.libraryDialog{width:min(1100px,100%);max-height:94vh;overflow:auto;background:#141b25;border:1px solid #3a4659;border-radius:12px;color:#edf3ff;padding:18px;box-shadow:0 24px 80px #000b}
+.libraryHeader,.libraryActions,.libraryCardActions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.libraryHeader h2{font-size:24px;font-weight:800}.libraryHeader p{color:#aeb9cb;font-size:12px}
+.libraryActions{margin:18px 0 12px}.libraryActions input,.librarySearch{background:#17212e;color:white;border:1px solid #37475d;border-radius:8px;padding:12px;flex:1;min-width:160px}
+.librarySearch{width:100%;margin:15px 0 10px}.libraryPreview,.libraryCard{border:1px solid #38475d;border-radius:11px;padding:12px;background:#1a2330}.libraryPreview{border-color:#465b91}.libraryMembers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}.libraryMember{min-width:0;display:flex;align-items:center;flex-direction:column;gap:4px;text-align:center;padding:10px 5px;background:#111925;border:1px solid #354258;border-radius:8px}.libraryMember img{height:60px;width:60px;object-fit:contain}.libraryMember strong{font-size:12px;overflow-wrap:anywhere}.libraryMember small,.libraryCardHeader small{font-size:10px;color:#a3b0c4}.libraryGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:12px;max-height:48vh;overflow:auto}.libraryCardHeader{display:flex;justify-content:space-between;gap:8px}.libraryCardActions{margin-top:12px;justify-content:stretch}.libraryCardActions button{flex:1;font-size:12px;padding:8px}.attributeGroup{border:1px solid #334257;border-radius:8px;padding:9px;min-width:0;background:#111b29}.attributeGroup strong{font-size:12px}.attributeGroup small{display:block;margin-top:8px;color:#98a7bd}.attributeSlots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px}.fixedAttribute{font-size:10px;border:1px solid #af7a32;border-radius:5px;padding:8px;color:#ffc277}.teamCount{color:#a3b6cd;font-size:11px}
+@media(max-width:600px){.libraryDialog{padding:10px}.libraryMembers{gap:3px}.libraryMember img{width:42px;height:42px}.libraryMember{padding:5px 2px}.libraryCardActions button{min-width:40%}}
+
+/* Compare-style cards: show the useful comparison first; keep full controls on demand. */
+.compareQuickStats { display:flex; flex-wrap:wrap; gap:5px 12px; margin:10px 0 6px; padding:8px; border:1px solid #294967; border-radius:7px; background:#0d2236; color:#91abc6; font-size:11px; }
+.compareQuickStats b { color:#f2f7ff; font-weight:800; }
+.compareGearLine { display:flex; flex-wrap:wrap; gap:5px 11px; padding:2px 1px 9px; color:#8caac5; font-size:10px; }
+.compareGearLine span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.compareGearLine b { color:#e6f0ff; font-weight:700; }
+.compareMutationLine { display:flex; gap:5px; padding:3px 0 8px; }
+.compareMutationLine span { min-width:0; flex:1; height:30px; display:flex; align-items:center; justify-content:center; gap:3px; border:1px solid #29435c; border-radius:6px; background:#0c1a29; color:#b4c6da; font-size:10px; }
+.compareMutationLine img { width:22px; height:22px; object-fit:contain; opacity:.45; }
+.compareMutationLine .compareMutationActive { border-color:#508ac0; background:#15314b; color:white; }
+.compareMutationLine .compareMutationActive img { opacity:1; }
+.compareEditor { margin:5px 0 9px; border:1px solid #31577b; border-radius:8px; background:#0b2033; }
+.compareEditor > summary { cursor:pointer; list-style:none; display:flex; justify-content:space-between; flex-wrap:wrap; gap:5px; align-items:center; padding:10px; font-size:12px; font-weight:800; color:#a7cfff; }
+.compareEditor > summary::-webkit-details-marker { display:none; }
+.compareEditor > summary:before { content:"▸"; color:#73b5ff; margin-right:3px; }
+.compareEditor[open] > summary:before { content:"▾"; }
+.compareEditor > summary span { font-size:10px; font-weight:400; color:#8ba5bc; }
+.compareEditor[open] > summary { border-bottom:1px solid #31506a; }
+.compareEditorBody { padding:4px 8px 10px; }
+.compareEditorBody .buildGroup { background:#0d2236; }
+.compareEditor:focus-within { border-color:#6c9bff; }
+
+
+/* Team builder: focused first view. The comparison is the page; the optimizer is opt-in. */
+.layoutFocus { grid-template-columns: 250px minmax(0, 1fr); }
+.layoutFocus .center { min-width: 0; }
+.layoutFocus .teamSlots { gap: 12px; }
+.layoutFocus .slot { padding: 13px; background: #111c2b; border-color: #30465e; }
+.layoutFocus .slotTop { padding-right: 15px; margin-bottom: 12px; }
+.layoutFocus .slotPortrait { width: 60px; height: 60px; }
+.layoutFocus .slotTitle strong { font-size: 14px; }
+.layoutFocus .compareQuickStats { margin: 0 0 9px; background: #0b1928; border-color: #2c435c; padding: 9px; gap: 6px 13px; }
+.layoutFocus .compareGearLine { padding: 8px 1px 11px; line-height: 1.5; border-bottom: 1px solid #263b50; }
+.layoutFocus .compareMutationLine { padding: 2px 0 5px; }
+.layoutFocus .compareMutationLine span { height: 34px; background: #0c1825; }
+.layoutFocus .compareMutationLine .compareMutationActive { background: #14263a; }
+.layoutFocus .compactStats { margin-top: 12px; }
+.layoutFocus .slotFooter { margin-top: 12px; }
+/* The card remains a quick summary; full editing is a dedicated overlay. */
+.compareEditor { margin: 10px 0 0; border-color: #355674; background: #102337; }
+.compareEditor > summary { justify-content: center; gap: 8px; padding: 9px 12px; color: #d7e9ff; }
+.compareEditor > summary:before { content: "✎"; }
+.compareEditor > summary span { color: #8eacc9; }
+.compareEditor > summary:hover { background: #1a3550; }
+.compareEditor[open] { position: fixed; z-index: 101; inset: max(30px, 5vh) auto auto 50%; transform: translateX(-50%); width: min(680px, calc(100vw - 24px)); max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; background: #101b2b; border: 1px solid #4a7096; border-radius: 14px; box-shadow: 0 30px 100px #000c; }
+.compareEditor[open] > summary { justify-content: space-between; flex: 0 0 auto; padding: 17px 20px; font-size: 15px; background: #14263b; border-bottom: 1px solid #35506b; }
+.compareEditor[open] > summary:before { content: none; }
+.compareEditor[open] > summary span { margin-left: auto; }
+.compareEditor[open] .compareEditorBody { min-height: 0; overflow-y: auto; padding: 16px; display: grid; gap: 12px; }
+.compareEditor[open] .buildGroup { padding: 14px; background: #0b2032; border-radius: 10px; }
+/* When a build editor is open, dim the main workspace without covering the editor. */
+.root:has(.compareEditor[open])::after { content: ""; position: fixed; z-index: 100; inset: 0; background: rgba(3,9,17,.76); pointer-events: auto; }
+.banner { grid-template-columns: auto minmax(0, 1fr); padding: 13px 18px; }
+.bannerIcon { width: 48px; height: 48px; font-size: 21px; }
+.bannerAside { display: none; }
+@media(max-width: 1250px) { .layoutFocus { grid-template-columns: 225px minmax(0, 1fr); } }
+@media(max-width: 900px) { .layoutFocus { grid-template-columns: minmax(0, 1fr); } }
+@media(max-width: 540px) { .compareEditor[open] { top: 8px; max-height: calc(100dvh - 16px); } .compareEditor[open] .compareEditorBody { padding: 10px; } }
+
+/* Interactive build-summary fields share one non-intrusive editor. */
+.compareQuickStats { align-items: center; gap: 5px !important; }
+.compareQuickStats button { display:inline-flex; align-items:center; gap:4px; min-width:0; padding:3px 5px; border:1px solid transparent; border-radius:5px; color:#9ab2cc; background:transparent; font:inherit; cursor:pointer; }
+.compareQuickStats button:hover, .compareQuickStats button:focus-visible { border-color:#47749c; background:#163148; }
+.compareQuickStats .quickGp { margin-left:auto; gap:3px; }
+.compareQuickStats .quickGp img { width:14px; height:14px; object-fit:contain; }
+.compareQuickStats .quickEnhancement { color:#66b8ff; }
+.editPencil { color:#77b7ed; opacity:.65; font-size:11px; margin-left:2px; }
+.compareQuickStats button:hover .editPencil, .compareMutationLine button:hover .editPencil, .compareGearLine button:hover .editPencil { opacity:1; color:#c6e5ff; }
+.compareMutationLine button { min-width:0; flex:1; height:34px; display:flex; align-items:center; justify-content:center; gap:3px; border:1px solid #29435c; border-radius:6px; background:#0c1a29; color:#b4c6da; cursor:pointer; }
+.compareMutationLine button:hover, .compareMutationLine button:focus-visible { border-color:#5189ba; background:#193147; }
+.compareMutationLine button img { width:22px; height:22px; object-fit:contain; opacity:.45; }
+.compareMutationLine button.compareMutationActive { border-color:#508ac0; background:#15314b; color:#fff; }
+.compareMutationLine button.compareMutationActive img { opacity:1; }
+.compareGearLine button { display:flex; align-items:center; min-width:0; gap:5px; padding:4px 5px; border:1px solid transparent; border-radius:5px; color:#90acc6; background:transparent; font-size:10px; cursor:pointer; }
+.compareGearLine button img { width:17px; height:17px; flex-shrink:0; object-fit:contain; }
+.compareGearLine button>span:not(.editPencil) { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.compareGearLine button:hover, .compareGearLine button:focus-visible { border-color:#47749c; background:#163148; }
+/* The only remaining editor control is a small pencil, not another full-width row. */
+.compareEditor:not([open]) { position:absolute; top:11px; right:34px; margin:0; border:0; background:transparent; }
+.compareEditor:not([open]) > summary { padding:5px 7px; font-size:13px; }
+.compareEditor:not([open]) > summary::before { content:none; }
+.compareEditor:not([open]) > summary span { color:#91bde6; font-size:13px; }
+.compareMutationLine button .editPencil { flex:initial; display:inline; min-width:0; width:auto; height:auto; padding:0; margin:0 0 0 2px; border:0; border-radius:0; background:none; font-size:10px; line-height:1; }
+
+/* Final compact card treatment: editable summaries without repeated pencil marks. */
+.compareGearLine button .relative { flex-shrink:0; }
+.compareGearLine .emptyGearIcon { width:17px; height:17px; flex-shrink:0; display:grid; place-items:center; color:#708ca7; }
+.compareGearLine button > span:not(.emptyGearIcon):not(.relative) { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+/* Overlay is a real outside-click target; saves the active build before closing. */
+.teamEditorBackdrop { position:fixed; z-index:100; inset:0; width:100%; height:100%; border:0; padding:0; background:rgba(3,9,17,.76); cursor:default; }
+.root:has(.compareEditor[open])::after { display:none; }
+/* Secret fixed attributes use the same artwork as the Calculator, not a text placeholder. */
+.attributeSlots .fixedAttribute { position:relative; display:grid; place-items:center; aspect-ratio:2.85 / 1; min-height:48px; width:100%; padding:2px; overflow:hidden; background:#0d131d; border:1px solid #af7a32; border-radius:6px; }
+.attributeSlots .fixedAttribute img { display:block; width:100%; height:auto; max-height:100%; object-fit:contain; }
+.attributeSlots .fixedAttribute span { position:absolute; top:3px; right:3px; border-radius:3px; padding:2px 3px; background:rgba(42,26,13,.92); color:#ffb866; font-size:8px; font-weight:700; line-height:1; }
+
+/* Multiple owned copies: each entry retains a separate editable build. */
+.copyList { grid-column: 1 / -1; display: grid; gap: 5px; min-width: 0; margin-top: 3px; }
+.copyRow { display: flex; align-items: center; gap: 5px; min-width: 0; padding: 5px 0 0; border-top: 1px solid #294056; }
+.copyLabel { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #b5cce1; font-size: 10px; }
+.copyRow .smallButton { flex: none; }
+
+/* Team build editors: match Calculator's layered navy palette.
+   Color-only overrides: the existing widths, heights, spacing and layout stay intact. */
+.compareEditor[open] {
+  background: #0b1e30;
+  border-color: #31516b;
+}
+.compareEditor[open] > summary {
+  background: #14283b;
+  border-bottom-color: #31516b;
+  color: #e8f2ff;
+}
+.compareEditor[open] .compareEditorBody {
+  background: #0b1e30;
+}
+.compareEditor[open] .buildGroup {
+  background: #10283c;
+  border-color: #31516b;
+}
+.compareEditor[open] .buildGroupTitle {
+  background: #142b40;
+  border-bottom-color: #31516b;
+  color: #f1f6ff;
+}
+.compareEditor[open] .buildGroupTitle b,
+.compareEditor[open] .compactDisclosure {
+  background: #10283c;
+  border-color: #31516b;
+}
+.compareEditor[open] .compactDisclosure summary:hover {
+  background: #19354c;
+}
+.compareEditor[open] .gpControls {
+  border-top-color: #31516b;
+  background: #10283c;
+}
+.compareEditor[open] .control input,
+.compareEditor[open] .control select,
+.compareEditor[open] .gpControls select,
+.compareEditor[open] .traitControl select,
+.compareEditor[open] .equipmentGrid select {
+  background: #041320;
+  border-color: #31516b;
+}
+.compareEditor[open] .rankStrip,
+.compareEditor[open] .enhancementStepper {
+  background: #041320;
+  border-color: #31516b;
+}
+.compareEditor[open] .enhancementStepper strong {
+  background: #14283b;
+}
+.compareEditor[open] .mutationTile,
+.compareEditor[open] .attributeGroup {
+  background: #0b2032;
+  border-color: #31516b;
+}
+.compareEditor[open] .mutationTile:hover {
+  background: #19354c;
+  border-color: #5584a9;
+}
+.compareEditor[open] .mutationTile img {
+  background: #041320;
+  border-color: #31516b;
+}
+/* Inventory copy editor follows the same surface hierarchy and keeps its size. */
+.inventoryEditor {
+  background: #0b1e30;
+  border-color: #31516b;
+}
+.inventoryEditorHeader,
+.inventoryEditorFooter {
+  background: #14283b;
+  border-color: #31516b;
+}
+.inventoryEditorGrid input,
+.inventoryEditorGrid select {
+  background: #041320;
+  border-color: #31516b;
+}
+.inventoryEditor .attributeGroup {
+  background: #10283c;
+  border-color: #31516b;
+}
+
+/* Compact team stats and direct monster selection */
+.compactStats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.compactStats .slotStat:first-child, .compactStats .slotStat:nth-child(2) { min-width:0; }
+.changeMonsterButton { position:absolute; top:10px; right:35px; z-index:2; border:1px solid #355574; border-radius:6px; padding:4px 7px; background:#10283e; color:#a6cff5; cursor:pointer; }
+.changeMonsterButton:hover, .changeMonsterButton:focus-visible { background:#1a3954; border-color:#6a9ed1; }
+.monsterPickerOverlay { position:fixed; inset:0; z-index:120; display:grid; place-items:center; padding:12px; background:rgba(3,9,17,.78); }
+.monsterPicker { width:min(610px,100%); max-height:min(760px,90dvh); display:flex; flex-direction:column; gap:12px; padding:17px; border:1px solid #416282; border-radius:14px; background:#0b1c2d; box-shadow:0 24px 90px #000b; }
+.monsterPickerHeader { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; color:#e9f3ff; }
+.monsterPickerHeader strong { font-size:16px; }
+.monsterPickerHeader p { margin-top:4px; font-size:12px; color:#91a8c0; }
+.monsterPickerHeader button { color:#b7cee6; border:1px solid #355574; border-radius:6px; padding:2px 9px; background:#10283e; }
+.monsterPickerList { min-height:0; overflow-y:auto; display:grid; gap:6px; }
+.monsterPickerRow { display:flex; align-items:center; gap:10px; padding:8px; border:1px solid #27445c; border-radius:9px; background:#102438; }
+.monsterPickerRow > img { width:43px; height:43px; flex-shrink:0; object-fit:contain; }
+.monsterPickerName { flex:1; min-width:0; display:grid; gap:3px; }
+.monsterPickerName strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; color:#eaf4ff; }
+.monsterPickerName span { font-size:11px; color:#90a9c1; }
+.monsterPickerCopies { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:5px; max-width:55%; }
+.monsterPickerCopies button { border:1px solid #41698c; border-radius:6px; padding:5px 8px; background:#173650; color:#cee7ff; font-size:11px; cursor:pointer; }
+.monsterPickerCopies button:disabled { opacity:.43; cursor:not-allowed; }
+.monsterPickerCopies button:not(:disabled):hover { background:#255078; }
+@media(max-width:540px) { .monsterPickerRow { flex-wrap:wrap; } .monsterPickerCopies { max-width:100%; width:100%; justify-content:flex-start; padding-left:53px; } }
+/* Reserve the pencil for changing a monster; build details remain editable through the summary. */
+.compareEditor:not([open]) > summary::before { content:none; }
+.compareEditor:not([open]) { right:69px; }
+.compareEditor:not([open]) > summary span { font-size:11px; }
+
+/* Monster picker: hide only affects discovery and suggestions, never saved builds. */
+.pickerPreferences { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:10px; color:#94acc3; }
+.pickerPreferences > span { min-width:0; }
+.pickerPreferences button { flex-shrink:0; }
+.pickerEmpty { padding:24px 10px; color:#9eb4ca; font-size:12px; text-align:center; }
+.monsterPickerCopies .hideMonsterButton { background:transparent; border-color:#36516a; color:#9cb4ca; }
+.monsterPickerCopies .hideMonsterButton:hover { background:#18334b; color:#e1eeff; }
+button.emptySlot { width:100%; cursor:pointer; font:inherit; }
+button.emptySlot:hover, button.emptySlot:focus-visible { border-color:#67a5e1; background:#10263a; color:#c9e7ff; }
+.emptySlotPlus { display:grid; width:40px; height:40px; margin:0 auto 8px; place-items:center; border:1px solid #4b73a1; border-radius:999px; color:#75bfff; font-size:24px; }
+@media(max-width:540px) { .pickerPreferences { flex-wrap:wrap; } }
+
+/* Final compact-card polish: center the empty slot control and mirror calculator stat labels. */
+button.emptySlot { display:flex; align-items:center; justify-content:center; min-width:0; text-align:center; padding:18px; }
+button.emptySlot .emptySlotContent { display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; min-width:0; gap:5px; margin:0; color:#c7e3ff; font-size:13px; line-height:1.4; }
+button.emptySlot .emptySlotPlus { display:grid; width:40px; height:40px; min-width:40px; margin:0 0 5px; place-items:center; border:1px solid #4b73a1; border-radius:999px; color:#75bfff; font-size:24px; line-height:1; }
+button.emptySlot .emptySlotContent strong { display:block; font-size:14px; font-weight:750; }
+button.emptySlot .emptySlotContent small { display:block; color:#91b6d8; font-size:11px; font-weight:400; }
+.compactStats .slotStat span { display:flex; align-items:center; gap:5px; min-height:15px; font-size:9px; font-weight:750; letter-spacing:.035em; line-height:1.2; }
+.compactStats .slotStat span img { display:block; flex:0 0 auto; width:14px; height:14px; object-fit:contain; }
+.compactStats .slotStat { min-width:0; background:#081b2a; border-color:#2a4961; }
+.compactStats .slotStat strong { font-size:12px; margin-top:4px; }
+
+/* Empty team card: one centered vertical action; no inherited span sizing. */
+button.emptySlot .emptySlotContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  text-align: center;
+}
+button.emptySlot .emptySlotPlus {
+  display: grid;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin: 0 0 4px;
+  place-items: center;
+  border: 1px solid #4b73a1;
+  border-radius: 50%;
+  background: #10263a;
+  color: #75bfff;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+}
+button.emptySlot .emptySlotContent strong {
+  display: block;
+  width: auto;
+  height: auto;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  font-size: 14px;
+  line-height: 1.25;
+}
+button.emptySlot .emptySlotContent small {
+  display: block;
+  width: auto;
+  height: auto;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  font-size: 11px;
+  line-height: 1.3;
+}

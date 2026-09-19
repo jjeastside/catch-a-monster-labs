@@ -1,0 +1,7 @@
+/* Calculator-only: bring the remaining neutral controls into the Monster Compare navy palette. */
+.cam-calculator { --background: #061a2b; --panel: #0d2437; --panel-raised: #102a3f; --border: #305672; }
+.cam-calculator :is(input,select,textarea) { color-scheme: dark; }
+.cam-calculator select option { background: #0b2336; color: #e9f3ff; }
+.cam-calculator :is(button,input,select,textarea):focus-visible { outline: 2px solid #72b7ff; outline-offset: 2px; }
+.cam-calculator :is(input,select,textarea)::placeholder { color: #98b2c8; }
+.cam-calculator :is(section,article) { scrollbar-color: #35617d transparent; }

@@ -68,6 +68,8 @@ export type MonsterPassive = {
 
 export type Build = {
   monsterId: string | null;
+  /** Optional inventory instance. Existing monsters use their monster ID. */
+  inventoryCopyId?: string;
   level: number;
   rank: Rank | null;
   enhancement: number;

@@ -911,5 +911,18 @@ export const GENERATED_ACHIEVEMENTS: Achievement[] = [
     "rewardPercent": 2,
     "requiresPrevious": false,
     "description": "Complete Splash Isle and claim its Path of Progress reward."
+  },
+  {
+    "id": "coilwork-city",
+    "category": "path-of-progress",
+    "order": 14,
+    "name": "Coilwork City",
+    "island": "Coilwork City",
+    "goalType": "Reward Claimed",
+    "goalAmount": null,
+    "rewardStat": "health",
+    "rewardPercent": 2,
+    "requiresPrevious": false,
+    "description": "Complete Coilwork City and claim its Path of Progress reward."
   }
 ];

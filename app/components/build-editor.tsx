@@ -138,7 +138,7 @@ function getAggregatedMutationEffects(selectedMutations: Mutation[]) {
 
 const ranks: Rank[] = ["E", "D", "C", "B", "A", "S", "SS"];
 
-const rankVisuals: Record<Rank, {
+export const BUILD_RANK_VISUALS: Record<Rank, {
     color: string;
     activeBackground: string;
     labelBackground?: string;
@@ -205,7 +205,7 @@ function SelectField({
                 onChange={(event) =>
                     onChange(event.target.value || null)
                 }
-                className="w-full rounded-md border border-[#344050] bg-[#141c28] px-3 py-2 text-sm text-[#e3e8f1] outline-none focus:border-[#7182ff]"
+                className="w-full rounded-md border border-[#25475f] bg-[#071b2b] px-3 py-2 text-sm text-[#e3e8f1] outline-none focus:border-[#7182ff]"
             >
                 {emptyLabel && (
                     <option value="">{emptyLabel}</option>
@@ -242,7 +242,7 @@ function HelpTooltip({
             </span>
             <span
                 role="tooltip"
-                className={`pointer-events-none absolute bottom-full z-[70] mb-2 w-64 max-w-[calc(100vw-2rem)] translate-y-1 rounded-lg border border-[#344050] bg-[#0f1620] p-3 text-left text-xs font-normal leading-5 text-[#bfc7d5] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100 ${align === "right" ? "right-0" : align === "left" ? "left-0" : "left-0 sm:left-1/2 sm:-translate-x-1/2"}`}
+                className={`pointer-events-none absolute bottom-full z-[70] mb-2 w-64 max-w-[calc(100vw-2rem)] translate-y-1 rounded-lg border border-[#25475f] bg-[#041320] p-3 text-left text-xs font-normal leading-5 text-[#bfc7d5] opacity-0 shadow-2xl transition group-hover/help:translate-y-0 group-hover/help:opacity-100 group-focus-within/help:translate-y-0 group-focus-within/help:opacity-100 ${align === "right" ? "right-0" : align === "left" ? "left-0" : "left-0 sm:left-1/2 sm:-translate-x-1/2"}`}
             >
                 <strong className="block font-semibold text-[#e3e8f1]">{title}</strong>
                 <span className="mt-1 block">{text}</span>
@@ -283,7 +283,7 @@ function GeneticPotentialSlider({
             </div>
 
             <div className="relative h-4">
-                <div className="pointer-events-none absolute inset-0 grid grid-cols-10 gap-0.5 overflow-hidden rounded border border-[#41506a] bg-[#0d131d] p-0.5">
+                <div className="pointer-events-none absolute inset-0 grid grid-cols-10 gap-0.5 overflow-hidden rounded border border-[#35617d] bg-[#0d131d] p-0.5">
                     {Array.from({ length: 10 }, (_, index) => (
                         <span
                             key={index}
@@ -313,11 +313,13 @@ function GeneticPotentialSlider({
 type EvolutionMultiplierEditorProps = {
     value: number;
     onChange: (value: number) => void;
+    compact?: boolean;
 };
 
-function EvolutionMultiplierEditor({
+export function EvolutionMultiplierEditor({
                                        value,
                                        onChange,
+                                       compact = false,
                                    }: EvolutionMultiplierEditorProps) {
     const [inputDraft, setInputDraft] = useState<string | null>(null);
     const [dragPreview, setDragPreview] = useState<number | null>(null);
@@ -374,9 +376,9 @@ function EvolutionMultiplierEditor({
 
     return (
         <div>
-            <div className="mb-2.5 flex items-center justify-between gap-3">
+            <div className={`${compact ? "mb-1.5" : "mb-2.5"} flex items-center justify-between gap-3`}>
                 <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-[#e3e8f1]">EM</p>
+                    <p className={`${compact ? "text-[10px]" : "text-sm"} font-semibold text-[#e3e8f1]`}>EM</p>
                     <HelpTooltip
                         title="Evolution Multiplier (EM)"
                         text="EM is the percentage of an evolved monster's base Damage and Health used by the game. 100% keeps its normal base stats; for example, 160% gives 1.60× base Damage and Health. Drag normally for quick changes. While dragging, slide upward to open the 0.01% precision range, then release to apply."
@@ -384,7 +386,7 @@ function EvolutionMultiplierEditor({
                     />
                 </div>
 
-                <label className="relative w-32">
+                <label className={`relative ${compact ? "w-24" : "w-32"}`}>
                     <input
                         type="number"
                         min={MIN_EVOLUTION_PERCENT}
@@ -414,7 +416,7 @@ function EvolutionMultiplierEditor({
                         }}
                         aria-label="Exact EM percentage"
                         aria-invalid={!isNumeric || isOutOfRange}
-                        className={`w-full rounded-md border bg-[#141c28] px-2.5 py-1.5 pr-6 text-right text-xs font-semibold tabular-nums text-[#e3e8f1] outline-none ${
+                        className={`w-full rounded-md border bg-[#0d131d] px-2.5 ${compact ? "h-7 py-1 text-[10px]" : "py-1.5 text-xs"} pr-6 text-right font-semibold tabular-nums text-[#e3e8f1] outline-none ${
                             !isNumeric || isOutOfRange
                                 ? "border-[#ff7657] focus:border-[#ff7657]"
                                 : "border-[#344050] focus:border-[#7182ff]"
@@ -444,7 +446,7 @@ function EvolutionMultiplierEditor({
                             </strong>
                             <span>{precisionRange.max.toFixed(2)}%</span>
                         </div>
-                        <div className="relative h-1.5 rounded-full bg-[#283140]">
+                        <div className="relative h-1.5 rounded-full bg-[#18394f]">
                             <div
                                 className="absolute inset-y-0 left-0 rounded-full bg-[#ff9d42]"
                                 style={{ width: `${precisionFill}%` }}
@@ -457,14 +459,14 @@ function EvolutionMultiplierEditor({
                     </div>
                 )}
 
-                <div className="relative rounded-lg border-2 border-[#f4d4b3] bg-[#343434] p-1 shadow-inner">
-                    <div className="relative h-7 overflow-hidden rounded-md bg-[#3a3a3a]">
+                <div className={`relative border-2 border-[#f4d4b3] bg-[#343434] shadow-inner ${compact ? "rounded-md p-0.5" : "rounded-lg p-1"}`}>
+                    <div className={`relative overflow-hidden rounded-md bg-[#3a3a3a] ${compact ? "h-5" : "h-7"}`}>
                         <div
                             className="pointer-events-none absolute inset-y-0 left-0 bg-gradient-to-r from-[#ffd2a3] via-[#ffb160] to-[#ff8a24]"
                             style={{ width: `${evolutionBarFill}%` }}
                         />
 
-                        <span className="pointer-events-none absolute inset-0 z-10 grid place-items-center text-sm font-black tabular-nums text-white [text-shadow:0_2px_0_#111,1px_0_0_#111,-1px_0_0_#111,0_-1px_0_#111]">
+                        <span className={`pointer-events-none absolute inset-0 z-10 grid place-items-center font-black tabular-nums text-white [text-shadow:0_2px_0_#111,1px_0_0_#111,-1px_0_0_#111,0_-1px_0_#111] ${compact ? "text-[10px]" : "text-sm"}`}>
                         EM:{displayedValue.toFixed(2)}%
                     </span>
 
@@ -785,7 +787,7 @@ function TeamContributionChip({
 }) {
     return (
         <span
-            className={`flex max-w-full items-start gap-1.5 rounded-lg border border-[#31405a] bg-[#141d2b] ${compact ? "px-2 py-1.5" : "px-2.5 py-2"}`}
+            className={`flex max-w-full items-start gap-1.5 rounded-lg border border-[#344050] bg-[#102a3f] ${compact ? "px-2 py-1.5" : "px-2.5 py-2"}`}
         >
             {contribution.icon ? (
                 <img
@@ -794,7 +796,7 @@ function TeamContributionChip({
                     className={`${compact ? "size-3.5" : "size-4"} mt-0.5 shrink-0 object-contain`}
                 />
             ) : (
-                <span className="mt-0.5 inline-flex size-3.5 shrink-0 items-center justify-center rounded-full bg-[#253149] text-[9px] text-[#c7cffc]">✦</span>
+                <span className="mt-0.5 inline-flex size-3.5 shrink-0 items-center justify-center rounded-full bg-[#183a56] text-[9px] text-[#c7cffc]">✦</span>
             )}
             <span className="min-w-0">
                 {contribution.skillName && (
@@ -874,11 +876,11 @@ function TeamPassiveSelect({
                 type="button"
                 onClick={() => setOpen((current) => !current)}
                 aria-expanded={open}
-                className={`flex min-h-[58px] w-full items-start justify-between gap-2 rounded-lg border border-[#344050] bg-[linear-gradient(180deg,#141c28_0%,#101823_100%)] px-2.5 py-2.5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition ${open ? "border-[#6482ff] shadow-[0_0_0_1px_rgba(100,130,255,0.18)]" : "hover:border-[#5c6a80] hover:bg-[#172131]"}`}
+                className={`flex min-h-[58px] w-full items-start justify-between gap-2 rounded-lg border border-[#344050] bg-[linear-gradient(115deg,#071b2b,#061725)] px-2.5 py-2.5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition ${open ? "border-[#6482ff] shadow-[0_0_0_1px_rgba(100,130,255,0.18)]" : "hover:border-[#3984af] hover:bg-[#172131]"}`}
             >
                 {selected ? (
                     <span className="flex min-w-0 flex-1 items-start gap-2">
-                        <span className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#31405a] bg-[radial-gradient(circle_at_50%_35%,rgba(80,113,184,0.28),rgba(14,22,35,0.9)_75%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                        <span className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#344050] bg-[radial-gradient(circle_at_50%_35%,rgba(80,113,184,0.28),rgba(14,22,35,0.9)_75%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
                             {selected.image ? (
                                 <img
                                     src={assetPath(selected.image)}
@@ -905,7 +907,7 @@ function TeamPassiveSelect({
                     </span>
                 ) : (
                     <span className="flex min-w-0 items-center gap-3">
-                        <span className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-dashed border-[#31405a] bg-[#101722] text-[#6e7d94]">
+                        <span className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-dashed border-[#344050] bg-[#071a2a] text-[#6e7d94]">
                             +
                         </span>
                         <span>
@@ -914,7 +916,7 @@ function TeamPassiveSelect({
                         </span>
                     </span>
                 )}
-                <span className={`inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-[#31405a] bg-[#141c28] text-[#8e9bb0] transition-transform ${open ? "rotate-180" : ""}`}>
+                <span className={`inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-[#25475f] bg-[#071b2b] text-[#8e9bb0] transition-transform ${open ? "rotate-180" : ""}`}>
                     <svg viewBox="0 0 20 20" className="size-3.5 fill-current" aria-hidden="true">
                         <path d="M5.25 7.5 10 12.25 14.75 7.5" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -977,8 +979,8 @@ function TeamPassiveSelect({
                                         className={
                                             "relative inline-flex size-9 items-center justify-center rounded-lg border transition " +
                                             (effectFilter === filter.id
-                                                ? "border-[#7182ff] bg-[#202846] text-[#dde4ff] shadow-[0_0_0_1px_rgba(113,130,255,0.14)]"
-                                                : "border-[#2d3949] bg-[#141c28] text-[#8492a7] hover:border-[#526177] hover:bg-[#182131] hover:text-[#d6dce7]")
+                                                ? "border-[#3984af] bg-[#102b40] text-[#dde4ff] shadow-[0_0_0_1px_rgba(113,130,255,0.14)]"
+                                                : "border-[#25475f] bg-[#071b2b] text-[#8492a7] hover:border-[#526177] hover:bg-[#182131] hover:text-[#d6dce7]")
                                         }
                                     >
                                         {filter.icon ? (
@@ -988,15 +990,15 @@ function TeamPassiveSelect({
                                                 className="size-4 object-contain"
                                             />
                                         ) : (
-                                            <span className="inline-flex size-4 items-center justify-center rounded-full bg-[#253149] text-[9px] text-[#c7cffc]">
+                                            <span className="inline-flex size-4 items-center justify-center rounded-full bg-[#183a56] text-[9px] text-[#c7cffc]">
                                                 {filter.id === "all" ? "•" : "✦"}
                                             </span>
                                         )}
-                                        <span className="absolute -right-1 -top-1 grid size-3.5 place-items-center rounded-full border border-[#46556c] bg-[#101722] text-[8px] font-black leading-none text-[#8795aa]">?</span>
+                                        <span className="absolute -right-1 -top-1 grid size-3.5 place-items-center rounded-full border border-[#46556c] bg-[#071a2a] text-[8px] font-black leading-none text-[#8795aa]">?</span>
                                     </button>
                                     <span
                                         role="tooltip"
-                                        className="pointer-events-none absolute bottom-full left-1/2 z-[120] mb-2 w-max max-w-48 -translate-x-1/2 translate-y-1 rounded-md border border-[#344050] bg-[#0f1620] px-2 py-1.5 text-[10px] font-semibold text-[#d7deea] opacity-0 shadow-xl transition group-hover/filter:translate-y-0 group-hover/filter:opacity-100 group-focus-within/filter:translate-y-0 group-focus-within/filter:opacity-100"
+                                        className="pointer-events-none absolute bottom-full left-1/2 z-[120] mb-2 w-max max-w-48 -translate-x-1/2 translate-y-1 rounded-md border border-[#25475f] bg-[#041320] px-2 py-1.5 text-[10px] font-semibold text-[#d7deea] opacity-0 shadow-xl transition group-hover/filter:translate-y-0 group-hover/filter:opacity-100 group-focus-within/filter:translate-y-0 group-focus-within/filter:opacity-100"
                                     >
                                         {filter.label}
                                     </span>
@@ -1014,8 +1016,8 @@ function TeamPassiveSelect({
                             className={
                                 "mb-2 flex w-full items-center justify-between rounded-xl border px-3 py-3 text-left transition " +
                                 (value === null
-                                    ? "border-[#5c72ff] bg-[#18223a]"
-                                    : "border-[#233043] bg-[#111822] hover:border-[#44546a] hover:bg-[#151e2b]")
+                                    ? "border-[#5c72ff] bg-[#102e48]"
+                                    : "border-[#24435c] bg-[#071827] hover:border-[#44546a] hover:bg-[#102b40]")
                             }
                         >
                             <span>
@@ -1042,8 +1044,8 @@ function TeamPassiveSelect({
                                 className={
                                     "mb-2 w-full rounded-xl border px-3 py-3 text-left transition " +
                                     (value === option.id
-                                        ? "border-[#5c72ff] bg-[#18223a] shadow-[0_0_0_1px_rgba(92,114,255,0.18)]"
-                                        : "border-[#233043] bg-[#111822] hover:border-[#44546a] hover:bg-[#151e2b]")
+                                        ? "border-[#5c72ff] bg-[#102e48] shadow-[0_0_0_1px_rgba(92,114,255,0.18)]"
+                                        : "border-[#24435c] bg-[#071827] hover:border-[#44546a] hover:bg-[#102b40]")
                                 }
                             >
                                 <span className="flex items-start gap-3">
@@ -1078,7 +1080,7 @@ function TeamPassiveSelect({
                                                 />
                                             ))}
                                             {option.contributions.length > 4 && (
-                                                <span className="inline-flex items-center rounded-full border border-[#2d3949] bg-[#141c28] px-2 py-1 text-[10px] font-medium text-[#7f8b9e]">
+                                                <span className="inline-flex items-center rounded-full border border-[#25475f] bg-[#071b2b] px-2 py-1 text-[10px] font-medium text-[#7f8b9e]">
                                                     +{option.contributions.length - 4} more
                                                 </span>
                                             )}
@@ -1338,7 +1340,7 @@ export function BuildEditor({
         >
             <div className="flex min-h-0 w-full min-w-0 max-w-full flex-1 flex-col gap-2 overflow-visible p-3 lg:overflow-x-hidden lg:overflow-y-auto">
                 {!monster && (
-                    <div className="rounded-lg border border-dashed border-[#344050] bg-[#0d131d]/45 p-4 text-center">
+                    <div className="rounded-lg border border-dashed border-[#25475f] bg-[#041320]/45 p-4 text-center">
                         <p className="text-sm font-medium text-[#e3e8f1]">
                             No monster selected
                         </p>
@@ -1374,7 +1376,7 @@ export function BuildEditor({
                                         disabled={build.combatContext === "dungeon"}
                                         aria-label="Monster level"
                                         title={build.combatContext === "dungeon" ? "Dungeon mode forces Level 60." : undefined}
-                                        className="w-[4.25rem] appearance-none rounded-md border border-[#344050] bg-[#0f1620] px-2 py-1.5 text-center text-sm font-semibold tabular-nums text-[#e3e8f1] outline-none transition focus:border-[#4d96ff] disabled:cursor-not-allowed disabled:opacity-60 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                        className="w-[4.25rem] appearance-none rounded-md border border-[#25475f] bg-[#041320] px-2 py-1.5 text-center text-sm font-semibold tabular-nums text-[#e3e8f1] outline-none transition focus:border-[#4d96ff] disabled:cursor-not-allowed disabled:opacity-60 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                     />
                                     <span className="text-xs tabular-nums text-[#7f8b9e]">/ {maxSelectableLevel}</span>
                                 </div>
@@ -1391,7 +1393,7 @@ export function BuildEditor({
                                 disabled={build.combatContext === "dungeon"}
                                 title={build.combatContext === "dungeon" ? "Dungeon mode forces Level 60." : undefined}
                                 style={{
-                                    background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((build.level - MIN_LEVEL) / (maxSelectableLevel - MIN_LEVEL)) * 100}%, #283140 ${((build.level - MIN_LEVEL) / (maxSelectableLevel - MIN_LEVEL)) * 100}%, #283140 100%)`,
+                                    background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((build.level - MIN_LEVEL) / (maxSelectableLevel - MIN_LEVEL)) * 100}%, #18394f ${((build.level - MIN_LEVEL) / (maxSelectableLevel - MIN_LEVEL)) * 100}%, #18394f 100%)`,
                                 }}
                                 className="h-1.5 w-full cursor-pointer appearance-none rounded-full outline-none disabled:cursor-not-allowed disabled:opacity-60 [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#3b82f6] [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#3b82f6] [&::-webkit-slider-thumb]:shadow-[0_0_0_3px_rgba(59,130,246,0.16)]"
                             />
@@ -1399,10 +1401,10 @@ export function BuildEditor({
 
                         <div>
                             <p className="mb-1.5 text-xs font-medium text-[#bfc7d5]">Rank</p>
-                            <div className="grid w-full min-w-0 grid-cols-[repeat(7,minmax(0,1fr))] overflow-hidden rounded-lg border border-[#344050] bg-[#0d131d]">
+                            <div className="grid w-full min-w-0 grid-cols-[repeat(7,minmax(0,1fr))] overflow-hidden rounded-lg border border-[#25475f] bg-[#041320]">
                                 {ranks.map((rank, index) => {
                                     const selected = build.rank === rank;
-                                    const visual = rankVisuals[rank];
+                                    const visual = BUILD_RANK_VISUALS[rank];
 
                                     return (
                                         <button
@@ -1416,7 +1418,7 @@ export function BuildEditor({
                                                     ? `inset 0 0 0 1px ${visual.color}99, inset 0 1px 0 rgba(255,255,255,0.08)`
                                                     : undefined,
                                             }}
-                                            className={`min-w-0 py-2 text-sm font-black tracking-wide transition hover:bg-[#141c28] ${index > 0 ? "border-l border-[#344050]" : ""}`}
+                                            className={`min-w-0 py-2 text-sm font-black tracking-wide transition hover:bg-[#102b40] ${index > 0 ? "border-l border-[#344050]" : ""}`}
                                         >
                                             <span
                                                 style={visual.labelBackground
@@ -1426,7 +1428,7 @@ export function BuildEditor({
                                                         WebkitBackgroundClip: "text",
                                                         color: "transparent",
                                                         textShadow: "none",
-                                                        filter: "drop-shadow(0 1px 0 #050608)",
+                                                        filter: "drop-shadow(0 1px 0 #061725)",
                                                         display: "inline-block",
                                                         fontSize: "1rem",
                                                         fontWeight: 900,
@@ -1435,7 +1437,7 @@ export function BuildEditor({
                                                     }
                                                     : {
                                                         color: visual.color,
-                                                        textShadow: "-0.5px 0 #050608, 0.5px 0 #050608, 0 1px #050608",
+                                                        textShadow: "-0.5px 0 #061725, 0.5px 0 #061725, 0 1px #061725",
                                                         display: "inline-block",
                                                         fontSize: "1rem",
                                                         fontWeight: 900,
@@ -1457,18 +1459,18 @@ export function BuildEditor({
                                 <span className="text-xs tabular-nums text-[#7f8b9e]">+10 max</span>
                             </div>
 
-                            <div className="grid grid-cols-[3rem_minmax(0,1fr)_3rem] overflow-hidden rounded-lg border border-[#344050] bg-[#0d131d]">
+                            <div className="grid grid-cols-[3rem_minmax(0,1fr)_3rem] overflow-hidden rounded-lg border border-[#25475f] bg-[#041320]">
                                 <button
                                     type="button"
                                     onClick={() => updateEnhancement(build.enhancement - 1)}
                                     disabled={build.enhancement <= 0}
                                     aria-label="Decrease enhancement"
-                                    className="border-r border-[#344050] py-2 text-base text-[#8e99ad] transition hover:bg-[#141c28] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+                                    className="border-r border-[#344050] py-2 text-base text-[#8e99ad] transition hover:bg-[#102b40] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
                                 >
                                     −
                                 </button>
 
-                                <div className={`grid place-items-center bg-[#0f1620] text-sm font-black tabular-nums [text-shadow:0_1px_0_#050608] ${build.enhancement === 0 ? "text-[#e3e8f1]" : "text-[#4d96ff]"}`}>
+                                <div className={`grid place-items-center bg-[#14283b] text-sm font-black tabular-nums [text-shadow:0_1px_0_#061725] ${build.enhancement === 0 ? "text-[#e3e8f1]" : "text-[#4d96ff]"}`}>
                                     +{build.enhancement}
                                 </div>
 
@@ -1477,7 +1479,7 @@ export function BuildEditor({
                                     onClick={() => updateEnhancement(build.enhancement + 1)}
                                     disabled={build.enhancement >= 10}
                                     aria-label="Increase enhancement"
-                                    className="border-l border-[#344050] py-2 text-base text-[#8e99ad] transition hover:bg-[#141c28] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+                                    className="border-l border-[#344050] py-2 text-base text-[#8e99ad] transition hover:bg-[#102b40] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
                                 >
                                     +
                                 </button>
@@ -1495,8 +1497,8 @@ export function BuildEditor({
                         )}
                     </div>
 
-                    <div className="mt-3 rounded-lg border border-[#344050] bg-[#0f1620]">
-                        <div className="flex items-center pr-3 transition hover:bg-[#181d27]">
+                    <div className="mt-3 overflow-hidden rounded-lg border border-[#25475f] bg-[#0b2032] shadow-[inset_0_1px_0_rgba(255,255,255,0.025)]">
+                        <div className="flex items-center rounded-t-lg pr-3 transition-colors hover:bg-[#102b40]">
                             <button
                                 type="button"
                                 onClick={() => setGeneticPotentialOpen((open) => !open)}
@@ -1527,7 +1529,7 @@ export function BuildEditor({
                         </div>
 
                         {geneticPotentialOpen && (
-                            <div id="genetic-potential-controls" className="border-t border-[#344050] p-3">
+                            <div id="genetic-potential-controls" className="border-t border-[#25475f] bg-[#071b2b] p-3">
                                 <div className="space-y-3">
                                     <GeneticPotentialSlider
                                         label="Attack"
@@ -1565,7 +1567,7 @@ export function BuildEditor({
                         <span className="flex items-center gap-2">
                             <span>Mutations</span>
                             <span
-                                className="rounded-full border border-[#41506a] bg-[#141c28] px-2 py-0.5 text-[10px] font-semibold tabular-nums text-[#8e99ad]">
+                                className="rounded-full border border-[#35617d] bg-[#141c28] px-2 py-0.5 text-[10px] font-semibold tabular-nums text-[#8e99ad]">
                                 {build.mutations.length} / 4
                             </span>
                         </span>
@@ -1596,9 +1598,9 @@ export function BuildEditor({
                                                 boxShadow: `inset 0 0 0 1px ${mutation.accent}25${isX ? `, 0 0 12px ${mutation.accent}20` : ""}`,
                                             }
                                             : undefined}
-                                        className="group/mutation flex min-h-[58px] w-full items-center gap-2 rounded-lg border border-[#344050] bg-[#141c28] p-2 pr-8 text-left transition hover:border-[#5c6a80] hover:bg-[#1b202b]"
+                                        className="group/mutation flex min-h-[58px] w-full items-center gap-2 rounded-lg border border-[#25475f] bg-[#071b2b] p-2 pr-8 text-left transition hover:border-[#3984af] hover:bg-[#123149]"
                                     >
-                                        <span className="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-md border border-[#41506a] bg-[#0d131d]">
+                                        <span className="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-md border border-[#35617d] bg-[#0d131d]">
                                             <img
                                                 src={assetPath(isX ? mutation.xIcon : mutation.icon)}
                                                 alt=""
@@ -1658,11 +1660,11 @@ export function BuildEditor({
                                 </button>
                             </div>
                             <div className="mt-2 grid gap-2 text-[10px] sm:grid-cols-2">
-                                <div className="rounded-md border border-[#344050] bg-[#0f1620] p-2 text-[#8e99ad]">
+                                <div className="rounded-md border border-[#25475f] bg-[#041320] p-2 text-[#8e99ad]">
                                     <span className="mb-1 block font-semibold text-[#e3e8f1]">Normal</span>
                                     {mutationHelp.effects.join(" · ")}
                                 </div>
-                                <div className="rounded-md border border-[#344050] bg-[#0f1620] p-2 text-[#8e99ad]">
+                                <div className="rounded-md border border-[#25475f] bg-[#041320] p-2 text-[#8e99ad]">
                                     <span className="mb-1 block font-semibold" style={{ color: mutationHelp.accent }}>X Mutation</span>
                                     {mutationHelp.xEffects.join(" · ")}
                                 </div>
@@ -1670,18 +1672,18 @@ export function BuildEditor({
                         </div>
                     )}
 
-                    <div className="mt-3 overflow-hidden rounded-lg border border-[#344050] bg-[#0f1620]">
+                    <div className="mt-3 overflow-hidden rounded-lg border border-[#25475f] bg-[#041320]">
                         <button
                             type="button"
                             onClick={() => setMutationEffectsOpen((current) => !current)}
                             aria-expanded={mutationEffectsOpen}
-                            className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition hover:bg-[#141c28]"
+                            className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition hover:bg-[#102b40]"
                         >
                             <span className="flex items-center gap-2">
                                 <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">
                                     Active Effects
                                 </span>
-                                <span className="rounded-full bg-[#202632] px-1.5 py-0.5 text-[9px] font-semibold tabular-nums text-[#8e99ad]">
+                                <span className="rounded-full bg-[#123149] px-1.5 py-0.5 text-[9px] font-semibold tabular-nums text-[#8e99ad]">
                                     {aggregatedMutationEffects.length}
                                 </span>
                             </span>
@@ -1697,7 +1699,7 @@ export function BuildEditor({
                                         {aggregatedMutationEffects.map((effect) => (
                                             <span
                                                 key={effect.stat}
-                                                className="rounded-md border border-[#344050] bg-[#141c28] px-2 py-1 text-[10px] font-medium text-[#bfc7d5]"
+                                                className="rounded-md border border-[#25475f] bg-[#071b2b] px-2 py-1 text-[10px] font-medium text-[#bfc7d5]"
                                             >
                                                 {effect.label}
                                             </span>
@@ -1783,7 +1785,7 @@ export function BuildEditor({
                             const selectedIds = build[key];
                             return (
                                 <div key={type}
-                                     className="self-start space-y-2 rounded-md border border-[#252c38] bg-[#0f1620] p-2">
+                                     className="self-start space-y-2 rounded-md border border-[#25475f] bg-[#071b2b] p-2">
                                     <p className="text-xs font-semibold text-[#e3e8f1]">{type === "weapon" ? "Weapon" : "Armor"} Attributes</p>
                                     <div className="grid grid-cols-2 gap-2">
                                         {fixedIds.map((id) => {
@@ -1867,8 +1869,8 @@ export function BuildEditor({
                                 aria-pressed={build.combatContext === context.id}
                                 className={`rounded-md border px-3 py-2 text-xs font-semibold transition ${
                                     build.combatContext === context.id
-                                        ? "border-[#7182ff] bg-[#202846] text-[#aeb8ff]"
-                                        : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"
+                                        ? "border-[#3984af] bg-[#102b40] text-[#aeb8ff]"
+                                        : "border-[#25475f] bg-[#071b2b] text-[#8e99ad] hover:border-[#3984af] hover:text-[#e3e8f1]"
                                 }`}
                             >
                                 {context.label}
@@ -1881,8 +1883,8 @@ export function BuildEditor({
                         aria-pressed={build.targetIsBoss}
                         className={`mt-3 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-xs font-semibold transition ${
                             build.targetIsBoss
-                                ? "border-[#7182ff]/55 bg-[#202846] text-[#aeb8ff]"
-                                : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"
+                                ? "border-[#7182ff]/55 bg-[#102e48] text-[#aeb8ff]"
+                                : "border-[#25475f] bg-[#071b2b] text-[#8e99ad] hover:border-[#3984af] hover:text-[#e3e8f1]"
                         }`}
                     >
                         <span>Target is Boss</span>
@@ -1895,7 +1897,7 @@ export function BuildEditor({
                         className={`mt-3 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-xs font-semibold transition ${
                             build.targetStatused
                                 ? "border-[#ff7448]/55 bg-[#3a201b]/45 text-[#ff9a7f]"
-                                : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"
+                                : "border-[#25475f] bg-[#071b2b] text-[#8e99ad] hover:border-[#3984af] hover:text-[#e3e8f1]"
                         }`}
                     >
                         <span>Target is Burning or Poisoned</span>
@@ -1909,7 +1911,7 @@ export function BuildEditor({
                             className={`mt-3 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-xs font-semibold transition ${
                                 build.rallyingWarCryActive
                                     ? "border-[#f0a14a]/55 bg-[#3a2818]/45 text-[#f3b767]"
-                                    : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"
+                                    : "border-[#25475f] bg-[#071b2b] text-[#8e99ad] hover:border-[#3984af] hover:text-[#e3e8f1]"
                             }`}
                         >
                             <span className="flex items-center gap-2">
@@ -1927,7 +1929,7 @@ export function BuildEditor({
                             className={`mt-3 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-xs font-semibold transition ${
                                 build.vulnerabilityActive
                                     ? "border-[#b26fff]/55 bg-[#2b2040]/45 text-[#c99aff]"
-                                    : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#5c6a80] hover:text-[#e3e8f1]"
+                                    : "border-[#25475f] bg-[#071b2b] text-[#8e99ad] hover:border-[#3984af] hover:text-[#e3e8f1]"
                             }`}
                         >
                             <span className="flex items-center gap-2">
@@ -1950,7 +1952,7 @@ export function BuildEditor({
 
                 <CollapsibleSection title="Experimental Mode" defaultOpen={false}>
                     <div className="space-y-3">
-                        <div className="flex items-center justify-between gap-3 rounded-md border border-[#344050] bg-[#0f1620] px-3 py-2.5">
+                        <div className="flex items-center justify-between gap-3 rounded-md border border-[#25475f] bg-[#041320] px-3 py-2.5">
                             <div className="min-w-0">
                                 <p className="text-xs font-medium text-[#bfc7d5]">
                                     Experimental Levels
@@ -1974,8 +1976,8 @@ export function BuildEditor({
                                 aria-pressed={experimentalLevelMode}
                                 className={`shrink-0 rounded-md border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.08em] transition ${
                                     experimentalLevelMode
-                                        ? "border-[#7182ff]/50 bg-[#202846] text-[#aeb8ff]"
-                                        : "border-[#344050] bg-[#141c28] text-[#8e99ad] hover:border-[#465166] hover:text-[#e3e8f1]"
+                                        ? "border-[#7182ff]/50 bg-[#102e48] text-[#aeb8ff]"
+                                        : "border-[#25475f] bg-[#071b2b] text-[#8e99ad] hover:border-[#38617b] hover:text-[#e3e8f1]"
                                 } disabled:cursor-not-allowed disabled:opacity-50`}
                             >
                                 {experimentalLevelMode ? "On" : "Off"}
@@ -1996,7 +1998,7 @@ export function BuildEditor({
                     <button
                         type="button"
                         onClick={onOpenLoadBuildsAction}
-                        className="rounded-md border border-[#344050] bg-[#141c28] px-3 py-2 text-xs font-semibold text-[#e3e8f1]"
+                        className="rounded-md border border-[#25475f] bg-[#071b2b] px-3 py-2 text-xs font-semibold text-[#e3e8f1]"
                     >
                         Load Build
                     </button>
@@ -2014,7 +2016,7 @@ export function BuildEditor({
                     <button
                         type="button"
                         onClick={onResetAction}
-                        className="rounded-md border border-[#344050] bg-[#141c28] px-3 py-2 text-xs font-semibold text-[#e3e8f1]"
+                        className="rounded-md border border-[#25475f] bg-[#071b2b] px-3 py-2 text-xs font-semibold text-[#e3e8f1]"
                     >
                         Reset
                     </button>

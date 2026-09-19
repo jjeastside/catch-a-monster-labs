@@ -23,17 +23,37 @@ type Patch = {
 
 const patches: Patch[] = [
     {
-        version: "Update 0.48.1",
-        date: "September 11, 2026",
+        version: "Update 0.49",
+        date: "September 19, 2026",
         label: "Latest",
         sections: [
             {
-                title: "Hotfix & Codes",
+                title: "World Boss Event",
                 changes: [
-                    "Fixed some bugs.",
-                    "New Code: pxpvef",
-                    "Old Code: veloros",
+                    "The World Boss Event is live!",
+                    "Defeat World Bosses to receive Trait Server Buffs.",
                 ],
+            },
+            {
+                title: "PvP",
+                changes: [
+                    "Added the PvP Battle Pass.",
+                    "Added PvP Rank Rewards.",
+                    "Added PvP Season Leaderboard Rewards.",
+                ],
+            },
+            {
+                title: "New Content & Coilwork City",
+                changes: [
+                    "Added a new Trait.",
+                    "Added new Mythic Gear.",
+                    "Added achievements for Coilwork City.",
+                    "Added quests for Coilwork City.",
+                ],
+            },
+            {
+                title: "New Code",
+                changes: ["Twirly"],
             },
         ],
     },
@@ -58,6 +78,15 @@ const patches: Patch[] = [
                 title: "Events",
                 changes: [
                     "Super Event Boosts are active during Admin Abuse and scheduled Wednesday time slots.",
+                ],
+            },
+            {
+                title: "Update 0.48.1",
+                date: "September 11, 2026",
+                changes: [
+                    "Fixed some bugs.",
+                    "New Code: pxpvef",
+                    "Old Code: veloros",
                 ],
             },
         ],

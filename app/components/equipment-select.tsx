@@ -148,7 +148,7 @@ export function EquipmentSelect({
         }}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        className={`flex ${compact ? "h-7 min-w-0 flex-1" : "min-h-10 w-full"} items-center gap-1 rounded-md border border-[#344050] bg-[#141c28] px-1.5 py-0.5 text-left outline-none hover:border-[#5c6a80] focus:border-[#7182ff]`}
+        className={`flex ${compact ? "h-7 min-w-0 flex-1" : "min-h-10 w-full"} items-center gap-1 rounded-md border border-[#25475f] bg-[#041320] px-1.5 py-0.5 text-left outline-none hover:border-[#5c6a80] focus:border-[#7182ff]`}
       >
         {selectedItem ? (
           <>
@@ -184,7 +184,7 @@ export function EquipmentSelect({
           role="listbox"
           aria-label={label}
           style={{ maxHeight: `${menuMaxHeight}px` }}
-          className={`absolute z-50 w-[min(16rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border border-[#344050] bg-[#0f1620] p-1 shadow-2xl ${
+          className={`absolute z-50 w-[min(16rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border border-[#25475f] bg-[#041320] p-1 shadow-2xl ${
             opensUpward ? "bottom-full mb-1" : "top-full mt-1"
           } ${alignsRight ? "right-0" : "left-0"}`}
         >
@@ -195,8 +195,8 @@ export function EquipmentSelect({
             onClick={() => selectItem(null)}
             className={`w-full rounded-md px-2 py-1.5 text-left text-xs ${
               value === null
-                ? "bg-[#202846] text-[#7182ff]"
-                : "text-[#8e99ad] hover:bg-[#141c28]"
+                ? "bg-[#102b40] text-[#7182ff]"
+                : "text-[#91adc5] hover:bg-[#102b40]"
             }`}
           >
             None
@@ -212,7 +212,7 @@ export function EquipmentSelect({
                 aria-selected={selected}
                 onClick={() => selectItem(item.id)}
                 className={`flex w-full items-center gap-2 rounded-md p-1.5 text-left ${
-                  selected ? "bg-[#202846]" : "hover:bg-[#141c28]"
+                  selected ? "bg-[#102b40]" : "hover:bg-[#102b40]"
                 }`}
               >
                 <img
