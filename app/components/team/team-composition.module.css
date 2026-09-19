@@ -2053,3 +2053,7 @@ button.emptySlot .emptySlotContent small {
   font-size: 11px;
   line-height: 1.3;
 }
+
+/* The team icon is shared with the primary navigation. */
+.bannerIcon { overflow: hidden; border: 1px solid #25475f; border-radius: 12px; background: #071b2b; }
+.bannerIcon img { display: block; width: 100%; height: 100%; object-fit: contain; }

@@ -10,7 +10,7 @@ import { assetPath } from "../lib/asset-path";
 const navItems = [
     { label: "Calculator", href: "/", icon: "/icons/monster-calculator.png" },
     { label: "Monster Compare", href: "/compare", icon: "/icons/monster-compare.png" },
-    { label: "Team Builder", href: "/team", icon: "/icons/monster-compare.png" },
+    { label: "Team Builder", href: "/team", icon: "/team-builder.png" },
     { label: "Monster Database", href: "/monster-database", icon: "/icons/monster-database.png" },
     { label: "Index Tracker", href: "/index-tracker", icon: "/icons/index.png" },
     { label: "Patch Notes", href: "/updates", icon: "/icons/patch-notes.png" },
@@ -156,7 +156,7 @@ export function TopNavigation() {
                                     src={assetPath(item.icon)}
                                     alt=""
                                     aria-hidden="true"
-                                    className={`size-3.5 shrink-0 object-contain xl:size-4 ${
+                                    className={`size-4 shrink-0 rounded-[3px] object-contain xl:size-[17px] ${
                                         isActive ? "opacity-100" : "opacity-75"
                                     }`}
                                 />
@@ -182,8 +182,8 @@ export function TopNavigation() {
                         flex items-center gap-2
                         justify-self-end
                         rounded-md
-                        border border-[#344050]
-                        bg-[#141c28]
+                        border border-[#25475f]
+                        bg-[#0a1931]
                         px-3 py-1.5
                         text-xs font-semibold text-[#bfc7d5]
 
@@ -198,7 +198,7 @@ export function TopNavigation() {
             {isMobileMenuOpen && (
                 <div
                     id="mobile-primary-navigation"
-                    className="relative z-10 border-t border-[#293140] bg-[#071224]/95 px-3 py-2 lg:hidden"
+                    className="relative z-10 border-t border-[#16345e] bg-[#061023]/95 px-3 py-2 lg:hidden"
                 >
                     <div className="mx-auto grid max-w-[900px] gap-1 px-3 sm:px-4 md:px-6">
                         {navItems.map((item) => {
@@ -214,17 +214,17 @@ export function TopNavigation() {
                                     onClick={() =>
                                         setIsMobileMenuOpen(false)
                                     }
-                                    className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-sm ${
+                                    className={`relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
                                         isActive
-                                            ? "bg-[#1c2330] text-white"
-                                            : "text-[#a5afc0] hover:bg-[#141c28] hover:text-white"
+                                            ? "bg-[#0a1931] text-[#5caaff] shadow-[inset_0_0_0_1px_rgba(92,170,255,0.12)]"
+                                            : "text-[#a9b4ca] hover:bg-[#09162b] hover:text-white"
                                     }`}
                                 >
                                     <img
                                         src={assetPath(item.icon)}
                                         alt=""
                                         aria-hidden="true"
-                                        className={`size-5 shrink-0 object-contain ${
+                                        className={`size-5 shrink-0 rounded-[4px] object-contain ${
                                             isActive
                                                 ? "opacity-100"
                                                 : "opacity-80"
