@@ -2796,5 +2796,80 @@ export const GENERATED_SKILLS = {
     "cooldown": 3,
     "notes": "Target: Enemy.",
     "validationStatus": "Ready"
+  },
+  "windmill-blast": {
+    "id": "windmill-blast",
+    "name": "Windmill Blast",
+    "element": "Common",
+    "description": "Throw a windmill and gain one random effect. (All effects can appear!)",
+    "damageInstances": [
+      {
+        "multiplier": 1.5,
+        "hits": 1
+      }
+    ],
+    "cooldown": 3,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Self",
+        "amountPercent": 25,
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      },
+      {
+        "type": "damageIncrease",
+        "target": "Self",
+        "amountPercent": 50,
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      },
+      {
+        "type": "damageIncrease",
+        "target": "Self",
+        "amountPercent": 100,
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      },
+      {
+        "type": "vulnerability",
+        "target": "Self",
+        "amountPercent": 20,
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      },
+      {
+        "type": "damageReduction",
+        "target": "Self",
+        "amountPercent": 95,
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      },
+      {
+        "type": "damageReflection",
+        "target": "Self",
+        "amountPercent": 60,
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      },
+      {
+        "type": "shield",
+        "target": "Self",
+        "amountPercent": 25,
+        "scaling": "MaxHealth",
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      },
+      {
+        "type": "shield",
+        "target": "Self",
+        "amountPercent": 50,
+        "scaling": "MaxHealth",
+        "durationSeconds": 2,
+        "condition": "Random Egg Blast result"
+      }
+    ],
+    "notes": "Target: Enemy | Self. Ally effects: Chance for one of the following to activate:; 20% vulnerability on self for 2 secs; 25% self damage for 2 secs; 50% self damage for 2 secs; 100% self damage for 2 secs; 25% Max Hp self shield for 2 secs; 50% Max Hp self shield for 2 secs; 60% Damage reflection for 2 secs; 95% Damage reduction for 2 secs",
+    "validationStatus": "ready"
   }
 } as const satisfies Record<string, Skill>;
