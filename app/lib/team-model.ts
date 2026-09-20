@@ -27,7 +27,15 @@ export const mutationOptions: Array<{ id: Mutation; label: string }> = [
   { id: "fairy", label: "Fairy" },
   { id: "fairy-x", label: "Fairy X" },
 ];
-export type TeamGoal = "damage" | "balanced" | "survivability" | "support" | "boss" | "rift" | "dungeon";
+export type TeamGoal = "damage" | "balanced" | "survivability" | "support";
+export type TeamCombatContext = "standard" | "boss" | "rift" | "dungeon";
+export function normalizeCombatContext(value: unknown): TeamCombatContext {
+  return value === "boss" || value === "rift" || value === "dungeon" ? value : "standard";
+}
+export function migrateGoalContext(goal: unknown, context: unknown): { goal: TeamGoal; combatContext: TeamCombatContext } {
+  const legacyContext = normalizeCombatContext(goal);
+  return { goal: normalizeGoal(goal), combatContext: context == null ? legacyContext : normalizeCombatContext(context) };
+}
 // The first copy keeps its legacy monster ID; further copies receive stable IDs.
 export type InventoryBuilds = Record<string, Build>;
 export const copyMonsterId = (key: string) => key.split("::copy-")[0];
@@ -40,7 +48,7 @@ export type InventoryFilter = "all" | "owned" | "unowned" | "team";
 export type InventorySort = "name" | "rank" | "level" | "dps" | "health";
 export type IndexBonusId = "huge" | "shiny" | "bloodlit" | "fairy";
 export type IndexTrackerProgress = Record<string, { rank?: Rank; bonuses?: Partial<Record<IndexBonusId, boolean>> }>;
-export type SavedTeam = { builds: Build[]; goal: TeamGoal; updatedAt: number; name?: string };
+export type SavedTeam = { builds: Build[]; goal: TeamGoal; combatContext: TeamCombatContext; updatedAt: number; name?: string };
 export type SavedTeams = Record<string, SavedTeam>;
 
 export const availableMonsters = monsters.filter((monster) => getMonsterStatData(monster.id));
@@ -159,13 +167,11 @@ export function normalizeSavedTeams(value: unknown): SavedTeams {
     const saved = entry as Partial<SavedTeam>;
     const builds = normalizeTeam(saved.builds);
     if (!builds) continue;
-    const savedGoal = saved.goal;
-    const goal: TeamGoal = ["damage", "balanced", "survivability", "support", "boss", "rift", "dungeon"].includes(savedGoal ?? "")
-      ? (savedGoal as TeamGoal)
-      : "balanced";
+    const { goal, combatContext } = migrateGoalContext(saved.goal, saved.combatContext);
     result[slotId] = {
       builds,
       goal,
+      combatContext,
       updatedAt: Number(saved.updatedAt) || Date.now(),
       name: typeof saved.name === "string" ? saved.name.slice(0, 80) : undefined,
     };
@@ -194,7 +200,7 @@ export function normalizeInventory(value: unknown): InventoryBuilds | null {
 }
 
 export function normalizeGoal(value: unknown): TeamGoal {
-  return typeof value === "string" && ["damage", "balanced", "survivability", "support", "boss", "rift", "dungeon"].includes(value)
+  return typeof value === "string" && ["damage", "balanced", "survivability", "support"].includes(value)
     ? value as TeamGoal : "balanced";
 }
 
@@ -214,21 +220,21 @@ export function loadTeamStorage(storage: Pick<Storage, "getItem">) {
       return fallback;
     }
   };
-  const session = read(TEAM_STORAGE_KEY, { builds: defaultTeam(), goal: "balanced" as TeamGoal }, (value) => {
+  const session = read(TEAM_STORAGE_KEY, { builds: defaultTeam(), goal: "balanced" as TeamGoal, combatContext: "standard" as TeamCombatContext }, (value) => {
     // Versions 1–9 saved just the build array.
     if (Array.isArray(value)) {
       const builds = normalizeTeam(value);
-      return builds ? { builds, goal: "balanced" as TeamGoal } : null;
+      return builds ? { builds, goal: "balanced" as TeamGoal, combatContext: "standard" as TeamCombatContext } : null;
     }
     if (!value || typeof value !== "object") return null;
-    const saved = value as { builds?: unknown; goal?: unknown };
+    const saved = value as { builds?: unknown; goal?: unknown; combatContext?: unknown };
     const builds = normalizeTeam(saved.builds);
-    return builds ? { builds, goal: normalizeGoal(saved.goal) } : null;
+    return builds ? { builds, ...migrateGoalContext(saved.goal, saved.combatContext) } : null;
   });
   const inventory = read(INVENTORY_STORAGE_KEY, defaultInventory(), normalizeInventory);
   const presets = read(SAVED_TEAMS_STORAGE_KEY, {} as SavedTeams, (value) =>
     value && typeof value === "object" && !Array.isArray(value) ? normalizeSavedTeams(value) : null);
-  return { team: session.builds, goal: session.goal, inventory, presets, blockedKeys };
+  return { team: session.builds, goal: session.goal, combatContext: session.combatContext, inventory, presets, blockedKeys };
 }
 
 export function mergeIndexProgress(current: InventoryBuilds, value: unknown) {
@@ -311,11 +317,11 @@ export function compactBuildLabel(build: Build): string {
   return `Lv ${build.level} · ${build.rank ?? "E"} · +${build.enhancement}${mutationCount ? ` · ${mutationCount} mut.` : ""}`;
 }
 
-export function buildForGoal(build: Build, goal: TeamGoal): Build {
+export function buildForGoal(build: Build, combatContext: TeamCombatContext): Build {
   return {
     ...build,
-    targetIsBoss: goal === "boss",
-    combatContext: goal === "rift" ? "rift" : goal === "dungeon" ? "dungeon" : "standard",
+    targetIsBoss: combatContext === "boss",
+    combatContext: combatContext === "boss" ? "standard" : combatContext,
   };
 }
 
@@ -353,9 +359,6 @@ export function goalTitle(goal: TeamGoal): string {
   if (goal === "damage") return "Highest DPS Composition";
   if (goal === "survivability") return "Survivability Composition";
   if (goal === "support") return "Support Composition";
-  if (goal === "boss") return "Boss Composition";
-  if (goal === "rift") return "Rift Composition";
-  if (goal === "dungeon") return "Dungeon Composition";
   return "Balanced Composition";
 }
 
@@ -363,9 +366,6 @@ export function goalDescription(goal: TeamGoal): string {
   if (goal === "damage") return "Ranks candidate teams by calculated skill DPS only.";
   if (goal === "survivability") return "Prioritizes total Health plus healing, shielding, mitigation, and other defensive utility.";
   if (goal === "support") return "Prioritizes teams with broad buffs, debuffs, healing, shielding, and control without ignoring combat stats.";
-  if (goal === "boss") return "Evaluates saved builds with Boss conditions enabled, including each monster’s Boss damage passives.";
-  if (goal === "rift") return "Evaluates saved builds in Rift context so Rift-specific modifiers are included in the comparison.";
-  if (goal === "dungeon") return "Evaluates saved builds in Dungeon context so dungeon-specific modifiers are included in the comparison.";
   return "Balances calculated DPS, Health, and non-overlapping team utility.";
 }
 
@@ -373,9 +373,6 @@ export function goalWeights(goal: TeamGoal) {
   if (goal === "damage") return { dps: 1, health: 0, utility: 0, offense: 0, defense: 0 };
   if (goal === "survivability") return { dps: 0.1, health: 0.64, utility: 0, offense: 0, defense: 0.26 };
   if (goal === "support") return { dps: 0.22, health: 0.2, utility: 0.58, offense: 0, defense: 0 };
-  if (goal === "boss" || goal === "rift" || goal === "dungeon") {
-    return { dps: 0.72, health: 0.1, utility: 0.18, offense: 0, defense: 0 };
-  }
   return { dps: 0.45, health: 0.32, utility: 0.23, offense: 0, defense: 0 };
 }
 
@@ -384,7 +381,7 @@ export function signedPercent(value: number): string {
   return `${value > 0 ? "+" : ""}${Math.round(value * 100)}%`;
 }
 
-export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build["accountMultipliers"], goal: TeamGoal) {
+export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build["accountMultipliers"], goal: TeamGoal, combatContext: TeamCombatContext = "standard") {
   const ownedIds = Object.keys(inventoryBuilds);
     const ownedCandidates = ownedIds
       .map((id) => ({ id, monster: monsterById.get(copyMonsterId(id)) }))
@@ -398,7 +395,7 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
             teammateMonsterIds: [null, null],
             evolutionPercent: monster.isEvolved ? saved.evolutionPercent : 100,
           },
-          goal,
+          combatContext,
         );
         const statData = getMonsterStatData(monster.id);
         const stats = statData ? calculateStats(statData, baseBuild, monster.passives ?? []) : null;
@@ -424,7 +421,6 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
       const health = item.health / maxIndividualHealth;
       const utility = item.utility.total / maxIndividualUtility;
       if (goal === "damage") return dps;
-      if (goal === "boss" || goal === "rift" || goal === "dungeon") return dps * 0.78 + utility * 0.14 + health * 0.08;
       if (goal === "survivability") return health * 0.67 + utility * 0.25 + dps * 0.08;
       if (goal === "support") return utility * 0.65 + dps * 0.2 + health * 0.15;
       return dps * 0.48 + health * 0.32 + utility * 0.2;
@@ -464,7 +460,7 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
             teammateMonsterIds: [teammateIds[0] ?? null, teammateIds[1] ?? null],
             evolutionPercent: item.monster.isEvolved ? item.savedBuild.evolutionPercent : 100,
           },
-          goal,
+          combatContext,
         );
         const statData = getMonsterStatData(item.monster.id);
         const stats = statData ? calculateStats(statData, build, item.monster.passives ?? []) : null;

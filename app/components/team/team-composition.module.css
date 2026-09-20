@@ -2316,7 +2316,7 @@ button.emptySlot .emptySlotContent small {
 .useCases > div { display: grid; }
 .useCases strong { font-size: 12px; }
 .useCases span { margin-top: 2px; color: #89a6c1; font-size: 10px; }
-.useCases nav { display: grid; grid-template-columns: repeat(6, minmax(74px,1fr)); gap: 8px; width: min(610px,55%); }
+.useCases nav { display: grid; grid-template-columns: repeat(4, minmax(74px,1fr)); gap: 8px; width: min(520px,55%); }
 .useCases button { border: 1px solid #2d5273; border-radius: 6px; background: #081726; padding: 7px 11px; color: #bdd3e8; font-size: 10px; }
 .useCases button:hover, .useCases .useCaseActive { border-color: #25a9ff; background: linear-gradient(#126fb9,#0b4b82); color: white; box-shadow: 0 0 12px rgba(18,140,236,.2); }
 
@@ -2352,3 +2352,35 @@ button.emptySlot .emptySlotContent small {
   .teamAnalysis { grid-template-columns: 1fr; }
   .useCases nav { grid-template-columns: repeat(3,1fr); }
 }
+
+.goalContextGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 560px) { .goalContextGrid { grid-template-columns: 1fr; } }
+
+/* Team metrics reuse the Team Builder stat artwork; utility icons remain outlined SVGs. */
+.overviewCard .overviewLabel { display: flex; align-items: center; gap: 6px; line-height: 1.25; }
+.overviewIcon { display: block; flex: 0 0 15px; width: 15px; height: 15px; }
+.overviewIcon_damage { color: #ff6284; }
+.overviewIcon_health { color: #61e48b; }
+.overviewIcon_dps { color: #ffcd62; }
+.overviewIcon_survivability { color: #67c3ff; }
+.overviewIcon_synergy { color: #d397ff; }
+
+/* Inventory improvement recommendations */
+.recommendModeTabs { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.recommendModeTabs button { border: 1px solid #2b5274; border-radius: 7px; padding: 9px 6px; background: #091e31; color: #a5c3de; font-size: 11px; font-weight: 800; }
+.recommendModeTabs button[aria-pressed="true"] { border-color: #48a6ff; background: #12385c; color: #f3faff; }
+.improvementPanel { display: grid; gap: 9px; }
+.improvementList { display: grid; gap: 8px; }
+.improvementCard { display: grid; gap: 8px; padding: 10px; border: 1px solid #2a4a68; border-radius: 9px; background: #0b2136; min-width: 0; }
+.improvementHeader { display: flex; gap: 8px; align-items: center; min-width: 0; flex-wrap: wrap; }
+.improvementHeader > div:nth-child(2) { display: grid; gap: 3px; flex: 1; min-width: 100px; }
+.improvementHeader strong { font-size: 12px; }
+.improvementHeader small, .improvementOther { color: #91acc5; font-size: 10px; }
+.improvementPortrait { flex: 0 0 42px; width: 42px; height: 42px; border: 2px solid; border-radius: 9px; overflow: hidden; }
+.improvementBadge { border: 1px solid #397aa8; background: #123858; color: #88d0ff; border-radius: 15px; padding: 3px 6px; font-size: 9px; font-weight: 800; }
+.improvementNext { display: grid; gap: 3px; }
+.improvementNext span { color: #95afc8; font-size: 10px; }
+.improvementNext strong { color: #d5ebff; font-size: 12px; }
+.improvementGains { display: flex; gap: 8px; flex-wrap: wrap; font-size: 10px; color: #9db7d0; }
+.improvementGains b { color: #64e2a6; }
+.improvementCard .ghostButton { width: 100%; }
