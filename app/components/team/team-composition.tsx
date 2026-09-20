@@ -5,7 +5,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AccountMultipliers } from "../account-multipliers";
 import { BUILD_RANK_VISUALS, EvolutionMultiplierEditor } from "../build-editor";
 import { getMonsterStatData } from "../../data/monster-stats";
-import { getSkill } from "../../data/skills";
+import { getSkill, getSkillDisplayName } from "../../data/skills";
+import { getMonsterPortraitStyles } from "../monster-overview-card";
 import { ARMORS, WEAPONS } from "../../data/equipments";
 import { getAvailableTraits } from "../../data/traits";
 import { TraitSelect } from "../trait-select";
@@ -37,6 +38,24 @@ import {
 } from "../../lib/team-model";
 
 import styles from "./team-composition.module.css";
+
+// Use the same icon aliases as Calculator Results for alternate skill variants.
+const SKILL_ICON_ALIASES: Record<string, string> = {
+  "ghost-impact-vulnerability": "ghost-impact",
+  "soul-reap-chain-vulnerability": "soul-reap-chain",
+  "soul-reap-chain-scareharvest": "soul-reap-chain-poison",
+};
+
+function TeamMonsterPortrait({ monster, className, alt = "" }: { monster: Monster; className: string; alt?: string }) {
+  const { portraitStyle, portraitFrameStyle } = getMonsterPortraitStyles(monster);
+  return (
+    <div className={className} data-rarity={monster.rarity} style={portraitFrameStyle}>
+      <div className={styles.portraitInner} style={portraitStyle}>
+        <img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt={alt} />
+      </div>
+    </div>
+  );
+}
 
 const HIDDEN_MONSTERS_STORAGE_KEY = "cam-lab-team-hidden-monsters-v1";
 
@@ -616,9 +635,7 @@ export function TeamComposition() {
                   const inTeam = teamIds.includes(monster.id);
                   return (
                     <article key={monster.id} className={`${styles.inventoryRow} ${owned ? styles.inventoryRowOwned : ""}`}>
-                      <div className={styles.inventoryPortrait} data-rarity={monster.rarity}>
-                        <img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt="" />
-                      </div>
+                      <TeamMonsterPortrait monster={monster} className={styles.inventoryPortrait} />
                       <div className="min-w-0">
                         <div className={styles.inventoryName}>{monster.name}</div>
                         <div className={styles.inventoryMeta}>{monster.element} · {monster.rarity}</div>
@@ -688,9 +705,7 @@ export function TeamComposition() {
                       </button>
                       <button type="button" className={styles.changeMonsterButton} onClick={() => { openMonsterPicker(index); }} aria-label={`Change monster in slot ${index + 1}`} title="Change monster">✎</button>
                       <div className={styles.slotTop}>
-                        <div className={styles.slotPortrait} data-rarity={item.monster.rarity}>
-                          <img src={assetPath(item.monster.image ?? "/icons/monster-database.png")} alt={item.monster.name} />
-                        </div>
+                        <TeamMonsterPortrait monster={item.monster} className={styles.slotPortrait} alt={item.monster.name} />
                         <div className={styles.slotTitle}>
                     <span>Slot {index + 1} · {index === 0 ? "Main DPS" : index === 1 ? "Support" : "Utility"}</span>
                           <strong>{item.monster.name}</strong>
@@ -982,10 +997,10 @@ export function TeamComposition() {
                         return (
                           <div className={styles.skillRow} key={skill.id}>
                             <div className={styles.skillIcon}>
-                              <img src={assetPath(`/skill-icons/${skill.id}.png`)} alt="" onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = assetPath(`/element-icons/${skill.element.toLowerCase()}.png`); }} />
+                              <img src={assetPath(`/skill-icons/${SKILL_ICON_ALIASES[skill.id] ?? skill.id}.png`)} alt="" onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = assetPath(`/element-icons/${skill.element.toLowerCase()}.png`); }} />
                             </div>
                             <div className={styles.skillMain}>
-                              <strong>{skill.name}</strong>
+                              <strong>{getSkillDisplayName(skill.name)}</strong>
                               <div className={styles.skillEffects}>
                                 {effects.map((effect) => (
                                   <span key={effect} title={databaseSkillEffectDetails[effect].label}>{databaseSkillEffectDetails[effect].label}</span>
