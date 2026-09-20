@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { AccountMultipliers } from "../account-multipliers";
-import { PageHeading } from "../page-heading";
 import { BUILD_RANK_VISUALS, EvolutionMultiplierEditor } from "../build-editor";
 import { getMonsterStatData } from "../../data/monster-stats";
 import { getSkill } from "../../data/skills";
@@ -52,6 +51,7 @@ export function TeamComposition() {
   const [search, setSearch] = useState("");
   const blockedStorageKeys = useRef(new Set<string>());
   const editorRef = useRef<HTMLDialogElement>(null);
+  const inventoryImportRef = useRef<HTMLInputElement>(null);
   const [storageError, setStorageError] = useState<string | null>(null);
   const [storageReady, setStorageReady] = useState(false);
   const [team, setTeam] = useState<Build[]>(defaultTeam);
@@ -67,13 +67,14 @@ export function TeamComposition() {
   const [teamPresetMessage, setTeamPresetMessage] = useState<string | null>(null);
   const [teamLibraryOpen, setTeamLibraryOpen] = useState(false);
   const [teamSaveName, setTeamSaveName] = useState("");
-  const [showRecommendations, setShowRecommendations] = useState(false);
+  const [showRecommendations, setShowRecommendations] = useState(true);
   const [editingTeamSlot, setEditingTeamSlot] = useState<number | null>(null);
   const [teamSearch, setTeamSearch] = useState("");
   const [replacingTeamSlot, setReplacingTeamSlot] = useState<number | null>(null);
   const [replacementSearch, setReplacementSearch] = useState("");
   const [hiddenMonsterIds, setHiddenMonsterIds] = useState<string[]>([]);
   const [showHiddenMonsters, setShowHiddenMonsters] = useState(false);
+  const [analysisRun, setAnalysisRun] = useState(0);
 
   useCompareAccount(accountBuild.accountMultipliers, setAccountBuild);
 
@@ -343,6 +344,41 @@ export function TeamComposition() {
     }
   };
 
+  const exportInventory = () => {
+    const payload = JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), inventory: inventoryBuilds }, null, 2);
+    const url = URL.createObjectURL(new Blob([payload], { type: "application/json" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "cam-lab-team-inventory.json";
+    link.click();
+    URL.revokeObjectURL(url);
+    setInventoryMessage("Inventory exported.");
+  };
+
+  const importInventory = async (file: File | undefined) => {
+    if (!file) return;
+    try {
+      const parsed: unknown = JSON.parse(await file.text());
+      if (!parsed || typeof parsed !== "object" || !("inventory" in parsed)) throw new Error("Invalid inventory file");
+      const source = (parsed as { inventory: unknown }).inventory;
+      if (!source || typeof source !== "object" || Array.isArray(source)) throw new Error("Invalid inventory data");
+      const next: InventoryBuilds = {};
+      for (const [copyId, candidate] of Object.entries(source)) {
+        const monsterId = copyMonsterId(copyId);
+        if (!monsterById.has(monsterId) || !candidate || typeof candidate !== "object") continue;
+        next[copyId] = { ...sanitizeBuild(candidate as Build, monsterId), inventoryCopyId: copyId };
+      }
+      if (!Object.keys(next).length) throw new Error("No valid monsters found");
+      setInventoryBuilds((current) => ({ ...current, ...next }));
+      setInventoryFilter("owned");
+      setInventoryMessage(`Imported ${Object.keys(next).length} saved monster builds.`);
+    } catch {
+      setInventoryMessage("That file is not a valid Cam Lab inventory export.");
+    } finally {
+      if (inventoryImportRef.current) inventoryImportRef.current.value = "";
+    }
+  };
+
   const addMonster = (monster: Monster, copyId = monster.id) => {
     if (team.some((build) => build.inventoryCopyId === copyId && copyId in inventoryBuilds)) {
       setInventoryMessage("That copy is already in your team. Add another owned copy to use this monster twice.");
@@ -495,9 +531,24 @@ export function TeamComposition() {
       {editingTeamSlot !== null ? <button type="button" className={styles.teamEditorBackdrop} onClick={closeTeamEditor} aria-label="Save build and close editor" tabIndex={-1} /> : null}
       <div className="mx-auto w-full max-w-[2000px] space-y-3 px-3 py-3 sm:px-4 xl:px-5">
         {storageError ? <p role="alert" className={styles.inventoryMessage}>{storageError}</p> : null}
-        <PageHeading title="Team Composition" image="/team-builder.png">
-          Build a three-monster team, save the monsters you actually own, and compare combined performance.
-        </PageHeading>
+        <header className={styles.banner}>
+          <div className={styles.bannerIcon}>
+            <img src={assetPath("/team-builder.png")} alt="" />
+          </div>
+          <div>
+            <h1>Team Composition</h1>
+            <p>Build your team, manage your monsters, and find the best combinations.</p>
+          </div>
+          <div className={styles.heroMonsters} aria-hidden="true">
+            <img src={assetPath("/monster-artwork/dummee.png")} alt="" />
+            <img src={assetPath("/monster-artwork/leafet.png")} alt="" />
+            <img src={assetPath("/monster-artwork/wattoad.png")} alt="" />
+          </div>
+          <div className={styles.bannerAside}>
+            Create powerful teams for dungeons, bosses, PvP, and more.<br />
+            Use your inventory or the full database, then compare the results with your account multipliers.
+          </div>
+        </header>
 
         <section className={styles.panel}>
           <AccountMultipliers build={accountBuild} onBuildChangeAction={setAccountBuild} />
@@ -507,10 +558,15 @@ export function TeamComposition() {
           <section className={styles.panel} aria-label="Monster inventory">
             <div className={styles.panelHeader}>
               <div>
-                <p className={styles.kicker}>Inventory</p>
-                <h2>My Monsters</h2>
+                <p className={styles.kicker}>Collection</p>
+                <h2>My Inventory</h2>
               </div>
               <span className="text-xs text-[#8da0b7]">{ownedIds.length} owned</span>
+              <div className={styles.inventoryPortability}>
+                <button type="button" onClick={() => inventoryImportRef.current?.click()}>Import</button>
+                <button type="button" onClick={exportInventory}>Export</button>
+                <input ref={inventoryImportRef} type="file" accept="application/json,.json" onChange={(event) => void importInventory(event.target.files?.[0])} />
+              </div>
             </div>
             <div className={styles.inventoryBody}>
               <input
@@ -560,27 +616,30 @@ export function TeamComposition() {
                   const inTeam = teamIds.includes(monster.id);
                   return (
                     <article key={monster.id} className={`${styles.inventoryRow} ${owned ? styles.inventoryRowOwned : ""}`}>
-                      <div className={styles.inventoryPortrait}>
+                      <div className={styles.inventoryPortrait} data-rarity={monster.rarity}>
                         <img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt="" />
                       </div>
                       <div className="min-w-0">
                         <div className={styles.inventoryName}>{monster.name}</div>
                         <div className={styles.inventoryMeta}>{monster.element} · {monster.rarity}</div>
-                        {savedBuild ? <div className={styles.inventoryBuildMeta}>{copies.length} owned · {compactBuildLabel(savedBuild)}</div> : null}
+                        {savedBuild ? <div className={styles.inventoryBuildMeta}>{copies.length} owned</div> : null}
                       </div>
                       <div className={styles.rowActions}>
+                        {savedBuild ? <div className={styles.inventoryBadges}><span>Lv {savedBuild.level}</span><b style={{ color: savedBuild.rank ? BUILD_RANK_VISUALS[savedBuild.rank].color : undefined }}>{savedBuild.rank ?? "E"}</b></div> : null}
+                        {savedBuild && copies[0] ? <button type="button" className={styles.inventoryActionButton} onClick={() => setEditingInventoryId(copies[0])} title={`Edit ${monster.name}`} aria-label={`Edit ${monster.name}`}>✎</button> : null}
                         <button
                           type="button"
-                          className={`${styles.smallButton} ${owned ? styles.ownedButton : ""}`}
+                          className={`${styles.smallButton} ${styles.inventoryActionButton} ${owned ? styles.ownedButton : ""}`}
                           onClick={() => owned ? addOwnedCopy(monster.id) : toggleOwned(monster)}
                           title={owned ? "Add another independently editable copy" : "Add to inventory"}
                         >
-                          {owned ? `+ Copy (${copies.length})` : "+ Own"}
+                          {owned ? "+" : "+ Own"}
                         </button>
                         {!owned ? <button type="button" className={styles.smallButton} onClick={() => addMonster(monster)}>+ Team</button> : null}
                         <button type="button" className={styles.smallButton} onClick={() => toggleHiddenMonster(monster.id)} aria-label={`${hiddenMonsterIds.includes(monster.id) ? "Unhide" : "Hide"} ${monster.name}`} title="Hide this species from browsing and recommendations">{hiddenMonsterIds.includes(monster.id) ? "Unhide" : "Hide"}</button>
                       </div>
-                      {copies.length > 0 ? <div className={styles.copyList}>
+                      {copies.length > 0 ? <details className={styles.copyList}>
+                        <summary>{copies.length === 1 ? "Manage saved build" : `Manage ${copies.length} saved copies`}</summary>
                         {copies.map((copyId, copyIndex) => {
                           const copy = inventoryBuilds[copyId];
                           const assigned = team.some((build) => build.inventoryCopyId === copyId);
@@ -591,7 +650,7 @@ export function TeamComposition() {
                             <button type="button" className={styles.smallButton} aria-label={`Remove ${monster.name} copy ${copyIndex + 1}`} title="Remove copy" onClick={() => removeOwnedCopy(copyId)}>×</button>
                           </div>;
                         })}
-                      </div> : null}
+                      </details> : null}
                     </article>
                   );
                 })}
@@ -629,11 +688,11 @@ export function TeamComposition() {
                       </button>
                       <button type="button" className={styles.changeMonsterButton} onClick={() => { openMonsterPicker(index); }} aria-label={`Change monster in slot ${index + 1}`} title="Change monster">✎</button>
                       <div className={styles.slotTop}>
-                        <div className={styles.slotPortrait}>
+                        <div className={styles.slotPortrait} data-rarity={item.monster.rarity}>
                           <img src={assetPath(item.monster.image ?? "/icons/monster-database.png")} alt={item.monster.name} />
                         </div>
                         <div className={styles.slotTitle}>
-                          <span>Slot {index + 1}</span>
+                    <span>Slot {index + 1} · {index === 0 ? "Main DPS" : index === 1 ? "Support" : "Utility"}</span>
                           <strong>{item.monster.name}</strong>
                           <span>{item.monster.element} · {item.monster.rarity}</span>
                         </div>
@@ -648,6 +707,15 @@ export function TeamComposition() {
                           <b>{item.build.damageGeneticPotential}% / {item.build.healthGeneticPotential}%</b>
                           
                         </button>
+                        {(() => {
+                          const trait = getAvailableTraits().find((entry) => entry.id === item.build.traitId);
+                          return trait ? <button type="button" className={styles.quickTrait} onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} trait: ${trait.name}`} title={`Trait: ${trait.name}`}><span>Trait</span><TraitIcon trait={trait} size="combat" /><b>{trait.name}</b></button> : null;
+                        })()}
+                      </div>
+                      <div className={styles.monsterCoreStats} aria-label={`${item.monster.name} current stats`}>
+                        <div><span><img src={assetPath("/account-icons/damage.png")} alt="" />Damage</span><strong>{formatStatNumber(item.stats?.damage ?? 0)}</strong></div>
+                        <div><span><img src={assetPath("/account-icons/health.png")} alt="" />Health</span><strong>{formatStatNumber(item.stats?.health ?? 0)}</strong></div>
+                        <div><span><img src={assetPath("/icons/dps.png")} alt="" />Skill DPS</span><strong>{formatStatNumber(item.dps)}</strong></div>
                       </div>
                       <div className={styles.compareMutationLine} aria-label="Mutations; click an icon to cycle Normal, X, then Off">
                         {teamMutationFamilies.map((mutation) => {
@@ -659,10 +727,6 @@ export function TeamComposition() {
                         })}
                       </div>
                       <div className={styles.compareGearLine}>
-                        <button type="button" onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} trait`}>
-                          {(() => { const trait = getAvailableTraits().find((entry) => entry.id === item.build.traitId); return trait ? <TraitIcon trait={trait} size="combat" /> : <span className={styles.emptyGearIcon}>◇</span>; })()}
-                          <span>Trait <b>{getAvailableTraits().find((trait) => trait.id === item.build.traitId)?.name ?? "None"}</b></span>
-                        </button>
                         {([
                           { label: "Weapon", id: item.build.weaponId, name: WEAPONS.find((gear) => gear.id === item.build.weaponId)?.name ?? "None" },
                           { label: "Armor", id: item.build.armorId, name: ARMORS.find((gear) => gear.id === item.build.armorId)?.name ?? "None" },
@@ -671,6 +735,7 @@ export function TeamComposition() {
                           <span>{gear.label} <b>{gear.name}</b></span>
                         </button>)}
                       </div>
+                      <a className={styles.calculatorLink} href={`/#${item.monster.id}`}>▣ Open in Calculator</a>
                       <details className={styles.compareEditor} open={editingTeamSlot === index} onToggle={(event) => { if (!event.currentTarget.open && editingTeamSlot === index) closeTeamEditor(); }}>
                         <summary onClick={(event) => { event.preventDefault(); if (editingTeamSlot === index) closeTeamEditor(); else setEditingTeamSlot(index); }}><span>{editingTeamSlot === index ? `Close · Slot ${index + 1} · ${item.monster.name}` : "Edit build"}</span></summary>
                         <div className={styles.compareEditorBody}>
@@ -843,8 +908,9 @@ export function TeamComposition() {
               <div className={styles.overviewGrid}>
                 <div className={styles.overviewCard}><span>Total Damage</span><strong>{formatStatNumber(totals.damage)}</strong></div>
                 <div className={styles.overviewCard}><span>Total Health</span><strong>{formatStatNumber(totals.health)}</strong></div>
-                <div className={styles.overviewCard}><span>Total Skill DPS</span><strong>{formatStatNumber(totals.dps)}</strong></div>
-                <div className={styles.overviewCard}><span>Team Slots</span><strong>{totals.monsters}/3</strong></div>
+                <div className={styles.overviewCard}><span>Average DPS</span><strong>{formatStatNumber(totals.monsters ? totals.dps / totals.monsters : 0)}</strong></div>
+                <div className={styles.overviewCard}><span>Team Survivability</span><strong className={styles.overviewAccent}>{totals.monsters === 3 ? "High" : totals.monsters ? "Building" : "—"}</strong></div>
+                <div className={`${styles.overviewCard} ${styles.synergyMetric}`}><span>Synergy Score</span><strong>{Math.min(100, Object.keys(teamUtility).length * 8 + totals.monsters * 18)} / 100</strong></div>
               </div>
 
               <div className={styles.teamAnalysis}>
@@ -893,6 +959,9 @@ export function TeamComposition() {
                 </div>
               </div>
 
+              <div className={styles.skillsSectionHeader}>
+                <div><p className={styles.kicker}>Skills</p><h3>Team Skills Preview</h3><span>Quick view of team damage, cooldowns, and key effects.</span></div>
+              </div>
               <div className={styles.monsterBreakdowns}>
                 {resolvedTeam.filter((item) => item.monster).map((item) => (
                   <article className={styles.monsterBreakdown} key={`breakdown-${item.monster!.id}`}>
@@ -1003,7 +1072,7 @@ export function TeamComposition() {
             <div className={styles.panelHeader}>
               <div>
                 <p className={styles.kicker}>Analyze</p>
-                <h2>Recommendations</h2>
+                <h2>Team Recommendations</h2>
               </div>
             </div>
             <div className={styles.recommendBody}>
@@ -1019,7 +1088,8 @@ export function TeamComposition() {
                   <option value="dungeon">Dungeon</option>
                 </select>
               </div>
-              <article className={styles.recommendCard}>
+              <button type="button" className={styles.analyzeButton} onClick={() => setAnalysisRun((value) => value + 1)}>✦ {analysisRun ? "Analysis Updated" : "Analyze My Inventory"}</button>
+              <article className={`${styles.recommendCard} ${styles.optimizerNotes}`}>
                 <div className={styles.recommendTitleRow}>
                   <div>
                     <h3>{goalTitle(goal)}</h3>
@@ -1120,12 +1190,19 @@ export function TeamComposition() {
                             {signedPercent(alternative.healthDelta)} HP
                           </span>
                         </div>
+                        <div className={styles.alternativeMembers}>
+                          {alternative.members.map((member) => <img key={member.monster.id} src={assetPath(member.monster.image ?? "/icons/monster-database.png")} alt={member.monster.name} title={member.monster.name} />)}
+                        </div>
                         {alternative.gainedUtility.length || alternative.lostUtility.length ? (
                           <div className={styles.tradeoffUtility}>
                             {alternative.gainedUtility.length ? <span>Gains {alternative.gainedUtility.join(", ")}</span> : null}
                             {alternative.lostUtility.length ? <span>Loses {alternative.lostUtility.join(", ")}</span> : null}
                           </div>
                         ) : null}
+                        <button type="button" className={styles.alternativeUseButton} onClick={() => setTeam(Array.from({ length: 3 }, (_, memberIndex) => {
+                          const member = alternative.members[memberIndex];
+                          return member ? sanitizeBuild(member.build, member.monster.id) : makeBuild(null);
+                        }))}>Use This Team</button>
                       </div>
                     ))}
                   </div>
@@ -1134,6 +1211,13 @@ export function TeamComposition() {
             </div>
           </section> : null}
         </div>
+        <section className={styles.useCases} aria-label="Team use cases">
+          <div><strong>Team Use Cases</strong><span>See how your team performs in different content types.</span></div>
+          <nav aria-label="Choose team use case">
+            {(["balanced", "boss", "dungeon", "rift"] as TeamGoal[]).map((value) => <button key={value} type="button" className={goal === value ? styles.useCaseActive : ""} onClick={() => setGoal(value)}>{value === "balanced" ? "General" : value === "boss" ? "Bosses" : value === "dungeon" ? "Dungeons" : "Rifts"}</button>)}
+            <button type="button">PvP</button><button type="button">Farming</button>
+          </nav>
+        </section>
       </div>
       {teamLibraryOpen && <div className={styles.libraryBackdrop} onMouseDown={(event) => { if (event.target === event.currentTarget) setTeamLibraryOpen(false); }}>
         <section className={styles.libraryDialog} role="dialog" aria-modal="true" aria-label="Team library">

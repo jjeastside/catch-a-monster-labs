@@ -2057,3 +2057,297 @@ button.emptySlot .emptySlotContent small {
 /* The team icon is shared with the primary navigation. */
 .bannerIcon { overflow: hidden; border: 1px solid #25475f; border-radius: 12px; background: #071b2b; }
 .bannerIcon img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+/* Target-inspired Team Builder refresh */
+.root {
+  --panel: #07182a;
+  --panel-soft: #061321;
+  --border: #244b6d;
+  background:
+    radial-gradient(circle at 52% 8%, rgba(24, 108, 196, .18), transparent 34rem),
+    linear-gradient(180deg, #04101d 0%, #061321 48%, #04101d 100%);
+}
+
+.banner {
+  min-height: 98px;
+  grid-template-columns: 76px minmax(0, 1fr) minmax(290px, 380px);
+  border-color: #28608c;
+  border-radius: 10px;
+  background:
+    radial-gradient(ellipse at 59% 120%, rgba(46, 121, 220, .3), transparent 34%),
+    linear-gradient(100deg, #071b2d, #0b1a31 56%, #071523);
+  padding: 12px 18px;
+}
+
+.bannerIcon { width: 64px; height: 64px; border-radius: 50%; border: 2px solid #229ff7; box-shadow: 0 0 24px rgba(27, 147, 255, .18); }
+.banner h1 { font-size: 30px; letter-spacing: -.02em; }
+.banner h1 + p { margin-top: 4px; color: #bad7f3; font-size: 13px; }
+.bannerAside { display: block; }
+
+.layout { grid-template-columns: 332px minmax(620px, 1fr) 334px; gap: 12px; }
+.panel { border-color: #244b6d; border-radius: 10px; background: rgba(7, 24, 42, .94); box-shadow: inset 0 1px rgba(255,255,255,.018); }
+.panelHeader { padding: 10px 14px; background: linear-gradient(180deg, rgba(14,39,65,.7), rgba(6,23,40,.25)); }
+.panelHeader h2 { font-size: 17px; }
+.kicker { color: #78a7ff; }
+
+.inventoryBody { padding: 9px 12px; }
+.inventoryList { max-height: 618px; scrollbar-color: #3d7098 transparent; }
+.inventoryRow { grid-template-columns: 40px minmax(0, 1fr) auto; min-height: 52px; margin-bottom: 4px; border-color: #224767; border-radius: 7px; background: #081a2c; padding: 5px 7px; }
+.inventoryRow:hover { border-color: #3987c2; background: #0b2239; }
+.inventoryPortrait { width: 38px; height: 38px; border-color: #3b76a2; }
+.inventoryName { font-size: 12px; }
+.inventoryMeta { color: #7fa3c3; }
+.inventoryRow .rowActions { opacity: .25; transition: opacity .15s ease; }
+.inventoryRow:hover .rowActions, .inventoryRow:focus-within .rowActions { opacity: 1; }
+.copyList { display: none; }
+
+.teamSlots { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; padding: 10px; }
+.slot { min-height: 304px; border-color: #2f628c; border-radius: 9px; background: radial-gradient(circle at 50% 30%, rgba(33,110,184,.26), transparent 45%), linear-gradient(180deg,#102a48,#081827); padding: 10px; }
+.slot:nth-child(1) { box-shadow: inset 0 3px #8a61ff; }
+.slot:nth-child(2) { box-shadow: inset 0 3px #8ed741; }
+.slot:nth-child(3) { box-shadow: inset 0 3px #29d1e6; }
+.slotTop { display: grid; justify-items: center; gap: 7px; padding: 10px 16px 0; text-align: center; }
+.slotPortrait { width: 104px; height: 104px; border-width: 3px; border-color: #51a7eb; border-radius: 12px; background: radial-gradient(circle,#173c63,#071421); box-shadow: 0 0 18px rgba(70,159,255,.22); }
+.slotTitle { width: 100%; }
+.slotTitle strong { font-size: 15px; }
+.slotTitle span:first-child { position: absolute; top: 9px; left: 10px; width: calc(100% - 70px); text-align: left; }
+.slotTitle span:last-child { display: none; }
+.compareQuickStats { justify-content: center; margin: 2px 0 7px; border: 0; background: transparent; padding: 0; }
+.compareQuickStats .quickGp { display: none; }
+.compareMutationLine { display: none; }
+.compareGearLine { display: grid; grid-template-columns: 1fr; gap: 5px; padding: 4px 0; }
+.compareGearLine button { min-height: 31px; border: 1px solid #2d5578; border-radius: 6px; background: #091a2c; }
+.compareGearLine button:hover { border-color: #4699d6; background: #102b45; }
+.compareGearLine button > span:not(.emptyGearIcon):not(.relative) { display: flex; width: 100%; justify-content: space-between; }
+.compactStats, .slotFooter { display: none; }
+.calculatorLink { display:flex; align-items:center; justify-content:center; min-height:30px; margin-top:5px; border:1px solid #32679a; border-radius:6px; background:linear-gradient(180deg,#173d68,#0d2b4b); color:#bdddff; font-size:10px; font-weight:750; }
+.calculatorLink:hover { border-color:#58adf2; color:#fff; background:linear-gradient(180deg,#1d5189,#11385f); }
+.emptySlot { min-height: 304px; background: radial-gradient(circle,rgba(28,91,150,.12),transparent 55%),#061522; }
+.changeMonsterButton { top: 7px; right: 32px; padding: 3px 6px; }
+
+.overviewGrid { grid-template-columns: repeat(5,minmax(0,1fr)); padding: 10px; }
+.overviewCard { min-height: 74px; background: linear-gradient(145deg,#0b2136,#071523); }
+.overviewCard strong { font-size: 21px; }
+.overviewAccent { color: #56b7ff; }
+.synergyMetric { border-color: #61428b; background: linear-gradient(145deg,#24173d,#091729); }
+.synergyMetric strong { color: #d397ff; }
+.teamAnalysis { grid-template-columns: minmax(0,1fr) 290px; padding: 0 10px 10px; }
+.analysisBlock { background: #061624; }
+.monsterBreakdowns { grid-template-columns: repeat(3,minmax(0,1fr)); padding: 0 10px 10px; }
+.skillsSectionHeader { margin:0 10px 8px; border-top:1px solid #24445f; padding:10px 2px 0; }
+.skillsSectionHeader > div { display:flex; align-items:baseline; gap:9px; }
+.skillsSectionHeader .kicker { margin:0; }
+.skillsSectionHeader h3 { font-size:13px; font-weight:850; }
+.skillsSectionHeader span { color:#7896b2; font-size:9px; }
+.monsterBreakdown { min-width: 0; }
+.skillRow { grid-template-columns: 34px minmax(0,1fr); }
+.skillNumbers { grid-column: 1 / -1; display: flex; justify-content: space-between; }
+
+.recommendations { position: sticky; top: 86px; max-height: calc(100vh - 100px); overflow: auto; }
+.recommendBody { padding: 9px; }
+.recommendCard { border-color: #2d5678; background: linear-gradient(180deg,#0b2035,#071522); }
+.analyzeButton { width:100%; min-height:34px; margin:0 0 9px; border:1px solid #27a5ff; border-radius:6px; background:linear-gradient(180deg,#1578d0,#0c529a); color:white; font-size:11px; font-weight:800; box-shadow:0 0 14px rgba(27,142,235,.18); }
+.analyzeButton:hover { filter:brightness(1.14); }
+.recommendTitleRow h3::before { content: "1. "; color: #9dc8ef; }
+.recommendList { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 5px; }
+.recommendRow { display: block; padding: 5px; text-align: center; }
+.recommendMonster { width: 58px; height: 58px; margin: 0 auto 5px; border-width: 2px; }
+.recommendDetails strong { font-size: 10px; }
+.recommendDetails span:nth-of-type(2), .recommendDetails em { display: none; }
+.recommendMetrics, .scoreBreakdown, .recommendReasons { display: none; }
+.optimizerNotes { opacity: .78; }
+.alternativeMembers { display:flex; gap:5px; margin:7px 0; }
+.alternativeMembers img { width:36px; height:36px; border:1px solid #3b6689; border-radius:6px; background:#061320; object-fit:contain; }
+.alternativeUseButton { width:100%; border:1px solid #356b98; border-radius:5px; background:#0e2b47; padding:5px; color:#bdddff; font-size:9px; font-weight:800; }
+.alternativeUseButton:hover { border-color:#56aaf0; background:#16426a; color:white; }
+
+.inventoryPortability { display:flex; gap:4px; margin-left:auto; }
+.inventoryPortability button { border:1px solid #315a7d; border-radius:5px; background:#0c2237; padding:4px 7px; color:#a9cce9; font-size:9px; font-weight:750; }
+.inventoryPortability button:hover { border-color:#53a0d9; color:white; }
+.inventoryPortability input { display:none; }
+
+.heroMonsters { position:absolute; left:51%; bottom:0; display:flex; align-items:flex-end; height:92px; pointer-events:none; opacity:.48; transform:translateX(-50%); }
+.heroMonsters img { width:76px; height:88px; margin:0 -12px; object-fit:contain; object-position:bottom; filter:drop-shadow(0 0 13px rgba(55,140,255,.42)); }
+.heroMonsters img:nth-child(2) { width:88px; height:96px; z-index:2; }
+.banner { position:relative; overflow:hidden; }
+.banner > div:not(.heroMonsters) { position:relative; z-index:3; }
+
+/* Card + inventory corrections from the in-browser review. */
+.slot { min-height: 0; }
+.slotTop { padding-top: 20px; }
+.slotTitle span:first-child {
+  top: 10px;
+  left: 10px;
+  width: min(42%, 118px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.compareEditor:not([open]) { top: 5px; right: 70px; max-width: 72px; }
+.compareEditor:not([open]) > summary { overflow:hidden; padding:5px 4px; white-space:nowrap; }
+.compareEditor:not([open]) > summary span { display:block; overflow:hidden; text-overflow:ellipsis; }
+.changeMonsterButton { top: 6px; right: 34px; }
+.removeButton { top: 7px; right: 9px; }
+
+.monsterCoreStats {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:5px;
+  margin:7px 0;
+}
+.monsterCoreStats > div {
+  min-width:0;
+  border:1px solid #29516f;
+  border-radius:6px;
+  background:#071827;
+  padding:6px;
+}
+.monsterCoreStats span { display:flex; min-width:0; align-items:center; gap:4px; color:#7f9db8; font-size:7px; font-weight:800; letter-spacing:.03em; text-transform:uppercase; white-space:nowrap; }
+.monsterCoreStats span img { width:12px; height:12px; flex:0 0 auto; object-fit:contain; }
+.monsterCoreStats strong { display:block; overflow:hidden; margin-top:3px; color:#f4f8ff; font-size:11px; text-overflow:ellipsis; white-space:nowrap; }
+
+.compareGearLine { grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; }
+.compareGearLine button { min-width:0; min-height:38px; align-items:center; padding:4px 5px; }
+.compareGearLine button > span:not(.emptyGearIcon):not(.relative) { display:grid; min-width:0; justify-content:initial; gap:1px; text-align:left; }
+.compareGearLine button > span b { display:block; overflow:hidden; color:#e8f2ff; font-size:8px; text-overflow:ellipsis; white-space:nowrap; }
+.compareGearLine button > span { color:#7f9db8; font-size:7px; }
+.compareGearLine .gearIcon, .compareGearLine button > img { width:22px; height:22px; flex:0 0 22px; border-radius:4px; object-fit:contain; }
+.compareGearLine .emptyGearIcon { width:22px; height:22px; flex:0 0 22px; }
+.calculatorLink { min-height:27px; }
+
+.panelHeader h2 { white-space:nowrap; }
+.inventoryBody { padding:8px; }
+.inventoryToolbar { display:grid; grid-template-columns:minmax(0,1fr) 70px; gap:5px; }
+.inventoryFilters { display:grid; grid-template-columns:repeat(4,minmax(max-content,1fr)); gap:4px; overflow-x:auto; }
+.filterChip { padding:5px 7px; }
+.inventorySort { width:70px; }
+.pickerPreferences { margin-top:5px; }
+.inventoryList { margin-top:7px; }
+.inventoryRow { position:relative; grid-template-columns:38px minmax(0,1fr) auto; min-height:48px; padding:4px 6px; }
+.inventoryPortrait { width:36px; height:36px; }
+.inventoryMeta { margin-top:1px; font-size:9px; }
+.inventoryBuildMeta { display:none; }
+.inventoryRow .rowActions { flex-direction:row; align-items:center; opacity:1; }
+.inventoryBadges { display:flex; align-items:center; gap:4px; }
+.inventoryBadges span, .inventoryBadges b { border:1px solid #315270; border-radius:4px; background:#0c2236; padding:2px 5px; font-size:8px; font-weight:850; white-space:nowrap; }
+.inventoryBadges b { min-width:20px; text-align:center; }
+.inventoryRow .rowActions > button { display:none; }
+.inventoryRow:hover .rowActions > button, .inventoryRow:focus-within .rowActions > button { display:block; }
+.inventoryRow:hover .inventoryBadges, .inventoryRow:focus-within .inventoryBadges { display:none; }
+.inventoryRow .smallButton { padding:3px 5px; }
+.indexImportButton { min-height:34px; }
+
+@media (max-width: 1450px) {
+  .compareGearLine { grid-template-columns:1fr; }
+  .compareGearLine button { min-height:29px; }
+  .monsterCoreStats { gap:3px; }
+  .monsterCoreStats > div { padding:5px 4px; }
+  .monsterCoreStats span { font-size:6px; }
+  .monsterCoreStats strong { font-size:10px; }
+}
+
+@media (max-width: 1120px) {
+  .compareGearLine { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+
+@media (max-width: 640px) {
+  .compareGearLine { grid-template-columns:1fr; }
+  .slotTitle span:first-child { width:38%; }
+}
+
+/* Trait is a symbol-only stat; equipment remains compact. */
+.monsterCoreStats:has(.traitStat) { grid-template-columns:repeat(3,minmax(0,1fr)) 34px; }
+.traitStat {
+  display:grid;
+  min-width:34px;
+  place-items:center;
+  border:1px solid #7d4fb2 !important;
+  border-radius:6px;
+  background:radial-gradient(circle at 50% 70%,rgba(180,69,224,.3),transparent 65%),#10172b !important;
+  padding:6px !important;
+  cursor:pointer;
+}
+.traitStat:hover { border-color:#c176ff !important; background:#241843 !important; }
+.traitStat img { width:20px !important; height:20px !important; object-fit:contain; filter:brightness(0) invert(1) drop-shadow(0 0 4px #bd68ff); }
+.compareGearLine { grid-template-columns:repeat(2,minmax(0,1fr)); }
+
+/* Every inventory copy remains visible and editable without bloating the list. */
+.inventoryRow .rowActions > .inventoryActionButton { display:grid; min-width:24px; height:24px; place-items:center; padding:0 5px; }
+.inventoryRow:hover .inventoryBadges, .inventoryRow:focus-within .inventoryBadges { display:flex; }
+.copyList { display:block; grid-column:1 / -1; margin-top:2px; border-top:1px solid #20405b; }
+.copyList > summary { cursor:pointer; list-style:none; padding:5px 2px 1px; color:#7899b6; font-size:8px; font-weight:750; }
+.copyList > summary::-webkit-details-marker { display:none; }
+.copyList > summary::before { content:"▸"; display:inline-block; margin-right:5px; transition:transform .12s ease; }
+.copyList[open] > summary::before { transform:rotate(90deg); }
+.copyList:not([open]) .copyRow { display:none; }
+.copyList .copyRow { padding:5px 0 1px; }
+.copyList .copyRow .smallButton { display:block; }
+
+@media (max-width:1450px) {
+  .compareGearLine { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width:640px) {
+  .monsterCoreStats:has(.traitStat) { grid-template-columns:repeat(3,minmax(0,1fr)) 34px; }
+  .compareGearLine { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+/* Calculator-style trait metadata row. */
+.compareQuickStats { flex-wrap:wrap; }
+.compareQuickStats .quickTrait { flex:0 1 auto; justify-content:center; min-width:0; border-color:#2c4d69; background:#081a2a; }
+.compareQuickStats .quickTrait > span { color:#829db7; font-size:8px; }
+.compareQuickStats .quickTrait > b { max-width:130px; overflow:hidden; color:#edf5ff; font-size:9px; text-overflow:ellipsis; white-space:nowrap; }
+.compareQuickStats .quickTrait > span:nth-child(2) { width:22px; height:22px; flex:0 0 22px; }
+.monsterCoreStats:has(.traitStat) { grid-template-columns:repeat(3,minmax(0,1fr)); }
+
+/* Preserve monster rarity frames in team cards and inventory. */
+.slotPortrait[data-rarity="Common"], .inventoryPortrait[data-rarity="Common"] { border-color:#707070; background:linear-gradient(145deg,#353535,#171717); }
+.slotPortrait[data-rarity="Uncommon"], .inventoryPortrait[data-rarity="Uncommon"] { border-color:#28a745; background:linear-gradient(145deg,#174d24,#0c2512); }
+.slotPortrait[data-rarity="Rare"], .inventoryPortrait[data-rarity="Rare"] { border-color:#299ddd; background:linear-gradient(145deg,#17486a,#0b2131); }
+.slotPortrait[data-rarity="Epic"], .inventoryPortrait[data-rarity="Epic"] { border-color:#bd45d8; background:linear-gradient(145deg,#5b1e64,#27102d); }
+.slotPortrait[data-rarity="Legendary"], .inventoryPortrait[data-rarity="Legendary"] { border-color:#ff9f43; background:linear-gradient(145deg,#6a3a12,#291608); }
+.slotPortrait[data-rarity="Mythical"], .inventoryPortrait[data-rarity="Mythical"] { border-color:transparent; background:linear-gradient(135deg,#ff3347,#ff8a1f,#ffe13b,#35e56f,#22bde8,#b43cff); box-shadow:0 0 12px rgba(124,107,255,.38); }
+.slotPortrait[data-rarity="Secret"], .inventoryPortrait[data-rarity="Secret"] { border-color:#ff7139; background:linear-gradient(145deg,#5d1714,#21130b); box-shadow:0 0 10px rgba(255,74,48,.22); }
+.slotPortrait[data-rarity="Void"], .inventoryPortrait[data-rarity="Void"] { border-color:#35e9d0; background:linear-gradient(135deg,#123c43,#101d2b); box-shadow:0 0 10px rgba(53,233,208,.24); }
+.slotPortrait[data-rarity] img, .inventoryPortrait[data-rarity] img { border-radius:inherit; background:rgba(5,15,25,.86); }
+
+.useCases { display: flex; align-items: center; justify-content: space-between; gap: 20px; border: 1px solid #244b6d; border-radius: 9px; background: #07192a; padding: 8px 14px; }
+.useCases > div { display: grid; }
+.useCases strong { font-size: 12px; }
+.useCases span { margin-top: 2px; color: #89a6c1; font-size: 10px; }
+.useCases nav { display: grid; grid-template-columns: repeat(6, minmax(74px,1fr)); gap: 8px; width: min(610px,55%); }
+.useCases button { border: 1px solid #2d5273; border-radius: 6px; background: #081726; padding: 7px 11px; color: #bdd3e8; font-size: 10px; }
+.useCases button:hover, .useCases .useCaseActive { border-color: #25a9ff; background: linear-gradient(#126fb9,#0b4b82); color: white; box-shadow: 0 0 12px rgba(18,140,236,.2); }
+
+@media (max-width: 1400px) {
+  .layout { grid-template-columns: 260px minmax(0,1fr) 292px; }
+  .slotPortrait { width: 82px; height: 82px; }
+  .inventoryList { max-height: 560px; }
+}
+
+@media (max-width: 1120px) {
+  .layout { grid-template-columns: 250px minmax(0,1fr); }
+  .recommendations { position: static; grid-column: 1 / -1; max-height: none; }
+  .recommendBody { display: grid; grid-template-columns: 1fr 1fr; }
+  .teamSlots { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .heroMonsters { opacity:.25; }
+}
+
+@media (max-width: 900px) {
+  .banner { grid-template-columns: 58px 1fr; }
+  .bannerAside { grid-column: 1 / -1; }
+  .layout { grid-template-columns: 1fr; }
+  .recommendations { grid-column: auto; }
+  .monsterBreakdowns { grid-template-columns: 1fr; }
+  .overviewGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .synergyMetric { grid-column: 1 / -1; }
+  .useCases { align-items: stretch; flex-direction: column; }
+  .useCases nav { width: 100%; }
+  .heroMonsters { display:none; }
+}
+
+@media (max-width: 640px) {
+  .teamSlots, .recommendBody { grid-template-columns: 1fr; }
+  .teamAnalysis { grid-template-columns: 1fr; }
+  .useCases nav { grid-template-columns: repeat(3,1fr); }
+}
