@@ -5,6 +5,7 @@ import { monsters } from "../data/monsters";
 import { getMonsterStatData } from "../data/monster-stats";
 import { getSkill, getSkillDisplayName } from "../data/skills";
 import { WEAPONS, ARMORS } from "../data/equipments";
+import { getAvailableTraits, getTrait } from "../data/traits";
 import { calculateStats } from "../lib/calculations/stats";
 import { calculateSkillSummary } from "../lib/calculations/skill-summary";
 import { GENETIC_POTENTIAL_VALUES } from "../lib/calculations/genetic-potential";
@@ -15,7 +16,7 @@ import {
   MIN_EVOLUTION_PERCENT,
   EVOLUTION_STEP,
 } from "../lib/calculations/evolution";
-import { EXPERIMENTAL_MAX_LEVEL, MIN_LEVEL } from "../lib/level-config";
+import { CURRENT_MAX_LEVEL, MIN_LEVEL } from "../lib/level-config";
 import { formatNumber, formatStatNumber } from "../lib/format-numbers";
 import { isBestValue } from "../lib/compare-values";
 import { assetPath } from "../lib/asset-path";
@@ -25,6 +26,7 @@ import { useCompareAccount } from "../lib/use-compare-account";
 import { PASSIVE_DEFINITIONS, getPassiveImagePath } from "../data/passives";
 import { MonsterBrowser } from "./monster-browser";
 import { EquipmentSelect } from "./equipment-select";
+import { TraitIcon } from "./trait-icon";
 import styles from "./monster-compare.module.css";
 import { PageHeading } from "./page-heading";
 import { CombatRank, rankColors } from "./calculator-results";
@@ -640,6 +642,116 @@ function CompareMutations({
   );
 }
 
+const traitRarityTextClasses: Record<"rare" | "epic" | "legendary" | "mythical" | "secret", string> = {
+  rare: "text-[#6bc8ff]",
+  epic: "text-[#eb7cff]",
+  legendary: "text-[#ffb866]",
+  mythical: "text-[#79e3ae]",
+  secret: "text-[#ff8b55]",
+};
+
+function CompareTraitSelect({
+  compact,
+  value,
+  onChange,
+}: {
+  compact: boolean;
+  value: string | null;
+  onChange: (value: string | null) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [opensUp, setOpensUp] = useState(false);
+  const [alignRight, setAlignRight] = useState(false);
+  const [maxHeight, setMaxHeight] = useState(248);
+  const container = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const selected = getTrait(value);
+
+  useEffect(() => {
+    const outside = (event: MouseEvent) => {
+      if (!container.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", outside);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("mousedown", outside);
+      document.removeEventListener("keydown", escape);
+    };
+  }, []);
+
+  function positionMenu() {
+    const button = trigger.current;
+    if (!button) return;
+    let boundary = container.current?.parentElement ?? null;
+    while (boundary && !["auto", "scroll", "hidden", "clip"].includes(getComputedStyle(boundary).overflowY)) {
+      boundary = boundary.parentElement;
+    }
+    const rect = button.getBoundingClientRect();
+    const bounds = boundary?.getBoundingClientRect();
+    const above = Math.max(0, rect.top - Math.max(8, bounds?.top ?? 8) - 6);
+    const below = Math.max(0, Math.min(innerHeight - 8, bounds?.bottom ?? innerHeight - 8) - rect.bottom - 6);
+    const upward = below < 240 && above > below;
+    setOpensUp(upward);
+    setMaxHeight(Math.max(64, Math.min(248, upward ? above : below)));
+    setAlignRight(rect.left + Math.min(256, innerWidth - 32) > Math.min(innerWidth - 8, bounds?.right ?? innerWidth - 8));
+  }
+
+  useEffect(() => {
+    if (!open) return;
+    positionMenu();
+    window.addEventListener("resize", positionMenu);
+    window.addEventListener("scroll", positionMenu, true);
+    return () => {
+      window.removeEventListener("resize", positionMenu);
+      window.removeEventListener("scroll", positionMenu, true);
+    };
+  }, [open]);
+
+  return (
+    <div ref={container} className={`relative min-w-0 ${compact ? "flex items-center gap-1" : ""}`}>
+      <span className={compact ? "shrink-0 text-[10px] text-[#a9b7cd]" : "mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]"}>Trait</span>
+      <button
+        ref={trigger}
+        type="button"
+        aria-label="Trait"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => { if (!open) positionMenu(); setOpen((current) => !current); }}
+        className={`flex ${compact ? "h-7 min-w-0 flex-1" : "min-h-10 w-full"} items-center gap-1 rounded-md border border-[#25475f] bg-[#041320] px-1.5 py-0.5 text-left outline-none hover:border-[#5c6a80] focus:border-[#7182ff]`}
+      >
+        {selected ? (
+          <>
+            <TraitIcon trait={selected} size="combat" />
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-[11px] font-semibold leading-tight text-[#e3e8f1]">{selected.name}</span>
+              <span className={`block truncate text-[9px] leading-tight ${traitRarityTextClasses[selected.rarity]}`}>{selected.effects.map((effect) => effect.description).join(" · ")}</span>
+            </span>
+          </>
+        ) : <span className="flex-1 px-1 text-xs text-[#7f8b9e]">No Trait</span>}
+        <span aria-hidden="true" className="shrink-0 text-xs text-[#7f8b9e]">{open ? "▲" : "▼"}</span>
+      </button>
+      {open && (
+        <div role="listbox" aria-label="Trait" style={{ maxHeight }} className={`absolute z-50 w-[min(16rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border border-[#25475f] bg-[#041320] p-1 shadow-2xl ${opensUp ? "bottom-full mb-1" : "top-full mt-1"} ${alignRight ? "right-0" : "left-0"}`}>
+          <button type="button" role="option" aria-selected={!value} onClick={() => { onChange(null); setOpen(false); }} className={`w-full rounded-md px-2 py-1.5 text-left text-xs ${!value ? "bg-[#102b40] text-[#7182ff]" : "text-[#91adc5] hover:bg-[#102b40]"}`}>No Trait</button>
+          {getAvailableTraits().map((trait) => (
+            <button key={trait.id} type="button" role="option" aria-selected={value === trait.id} onClick={() => { onChange(trait.id); setOpen(false); }} className={`flex w-full items-center gap-2 rounded-md p-1.5 text-left ${value === trait.id ? "bg-[#102b40]" : "hover:bg-[#102b40]"}`}>
+              <TraitIcon trait={trait} size="combat" />
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-xs font-semibold text-[#e3e8f1]">{trait.name}</span>
+                <span className={`block text-[10px] leading-tight ${traitRarityTextClasses[trait.rarity]}`}>{trait.effects.map((effect) => effect.description).join(" · ")}</span>
+              </span>
+              {value === trait.id && <span className="text-[#7182ff]">✓</span>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function CompareBuildControls({
   build,
   onChange,
@@ -669,7 +781,7 @@ function CompareBuildControls({
             aria-label="Level"
             type="number"
             min={MIN_LEVEL}
-            max={EXPERIMENTAL_MAX_LEVEL}
+            max={CURRENT_MAX_LEVEL}
             value={build.level}
             onChange={(event) =>
               update(
@@ -677,7 +789,7 @@ function CompareBuildControls({
                 Math.max(
                   MIN_LEVEL,
                   Math.min(
-                    EXPERIMENTAL_MAX_LEVEL,
+                    CURRENT_MAX_LEVEL,
                     Math.trunc(Number(event.target.value)) || MIN_LEVEL,
                   ),
                 ),
@@ -741,7 +853,7 @@ function CompareBuildControls({
           />
         ))}
       </div>
-      <div className={compact ? "mt-1 grid grid-cols-2 gap-2" : "contents"}>
+      <div className={compact ? "mt-1 grid grid-cols-3 gap-1" : "contents"}>
         <EquipmentSelect
           compact={compact}
           label="Weapon"
@@ -755,6 +867,11 @@ function CompareBuildControls({
           items={ARMORS}
           value={build.armorId}
           onChangeAction={(value) => update("armorId", value)}
+        />
+        <CompareTraitSelect
+          compact={compact}
+          value={build.traitId}
+          onChange={(value) => update("traitId", value)}
         />
       </div>
       <CompareMutations build={build} onChange={onChange} compact={compact} />
