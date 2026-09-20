@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { AccountMultipliers } from "../account-multipliers";
 import { BUILD_RANK_VISUALS, EvolutionMultiplierEditor } from "../build-editor";
@@ -16,6 +16,7 @@ import { AttributeSelect } from "../attribute-select";
 import { getAttributesForGear, getAttribute } from "../../data/attributes";
 import { getAttributeSlotCount, getFixedAttributeIds } from "../../lib/calculations/attributes";
 import { assetPath } from "../../lib/asset-path";
+import { CURRENT_MAX_LEVEL } from "../../lib/level-config";
 import { calculateSkillSummary } from "../../lib/calculations/skill-summary";
 import { calculateStats } from "../../lib/calculations/stats";
 import { formatStatNumber } from "../../lib/format-numbers";
@@ -33,7 +34,7 @@ import {
   makeBuild, sanitizeBuild, defaultTeam, defaultInventory, copyMonsterId, nextCopyKey,
   monsterDps, buildSignature, getTeamRole, effectSummaryLabel, compactBuildLabel,
   buildForGoal, goalTitle, goalDescription, signedPercent, recommendTeams,
-  type TeamGoal, type InventoryBuilds, type InventoryFilter, type InventorySort, type SavedTeams,
+  type TeamGoal, type TeamCombatContext, type InventoryBuilds, type InventoryFilter, type InventorySort, type SavedTeams,
   loadTeamStorage, mergeIndexProgress,
 } from "../../lib/team-model";
 
@@ -57,6 +58,27 @@ function TeamMonsterPortrait({ monster, className, alt = "" }: { monster: Monste
   );
 }
 
+type OverviewIconKind = "damage" | "health" | "dps" | "survivability" | "synergy";
+
+function OverviewIcon({ kind }: { kind: OverviewIconKind }) {
+  // Reuse the exact asset paths shown beside each monster in the Team Builder.
+  const statIcons: Partial<Record<OverviewIconKind, string>> = {
+    damage: "/account-icons/damage.png",
+    health: "/account-icons/health.png",
+    dps: "/icons/dps.png",
+  };
+  const statIcon = statIcons[kind];
+  if (statIcon) return <img className={styles.overviewIcon} src={assetPath(statIcon)} alt="" aria-hidden="true" />;
+  const paths: Record<OverviewIconKind, ReactNode> = {
+    damage: <><path d="m13.5 2-8 11h6l-1 9 8-12h-6z" /></>,
+    health: <><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" /></>,
+    dps: <><path d="M12 2v3m0 14v3M2 12h3m14 0h3" /><circle cx="12" cy="12" r="7" /><circle cx="12" cy="12" r="3" /><path d="m15 9 6-6" /></>,
+    survivability: <><path d="M12 2 4 5v6c0 5 3.3 8.4 8 11 4.7-2.6 8-6 8-11V5z" /><path d="m8.5 12 2.5 2.5 4.5-5" /></>,
+    synergy: <><circle cx="12" cy="4" r="2" /><circle cx="4" cy="18" r="2" /><circle cx="20" cy="18" r="2" /><path d="m10.5 5.7-5 10.6m8-10.6 5 10.6M6 18h12" /></>,
+  };
+  return <svg className={`${styles.overviewIcon} ${styles[`overviewIcon_${kind}`]}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[kind]}</svg>;
+}
+
 const HIDDEN_MONSTERS_STORAGE_KEY = "cam-lab-team-hidden-monsters-v1";
 
 const teamMutationFamilies = [
@@ -77,6 +99,7 @@ export function TeamComposition() {
   const [inventoryBuilds, setInventoryBuilds] = useState<InventoryBuilds>(defaultInventory);
   const [accountBuild, setAccountBuild] = useState<Build>(() => createDefaultBuild());
   const [goal, setGoal] = useState<TeamGoal>("balanced");
+  const [combatContext, setCombatContext] = useState<TeamCombatContext>("standard");
   const [inventoryFilter, setInventoryFilter] = useState<InventoryFilter>("all");
   const [inventorySort, setInventorySort] = useState<InventorySort>("name");
   const [editingInventoryId, setEditingInventoryId] = useState<string | null>(null);
@@ -87,6 +110,7 @@ export function TeamComposition() {
   const [teamLibraryOpen, setTeamLibraryOpen] = useState(false);
   const [teamSaveName, setTeamSaveName] = useState("");
   const [showRecommendations, setShowRecommendations] = useState(true);
+  const [recommendationMode, setRecommendationMode] = useState<"team" | "improve">("team");
   const [editingTeamSlot, setEditingTeamSlot] = useState<number | null>(null);
   const [teamSearch, setTeamSearch] = useState("");
   const [replacingTeamSlot, setReplacingTeamSlot] = useState<number | null>(null);
@@ -104,6 +128,7 @@ export function TeamComposition() {
       blockedStorageKeys.current = new Set(restored.blockedKeys);
       setTeam(restored.team);
       setGoal(restored.goal);
+      setCombatContext(restored.combatContext);
       setInventoryBuilds(restored.inventory);
       setSavedTeams(restored.presets);
       try {
@@ -122,11 +147,11 @@ export function TeamComposition() {
   useEffect(() => {
     if (!storageReady || blockedStorageKeys.current.has(TEAM_STORAGE_KEY)) return;
     try {
-      localStorage.setItem(TEAM_STORAGE_KEY, JSON.stringify({ builds: team, goal }));
+      localStorage.setItem(TEAM_STORAGE_KEY, JSON.stringify({ builds: team, goal, combatContext }));
     } catch {
       queueMicrotask(() => setStorageError("Browser storage is unavailable or full. Your latest changes have not been saved."));
     }
-  }, [storageReady, team, goal]);
+  }, [storageReady, team, goal, combatContext]);
 
   useEffect(() => {
     if (!storageReady || blockedStorageKeys.current.has(INVENTORY_STORAGE_KEY)) return;
@@ -206,7 +231,7 @@ export function TeamComposition() {
       accountMultipliers: accountBuild.accountMultipliers,
       teammateMonsterIds: [teammateIds[0] ?? null, teammateIds[1] ?? null],
       evolutionPercent: monster.isEvolved ? savedBuild.evolutionPercent : 100,
-    }, goal);
+    }, combatContext);
     const stats = calculateStats(getMonsterStatData(monster.id), build, monster.passives ?? []);
     const skillPreviews = stats
       ? monster.skillIds.flatMap((skillId) => {
@@ -288,9 +313,44 @@ export function TeamComposition() {
 
   const recommendation = useMemo(
     () => recommendTeams(Object.fromEntries(Object.entries(inventoryBuilds)
-      .filter(([copyId]) => !hiddenMonsterIds.includes(copyMonsterId(copyId)))), accountBuild.accountMultipliers, goal),
-    [inventoryBuilds, accountBuild.accountMultipliers, goal, hiddenMonsterIds],
+      .filter(([copyId]) => !hiddenMonsterIds.includes(copyMonsterId(copyId)))), accountBuild.accountMultipliers, goal, combatContext),
+    [inventoryBuilds, accountBuild.accountMultipliers, goal, combatContext, hiddenMonsterIds],
   );
+
+  // Compare attainable, single-step upgrades of owned copies only. This is a
+  // stat-based focus list, not a claim about upgrade costs or simulated combat.
+  const improvementTargets = useMemo(() => {
+    const selectedCopies = new Set(recommendation?.members.map((member) => member.build.inventoryCopyId ?? member.monster.id) ?? []);
+    const candidates = Object.entries(inventoryBuilds).flatMap(([copyId, saved]) => {
+      const monster = monsterById.get(copyMonsterId(copyId));
+      if (!monster || hiddenMonsterIds.includes(monster.id)) return [];
+      const evaluate = (build: Build) => {
+        const contextual = buildForGoal({ ...build, accountMultipliers: accountBuild.accountMultipliers, teammateMonsterIds: [null, null], evolutionPercent: monster.isEvolved ? build.evolutionPercent : 100 }, combatContext);
+        const statData = getMonsterStatData(monster.id);
+        const stats = statData ? calculateStats(statData, contextual, monster.passives ?? []) : null;
+        return { dps: monsterDps(monster, contextual), health: stats?.health ?? 0 };
+      };
+      const before = evaluate(saved);
+      const upgrades: Array<{ label: string; build: Build }> = [];
+      if (saved.level < CURRENT_MAX_LEVEL) upgrades.push({ label: `Level ${saved.level} → ${Math.min(CURRENT_MAX_LEVEL, saved.level + 10)}`, build: { ...saved, level: Math.min(CURRENT_MAX_LEVEL, saved.level + 10) } });
+      const nextRank = ranks.indexOf(saved.rank ?? "E") + 1;
+      if (nextRank > 0 && nextRank < ranks.length) upgrades.push({ label: `Rank ${saved.rank ?? "E"} → ${ranks[nextRank]}`, build: { ...saved, rank: ranks[nextRank] } });
+      if (saved.enhancement < 10) upgrades.push({ label: `Enhancement +${saved.enhancement} → +${saved.enhancement + 1}`, build: { ...saved, enhancement: saved.enhancement + 1 } });
+      if (!upgrades.length) return [];
+      const options = upgrades.map(({ label, build }) => {
+        const after = evaluate(build);
+        const dpsGain = before.dps > 0 ? (after.dps - before.dps) / before.dps : 0;
+        const healthGain = before.health > 0 ? (after.health - before.health) / before.health : 0;
+        const weightedGain = goal === "damage" ? dpsGain : goal === "survivability" ? healthGain * .8 + dpsGain * .2 : goal === "support" ? dpsGain * .45 + healthGain * .55 : dpsGain * .6 + healthGain * .4;
+        return { label, dpsGain, healthGain, weightedGain };
+      }).sort((a, b) => b.weightedGain - a.weightedGain);
+      const best = options[0];
+      return [{ copyId, monster, saved, before, best, options, selected: selectedCopies.has(copyId) }];
+    });
+    // Favor upgrades for the suggested composition, but show other owned
+    // monsters too so players can decide whether to develop an alternative.
+    return candidates.sort((a, b) => (Number(b.selected) - Number(a.selected)) || b.best.weightedGain - a.best.weightedGain).slice(0, 8);
+  }, [inventoryBuilds, accountBuild.accountMultipliers, combatContext, goal, hiddenMonsterIds, recommendation]);
 
   const updateTeamBuild = (index: number, changes: Partial<Build>) => {
     setTeam((current) =>
@@ -485,6 +545,7 @@ export function TeamComposition() {
       [selectedTeamSlot]: {
         builds: team.map((build) => (build.monsterId ? sanitizeBuild(build, build.monsterId) : makeBuild(null))),
         goal,
+        combatContext,
         name: teamSaveName.trim() || `Team ${selectedTeamSlot.replace("slot-", "")}`,
         updatedAt: Date.now(),
       },
@@ -501,6 +562,7 @@ export function TeamComposition() {
     }
     setTeam(saved.builds.map((build) => (build.monsterId ? sanitizeBuild(build, build.monsterId) : makeBuild(null))));
     setGoal(saved.goal);
+    setCombatContext(saved.combatContext);
     setTeamPresetMessage(`Loaded ${selectedTeamSlot.replace("slot-", "Team ")}.`);
   };
 
@@ -918,14 +980,14 @@ export function TeamComposition() {
                   <p className={styles.kicker}>Combined</p>
                   <h2>Team Overview</h2>
                 </div>
-                <span className="text-xs text-[#8da0b7]">{totals.monsters} / 3 · {goal === "boss" ? "Boss" : goal === "rift" ? "Rift" : goal === "dungeon" ? "Dungeon" : "Standard"}</span>
+                <span className="text-xs text-[#8da0b7]">{totals.monsters} / 3 · {combatContext === "boss" ? "Boss" : combatContext === "rift" ? "Rift" : combatContext === "dungeon" ? "Dungeon" : "Standard"}</span>
               </div>
               <div className={styles.overviewGrid}>
-                <div className={styles.overviewCard}><span>Total Damage</span><strong>{formatStatNumber(totals.damage)}</strong></div>
-                <div className={styles.overviewCard}><span>Total Health</span><strong>{formatStatNumber(totals.health)}</strong></div>
-                <div className={styles.overviewCard}><span>Average DPS</span><strong>{formatStatNumber(totals.monsters ? totals.dps / totals.monsters : 0)}</strong></div>
-                <div className={styles.overviewCard}><span>Team Survivability</span><strong className={styles.overviewAccent}>{totals.monsters === 3 ? "High" : totals.monsters ? "Building" : "—"}</strong></div>
-                <div className={`${styles.overviewCard} ${styles.synergyMetric}`}><span>Synergy Score</span><strong>{Math.min(100, Object.keys(teamUtility).length * 8 + totals.monsters * 18)} / 100</strong></div>
+                <div className={styles.overviewCard}><span className={styles.overviewLabel}><OverviewIcon kind="damage" />Total Damage</span><strong>{formatStatNumber(totals.damage)}</strong></div>
+                <div className={styles.overviewCard}><span className={styles.overviewLabel}><OverviewIcon kind="health" />Total Health</span><strong>{formatStatNumber(totals.health)}</strong></div>
+                <div className={styles.overviewCard}><span className={styles.overviewLabel}><OverviewIcon kind="dps" />Average DPS</span><strong>{formatStatNumber(totals.monsters ? totals.dps / totals.monsters : 0)}</strong></div>
+                <div className={styles.overviewCard}><span className={styles.overviewLabel}><OverviewIcon kind="survivability" />Team Survivability</span><strong className={styles.overviewAccent}>{totals.monsters === 3 ? "High" : totals.monsters ? "Building" : "—"}</strong></div>
+                <div className={`${styles.overviewCard} ${styles.synergyMetric}`}><span className={styles.overviewLabel}><OverviewIcon kind="synergy" />Synergy Score</span><strong>{Math.min(100, Object.keys(teamUtility).length * 8 + totals.monsters * 18)} / 100</strong></div>
               </div>
 
               <div className={styles.teamAnalysis}>
@@ -1091,23 +1153,57 @@ export function TeamComposition() {
               </div>
             </div>
             <div className={styles.recommendBody}>
-              <div className={styles.goalPicker}>
-                <label htmlFor="team-goal">Goal / Combat Context</label>
-                <select id="team-goal" value={goal} onChange={(event) => setGoal(event.target.value as TeamGoal)}>
-                  <option value="balanced">Balanced</option>
-                  <option value="damage">Highest DPS</option>
-                  <option value="survivability">Survivability</option>
-                  <option value="support">Support / Utility</option>
-                  <option value="boss">Boss</option>
-                  <option value="rift">Rift</option>
-                  <option value="dungeon">Dungeon</option>
-                </select>
+              <div className={styles.goalContextGrid}>
+                <div className={styles.goalPicker}>
+                  <label htmlFor="team-goal">Team Goal</label>
+                  <select id="team-goal" value={goal} onChange={(event) => setGoal(event.target.value as TeamGoal)}>
+                    <option value="balanced">Balanced</option>
+                    <option value="damage">Highest DPS</option>
+                    <option value="survivability">Survivability</option>
+                    <option value="support">Support / Utility</option>
+                  </select>
+                </div>
+                <div className={styles.goalPicker}>
+                  <label htmlFor="team-combat-context">Combat Context</label>
+                  <select id="team-combat-context" value={combatContext} onChange={(event) => setCombatContext(event.target.value as TeamCombatContext)}>
+                    <option value="standard">Standard</option>
+                    <option value="boss">Boss</option>
+                    <option value="rift">Rift</option>
+                    <option value="dungeon">Dungeon</option>
+                  </select>
+                </div>
               </div>
+              <div className={styles.recommendModeTabs} role="group" aria-label="Recommendation mode">
+                <button type="button" aria-pressed={recommendationMode === "team"} onClick={() => setRecommendationMode("team")}>Find a Team</button>
+                <button type="button" aria-pressed={recommendationMode === "improve"} onClick={() => setRecommendationMode("improve")}>Improve My Monsters</button>
+              </div>
+              {recommendationMode === "improve" ? (
+                <article className={`${styles.recommendCard} ${styles.improvementPanel}`}>
+                  <h3>Who should I improve?</h3>
+                  <p className={styles.helper}>Owned builds only · {goalTitle(goal)} · {combatContext}. Suggested team members appear first. Each preview changes one upgrade at a time, without changing your inventory.</p>
+                  {improvementTargets.length ? <div className={styles.improvementList}>
+                    {improvementTargets.map(({ copyId, monster, saved, best, options, selected }) => (
+                      <div className={styles.improvementCard} key={copyId}>
+                        <div className={styles.improvementHeader}>
+                          <TeamMonsterPortrait monster={monster} className={styles.improvementPortrait} />
+                          <div><strong>{monster.name}{copyId.includes("::copy-") ? ` · Copy ${copyId.split("::copy-")[1]}` : ""}</strong><small>{compactBuildLabel(saved)}</small></div>
+                          {selected ? <span className={styles.improvementBadge}>Suggested team</span> : null}
+                        </div>
+                        <div className={styles.improvementNext}><span>Next upgrade to consider</span><strong>{best.label}</strong></div>
+                        <div className={styles.improvementGains}><span>Skill DPS <b>{signedPercent(best.dpsGain)}</b></span><span>Health <b>{signedPercent(best.healthGain)}</b></span></div>
+                        <small className={styles.improvementOther}>Other previews: {options.slice(1).map((option) => option.label).join(" · ") || "No other basic upgrades available"}</small>
+                        <button type="button" className={styles.ghostButton} onClick={() => setEditingInventoryId(copyId)}>Edit in Inventory →</button>
+                      </div>
+                    ))}
+                  </div> : <p className={styles.helper}>Add owned monsters with upgrades remaining to see improvement suggestions.</p>}
+                  <p className={styles.helper}>Estimated stat gains are relative to each monster's current build, not team-wide gains. No upgrade costs, gear availability, or combat rotation are modeled. Level previews stop at 110.</p>
+                </article>
+              ) : <>
               <button type="button" className={styles.analyzeButton} onClick={() => setAnalysisRun((value) => value + 1)}>✦ {analysisRun ? "Analysis Updated" : "Analyze My Inventory"}</button>
               <article className={`${styles.recommendCard} ${styles.optimizerNotes}`}>
                 <div className={styles.recommendTitleRow}>
                   <div>
-                    <h3>{goalTitle(goal)}</h3>
+                    <h3>{goalTitle(goal)} · {combatContext === "standard" ? "Standard" : combatContext === "boss" ? "Boss" : combatContext === "rift" ? "Rift" : "Dungeon"}</h3>
                     <p className={`${styles.helper} mt-1`}>{goalDescription(goal)}</p>
                   </div>
                   {recommendation ? <span className={styles.compositionScore}>{recommendation.scorePercent}</span> : null}
@@ -1223,24 +1319,24 @@ export function TeamComposition() {
                   </div>
                 ) : null}
               </article>
+              </>}
             </div>
           </section> : null}
         </div>
         <section className={styles.useCases} aria-label="Team use cases">
-          <div><strong>Team Use Cases</strong><span>See how your team performs in different content types.</span></div>
+          <div><strong>Combat Context</strong><span>Apply content-specific modifiers independently of your team goal.</span></div>
           <nav aria-label="Choose team use case">
-            {(["balanced", "boss", "dungeon", "rift"] as TeamGoal[]).map((value) => <button key={value} type="button" className={goal === value ? styles.useCaseActive : ""} onClick={() => setGoal(value)}>{value === "balanced" ? "General" : value === "boss" ? "Bosses" : value === "dungeon" ? "Dungeons" : "Rifts"}</button>)}
-            <button type="button">PvP</button><button type="button">Farming</button>
+            {(["standard", "boss", "dungeon", "rift"] as TeamCombatContext[]).map((value) => <button key={value} type="button" className={combatContext === value ? styles.useCaseActive : ""} onClick={() => setCombatContext(value)}>{value === "standard" ? "General" : value === "boss" ? "Bosses" : value === "dungeon" ? "Dungeons" : "Rifts"}</button>)}
           </nav>
         </section>
       </div>
       {teamLibraryOpen && <div className={styles.libraryBackdrop} onMouseDown={(event) => { if (event.target === event.currentTarget) setTeamLibraryOpen(false); }}>
         <section className={styles.libraryDialog} role="dialog" aria-modal="true" aria-label="Team library">
-          <div className={styles.libraryHeader}><div><span className={styles.kicker}>TEAM LIBRARY · {Object.keys(savedTeams).length}/20</span><h2>Save current team</h2><p>Save three monster builds, equipment, attributes, mutations and your team goal.</p></div><button type="button" className={styles.ghostButton} onClick={() => setTeamLibraryOpen(false)}>✕</button></div>
-          <div className={styles.libraryActions}><input aria-label="Team name" placeholder="Team name" value={teamSaveName} onChange={(event) => setTeamSaveName(event.target.value)} /><button type="button" className={styles.primaryButton} disabled={Object.keys(savedTeams).length >= 20} onClick={() => { const id = Array.from({length:20},(_,i)=>`slot-${i+1}`).find((candidate)=>!savedTeams[candidate]); if(id){setSelectedTeamSlot(id); setSavedTeams((current)=>({...current,[id]:{builds:team.map((build)=>build.monsterId?sanitizeBuild(build,build.monsterId):makeBuild(null)),goal,name:teamSaveName.trim()||`Team ${id.replace('slot-','')}`,updatedAt:Date.now()}})); setTeamPresetMessage('Team saved.');setTeamLibraryOpen(false);} }}>Save New Team</button></div>
+          <div className={styles.libraryHeader}><div><span className={styles.kicker}>TEAM LIBRARY · {Object.keys(savedTeams).length}/20</span><h2>Save current team</h2><p>Save three monster builds, equipment, attributes, mutations and your team goal and combat context.</p></div><button type="button" className={styles.ghostButton} onClick={() => setTeamLibraryOpen(false)}>✕</button></div>
+          <div className={styles.libraryActions}><input aria-label="Team name" placeholder="Team name" value={teamSaveName} onChange={(event) => setTeamSaveName(event.target.value)} /><button type="button" className={styles.primaryButton} disabled={Object.keys(savedTeams).length >= 20} onClick={() => { const id = Array.from({length:20},(_,i)=>`slot-${i+1}`).find((candidate)=>!savedTeams[candidate]); if(id){setSelectedTeamSlot(id); setSavedTeams((current)=>({...current,[id]:{builds:team.map((build)=>build.monsterId?sanitizeBuild(build,build.monsterId):makeBuild(null)),goal,combatContext,name:teamSaveName.trim()||`Team ${id.replace('slot-','')}`,updatedAt:Date.now()}})); setTeamPresetMessage('Team saved.');setTeamLibraryOpen(false);} }}>Save New Team</button></div>
           <div className={styles.libraryPreview}><span className={styles.kicker}>CURRENT TEAM PREVIEW</span><div className={styles.libraryMembers}>{team.map((build,index)=>{const monster=build.monsterId?monsterById.get(build.monsterId):null;return <div key={index} className={styles.libraryMember}>{monster?<img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt=""/>:null}<strong>{monster?.name??'Empty slot'}</strong><small>Lv {build.level} · {build.rank} · +{build.enhancement}</small></div>})}</div></div>
           <input className={styles.librarySearch} aria-label="Search saved teams" placeholder="Search saved teams..." value={teamSearch} onChange={(event)=>setTeamSearch(event.target.value)}/>
-          <div className={styles.libraryGrid}>{Object.entries(savedTeams).filter(([id,saved])=>(saved.name??`Team ${id.replace('slot-','')}`).toLowerCase().includes(teamSearch.toLowerCase())||saved.builds.some((build)=>monsterById.get(build.monsterId??'')?.name.toLowerCase().includes(teamSearch.toLowerCase()))).sort((a,b)=>b[1].updatedAt-a[1].updatedAt).map(([id,saved])=><article key={id} className={styles.libraryCard}><div className={styles.libraryCardHeader}><strong>{saved.name??`Team ${id.replace('slot-','')}`}</strong><small>Slot {id.replace('slot-','')} · {new Date(saved.updatedAt).toLocaleDateString()}</small></div><div className={styles.libraryMembers}>{saved.builds.map((build,index)=>{const monster=build.monsterId?monsterById.get(build.monsterId):null;return <div key={index} className={styles.libraryMember}>{monster?<img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt=""/>:null}<strong>{monster?.name??'Empty slot'}</strong><small>Lv {build.level} · {build.rank} · +{build.enhancement}</small></div>})}</div><div className={styles.libraryCardActions}><button type="button" className={styles.primaryButton} onClick={()=>{setTeam(saved.builds.map((build)=>build.monsterId?sanitizeBuild(build,build.monsterId):makeBuild(null)));setGoal(saved.goal);setTeamLibraryOpen(false);setTeamPresetMessage('Team loaded.')}}>Load Team</button><button type="button" className={styles.ghostButton} onClick={()=>{setSelectedTeamSlot(id);setSavedTeams((current)=>({...current,[id]:{builds:team.map((build)=>build.monsterId?sanitizeBuild(build,build.monsterId):makeBuild(null)),goal,name:saved.name||`Team ${id.replace('slot-','')}`,updatedAt:Date.now()}}));setTeamPresetMessage('Team overwritten.')}}>Overwrite</button><button type="button" className={styles.ghostButton} onClick={()=>{const name=window.prompt('Rename team',saved.name??'');if(name?.trim())setSavedTeams((current)=>({...current,[id]:{...saved,name:name.trim()}}))}}>Rename</button><button type="button" className={styles.ghostButton} onClick={()=>{if(window.confirm('Delete this saved team?'))setSavedTeams((current)=>{const next={...current};delete next[id];return next})}}>Delete</button></div></article>)}</div>
+          <div className={styles.libraryGrid}>{Object.entries(savedTeams).filter(([id,saved])=>(saved.name??`Team ${id.replace('slot-','')}`).toLowerCase().includes(teamSearch.toLowerCase())||saved.builds.some((build)=>monsterById.get(build.monsterId??'')?.name.toLowerCase().includes(teamSearch.toLowerCase()))).sort((a,b)=>b[1].updatedAt-a[1].updatedAt).map(([id,saved])=><article key={id} className={styles.libraryCard}><div className={styles.libraryCardHeader}><strong>{saved.name??`Team ${id.replace('slot-','')}`}</strong><small>Slot {id.replace('slot-','')} · {new Date(saved.updatedAt).toLocaleDateString()}</small></div><div className={styles.libraryMembers}>{saved.builds.map((build,index)=>{const monster=build.monsterId?monsterById.get(build.monsterId):null;return <div key={index} className={styles.libraryMember}>{monster?<img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt=""/>:null}<strong>{monster?.name??'Empty slot'}</strong><small>Lv {build.level} · {build.rank} · +{build.enhancement}</small></div>})}</div><div className={styles.libraryCardActions}><button type="button" className={styles.primaryButton} onClick={()=>{setTeam(saved.builds.map((build)=>build.monsterId?sanitizeBuild(build,build.monsterId):makeBuild(null)));setGoal(saved.goal);setCombatContext(saved.combatContext);setTeamLibraryOpen(false);setTeamPresetMessage('Team loaded.')}}>Load Team</button><button type="button" className={styles.ghostButton} onClick={()=>{setSelectedTeamSlot(id);setSavedTeams((current)=>({...current,[id]:{builds:team.map((build)=>build.monsterId?sanitizeBuild(build,build.monsterId):makeBuild(null)),goal,combatContext,name:saved.name||`Team ${id.replace('slot-','')}`,updatedAt:Date.now()}}));setTeamPresetMessage('Team overwritten.')}}>Overwrite</button><button type="button" className={styles.ghostButton} onClick={()=>{const name=window.prompt('Rename team',saved.name??'');if(name?.trim())setSavedTeams((current)=>({...current,[id]:{...saved,name:name.trim()}}))}}>Rename</button><button type="button" className={styles.ghostButton} onClick={()=>{if(window.confirm('Delete this saved team?'))setSavedTeams((current)=>{const next={...current};delete next[id];return next})}}>Delete</button></div></article>)}</div>
         </section>
       </div>}
     </main>
