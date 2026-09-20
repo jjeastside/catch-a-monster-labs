@@ -118,6 +118,17 @@ export function AccountMultipliers({
         ]);
     };
 
+    const toggleAllCategory = (category: AchievementCategory) => {
+        const categoryAchievements = achievementsByCategory[category];
+        const categoryIds = new Set(categoryAchievements.map(({ id }) => id));
+        const otherIds = selectedIds.filter((id) => !categoryIds.has(id));
+        const allSelected = categoryAchievements.every(({ id }) => selectedSet.has(id));
+        updateSelectedIds([
+            ...otherIds,
+            ...(!allSelected ? categoryAchievements.map(({ id }) => id) : []),
+        ]);
+    };
+
     const setIndexScore = (rawScore: string) => {
         setIndexScoreInput(rawScore);
         if (rawScore.trim() === "") return;
@@ -305,15 +316,15 @@ export function AccountMultipliers({
                 <div className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-2 sm:p-4" onMouseDown={(event) => {
                     if (event.target === event.currentTarget) setIsOpen(false);
                 }}>
-                    <section role="dialog" aria-modal="true" aria-labelledby="account-multipliers-title" className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-xl border border-[#344050] bg-[#071b2b] shadow-2xl">
-                        <header className="sticky top-0 z-20 flex items-start justify-between gap-3 border-b border-[#344050] bg-[#071b2b] px-4 py-3 sm:px-5 sm:py-4">
+                    <section role="dialog" aria-modal="true" aria-labelledby="account-multipliers-title" className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-xl border border-[#294b64] bg-[#071b2b] shadow-2xl">
+                        <header className="sticky top-0 z-20 flex items-start justify-between gap-3 border-b border-[#294b64] bg-[#071b2b] px-4 py-3 sm:px-5 sm:py-4">
                             <div>
                                 {expandedCategory && (
-                                    <button type="button" onClick={() => setExpandedCategory(null)} className="mb-2 text-xs font-bold text-[#7182ff] hover:text-white">
+                                    <button type="button" onClick={() => setExpandedCategory(null)} className="mb-2 text-xs font-bold text-[#79c9ff] hover:text-white">
                                         ← Back to account bonuses
                                     </button>
                                 )}
-                                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#7182ff]">Account Progress</p>
+                                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#79c9ff]">Account Progress</p>
                                 <h2 id="account-multipliers-title" className="mt-1 text-lg font-semibold text-[#f6f8fc]">
                                     {expandedCategory ? `${ACCOUNT_MULTIPLIER_DETAILS[expandedCategory].label} Achievements` : "Account Multipliers"}
                                 </h2>
@@ -321,7 +332,7 @@ export function AccountMultipliers({
                                     {expandedCategory ? "Select your completed achievements or enter the completed total." : "Choose a bonus category to update your account progress."}
                                 </p>
                             </div>
-                            <button ref={closeButtonRef} type="button" onClick={() => setIsOpen(false)} aria-label="Close account multipliers" className="grid size-9 shrink-0 place-items-center rounded-md border border-[#344050] bg-[#141c28] text-lg text-[#8e99ad] hover:border-[#7182ff] hover:text-[#7182ff]">×</button>
+                            <button ref={closeButtonRef} type="button" onClick={() => setIsOpen(false)} aria-label="Close account multipliers" className="grid size-9 shrink-0 place-items-center rounded-md border border-[#294b64] bg-[#0b2337] text-lg text-[#8e99ad] hover:border-[#43a1df] hover:text-[#79c9ff]">×</button>
                         </header>
 
                         <div className="space-y-4 p-3 sm:p-5">
@@ -341,7 +352,7 @@ export function AccountMultipliers({
                                             type="button"
                                             onClick={() => setExpandedCategory(card.category)}
                                             aria-expanded={isExpanded}
-                                            className={`group relative overflow-hidden rounded-2xl border-2 p-1 text-left shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition hover:-translate-y-0.5 hover:brightness-110 ${frame} ${isExpanded ? "ring-2 ring-[#7182ff]/60" : ""}`}
+                                            className={`group relative overflow-hidden rounded-2xl border-2 p-1 text-left shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition hover:-translate-y-0.5 hover:brightness-110 ${frame} ${isExpanded ? "ring-2 ring-[#43a1df]/60" : ""}`}
                                         >
                                             <span className={`relative flex min-h-28 items-center gap-3 overflow-hidden rounded-xl bg-gradient-to-r ${glow} to-[#090c10] px-4 py-3`}>
                                                 <span aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1.5px)", backgroundSize: "14px 14px" }} />
@@ -368,7 +379,7 @@ export function AccountMultipliers({
                                 })}
                             </div>
 
-                            <section className={`${expandedCategory ? "hidden" : "block"} rounded-xl border border-[#344050] bg-[#041320] p-3`}>
+                            <section className={`${expandedCategory ? "hidden" : "block"} rounded-xl border border-[#294b64] bg-[#081e30] p-3`}>
                                 <div className="mb-3 px-1">
                                     <div>
                                         <h3 className="text-sm font-black text-white">Additional Bonuses</h3>
@@ -397,7 +408,7 @@ export function AccountMultipliers({
                                                 role="checkbox"
                                                 aria-checked={isSelected}
                                                 onClick={() => toggleAchievement(achievement)}
-                                                className={`group flex min-w-0 items-center gap-3 rounded-lg border p-3 text-left transition ${isSelected ? "border-[#7182ff] bg-[#202846]" : "border-[#344050] bg-[#151923] hover:border-[#5c6a80] hover:bg-[#1a202b]"}`}
+                                                className={`group flex min-w-0 items-center gap-3 rounded-lg border p-3 text-left transition ${isSelected ? "border-[#43a1df] bg-[#123754]" : "border-[#294b64] bg-[#0b2235] hover:border-[#42647e] hover:bg-[#11314a]"}`}
                                             >
                                                 <img src={assetPath(achievementIcon)} alt="" className="size-12 shrink-0 object-contain drop-shadow-[0_3px_4px_rgba(0,0,0,0.65)]" />
                                                 <span className="min-w-0 flex-1">
@@ -407,7 +418,7 @@ export function AccountMultipliers({
                                                         {details.shortReward}
                                                     </span>
                                                 </span>
-                                                <span className={`grid size-7 shrink-0 place-items-center rounded-md border-2 text-sm font-black ${isSelected ? "border-[#3ee378] bg-[#26c965] text-[#07130b]" : "border-[#5c6a80] bg-[#041320] text-transparent"}`}>✓</span>
+                                                <span className={`grid size-7 shrink-0 place-items-center rounded-md border-2 text-sm font-black ${isSelected ? "border-[#3ee378] bg-[#26c965] text-[#07130b]" : "border-[#42647e] bg-[#081e30] text-transparent"}`}>✓</span>
                                             </button>
                                         );
                                     })}
@@ -421,8 +432,8 @@ export function AccountMultipliers({
                                 const progress = progressByCategory[category];
 
                                 return (
-                                    <section className="overflow-hidden rounded-xl border border-[#3a4353] bg-[#121722] shadow-xl">
-                                        <div className="border-b border-[#344050] bg-[#171d28] p-3 sm:p-4">
+                                    <section className="overflow-hidden rounded-xl border border-[#294b64] bg-[#091e30] shadow-xl">
+                                        <div className="border-b border-[#294b64] bg-[#0d283e] p-3 sm:p-4">
                                             <div className="min-w-0">
                                                 <div className="flex flex-wrap items-center gap-2">
                                                     <h3 className="text-sm font-black text-white">{details.label} Achievements</h3>
@@ -434,7 +445,7 @@ export function AccountMultipliers({
                                                 <p className="mt-1 text-[11px] text-[#8f9aae]">{details.description}</p>
                                             </div>
                                             <div className="mt-3 grid w-full gap-2 sm:grid-cols-2">
-                                                <label className="flex min-w-0 items-center gap-2 rounded-lg border border-[#5c6a80] bg-[#090c12] px-3 py-2">
+                                                <label className="flex min-w-0 items-center gap-2 rounded-lg border border-[#42647e] bg-[#0a2236] px-3 py-2">
                                                     <span className="shrink-0 text-[9px] font-bold uppercase tracking-wide text-[#7f8b9e]">Completed</span>
                                                     <input type="number" min={0} max={categoryAchievements.length} value={progress.completed} onChange={(event) => setCategoryCount(category, Number(event.target.value))} className="min-w-0 flex-1 bg-transparent text-right text-sm font-black text-white outline-none" aria-label={`${details.label} completed`} />
                                                     <span className="shrink-0 text-sm font-black text-[#7f8b9e]">/{categoryAchievements.length}</span>
@@ -456,14 +467,24 @@ export function AccountMultipliers({
                                                     </label>
                                                 )}
                                             </div>
-                                            <button type="button" onClick={() => setExpandedCategory(null)} className="mt-3 text-xs font-bold text-[#7182ff] hover:text-white">← Back to account bonuses</button>
+                                            {category !== "index-mania" && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => toggleAllCategory(category)}
+                                                    className="mt-3 inline-flex items-center gap-2 rounded-lg border border-[#42647e] bg-[#123754] px-3 py-2 text-xs font-bold text-[#a5dcff] transition hover:border-[#79c9ff] hover:bg-[#194765] hover:text-white"
+                                                >
+                                                    <span className="grid size-4 place-items-center rounded border border-[#79c9ff] text-[10px]">{progress.completed === categoryAchievements.length ? "✓" : ""}</span>
+                                                    {progress.completed === categoryAchievements.length ? "Clear All" : "Select All"}
+                                                </button>
+                                            )}
+                                            <button type="button" onClick={() => setExpandedCategory(null)} className="mt-3 block text-xs font-bold text-[#79c9ff] hover:text-white">← Back to account bonuses</button>
                                         </div>
                                         <div className={category === "index-mania" ? "max-h-80 overflow-y-auto" : ""}>
                                             {categoryAchievements.map((achievement) => {
                                                 const isSelected = selectedSet.has(achievement.id);
                                                 return (
-                                                    <button key={achievement.id} type="button" role="checkbox" aria-checked={isSelected} onClick={() => toggleAchievement(achievement)} className={`flex w-full items-center gap-3 border-b border-[#344050] px-4 py-3 text-left transition last:border-b-0 ${isSelected ? "bg-[#202846]" : "hover:bg-[#1b202c]"}`}>
-                                                        <span className={`grid size-7 shrink-0 place-items-center rounded-md border-2 text-sm font-black ${isSelected ? "border-[#3ee378] bg-[#26c965] text-[#07130b]" : "border-[#5c6a80] bg-[#041320] text-transparent"}`}>✓</span>
+                                                    <button key={achievement.id} type="button" role="checkbox" aria-checked={isSelected} onClick={() => toggleAchievement(achievement)} className={`flex w-full items-center gap-3 border-b border-[#294b64] px-4 py-3 text-left transition last:border-b-0 ${isSelected ? "bg-[#123754]" : "hover:bg-[#102b42]"}`}>
+                                                        <span className={`grid size-7 shrink-0 place-items-center rounded-md border-2 text-sm font-black ${isSelected ? "border-[#3ee378] bg-[#26c965] text-[#07130b]" : "border-[#42647e] bg-[#081e30] text-transparent"}`}>✓</span>
                                                         <span className="min-w-0 flex-1">
                                                             <span className="block text-sm font-bold text-[#eef1f6]">{achievement.name}</span>
                                                             <span className="mt-0.5 block text-xs text-[#7f8b9e]">{achievementGoal(achievement)}</span>
@@ -480,8 +501,8 @@ export function AccountMultipliers({
                                 );
                             })()}
 
-                            <section className={`${expandedCategory ? "hidden" : "block"} overflow-hidden rounded-2xl border-2 border-[#5a4a45] bg-[#071015] p-1 shadow-[0_12px_35px_rgba(0,0,0,0.45)]`}>
-                                <div className="rounded-xl bg-gradient-to-b from-[#0d2025] to-[#080d12] px-4 py-4 sm:px-6">
+                            <section className={`${expandedCategory ? "hidden" : "block"} overflow-hidden rounded-2xl border-2 border-[#315772] bg-[#081b2b] p-1 shadow-[0_12px_35px_rgba(0,0,0,0.45)]`}>
+                                <div className="rounded-xl bg-gradient-to-b from-[#0d2b42] to-[#071b2b] px-4 py-4 sm:px-6">
                                     <div className="mb-4 flex items-center gap-3">
                                         <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[#42505b]" />
                                         <h3 className="text-xl font-black text-white drop-shadow-[0_2px_1px_#000]">Total Bonuses</h3>
@@ -493,14 +514,14 @@ export function AccountMultipliers({
                                             <p className="text-sm font-black text-white">Damage</p>
                                             <p className="mt-3 rounded-lg border border-[#76243e] bg-[#250c15] px-2 py-1.5 text-[11px] font-bold text-[#ff7899]">{formatBonusPercent(indexProgress.damagePercent)} × {formatBonusPercent(petQuestProgress.damagePercent)} = {formatBonusPercent(bonuses.damagePercent)}</p>
                                         </div>
-                                        <div className="border-t border-[#39434b] pt-4 text-center sm:border-t-0 sm:pl-4 sm:pt-0">
+                                        <div className="border-t border-[#31536a] pt-4 text-center sm:border-t-0 sm:pl-4 sm:pt-0">
                                             <p className="flex items-center justify-center gap-2 text-2xl font-black text-[#39ef64] drop-shadow-[0_0_10px_rgba(57,239,100,0.35)]"><img src={assetPath("/account-icons/health.png")} alt="Health" className="size-9 object-contain" />+{bonuses.healthPercent}%</p>
                                             <p className="text-sm font-black text-white">Health</p>
                                             <p className="mt-3 rounded-lg border border-[#1f7438] bg-[#092314] px-2 py-1.5 text-[11px] font-bold text-[#62f383]">{formatBonusPercent(pathProgress.healthPercent)} × {formatBonusPercent(petQuestProgress.healthPercent)} = {formatBonusPercent(bonuses.healthPercent)}</p>
                                         </div>
                                     </div>
                                     {(bonuses.riftDamagePercent > 0 || bonuses.critChancePercent > 0) && (
-                                        <div className="mt-4 flex flex-wrap justify-center gap-2 border-t border-[#303b43] pt-3">
+                                        <div className="mt-4 flex flex-wrap justify-center gap-2 border-t border-[#294b64] pt-3">
                                             {bonuses.riftDamagePercent > 0 && (
                                                 <span className="flex items-center gap-1.5 rounded-lg border border-[#247899] bg-[#092634] px-2.5 py-1.5 text-[11px] font-black text-[#83e5ff]">
                                                     <img src={assetPath("/account-icons/rift-damage.png")} alt="" className="size-6 object-contain" />
@@ -519,13 +540,13 @@ export function AccountMultipliers({
                             </section>
                         </div>
 
-                        <footer className="sticky bottom-0 z-20 flex justify-between gap-3 border-t border-[#344050] bg-[#071b2b] px-5 py-4">
+                        <footer className="sticky bottom-0 z-20 flex justify-between gap-3 border-t border-[#294b64] bg-[#071b2b] px-5 py-4">
                             {expandedCategory ? (
-                                <button type="button" onClick={() => setExpandedCategory(null)} className="rounded-md px-3 py-2 text-xs font-semibold text-[#7182ff] hover:text-white">← Back</button>
+                                <button type="button" onClick={() => setExpandedCategory(null)} className="rounded-md px-3 py-2 text-xs font-semibold text-[#79c9ff] hover:text-white">← Back</button>
                             ) : (
                                 <button type="button" onClick={reset} disabled={selectedIds.length === 0} className="rounded-md px-3 py-2 text-xs font-semibold text-[#8e99ad] hover:text-[#e3e8f1] disabled:cursor-not-allowed disabled:opacity-40">Reset All</button>
                             )}
-                            <button type="button" onClick={() => setIsOpen(false)} className="rounded-md bg-[#7182ff] px-5 py-2 text-sm font-bold text-[#0b1510] hover:bg-[#8f9cff]">Done</button>
+                            <button type="button" onClick={() => setIsOpen(false)} className="rounded-md bg-[#58b6ee] px-5 py-2 text-sm font-bold text-[#0b1510] hover:bg-[#87d2ff]">Done</button>
                         </footer>
                     </section>
                 </div>
