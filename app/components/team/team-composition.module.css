@@ -2300,16 +2300,17 @@ button.emptySlot .emptySlotContent small {
 .compareQuickStats .quickTrait > span:nth-child(2) { width:22px; height:22px; flex:0 0 22px; }
 .monsterCoreStats:has(.traitStat) { grid-template-columns:repeat(3,minmax(0,1fr)); }
 
-/* Preserve monster rarity frames in team cards and inventory. */
+/* Match the two-layer portrait frame and backgrounds in MonsterOverviewCard. */
 .slotPortrait[data-rarity="Common"], .inventoryPortrait[data-rarity="Common"] { border-color:#707070; background:linear-gradient(145deg,#353535,#171717); }
 .slotPortrait[data-rarity="Uncommon"], .inventoryPortrait[data-rarity="Uncommon"] { border-color:#28a745; background:linear-gradient(145deg,#174d24,#0c2512); }
 .slotPortrait[data-rarity="Rare"], .inventoryPortrait[data-rarity="Rare"] { border-color:#299ddd; background:linear-gradient(145deg,#17486a,#0b2131); }
 .slotPortrait[data-rarity="Epic"], .inventoryPortrait[data-rarity="Epic"] { border-color:#bd45d8; background:linear-gradient(145deg,#5b1e64,#27102d); }
-.slotPortrait[data-rarity="Legendary"], .inventoryPortrait[data-rarity="Legendary"] { border-color:#ff9f43; background:linear-gradient(145deg,#6a3a12,#291608); }
-.slotPortrait[data-rarity="Mythical"], .inventoryPortrait[data-rarity="Mythical"] { border-color:transparent; background:linear-gradient(135deg,#ff3347,#ff8a1f,#ffe13b,#35e56f,#22bde8,#b43cff); box-shadow:0 0 12px rgba(124,107,255,.38); }
-.slotPortrait[data-rarity="Secret"], .inventoryPortrait[data-rarity="Secret"] { border-color:#ff7139; background:linear-gradient(145deg,#5d1714,#21130b); box-shadow:0 0 10px rgba(255,74,48,.22); }
-.slotPortrait[data-rarity="Void"], .inventoryPortrait[data-rarity="Void"] { border-color:#35e9d0; background:linear-gradient(135deg,#123c43,#101d2b); box-shadow:0 0 10px rgba(53,233,208,.24); }
-.slotPortrait[data-rarity] img, .inventoryPortrait[data-rarity] img { border-radius:inherit; background:rgba(5,15,25,.86); }
+.slotPortrait[data-rarity="Legendary"], .inventoryPortrait[data-rarity="Legendary"] { border-color:transparent; background:#f28a22; }
+.slotPortrait[data-rarity="Mythical"], .inventoryPortrait[data-rarity="Mythical"] { border-color:transparent; background:linear-gradient(to right,#ff3347,#ff8a1f,#ffe13b,#35e56f,#22bde8,#b43cff); box-shadow:0 0 12px rgba(124,107,255,.38); }
+.slotPortrait[data-rarity="Secret"], .inventoryPortrait[data-rarity="Secret"] { border-color:transparent; background:#ff2738; }
+.slotPortrait[data-rarity="Void"], .inventoryPortrait[data-rarity="Void"] { border-color:transparent; background:linear-gradient(135deg,#84ff00,#4cff8f,#00f2ff,#0096c7); }
+.portraitInner { width:100%; height:100%; min-width:0; min-height:0; display:grid; place-items:center; overflow:hidden; border-radius:inherit; background:rgba(16,20,29,.85); }
+.portraitInner img { width:100%; height:100%; object-fit:contain; background:transparent; }
 
 .useCases { display: flex; align-items: center; justify-content: space-between; gap: 20px; border: 1px solid #244b6d; border-radius: 9px; background: #07192a; padding: 8px 14px; }
 .useCases > div { display: grid; }

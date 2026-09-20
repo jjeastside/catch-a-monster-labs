@@ -7,9 +7,26 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.18",
+        date: "September 20, 2026",
+        label: "Latest",
+        changes: [
+            "Redesigned Team Builder cards to display each monster's individual Health, Damage, Total Skill DPS, and combat stats while keeping equipment controls compact and labels readable.",
+            "Reworked the owned-monster inventory to more closely match the in-game inventory, retained the Import Missing Monsters action, and fixed inventory editing and copy controls.",
+            "Moved Trait into the compact monster build summary beside Level, Rank, and Enhancement, showing its icon without a separate oversized Trait section.",
+            "Matched Team Builder monster portrait backgrounds and borders to the Calculator's rarity styling.",
+            "Fixed Team Composition monster portrait rarity backgrounds and outlines to match Calculator Results, including Secret and Mythical styling.",
+            "Corrected Team Composition skill icon lookups to use Calculator Results aliases for alternate skill variants, with element icons as a fallback when artwork is unavailable.",
+            "Added a Trait selector to Monster Compare in both Shared Settings and Custom Builds, using existing calculator Trait effects.",
+            "Aligned the Compare Trait selector with Weapon and Armor and added square rarity-backed icons, Trait names, and rarity-colored effect descriptions in the selected value and dropdown.",
+            "Restored Monster Compare's maximum level to 110 until Level 115 is available.",
+            "Restyled Account Multipliers, achievement lists, fields, checkboxes, buttons, and Total Bonuses with Cam Lab's navy-blue theme while retaining their distinct bonus colors.",
+            "Added Select All and Clear All controls for Path of Progress and Pet Quest achievements without changing other account bonus selections.",
+        ],
+    },
+    {
         version: "v1.0.17",
         date: "September 19, 2026",
-        label: "Latest",
         changes: [
             "Added Twirly, the new World Boss monster, to Cam Lab with its skills and monster data.",
             "Updated Patch Notes for Catch a Monster Update 0.49: World Boss Event and Trait Server Buffs, PvP Battle Pass, PvP Rank and Season Leaderboard Rewards, new Trait and Mythic Gear, Coilwork City achievements and quests, and code Twirly.",
