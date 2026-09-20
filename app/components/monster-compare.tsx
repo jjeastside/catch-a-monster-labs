@@ -15,7 +15,7 @@ import {
   MIN_EVOLUTION_PERCENT,
   EVOLUTION_STEP,
 } from "../lib/calculations/evolution";
-import { CURRENT_MAX_LEVEL, MIN_LEVEL } from "../lib/level-config";
+import { EXPERIMENTAL_MAX_LEVEL, MIN_LEVEL } from "../lib/level-config";
 import { formatNumber, formatStatNumber } from "../lib/format-numbers";
 import { isBestValue } from "../lib/compare-values";
 import { assetPath } from "../lib/asset-path";
@@ -669,7 +669,7 @@ function CompareBuildControls({
             aria-label="Level"
             type="number"
             min={MIN_LEVEL}
-            max={CURRENT_MAX_LEVEL}
+            max={EXPERIMENTAL_MAX_LEVEL}
             value={build.level}
             onChange={(event) =>
               update(
@@ -677,7 +677,7 @@ function CompareBuildControls({
                 Math.max(
                   MIN_LEVEL,
                   Math.min(
-                    CURRENT_MAX_LEVEL,
+                    EXPERIMENTAL_MAX_LEVEL,
                     Math.trunc(Number(event.target.value)) || MIN_LEVEL,
                   ),
                 ),
