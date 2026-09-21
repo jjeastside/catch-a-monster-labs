@@ -7,11 +7,10 @@ import { BUILD_RANK_VISUALS, EvolutionMultiplierEditor } from "../build-editor";
 import { getMonsterStatData } from "../../data/monster-stats";
 import { getSkill, getSkillDisplayName } from "../../data/skills";
 import { getMonsterPortraitStyles } from "../monster-overview-card";
-import { ARMORS, WEAPONS } from "../../data/equipments";
+import { ARMORS, WEAPONS, EQUIPMENT } from "../../data/equipments";
 import { getAvailableTraits } from "../../data/traits";
 import { TraitSelect } from "../trait-select";
 import { TraitIcon } from "../trait-icon";
-import { EquipmentSelect } from "../equipment-select";
 import { AttributeSelect } from "../attribute-select";
 import { getAttributesForGear, getAttribute } from "../../data/attributes";
 import { getAttributeSlotCount, getFixedAttributeIds } from "../../lib/calculations/attributes";
@@ -32,7 +31,7 @@ import {
   TEAM_STORAGE_KEY, INVENTORY_STORAGE_KEY, SAVED_TEAMS_STORAGE_KEY,
   ranks, mutationOptions, availableMonsters, monsterById,
   makeBuild, sanitizeBuild, defaultTeam, defaultInventory, copyMonsterId, nextCopyKey,
-  monsterDps, buildSignature, getTeamRole, effectSummaryLabel, compactBuildLabel,
+  monsterDps, getEffectiveTeamPassives, effectiveTeamHealth, buildSignature, getTeamRole, effectSummaryLabel, compactBuildLabel,
   buildForGoal, goalTitle, goalDescription, signedPercent, recommendTeams,
   type TeamGoal, type TeamCombatContext, type InventoryBuilds, type InventoryFilter, type InventorySort, type SavedTeams,
   loadTeamStorage, mergeIndexProgress,
@@ -79,7 +78,153 @@ function OverviewIcon({ kind }: { kind: OverviewIconKind }) {
   return <svg className={`${styles.overviewIcon} ${styles[`overviewIcon_${kind}`]}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[kind]}</svg>;
 }
 
+const INVENTORY_ELEMENTS = [...new Set(availableMonsters.map((monster) => monster.element))].sort();
+const INVENTORY_RARITIES = [...new Set(availableMonsters.map((monster) => monster.rarity))].sort();
+
+const combatContextLabel = (context: TeamCombatContext) => ({
+  standard: "Standard", boss: "Boss", rift: "Rift", spire: "Tower / Spire", dungeon: "Dungeon",
+})[context];
+
 const HIDDEN_MONSTERS_STORAGE_KEY = "cam-lab-team-hidden-monsters-v1";
+const OWNED_EQUIPMENT_KEY = "cam-lab-team-owned-equipment-v1";
+// A one-time migration marker prevents deliberately unequipped gear from returning
+// when an old build still has stale equipment IDs.
+const EQUIPMENT_MIGRATION_KEY = "cam-lab-team-equipment-migrated-v2";
+type OwnedEquipmentCopy = { id: string; equipmentId: string; attributeIds: string[]; equippedTo?: string };
+const equipmentRarityColors: Record<string, string> = { Rare: "#69c7ff", Epic: "#de7cff", Legendary: "#ffb15f", Mythical: "#78dfac", Secret: "#ff725c" };
+function validOwnedEquipment(value: unknown): OwnedEquipmentCopy[] {
+  if (!Array.isArray(value)) return [];
+  const used = new Set<string>();
+  return value.flatMap((entry): OwnedEquipmentCopy[] => {
+    if (!entry || typeof entry !== "object") return [];
+    const record = entry as Partial<OwnedEquipmentCopy>;
+    if (typeof record.id !== "string" || !record.id || used.has(record.id) || !EQUIPMENT.some((gear) => gear.id === record.equipmentId)) return [];
+    used.add(record.id);
+    const gear = EQUIPMENT.find((item) => item.id === record.equipmentId)!;
+    const choices = getAttributesForGear(gear.type);
+    const usedAttributeIds = new Set<string>();
+    const attributeIds = Array.from({ length: getAttributeSlotCount(gear.rarity) }, (_, slot) => {
+      const id = Array.isArray(record.attributeIds) ? record.attributeIds[slot] : null;
+      if (typeof id !== "string" || usedAttributeIds.has(id) || !choices.some((attr) => attr.id === id)) return "";
+      usedAttributeIds.add(id);
+      return id;
+    });
+    return [{ id: record.id, equipmentId: gear.id, attributeIds, equippedTo: typeof record.equippedTo === "string" ? record.equippedTo : undefined }];
+  });
+}
+// Inventory monster IDs are stable across the team and inventory editors. Unowned
+// team builds use a slot ID until they are saved to the inventory.
+const inventoryOwner = (copyId: string) => `inventory:${copyId}`;
+const teamOwner = (build: Build, index: number) => build.inventoryCopyId
+  ? inventoryOwner(build.inventoryCopyId) : `team:${index}`;
+
+function withOwnedGear(build: Build, owner: string, copies: OwnedEquipmentCopy[]): Build {
+  // A saved build is not proof of ownership: only an assigned physical copy is.
+  // Clearing both fields first prevents old build IDs from resurrecting unequipped gear.
+  let next: Build = { ...build, weaponId: null, weaponAttributeIds: [], armorId: null, armorAttributeIds: [] };
+  for (const copy of copies) {
+    if (copy.equippedTo !== owner) continue;
+    const gear = EQUIPMENT.find((item) => item.id === copy.equipmentId);
+    if (!gear) continue;
+    next = gear.type === "weapon"
+      ? { ...next, weaponId: gear.id, weaponAttributeIds: [...copy.attributeIds] }
+      : { ...next, armorId: gear.id, armorAttributeIds: [...copy.attributeIds] };
+  }
+  return next;
+}
+
+// Older releases stored gear on monster builds without an owned-copy record.
+// Preserve those selections exactly once, rather than dropping them on hydration.
+function migrateLegacyEquipment(
+  copies: OwnedEquipmentCopy[], team: Build[], inventory: InventoryBuilds,
+): OwnedEquipmentCopy[] {
+  const result = copies.map((copy) => ({ ...copy, attributeIds: [...copy.attributeIds] }));
+  const entries = [
+    ...team.map((build, index) => [teamOwner(build, index), build] as const),
+    ...Object.entries(inventory).map(([id, build]) => [inventoryOwner(id), build] as const),
+  ];
+  const processed = new Set<string>();
+  for (const [owner, build] of entries) {
+    if (!build.monsterId || processed.has(owner)) continue;
+    processed.add(owner);
+    for (const type of ["weapon", "armor"] as const) {
+      const gearId = type === "weapon" ? build.weaponId : build.armorId;
+      const attributes = type === "weapon" ? build.weaponAttributeIds : build.armorAttributeIds;
+      if (!gearId || result.some((copy) => copy.equippedTo === owner && EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type === type)) continue;
+      // Team and Inventory often have two legacy snapshots of the same monster.
+      // Do not create two physical copies of the same item when the team already
+      // references that monster's old inventory build.
+      if (owner.startsWith("inventory:") && team.some((member) =>
+        member.monsterId === build.monsterId && !member.inventoryCopyId &&
+        (type === "weapon" ? member.weaponId : member.armorId) === gearId &&
+        JSON.stringify(type === "weapon" ? member.weaponAttributeIds : member.armorAttributeIds) === JSON.stringify(attributes))) continue;
+      const available = result.filter((copy) => copy.equipmentId === gearId && !copy.equippedTo);
+      const matching = available.find((copy) => JSON.stringify(copy.attributeIds.filter(Boolean)) === JSON.stringify((attributes ?? []).filter(Boolean)));
+      const candidate = matching ?? (available.length === 1 ? available[0] : undefined);
+      if (candidate) candidate.equippedTo = owner;
+      else if (EQUIPMENT.some((gear) => gear.id === gearId)) {
+        // There may be no owned-equipment record at all in pre-inventory saves.
+        // Create the missing physical copy instead of wiping the saved gear.
+        result.push({ id: crypto.randomUUID(), equipmentId: gearId, attributeIds: [...(attributes ?? [])], equippedTo: owner });
+      }
+    }
+  }
+  return result;
+}
+
+// Old builds can change from a temporary team-slot identity to a permanent
+// inventory-copy identity without transferring their previously assigned gear.
+function normalizeEquipmentOwners(copies: OwnedEquipmentCopy[], team: Build[]): OwnedEquipmentCopy[] {
+  const claimed = new Set<string>();
+  return copies.map((copy) => {
+    const slot = /^team:([0-2])$/.exec(copy.equippedTo ?? "");
+    if (!slot) return copy;
+    const build = team[Number(slot[1])];
+    if (!build?.monsterId) return { ...copy, equippedTo: undefined };
+    if (!build.inventoryCopyId) return copy;
+    const owner = inventoryOwner(build.inventoryCopyId);
+    const type = EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type;
+    if (!type) return copy;
+    const key = `${owner}:${type}`;
+    const alreadyAssigned = copies.some((other) => other.equippedTo === owner && EQUIPMENT.find((gear) => gear.id === other.equipmentId)?.type === type);
+    if (alreadyAssigned || claimed.has(key)) return { ...copy, equippedTo: undefined };
+    claimed.add(key);
+    return { ...copy, equippedTo: owner };
+  });
+}
+
+function OwnedGearSelect({ label, type, owner, copies, onSelect }: {
+  label: string; type: "weapon" | "armor"; owner: string;
+  copies: OwnedEquipmentCopy[]; onSelect: (copyId: string | null) => void;
+}) {
+  const panel = useRef<HTMLDetailsElement>(null);
+  const assigned = copies.find((copy) => copy.equippedTo === owner && EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type === type);
+  const current = assigned ? EQUIPMENT.find((gear) => gear.id === assigned.equipmentId) : null;
+  const choose = (copyId: string | null) => { onSelect(copyId); if (panel.current) panel.current.open = false; };
+  return <details ref={panel} className={styles.ownedGearSelect}>
+    <summary><span className={styles.ownedGearLabel}>{label}</span><span className={styles.ownedGearCurrent}>
+      {current ? <img src={assetPath(`/gear/${current.id}.png`)} alt="" style={{ borderColor: equipmentRarityColors[current.rarity] }} /> : null}
+      <span>{current?.name ?? `No ${label.toLowerCase()}`}
+        <small>{current ? `+${current.percentage}% ${type === "weapon" ? "Damage" : "Health"}${getAttributeSlotCount(current.rarity) ? ` · ${assigned!.attributeIds.filter(Boolean).map((id) => getAttribute(id)?.name ?? id).join(", ") || "Attributes not selected"}` : ""}` : "Unequipped"}</small></span>
+    </span></summary>
+    <div className={styles.ownedGearOptions}>
+      <button type="button" onClick={() => choose(null)}>Unequip {label}</button>
+      {copies.filter((copy) => EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type === type).map((copy) => {
+        const gear = EQUIPMENT.find((item) => item.id === copy.equipmentId)!;
+        const unavailable = Boolean(copy.equippedTo && copy.equippedTo !== owner);
+        return <button type="button" key={copy.id} disabled={unavailable} onClick={() => choose(copy.id)} className={copy.id === assigned?.id ? styles.ownedGearActive : ""}>
+          <img src={assetPath(`/gear/${gear.id}.png`)} alt="" style={{ borderColor: equipmentRarityColors[gear.rarity] }} />
+          <span><strong style={{ color: equipmentRarityColors[gear.rarity] }}>{gear.name} · +{gear.percentage}% {type === "weapon" ? "Damage" : "Health"}</strong>
+          {getAttributeSlotCount(gear.rarity) ? <small>{copy.attributeIds.filter(Boolean).map((id) => getAttribute(id)?.name ?? id).join(", ") || "Attributes not selected"}</small> : null}
+          {copy.equippedTo ? <small>{unavailable ? `Equipped to ${copy.equippedTo.startsWith("inventory:") ? copy.equippedTo.slice(10) : `team slot ${Number(copy.equippedTo.slice(5)) + 1}`}` : "Equipped here"}</small> : null}</span>
+        </button>;
+      })}
+      {!copies.some((copy) => EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type === type) ? <small>Add {label.toLowerCase()} in the Equipment inventory first.</small> : null}
+    </div>
+  </details>;
+}
+
+const INVENTORY_FAVORITES_KEY = "cam-lab-team-inventory-favorites-v1";
 
 const teamMutationFamilies = [
   { id: "huge", xId: "huge-x", label: "Huge", icon: "/icons/Huge.png", xIcon: "/icons/huge-x.png", accent: "#e954d8" },
@@ -102,6 +247,18 @@ export function TeamComposition() {
   const [combatContext, setCombatContext] = useState<TeamCombatContext>("standard");
   const [inventoryFilter, setInventoryFilter] = useState<InventoryFilter>("all");
   const [inventorySort, setInventorySort] = useState<InventorySort>("name");
+  const [inventoryFilterPanel, setInventoryFilterPanel] = useState<"sort" | "browse" | null>(null);
+  const [inventoryElement, setInventoryElement] = useState("all");
+  const [inventoryRarity, setInventoryRarity] = useState("all");
+  const [ownedEquipment, setOwnedEquipment] = useState<OwnedEquipmentCopy[]>([]);
+  const [equipmentSearch, setEquipmentSearch] = useState("");
+  const [equipmentFilter, setEquipmentFilter] = useState<"all" | "weapon" | "armor">("all");
+  const [equipmentToAdd, setEquipmentToAdd] = useState("");
+  const [addGearMenuOpen, setAddGearMenuOpen] = useState(false);
+  const [editingEquipmentId, setEditingEquipmentId] = useState<string | null>(null);
+  const [inventoryTab, setInventoryTab] = useState<"monsters" | "equipment" | "items">("monsters");
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [favoriteMonsterIds, setFavoriteMonsterIds] = useState<string[]>([]);
   const [editingInventoryId, setEditingInventoryId] = useState<string | null>(null);
   const [inventoryMessage, setInventoryMessage] = useState<string | null>(null);
   const [savedTeams, setSavedTeams] = useState<SavedTeams>({});
@@ -111,6 +268,7 @@ export function TeamComposition() {
   const [teamSaveName, setTeamSaveName] = useState("");
   const [showRecommendations, setShowRecommendations] = useState(true);
   const [recommendationMode, setRecommendationMode] = useState<"team" | "improve">("team");
+  const [improvementScope, setImprovementScope] = useState<"team" | "all">("team");
   const [editingTeamSlot, setEditingTeamSlot] = useState<number | null>(null);
   const [teamSearch, setTeamSearch] = useState("");
   const [replacingTeamSlot, setReplacingTeamSlot] = useState<number | null>(null);
@@ -119,6 +277,19 @@ export function TeamComposition() {
   const [showHiddenMonsters, setShowHiddenMonsters] = useState(false);
   const [analysisRun, setAnalysisRun] = useState(0);
 
+  useEffect(() => {
+    try {
+      const value = JSON.parse(localStorage.getItem(INVENTORY_FAVORITES_KEY) ?? "[]");
+      if (Array.isArray(value)) setFavoriteMonsterIds(value.filter((id): id is string => typeof id === "string"));
+    } catch { /* Ignore malformed optional UI preferences. */ }
+  }, []);
+
+  const toggleInventoryFavorite = (id: string) => setFavoriteMonsterIds((current) => {
+    const next = current.includes(id) ? current.filter((value) => value !== id) : [...current, id];
+    try { localStorage.setItem(INVENTORY_FAVORITES_KEY, JSON.stringify(next)); } catch { /* Browsing still works without storage. */ }
+    return next;
+  });
+
   useCompareAccount(accountBuild.accountMultipliers, setAccountBuild);
 
   useEffect(() => {
@@ -126,10 +297,52 @@ export function TeamComposition() {
       // Access localStorage lazily so browsers which deny access are handled too.
       const restored = loadTeamStorage({ getItem: (key) => window.localStorage.getItem(key) });
       blockedStorageKeys.current = new Set(restored.blockedKeys);
-      setTeam(restored.team);
+      // Restore equipment before exposing the team: assigned copies are authoritative
+      // and their individual attribute slots must survive a refresh.
+      let restoredEquipment: OwnedEquipmentCopy[] = [];
+      let legacyEquipmentFormat = false;
+      try {
+        const rawEquipment = window.localStorage.getItem(OWNED_EQUIPMENT_KEY);
+        const parsedEquipment: unknown = rawEquipment === null ? [] : JSON.parse(rawEquipment);
+        if (!Array.isArray(parsedEquipment)) throw new Error("Invalid owned equipment");
+        restoredEquipment = validOwnedEquipment(parsedEquipment);
+        // Do not replace an unrecognized inventory with an empty one.
+        if (restoredEquipment.length !== parsedEquipment.length) throw new Error("Unrecognized owned equipment copies");
+        legacyEquipmentFormat = !window.localStorage.getItem(EQUIPMENT_MIGRATION_KEY) && restoredEquipment.length === 0;
+        // A backup of pre-migration records is useful if a player needs to recover
+        // an old save. Never overwrite an existing backup.
+        if (legacyEquipmentFormat) {
+          if (rawEquipment !== null && !window.localStorage.getItem(`${OWNED_EQUIPMENT_KEY}-backup`)) {
+            window.localStorage.setItem(`${OWNED_EQUIPMENT_KEY}-backup`, rawEquipment);
+          }
+        }
+      } catch {
+        blockedStorageKeys.current.add(OWNED_EQUIPMENT_KEY);
+        setStorageError("Saved equipment could not be read. It has not been overwritten; repair or export your browser data before changing equipment.");
+      }
+      if (!blockedStorageKeys.current.has(OWNED_EQUIPMENT_KEY)) {
+        if (legacyEquipmentFormat) restoredEquipment = migrateLegacyEquipment(restoredEquipment, restored.team, restored.inventory);
+        restoredEquipment = normalizeEquipmentOwners(restoredEquipment, restored.team);
+        if (legacyEquipmentFormat) {
+          try {
+            // Commit the migrated copies BEFORE marking migration complete. If
+            // the page reloads before React effects flush, the gear survives.
+            window.localStorage.setItem(OWNED_EQUIPMENT_KEY, JSON.stringify(restoredEquipment));
+            window.localStorage.setItem(EQUIPMENT_MIGRATION_KEY, "1");
+          } catch {
+            blockedStorageKeys.current.add(OWNED_EQUIPMENT_KEY);
+            setStorageError("Legacy equipment could not be migrated safely. Original browser data was not overwritten.");
+          }
+        }
+      }
+      setOwnedEquipment(restoredEquipment);
+      setTeam(restored.team.map((build, index) => build.monsterId && !blockedStorageKeys.current.has(OWNED_EQUIPMENT_KEY)
+        ? withOwnedGear(build, teamOwner(build, index), restoredEquipment) : build));
       setGoal(restored.goal);
-      setCombatContext(restored.combatContext);
-      setInventoryBuilds(restored.inventory);
+      setCombatContext(restored.combatContext ?? "standard");
+      setInventoryBuilds(Object.fromEntries(Object.entries(restored.inventory).map(([copyId, build]) => [
+        copyId, blockedStorageKeys.current.has(OWNED_EQUIPMENT_KEY) ? build : withOwnedGear(build, inventoryOwner(copyId), restoredEquipment),
+      ])));
       setSavedTeams(restored.presets);
       try {
         const parsed: unknown = JSON.parse(window.localStorage.getItem(HIDDEN_MONSTERS_STORAGE_KEY) ?? "[]");
@@ -161,6 +374,15 @@ export function TeamComposition() {
       queueMicrotask(() => setStorageError("Browser storage is unavailable or full. Your latest changes have not been saved."));
     }
   }, [storageReady, inventoryBuilds]);
+
+  useEffect(() => {
+    if (!storageReady || blockedStorageKeys.current.has(OWNED_EQUIPMENT_KEY)) return;
+    try {
+      const snapshot = JSON.stringify(ownedEquipment);
+      localStorage.setItem(OWNED_EQUIPMENT_KEY, snapshot);
+      if (localStorage.getItem(OWNED_EQUIPMENT_KEY) !== snapshot) throw new Error("Equipment save was not retained");
+    } catch { queueMicrotask(() => setStorageError("Equipment could not be saved to browser storage. Check browser storage permissions and available space.")); }
+  }, [storageReady, ownedEquipment]);
 
   useEffect(() => {
     if (!storageReady || blockedStorageKeys.current.has(SAVED_TEAMS_STORAGE_KEY)) return;
@@ -227,17 +449,18 @@ export function TeamComposition() {
       .flatMap((candidate) => (candidate.monsterId ? [candidate.monsterId] : []));
 
     const build = buildForGoal({
-      ...savedBuild,
+      ...withOwnedGear(savedBuild, teamOwner(savedBuild, index), ownedEquipment),
       accountMultipliers: accountBuild.accountMultipliers,
       teammateMonsterIds: [teammateIds[0] ?? null, teammateIds[1] ?? null],
       evolutionPercent: monster.isEvolved ? savedBuild.evolutionPercent : 100,
     }, combatContext);
-    const stats = calculateStats(getMonsterStatData(monster.id), build, monster.passives ?? []);
+    const effectivePassives = getEffectiveTeamPassives(monster, build);
+    const stats = calculateStats(getMonsterStatData(monster.id), build, effectivePassives);
     const skillPreviews = stats
       ? monster.skillIds.flatMap((skillId) => {
           const skill = getSkill(skillId);
           if (!skill) return [];
-          const summary = calculateSkillSummary(monster, skill, stats, build, monster.passives ?? []);
+          const summary = calculateSkillSummary(monster, skill, stats, build, effectivePassives);
           const supportEffects = (skill.statusEffects ?? []).filter(
             (effect) => effect.target === "Team" || effect.type === "healing" || effect.type === "shield" || effect.type === "vulnerability" || effect.type === "damageDecrease" || effect.type === "damageReduction" || effect.type === "stun" || effect.type === "taunt",
           );
@@ -267,9 +490,10 @@ export function TeamComposition() {
       health: result.health + (item.stats?.health ?? 0),
       damage: result.damage + (item.stats?.damage ?? 0),
       dps: result.dps + item.dps,
+      effectiveHealth: result.effectiveHealth + (item.monster && item.stats ? effectiveTeamHealth(item.monster, item.build, item.stats.health) : 0),
       monsters: result.monsters + (item.monster ? 1 : 0),
     }),
-    { health: 0, damage: 0, dps: 0, monsters: 0 },
+    { health: 0, damage: 0, dps: 0, effectiveHealth: 0, monsters: 0 },
   );
 
   const filteredInventory = useMemo(() => {
@@ -300,6 +524,9 @@ export function TeamComposition() {
         if (inventoryFilter === "owned" && !owned) return false;
         if (inventoryFilter === "unowned" && owned) return false;
         if (inventoryFilter === "team" && !teamIds.includes(monster.id)) return false;
+        if (inventoryElement !== "all" && monster.element !== inventoryElement) return false;
+        if (inventoryRarity !== "all" && monster.rarity !== inventoryRarity) return false;
+        if (favoritesOnly && !favoriteMonsterIds.includes(monster.id)) return false;
         return true;
       })
       .sort((a, b) => {
@@ -309,66 +536,305 @@ export function TeamComposition() {
         if (inventorySort === "health") return getSavedStats(b).health - getSavedStats(a).health || a.name.localeCompare(b.name);
         return a.name.localeCompare(b.name);
       });
-  }, [search, inventoryFilter, inventorySort, inventoryBuilds, accountBuild.accountMultipliers, teamIds, hiddenMonsterIds, showHiddenMonsters, ownedIds]);
+  }, [search, inventoryFilter, inventorySort, inventoryElement, inventoryRarity, favoritesOnly, favoriteMonsterIds, inventoryBuilds, accountBuild.accountMultipliers, teamIds, hiddenMonsterIds, showHiddenMonsters, ownedIds]);
 
-  const recommendation = useMemo(
-    () => recommendTeams(Object.fromEntries(Object.entries(inventoryBuilds)
-      .filter(([copyId]) => !hiddenMonsterIds.includes(copyMonsterId(copyId)))), accountBuild.accountMultipliers, goal, combatContext),
-    [inventoryBuilds, accountBuild.accountMultipliers, goal, combatContext, hiddenMonsterIds],
+  const activeInventoryFilters = Number(inventoryFilter !== "all") + Number(favoritesOnly)
+    + Number(inventoryElement !== "all") + Number(inventoryRarity !== "all");
+  const clearInventoryFilters = () => {
+    setInventoryFilter("all");
+    setFavoritesOnly(false);
+    setInventoryElement("all");
+    setInventoryRarity("all");
+  };
+
+  // Compare individual gear copies with their real saved attributes, using the
+  // same contextual calculator as the build editor. Never treat a DB entry as owned.
+  const equipmentPreview = useMemo(() => {
+    const assess = (monster: Monster, saved: Build) => {
+      const contextBuild = buildForGoal({ ...saved, accountMultipliers: accountBuild.accountMultipliers,
+        teammateMonsterIds: [null, null], evolutionPercent: monster.isEvolved ? saved.evolutionPercent : 100 }, combatContext);
+      const data = getMonsterStatData(monster.id);
+      const stats = data ? calculateStats(data, contextBuild, monster.passives ?? []) : null;
+      return { dps: monsterDps(monster, contextBuild), health: effectiveTeamHealth(monster, contextBuild, stats?.health ?? 0) };
+    };
+    const score = (dps: number, health: number) => goal === "damage" ? dps
+      : goal === "survivability" ? health * 0.8 + dps * 0.2
+      : goal === "support" ? dps * 0.45 + health * 0.55 : dps * 0.6 + health * 0.4;
+    const withCopy = (build: Build, copy: OwnedEquipmentCopy) => {
+      const gear = EQUIPMENT.find((item) => item.id === copy.equipmentId)!;
+      return gear.type === "weapon" ? { ...build, weaponId: gear.id, weaponAttributeIds: [...copy.attributeIds] }
+        : { ...build, armorId: gear.id, armorAttributeIds: [...copy.attributeIds] };
+    };
+    const baseline = (build: Build, type: "weapon" | "armor") => type === "weapon"
+      ? { ...build, weaponId: null, weaponAttributeIds: [] }
+      : { ...build, armorId: null, armorAttributeIds: [] };
+    return { assess, score, withCopy, baseline };
+  }, [accountBuild.accountMultipliers, combatContext, goal]);
+
+  // The first pass allows each candidate to be evaluated with the best copy of
+  // each gear type. The final three-member pass below resolves copy conflicts.
+  const optimizedCandidates = useMemo(() => Object.fromEntries(Object.entries(inventoryBuilds)
+    .filter(([copyId]) => !hiddenMonsterIds.includes(copyMonsterId(copyId)))
+    .map(([copyId, saved]) => {
+      const monster = monsterById.get(copyMonsterId(copyId));
+      if (!monster) return [copyId, saved];
+      let candidate = saved;
+      for (const type of ["weapon", "armor"] as const) {
+        const initial = equipmentPreview.baseline(candidate, type);
+        let best = initial;
+        const baseStats = equipmentPreview.assess(monster, initial);
+        let highest = equipmentPreview.score(1, 1);
+        for (const copy of ownedEquipment) {
+          if (EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type !== type) continue;
+          const trial = equipmentPreview.withCopy(initial, copy);
+          const metrics = equipmentPreview.assess(monster, trial);
+          const value = equipmentPreview.score(metrics.dps / Math.max(1, baseStats.dps), metrics.health / Math.max(1, baseStats.health));
+          if (value > highest) { highest = value; best = trial; }
+        }
+        // Do not strip legacy gear from pre-existing saved builds when no owned
+        // copy is available. This is an estimate, not an inventory migration.
+        candidate = best === initial && !ownedEquipment.some((copy) => EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type === type)
+          ? candidate : best;
+      }
+      return [copyId, candidate];
+    })), [inventoryBuilds, hiddenMonsterIds, ownedEquipment, equipmentPreview]);
+
+  const preliminaryRecommendation = useMemo(
+    () => recommendTeams(optimizedCandidates, accountBuild.accountMultipliers, goal, combatContext),
+    [optimizedCandidates, accountBuild.accountMultipliers, goal, combatContext],
   );
 
-  // Compare attainable, single-step upgrades of owned copies only. This is a
-  // stat-based focus list, not a claim about upgrade costs or simulated combat.
+  // Allocate each physical copy only once across the suggested team. Reassigning
+  // an equipped copy is permitted as a recommendation, not an automatic mutation.
+  const gearRecommendation = useMemo(() => {
+    if (!preliminaryRecommendation) return null;
+    const members = preliminaryRecommendation.members;
+    const builds = members.map(({ build }) => {
+      let base = { ...build };
+      for (const type of ["weapon", "armor"] as const) {
+        if (ownedEquipment.some((copy) => EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type === type))
+          base = equipmentPreview.baseline(base, type);
+      }
+      return base;
+    });
+    const assignments: Array<{ memberIndex: number; copy: OwnedEquipmentCopy; gain: number; from?: string }> = [];
+    const used = new Set<string>();
+    for (const type of ["weapon", "armor"] as const) {
+      // Optimize the weighted incremental benefit across all three members.
+      const candidates: Array<{ memberIndex: number; copy: OwnedEquipmentCopy; gain: number }> = [];
+      members.forEach(({ monster }, memberIndex) => {
+        const base = equipmentPreview.baseline(builds[memberIndex], type);
+        const before = equipmentPreview.assess(monster, base);
+        ownedEquipment.forEach((copy) => {
+          if (EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type !== type) return;
+          const after = equipmentPreview.assess(monster, equipmentPreview.withCopy(base, copy));
+          const gain = equipmentPreview.score(after.dps / Math.max(1, before.dps), after.health / Math.max(1, before.health)) - equipmentPreview.score(1, 1);
+          candidates.push({ memberIndex, copy, gain });
+        });
+      });
+      candidates.sort((a, b) => b.gain - a.gain);
+      const assignedMembers = new Set<number>();
+      for (const candidate of candidates) {
+        if (candidate.gain <= 0 || assignedMembers.has(candidate.memberIndex) || used.has(candidate.copy.id)) continue;
+        used.add(candidate.copy.id);
+        assignedMembers.add(candidate.memberIndex);
+        builds[candidate.memberIndex] = equipmentPreview.withCopy(builds[candidate.memberIndex], candidate.copy);
+        assignments.push({ ...candidate, from: candidate.copy.equippedTo });
+      }
+    }
+    return { builds, assignments };
+  }, [preliminaryRecommendation, ownedEquipment, equipmentPreview]);
+
+  const recommendation = useMemo(() => {
+    if (!preliminaryRecommendation || !gearRecommendation) return preliminaryRecommendation;
+    const members = preliminaryRecommendation.members.map((member, index) => {
+      const build = gearRecommendation.builds[index];
+      const contextual = buildForGoal({ ...build,
+        teammateMonsterIds: preliminaryRecommendation.members.filter((_, i) => i !== index).map((other) => other.monster.id).slice(0, 2) as [string, string],
+      }, combatContext);
+      const data = getMonsterStatData(member.monster.id);
+      const stats = data ? calculateStats(data, contextual, getEffectiveTeamPassives(member.monster, contextual)) : null;
+      return { ...member, build, dps: monsterDps(member.monster, contextual), health: stats?.health ?? 0,
+        effectiveHealth: effectiveTeamHealth(member.monster, contextual, stats?.health ?? 0), damage: stats?.damage ?? 0 };
+    });
+    return { ...preliminaryRecommendation, members,
+      totalDps: members.reduce((sum, member) => sum + member.dps, 0),
+      totalHealth: members.reduce((sum, member) => sum + member.health, 0),
+      totalEffectiveHealth: members.reduce((sum, member) => sum + member.effectiveHealth, 0) };
+  }, [preliminaryRecommendation, gearRecommendation, combatContext]);
+
+  // Improvement previews compare actual stats, not percentages relative to a
+  // level-one baseline. Only assigned team members are shown by default; the
+  // player can opt into the rest of their owned monster inventory.
   const improvementTargets = useMemo(() => {
     const selectedCopies = new Set(recommendation?.members.map((member) => member.build.inventoryCopyId ?? member.monster.id) ?? []);
-    const candidates = Object.entries(inventoryBuilds).flatMap(([copyId, saved]) => {
+    // Scale dissimilar stats against team totals so an HP point and a DPS
+    // point do not receive the same arbitrary weight. The numerator is the
+    // absolute improvement, never the percent growth of a tiny starter stat.
+    const referenceDps = Math.max(1, recommendation?.totalDps ?? 0);
+    const referenceHealth = Math.max(1, recommendation?.totalEffectiveHealth ?? 0);
+    const referenceDamage = Math.max(1, recommendation?.members.reduce((sum, member) => sum + member.damage, 0) ?? 0);
+    const candidates = Object.entries(inventoryBuilds).flatMap(([copyId, rawSaved]) => {
+      const saved = withOwnedGear(rawSaved, inventoryOwner(copyId), ownedEquipment);
       const monster = monsterById.get(copyMonsterId(copyId));
-      if (!monster || hiddenMonsterIds.includes(monster.id)) return [];
+      if (!monster || hiddenMonsterIds.includes(monster.id) ||
+        (improvementScope === "team" && selectedCopies.size > 0 && !selectedCopies.has(copyId))) return [];
       const evaluate = (build: Build) => {
         const contextual = buildForGoal({ ...build, accountMultipliers: accountBuild.accountMultipliers, teammateMonsterIds: [null, null], evolutionPercent: monster.isEvolved ? build.evolutionPercent : 100 }, combatContext);
         const statData = getMonsterStatData(monster.id);
         const stats = statData ? calculateStats(statData, contextual, monster.passives ?? []) : null;
-        return { dps: monsterDps(monster, contextual), health: stats?.health ?? 0 };
+        return { dps: monsterDps(monster, contextual), damage: stats?.damage ?? 0, health: stats?.health ?? 0,
+          effectiveHealth: effectiveTeamHealth(monster, contextual, stats?.health ?? 0) };
       };
       const before = evaluate(saved);
-      const upgrades: Array<{ label: string; build: Build }> = [];
-      if (saved.level < CURRENT_MAX_LEVEL) upgrades.push({ label: `Level ${saved.level} → ${Math.min(CURRENT_MAX_LEVEL, saved.level + 10)}`, build: { ...saved, level: Math.min(CURRENT_MAX_LEVEL, saved.level + 10) } });
-      const nextRank = ranks.indexOf(saved.rank ?? "E") + 1;
-      if (nextRank > 0 && nextRank < ranks.length) upgrades.push({ label: `Rank ${saved.rank ?? "E"} → ${ranks[nextRank]}`, build: { ...saved, rank: ranks[nextRank] } });
-      if (saved.enhancement < 10) upgrades.push({ label: `Enhancement +${saved.enhancement} → +${saved.enhancement + 1}`, build: { ...saved, enhancement: saved.enhancement + 1 } });
-      if (!upgrades.length) return [];
-      const options = upgrades.map(({ label, build }) => {
+      type Upgrade = { label: string; category: string; build: Build; hypothetical?: boolean };
+      const upgrades: Upgrade[] = [];
+      if (saved.level < CURRENT_MAX_LEVEL) upgrades.push({ category: "Level", label: `Level ${saved.level} → ${CURRENT_MAX_LEVEL}`, build: { ...saved, level: CURRENT_MAX_LEVEL } });
+      if (ranks.indexOf(saved.rank ?? "E") < ranks.indexOf("S")) upgrades.push({ category: "Rank", label: `Rank ${saved.rank ?? "E"} → S`, build: { ...saved, rank: "S" } });
+      if (saved.enhancement < 10) upgrades.push({ category: "Enhancement", label: `Enhancement +${saved.enhancement} → +10`, build: { ...saved, enhancement: 10 } });
+      for (const family of teamMutationFamilies) {
+        if (saved.mutations.includes(family.xId)) continue;
+        const mutations = saved.mutations.filter((id) => id !== family.id && id !== family.xId);
+        upgrades.push({ category: "Mutation", label: `${saved.mutations.includes(family.id) ? "Upgrade" : "Add"} ${family.label} X`, build: { ...saved, mutations: [...mutations, family.xId] } });
+      }
+      for (const copy of ownedEquipment) {
+        const gear = EQUIPMENT.find((item) => item.id === copy.equipmentId);
+        if (!gear) continue;
+        const type = gear.type;
+        const current = ownedEquipment.find((item) => item.equippedTo === inventoryOwner(copyId)
+          && EQUIPMENT.find((entry) => entry.id === item.equipmentId)?.type === type);
+        if (current?.id === copy.id) continue;
+        upgrades.push({ category: type === "weapon" ? "Weapon" : "Armor",
+          label: `${copy.equippedTo && copy.equippedTo !== inventoryOwner(copyId) ? "Reassign" : "Equip owned"} ${gear.name} · ${copy.id.slice(-6)}`,
+          build: equipmentPreview.withCopy(saved, copy) });
+      }
+      for (const gear of EQUIPMENT) {
+        if (ownedEquipment.some((copy) => copy.equipmentId === gear.id) ||
+          (gear.type === "weapon" ? saved.weaponId : saved.armorId) === gear.id) continue;
+        upgrades.push({ category: gear.type === "weapon" ? "Weapon to acquire" : "Armor to acquire",
+          label: `Obtain ${gear.name}`, hypothetical: true,
+          build: gear.type === "weapon" ? { ...saved, weaponId: gear.id, weaponAttributeIds: [] }
+            : { ...saved, armorId: gear.id, armorAttributeIds: [] } });
+      }
+      const options = upgrades.flatMap(({ label, category, build, hypothetical }) => {
         const after = evaluate(build);
-        const dpsGain = before.dps > 0 ? (after.dps - before.dps) / before.dps : 0;
-        const healthGain = before.health > 0 ? (after.health - before.health) / before.health : 0;
-        const weightedGain = goal === "damage" ? dpsGain : goal === "survivability" ? healthGain * .8 + dpsGain * .2 : goal === "support" ? dpsGain * .45 + healthGain * .55 : dpsGain * .6 + healthGain * .4;
-        return { label, dpsGain, healthGain, weightedGain };
+        const dpsGain = after.dps - before.dps;
+        const damageGain = after.damage - before.damage;
+        const healthGain = after.health - before.health;
+        const dpsScore = dpsGain / referenceDps;
+        const damageScore = damageGain / referenceDamage;
+        const healthScore = (after.effectiveHealth - before.effectiveHealth) / referenceHealth;
+        const weightedGain = goal === "damage" ? dpsScore * .9 + damageScore * .1
+          : goal === "survivability" ? healthScore * .8 + dpsScore * .2
+          : goal === "support" ? dpsScore * .45 + healthScore * .55
+          : dpsScore * .6 + healthScore * .4;
+        return weightedGain > 0.0000001
+          ? [{ label, category, hypothetical, before, after, dpsGain, damageGain, healthGain, weightedGain }] : [];
       }).sort((a, b) => b.weightedGain - a.weightedGain);
-      const best = options[0];
-      return [{ copyId, monster, saved, before, best, options, selected: selectedCopies.has(copyId) }];
+      if (!options.length) return [];
+      // Keep the strongest option for each type; don't show several mutually
+      // exclusive weapons as though their gains can all be combined.
+      const perCategory = options.filter((option, index) => options.findIndex((item) => item.category === option.category) === index);
+      return [{ copyId, monster, saved, best: perCategory[0], options: perCategory, selected: selectedCopies.has(copyId) }];
     });
-    // Favor upgrades for the suggested composition, but show other owned
-    // monsters too so players can decide whether to develop an alternative.
-    return candidates.sort((a, b) => (Number(b.selected) - Number(a.selected)) || b.best.weightedGain - a.best.weightedGain).slice(0, 8);
-  }, [inventoryBuilds, accountBuild.accountMultipliers, combatContext, goal, hiddenMonsterIds, recommendation]);
+    return candidates.sort((a, b) => (Number(b.selected) - Number(a.selected)) || b.best.weightedGain - a.best.weightedGain || b.best.after.dps - a.best.after.dps).slice(0, 6);
+  }, [inventoryBuilds, accountBuild.accountMultipliers, combatContext, goal, hiddenMonsterIds, recommendation, ownedEquipment, equipmentPreview, improvementScope]);
+
+  const upgradeStatRows = (before: { dps: number; damage: number; health: number }, after: { dps: number; damage: number; health: number }) => (
+    <div className={styles.improvementStatRows}>
+      {([ ["Skill DPS", "dps"], ["Damage", "damage"], ["Health", "health"] ] as const).map(([label, stat]) => (
+        <div className={styles.improvementStatRow} key={stat}>
+          <span>{label}</span>
+          <strong>{formatStatNumber(before[stat])} <span aria-label="to">→</span> {formatStatNumber(after[stat])}</strong>
+          <small>{after[stat] >= before[stat] ? "+" : "−"}{formatStatNumber(Math.abs(after[stat] - before[stat]))}</small>
+        </div>
+      ))}
+    </div>
+  );
+
+  const assignOwnedGear = (owner: string, type: "weapon" | "armor", copyId: string | null, onBuildChange: (changes: Partial<Build>) => void) => {
+    if (blockedStorageKeys.current.has(OWNED_EQUIPMENT_KEY)) {
+      setInventoryMessage("Equipment storage could not be read; assignments are locked to protect your saved copies.");
+      return;
+    }
+    const candidate = ownedEquipment.find((copy) => copy.id === copyId);
+    const gear = candidate && EQUIPMENT.find((item) => item.id === candidate.equipmentId);
+    if (copyId && (!candidate || !gear || gear.type !== type || (candidate.equippedTo && candidate.equippedTo !== owner))) {
+      setInventoryMessage("That equipment copy is already equipped by another monster.");
+      return;
+    }
+    const cleared = ownedEquipment.map((copy) => {
+      const item = EQUIPMENT.find((entry) => entry.id === copy.equipmentId);
+      if (item?.type === type && copy.equippedTo === owner) return { ...copy, equippedTo: undefined };
+      return copy;
+    });
+    setOwnedEquipment(cleared.map((copy) => copy.id === copyId ? { ...copy, equippedTo: owner } : copy));
+    onBuildChange(type === "weapon"
+      ? { weaponId: gear?.id ?? null, weaponAttributeIds: candidate ? [...candidate.attributeIds] : [] }
+      : { armorId: gear?.id ?? null, armorAttributeIds: candidate ? [...candidate.attributeIds] : [] });
+  };
+
+  const removeOwnedEquipmentCopy = (copy: OwnedEquipmentCopy) => {
+    const gear = EQUIPMENT.find((item) => item.id === copy.equipmentId);
+    if (gear && copy.equippedTo) {
+      const changes: Partial<Build> = gear.type === "weapon"
+        ? { weaponId: null, weaponAttributeIds: [] }
+        : { armorId: null, armorAttributeIds: [] };
+      setTeam((current) => current.map((build, index) => teamOwner(build, index) === copy.equippedTo && build.monsterId
+        ? sanitizeBuild({ ...build, ...changes }, build.monsterId) : build));
+      if (copy.equippedTo.startsWith("inventory:")) {
+        const copyId = copy.equippedTo.slice("inventory:".length);
+        setInventoryBuilds((current) => {
+          const build = current[copyId];
+          return build?.monsterId ? { ...current, [copyId]: { ...sanitizeBuild({ ...build, ...changes }, build.monsterId), inventoryCopyId: copyId } } : current;
+        });
+      }
+    }
+    setOwnedEquipment((current) => current.filter((item) => item.id !== copy.id));
+    if (editingEquipmentId === copy.id) setEditingEquipmentId(null);
+  };
+
+  const releaseTemporarySlot = (index: number) => {
+    const old = team[index];
+    if (!old?.monsterId || old.inventoryCopyId) return;
+    setOwnedEquipment((copies) => copies.map((copy) => copy.equippedTo === `team:${index}`
+      ? { ...copy, equippedTo: undefined } : copy));
+  };
+
+  const releaseReplacedTemporarySlots = (nextTeam: Build[]) => {
+    setOwnedEquipment((copies) => copies.map((copy) => {
+      const slot = /^team:([0-2])$/.exec(copy.equippedTo ?? "");
+      if (!slot) return copy;
+      const index = Number(slot[1]);
+      const old = team[index];
+      const next = nextTeam[index];
+      return old?.monsterId && !old.inventoryCopyId && next?.monsterId === old.monsterId && !next.inventoryCopyId
+        ? copy : { ...copy, equippedTo: undefined };
+    }));
+  };
 
   const updateTeamBuild = (index: number, changes: Partial<Build>) => {
+    if (changes.monsterId === null) releaseTemporarySlot(index);
     setTeam((current) =>
       current.map((build, buildIndex) => (buildIndex === index ? (changes.monsterId === null ? makeBuild(null) : build.monsterId ? sanitizeBuild({ ...build, ...changes }, build.monsterId) : build) : build)),
     );
   };
 
-  // Quick mutation icons and the detailed editor share the same Normal → X → Off cycle.
-  // Derive the next state from the latest build so rapid clicks don't lose updates.
-  const cycleTeamMutation = (index: number, family: (typeof teamMutationFamilies)[number]) => {
-    setTeam((current) => current.map((build, buildIndex) => {
-      if (buildIndex !== index || !build.monsterId) return build;
-      const isX = build.mutations.includes(family.xId);
-      const isNormal = build.mutations.includes(family.id);
-      const withoutFamily = build.mutations.filter((id) => id !== family.id && id !== family.xId);
-      const mutations = isX ? withoutFamily : [...withoutFamily, isNormal ? family.xId : family.id];
-      return sanitizeBuild({ ...build, mutations }, build.monsterId);
-    }));
+  // Each click cycles Off → Normal → X → Off. Keep the saved inventory build
+  // in sync with the team card so returning to it never restores an older value.
+  const setTeamMutation = (
+    index: number,
+    family: (typeof teamMutationFamilies)[number],
+  ) => {
+    const build = team[index];
+    if (!build?.monsterId) return;
+    const withoutFamily = build.mutations.filter((id) => id !== family.id && id !== family.xId);
+    const nextId = build.mutations.includes(family.xId)
+      ? null
+      : build.mutations.includes(family.id) ? family.xId : family.id;
+    const mutations = nextId ? [...withoutFamily, nextId] : withoutFamily;
+    if (build.inventoryCopyId) updateInventoryBuild(build.inventoryCopyId, { mutations });
+    else updateTeamBuild(index, { mutations });
   };
 
   const toggleOwned = (monster: Monster) => {
@@ -388,6 +854,12 @@ export function TeamComposition() {
       const existing = current[copyId] ?? makeBuild(monsterId);
       return { ...current, [copyId]: { ...sanitizeBuild({ ...existing, ...changes }, monsterId), inventoryCopyId: copyId } };
     });
+    // An inventory copy already on the team is the SAME monster, not a separate
+    // build. Changes (including traits) must update its visible team card too.
+    setTeam((current) => current.map((item) => {
+      if (!item.monsterId || !(item.inventoryCopyId === copyId || (!item.inventoryCopyId && item.monsterId === copyId))) return item;
+      return { ...sanitizeBuild({ ...item, ...changes }, item.monsterId), inventoryCopyId: copyId };
+    }));
   };
 
   const addOwnedCopy = (monsterId: string) => {
@@ -424,7 +896,7 @@ export function TeamComposition() {
   };
 
   const exportInventory = () => {
-    const payload = JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), inventory: inventoryBuilds }, null, 2);
+    const payload = JSON.stringify({ version: 2, exportedAt: new Date().toISOString(), inventory: inventoryBuilds, equipment: ownedEquipment }, null, 2);
     const url = URL.createObjectURL(new Blob([payload], { type: "application/json" }));
     const link = document.createElement("a");
     link.href = url;
@@ -447,10 +919,16 @@ export function TeamComposition() {
         if (!monsterById.has(monsterId) || !candidate || typeof candidate !== "object") continue;
         next[copyId] = { ...sanitizeBuild(candidate as Build, monsterId), inventoryCopyId: copyId };
       }
-      if (!Object.keys(next).length) throw new Error("No valid monsters found");
+      const includesEquipment = "equipment" in parsed;
+      const importedEquipment = includesEquipment ? validOwnedEquipment((parsed as { equipment: unknown }).equipment) : [];
+      if (!Object.keys(next).length && !importedEquipment.length) throw new Error("No valid inventory entries found");
       setInventoryBuilds((current) => ({ ...current, ...next }));
+      if (includesEquipment) setOwnedEquipment((current) => {
+        const currentIds = new Set(current.map((item) => item.id));
+        return [...current, ...importedEquipment.filter((item) => !currentIds.has(item.id))];
+      });
       setInventoryFilter("owned");
-      setInventoryMessage(`Imported ${Object.keys(next).length} saved monster builds.`);
+      setInventoryMessage(`Imported ${Object.keys(next).length} monster builds and ${importedEquipment.length} equipment copies.`);
     } catch {
       setInventoryMessage("That file is not a valid Cam Lab inventory export.");
     } finally {
@@ -489,6 +967,7 @@ export function TeamComposition() {
       return;
     }
     const saved = inventoryBuilds[copyId] ?? makeBuild(monster.id);
+    releaseTemporarySlot(index);
     setTeam((current) => current.map((build, slot) => slot === index
       ? { ...sanitizeBuild(saved, monster.id), inventoryCopyId: copyId }
       : build));
@@ -502,10 +981,29 @@ export function TeamComposition() {
   const saveTeamBuildToInventory = (index: number) => {
     const build = team[index];
     if (!build?.monsterId) return;
-    setInventoryBuilds((current) => {
-      const copyId = build.inventoryCopyId ?? build.monsterId!;
-      return { ...current, [copyId]: { ...sanitizeBuild(build, build.monsterId!), inventoryCopyId: copyId } };
-    });
+    const copyId = build.inventoryCopyId ?? build.monsterId;
+    const previousOwner = `team:${index}`;
+    const permanentOwner = inventoryOwner(copyId);
+    // Promoting a temporary build must move its actual owned copies with it.
+    // Merely saving weaponId/armorId would leave the gear on team:0, and loading
+    // the permanent inventory copy later would make both items disappear.
+    if (!build.inventoryCopyId) {
+      setOwnedEquipment((current) => {
+        const moving = current.filter((copy) => copy.equippedTo === previousOwner);
+        const types = new Set(moving.map((copy) => EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type));
+        return current.map((copy) => {
+          if (copy.equippedTo === previousOwner) return { ...copy, equippedTo: permanentOwner };
+          if (copy.equippedTo === permanentOwner && types.has(EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type)) {
+            return { ...copy, equippedTo: undefined };
+          }
+          return copy;
+        });
+      });
+      setTeam((current) => current.map((item, slot) => slot === index ? { ...item, inventoryCopyId: copyId } : item));
+    }
+    setInventoryBuilds((current) => ({ ...current, [copyId]: {
+      ...sanitizeBuild(build, build.monsterId!), inventoryCopyId: copyId,
+    } }));
   };
 
   const closeTeamEditor = () => {
@@ -531,12 +1029,53 @@ export function TeamComposition() {
 
   const useRecommendation = () => {
     if (!recommendation) return;
-    setTeam(
-      Array.from({ length: 3 }, (_, index) => {
-        const item = recommendation.members[index];
-        return item ? sanitizeBuild(item.build, item.monster.id) : makeBuild(null);
-      }),
-    );
+    const selected = gearRecommendation?.assignments ?? [];
+    const newOwners = new Map(selected.map(({ copy, memberIndex }) => [copy.id,
+      teamOwner(recommendation.members[memberIndex].build, memberIndex)]));
+    const selectedOwners = new Set(recommendation.members.map((member, index) => teamOwner(member.build, index)));
+    const affectedOwners = new Set<string>([...selectedOwners, "team:0", "team:1", "team:2"]);
+    for (const { copy } of selected) if (copy.equippedTo) affectedOwners.add(copy.equippedTo);
+    // All changes are applied in one transaction: remove previous ownership,
+    // then assign distinct physical copies to the recommended builds.
+    setOwnedEquipment((previous) => previous.map((copy) => ({ ...copy,
+      equippedTo: newOwners.get(copy.id) ?? (affectedOwners.has(copy.equippedTo ?? "") ? undefined : copy.equippedTo),
+    })));
+    setInventoryBuilds((previous) => {
+      const next = { ...previous };
+      for (const copy of ownedEquipment) {
+        if (!copy.equippedTo?.startsWith("inventory:")) continue;
+        if (!newOwners.has(copy.id) && !affectedOwners.has(copy.equippedTo)) continue;
+        if (newOwners.get(copy.id) === copy.equippedTo) continue;
+        const copyId = copy.equippedTo.slice("inventory:".length);
+        const old = next[copyId];
+        const type = EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type;
+        if (!old || !type) continue;
+        next[copyId] = type === "weapon"
+          ? { ...old, weaponId: null, weaponAttributeIds: [] }
+          : { ...old, armorId: null, armorAttributeIds: [] };
+      }
+      recommendation.members.forEach((member, index) => {
+        const copyId = member.build.inventoryCopyId;
+        if (!copyId || !next[copyId]) return;
+        let updated: Build = { ...member.build };
+        for (const { copy, memberIndex } of selected) {
+          if (memberIndex === index) updated = equipmentPreview.withCopy(updated, copy);
+        }
+        next[copyId] = { ...sanitizeBuild(updated, member.monster.id), inventoryCopyId: copyId };
+      });
+      return next;
+    });
+    setTeam(Array.from({ length: 3 }, (_, index) => {
+      const member = recommendation.members[index];
+      if (!member) return makeBuild(null);
+      let build = { ...member.build };
+      for (const type of ["weapon", "armor"] as const) {
+        const choice = selected.find(({ memberIndex, copy }) => memberIndex === index &&
+          EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type === type);
+        if (choice) build = equipmentPreview.withCopy(build, choice.copy);
+      }
+      return sanitizeBuild(build, member.monster.id);
+    }));
   };
 
   const saveTeamPreset = () => {
@@ -560,7 +1099,9 @@ export function TeamComposition() {
       setTeamPresetMessage("That team slot is empty.");
       return;
     }
-    setTeam(saved.builds.map((build) => (build.monsterId ? sanitizeBuild(build, build.monsterId) : makeBuild(null))));
+    const nextTeam = saved.builds.map((build) => (build.monsterId ? sanitizeBuild(build, build.monsterId) : makeBuild(null)));
+    releaseReplacedTemporarySlots(nextTeam);
+    setTeam(nextTeam);
     setGoal(saved.goal);
     setCombatContext(saved.combatContext);
     setTeamPresetMessage(`Loaded ${selectedTeamSlot.replace("slot-", "Team ")}.`);
@@ -600,7 +1141,8 @@ export function TeamComposition() {
                   <div className={styles.monsterPickerName}><strong>{monster.name}</strong><span>{monster.element} · {monster.rarity}</span></div>
                   <div className={styles.monsterPickerCopies}>{options.map((copyId, copyIndex) => {
                     const assigned = team.some((build, slot) => slot !== replacingTeamSlot && build.inventoryCopyId === copyId);
-                    return <button key={copyId} type="button" disabled={assigned} title={assigned ? "This copy is already in another team slot" : undefined} onClick={() => replaceTeamMonster(replacingTeamSlot, monster, copyId)}>{copies.length ? `Copy ${copyIndex + 1}${assigned ? " · In team" : ""}` : "+ Add & select"}</button>;
+                    const choiceLabel = copies.length > 1 ? `Build ${copyIndex + 1}` : "Select";
+                    return <button key={copyId} type="button" disabled={assigned} title={assigned ? "This monster is already in another team slot" : undefined} onClick={() => replaceTeamMonster(replacingTeamSlot, monster, copyId)}>{copies.length ? (assigned ? `${choiceLabel} · In team` : choiceLabel) : "+ Add & select"}</button>;
                   })}<button type="button" className={styles.hideMonsterButton} onClick={() => toggleHiddenMonster(monster.id)} aria-label={`${hiddenMonsterIds.includes(monster.id) ? "Unhide" : "Hide"} ${monster.name}`} title="Hide or unhide this monster from the picker and recommendations">{hiddenMonsterIds.includes(monster.id) ? "Unhide" : "Hide"}</button></div>
                 </div>;
               })}
@@ -637,58 +1179,77 @@ export function TeamComposition() {
 
         <div className={`${styles.layout} ${showRecommendations ? "" : styles.layoutFocus}`}>
           <section className={styles.panel} aria-label="Monster inventory">
-            <div className={styles.panelHeader}>
-              <div>
+            <div className={`${styles.panelHeader} ${styles.inventoryPanelHeader}`}>
+              <div className={styles.inventoryHeaderTitle}>
                 <p className={styles.kicker}>Collection</p>
                 <h2>My Inventory</h2>
               </div>
-              <span className="text-xs text-[#8da0b7]">{ownedIds.length} owned</span>
+              <span className={styles.inventoryOwnedCount}>{ownedIds.length} owned</span>
               <div className={styles.inventoryPortability}>
                 <button type="button" onClick={() => inventoryImportRef.current?.click()}>Import</button>
                 <button type="button" onClick={exportInventory}>Export</button>
                 <input ref={inventoryImportRef} type="file" accept="application/json,.json" onChange={(event) => void importInventory(event.target.files?.[0])} />
               </div>
             </div>
-            <div className={styles.inventoryBody}>
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                className={styles.search}
-                placeholder="Search monsters..."
-                aria-label="Search inventory monsters"
-              />
-              <div className={styles.inventoryToolbar}>
-                <div className={styles.inventoryFilters}>
-                  {([
-                    ["all", "All"],
-                    ["owned", `Owned (${ownedIds.length})`],
-                    ["unowned", "Unowned"],
-                    ["team", "In Team"],
-                  ] as const).map(([value, label]) => (
-                    <button key={value} type="button" className={`${styles.filterChip} ${inventoryFilter === value ? styles.filterChipActive : ""}`} onClick={() => setInventoryFilter(value)}>
-                      {label}
-                    </button>
+            <div className={styles.inventoryTabs} role="tablist" aria-label="Inventory categories">
+              {([ ["monsters", "Monsters", ownedIds.length], ["equipment", "Equipment", ownedEquipment.length], ["items", "Items", 0] ] as const).map(([id, label, count]) => (
+                <button key={id} type="button" role="tab" aria-selected={inventoryTab === id} className={`${styles.inventoryTab} ${inventoryTab === id ? styles.inventoryTabActive : ""}`} onClick={() => setInventoryTab(id)}>{label} <span>({count})</span></button>
+              ))}
+            </div>
+            {inventoryTab === "monsters" ? <div className={styles.inventoryBody}>
+              <div className={styles.inventorySearchRow}>
+                <label className={styles.inventorySearchBox}>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5" /></svg>
+                  <input
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    type="search"
+                    placeholder="Search monsters"
+                    aria-label="Search inventory monsters"
+                  />
+                </label>
+                <button type="button" className={`${styles.inventoryFilterTrigger} ${inventoryFilterPanel === "sort" ? styles.inventoryFilterTriggerActive : ""}`} aria-label="Sort inventory monsters" aria-expanded={inventoryFilterPanel === "sort"} aria-controls="inventory-sort-panel" title="Sort inventory" onClick={() => setInventoryFilterPanel((current) => current === "sort" ? null : "sort")}>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16M7 12h10M10 18h4" /></svg>
+                </button>
+                <button type="button" className={`${styles.inventoryFilterTrigger} ${inventoryFilterPanel === "browse" || activeInventoryFilters ? styles.inventoryFilterTriggerActive : ""}`} aria-label="Filter inventory monsters" aria-expanded={inventoryFilterPanel === "browse"} aria-controls="inventory-browse-panel" title="Filter inventory" onClick={() => setInventoryFilterPanel((current) => current === "browse" ? null : "browse")}>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16l-6.5 7.2V18l-3 1.5v-7.3L4 5Z" /></svg>
+                  {activeInventoryFilters > 0 ? <span className={styles.inventoryFilterBadge}>{activeInventoryFilters}</span> : null}
+                </button>
+              </div>
+              {inventoryFilterPanel === "sort" ? <div id="inventory-sort-panel" className={styles.inventoryFilterPanel}>
+                <div className={styles.inventoryFilterPanelHeading}><strong>Sort by</strong><button type="button" onClick={() => setInventoryFilterPanel(null)} aria-label="Close sort options">×</button></div>
+                <div className={styles.inventorySortOptions}>
+                  {([ ["name", "Name"], ["rank", "Rank"], ["level", "Level"], ["dps", "Skill DPS"], ["health", "Health"] ] as const).map(([value, label]) => (
+                    <button key={value} type="button" className={`${styles.filterChip} ${inventorySort === value ? styles.filterChipActive : ""}`} aria-pressed={inventorySort === value} onClick={() => { setInventorySort(value); setInventoryFilterPanel(null); }}>{label}</button>
                   ))}
                 </div>
-                <select className={styles.inventorySort} value={inventorySort} onChange={(event) => setInventorySort(event.target.value as InventorySort)} aria-label="Sort inventory">
-                  <option value="name">Name</option>
-                  <option value="rank">Rank</option>
-                  <option value="level">Level</option>
-                  <option value="dps">DPS</option>
-                  <option value="health">Health</option>
-                </select>
-              </div>
-              <div className={styles.pickerPreferences}>
-                <span>{hiddenMonsterIds.length} hidden from browsing and recommendations</span>
-                <button type="button" className={styles.smallButton} onClick={() => setShowHiddenMonsters((current) => !current)}>{showHiddenMonsters ? "Hide hidden" : "Show hidden"}</button>
-              </div>
-              <button type="button" className={styles.indexImportButton} onClick={importFromIndexTracker}>
-                Import Missing Monsters from Index Tracker
-              </button>
+              </div> : null}
+              {inventoryFilterPanel === "browse" ? <div id="inventory-browse-panel" className={styles.inventoryFilterPanel}>
+                <div className={styles.inventoryFilterPanelHeading}><strong>Browse filters</strong><button type="button" onClick={clearInventoryFilters} disabled={!activeInventoryFilters}>Clear all</button></div>
+                <span className={styles.inventoryFilterLabel}>Collection</span>
+                <div className={styles.inventoryFilterChoices}>
+                  {([ ["all", "All"], ["owned", "Owned"], ["unowned", "Missing"], ["team", "In team"] ] as const).map(([value, label]) => (
+                    <button key={value} type="button" className={`${styles.filterChip} ${inventoryFilter === value ? styles.filterChipActive : ""}`} aria-pressed={inventoryFilter === value} onClick={() => setInventoryFilter(value)}>{label}</button>
+                  ))}
+                </div>
+                <button type="button" className={`${styles.inventoryFavoriteFilter} ${favoritesOnly ? styles.filterChipActive : ""}`} aria-pressed={favoritesOnly} onClick={() => setFavoritesOnly((value) => !value)}>{favoritesOnly ? "★" : "☆"} Favorites only</button>
+                <div className={styles.inventoryFilterSelects}>
+                  <label>Element<select value={inventoryElement} onChange={(event) => setInventoryElement(event.target.value)}><option value="all">All elements</option>{INVENTORY_ELEMENTS.map((element) => <option key={element} value={element}>{element}</option>)}</select></label>
+                  <label>Rarity<select value={inventoryRarity} onChange={(event) => setInventoryRarity(event.target.value)}><option value="all">All rarities</option>{INVENTORY_RARITIES.map((rarity) => <option key={rarity} value={rarity}>{rarity}</option>)}</select></label>
+                </div>
+              </div> : null}
+              <p className={styles.inventoryResultCount}>{filteredInventory.length} of {availableMonsters.length} monsters{activeInventoryFilters ? ` · ${activeInventoryFilters} active ${activeInventoryFilters === 1 ? "filter" : "filters"}` : ""}</p>
+              <details className={styles.inventoryExtras}>
+                <summary>Inventory tools{hiddenMonsterIds.length ? ` · ${hiddenMonsterIds.length} hidden` : ""}</summary>
+                <div className={styles.pickerPreferences}>
+                  <span>Hidden monsters are excluded from recommendations.</span>
+                  <button type="button" className={styles.smallButton} onClick={() => setShowHiddenMonsters((current) => !current)}>{showHiddenMonsters ? "Hide hidden" : "Show hidden"}</button>
+                </div>
+                <button type="button" className={styles.indexImportButton} onClick={importFromIndexTracker}>
+                  Import Missing Monsters from Index Tracker
+                </button>
+              </details>
               {inventoryMessage ? <p role="status" className={styles.inventoryMessage}>{inventoryMessage}</p> : null}
-              <p className="mt-2 text-[10px] text-[#70839c]">
-                Owned monsters keep a saved build. Edit a saved build directly here or load it into the team.
-              </p>
               <div className={styles.inventoryList}>
                 {filteredInventory.map((monster) => {
                   const copies = copiesFor(monster.id);
@@ -700,17 +1261,17 @@ export function TeamComposition() {
                       <TeamMonsterPortrait monster={monster} className={styles.inventoryPortrait} />
                       <div className="min-w-0">
                         <div className={styles.inventoryName}>{monster.name}</div>
-                        <div className={styles.inventoryMeta}>{monster.element} · {monster.rarity}</div>
-                        {savedBuild ? <div className={styles.inventoryBuildMeta}>{copies.length} owned</div> : null}
+                        <div className={styles.inventoryMeta}>{monster.element} · {monster.rarity}{copies.length > 1 ? ` · ${copies.length} builds` : ""}</div>
                       </div>
                       <div className={styles.rowActions}>
-                        {savedBuild ? <div className={styles.inventoryBadges}><span>Lv {savedBuild.level}</span><b style={{ color: savedBuild.rank ? BUILD_RANK_VISUALS[savedBuild.rank].color : undefined }}>{savedBuild.rank ?? "E"}</b></div> : null}
+                        {savedBuild ? <div className={styles.inventoryBadges}><span>Lv{savedBuild.level} · <b style={{ color: savedBuild.rank ? BUILD_RANK_VISUALS[savedBuild.rank].color : undefined }}>{savedBuild.rank ?? "E"}</b></span></div> : null}
+                        <button type="button" className={`${styles.favoriteButton} ${favoriteMonsterIds.includes(monster.id) ? styles.favoriteButtonActive : ""}`} onClick={() => toggleInventoryFavorite(monster.id)} aria-pressed={favoriteMonsterIds.includes(monster.id)} aria-label={`${favoriteMonsterIds.includes(monster.id) ? "Remove" : "Add"} ${monster.name} ${favoriteMonsterIds.includes(monster.id) ? "from" : "to"} favorites`} title="Toggle favorite">{favoriteMonsterIds.includes(monster.id) ? "★" : "☆"}</button>
                         {savedBuild && copies[0] ? <button type="button" className={styles.inventoryActionButton} onClick={() => setEditingInventoryId(copies[0])} title={`Edit ${monster.name}`} aria-label={`Edit ${monster.name}`}>✎</button> : null}
                         <button
                           type="button"
                           className={`${styles.smallButton} ${styles.inventoryActionButton} ${owned ? styles.ownedButton : ""}`}
                           onClick={() => owned ? addOwnedCopy(monster.id) : toggleOwned(monster)}
-                          title={owned ? "Add another independently editable copy" : "Add to inventory"}
+                          title={owned ? "Add another independently editable monster build" : "Add to inventory"}
                         >
                           {owned ? "+" : "+ Own"}
                         </button>
@@ -718,23 +1279,122 @@ export function TeamComposition() {
                         <button type="button" className={styles.smallButton} onClick={() => toggleHiddenMonster(monster.id)} aria-label={`${hiddenMonsterIds.includes(monster.id) ? "Unhide" : "Hide"} ${monster.name}`} title="Hide this species from browsing and recommendations">{hiddenMonsterIds.includes(monster.id) ? "Unhide" : "Hide"}</button>
                       </div>
                       {copies.length > 0 ? <details className={styles.copyList}>
-                        <summary>{copies.length === 1 ? "Manage saved build" : `Manage ${copies.length} saved copies`}</summary>
+                        <summary aria-label={`Saved build options for ${monster.name}`} title={`Edit, load or remove ${monster.name} saved builds`}>⋯</summary>
                         {copies.map((copyId, copyIndex) => {
                           const copy = inventoryBuilds[copyId];
                           const assigned = team.some((build) => build.inventoryCopyId === copyId);
                           return <div key={copyId} className={styles.copyRow}>
-                            <span className={styles.copyLabel}>#{copyIndex + 1} · {compactBuildLabel(copy)}</span>
+                            <span className={styles.copyLabel}>{copies.length > 1 ? `Build ${copyIndex + 1} · ` : ""}{compactBuildLabel(copy)}</span>
                             <button type="button" className={styles.smallButton} onClick={() => setEditingInventoryId(copyId)}>Edit</button>
                             <button type="button" className={styles.smallButton} disabled={assigned} onClick={() => addMonster(monster, copyId)}>{assigned ? "In team" : "Load"}</button>
-                            <button type="button" className={styles.smallButton} aria-label={`Remove ${monster.name} copy ${copyIndex + 1}`} title="Remove copy" onClick={() => removeOwnedCopy(copyId)}>×</button>
+                            <button type="button" className={styles.smallButton} aria-label={`Remove ${monster.name} saved build ${copyIndex + 1}`} title="Remove saved build" onClick={() => removeOwnedCopy(copyId)}>×</button>
                           </div>;
                         })}
                       </details> : null}
                     </article>
                   );
                 })}
+                {filteredInventory.length === 0 ? <p className={styles.pickerEmpty}>No monsters match. Try clearing filters or changing your search.</p> : null}
               </div>
-            </div>
+            </div> : inventoryTab === "equipment" ? <div className={styles.inventoryBody} role="tabpanel">
+              <div className={styles.equipmentAddControl} onKeyDown={(event) => {
+                if (event.key === "Escape") setAddGearMenuOpen(false);
+              }}>
+                <div className={styles.equipmentAddRow}>
+                  <div className={styles.equipmentAddPicker}>
+                    <span className={styles.equipmentAddLabel}>Gear to add</span>
+                    <button
+                      type="button"
+                      className={styles.equipmentAddTrigger}
+                      aria-label="Choose gear to add"
+                      aria-haspopup="listbox"
+                      aria-expanded={addGearMenuOpen}
+                      aria-controls="team-equipment-add-options"
+                      onClick={() => setAddGearMenuOpen((open) => !open)}
+                    >
+                      {EQUIPMENT.filter((gear) => gear.id === equipmentToAdd).map((gear) => (
+                        <span key={gear.id} className={styles.equipmentAddSelected}>
+                          <img src={assetPath(`/gear/${gear.id}.png`)} alt="" style={{ borderColor: equipmentRarityColors[gear.rarity] }} />
+                          <span><strong>{gear.name}</strong><small style={{ color: equipmentRarityColors[gear.rarity] }}>+{gear.percentage}% {gear.type === "weapon" ? "Damage" : "Health"}</small></span>
+                        </span>
+                      ))}
+                      {!equipmentToAdd ? <span className={styles.equipmentAddPlaceholder}>Select gear to add…</span> : null}
+                      <span className={styles.equipmentAddCaret} aria-hidden="true">{addGearMenuOpen ? "▲" : "▼"}</span>
+                    </button>
+                  </div>
+                  <button type="button" className={styles.primaryButton} disabled={!equipmentToAdd} onClick={() => {
+                    if (!EQUIPMENT.some((gear) => gear.id === equipmentToAdd)) return;
+                    setOwnedEquipment((current) => [...current, { id: crypto.randomUUID(), equipmentId: equipmentToAdd, attributeIds: [] }]);
+                    setInventoryMessage("Equipment added.");
+                  }}>+ Add</button>
+                </div>
+                {addGearMenuOpen ? <div id="team-equipment-add-options" className={styles.equipmentAddMenu} role="listbox" aria-label="Gear to add">
+                  <button type="button" role="option" aria-selected={!equipmentToAdd} className={styles.equipmentAddOption} onClick={() => { setEquipmentToAdd(""); setAddGearMenuOpen(false); }}>None</button>
+                  {EQUIPMENT.map((gear) => <button
+                    key={gear.id}
+                    type="button"
+                    role="option"
+                    aria-selected={equipmentToAdd === gear.id}
+                    className={`${styles.equipmentAddOption} ${equipmentToAdd === gear.id ? styles.equipmentAddOptionActive : ""}`}
+                    onClick={() => { setEquipmentToAdd(gear.id); setAddGearMenuOpen(false); }}
+                  >
+                    <img src={assetPath(`/gear/${gear.id}.png`)} alt="" loading="lazy" style={{ borderColor: equipmentRarityColors[gear.rarity] }} />
+                    <span><strong>{gear.name}</strong><small style={{ color: equipmentRarityColors[gear.rarity] }}>{gear.rarity} · +{gear.percentage}% {gear.type === "weapon" ? "Damage" : "Health"}</small></span>
+                    {equipmentToAdd === gear.id ? <span className={styles.equipmentAddCheck} aria-hidden="true">✓</span> : null}
+                  </button>)}
+                </div> : null}
+              </div>
+              <input className={styles.search} value={equipmentSearch} onChange={(event) => setEquipmentSearch(event.target.value)} placeholder="Search owned equipment…" aria-label="Search owned equipment" />
+              <div className={styles.inventoryQuickFilters}>
+                {([ ["all", "All"], ["weapon", "Weapons"], ["armor", "Armor"] ] as const).map(([id, label]) => <button key={id} type="button" className={`${styles.filterChip} ${equipmentFilter === id ? styles.filterChipActive : ""}`} onClick={() => setEquipmentFilter(id)}>{label}</button>)}
+              </div>
+              {inventoryMessage ? <p role="status" className={styles.inventoryMessage}>{inventoryMessage}</p> : null}
+              <div className={styles.inventoryList}>
+                {EQUIPMENT.filter((gear) => (equipmentFilter === "all" || gear.type === equipmentFilter) && gear.name.toLowerCase().includes(equipmentSearch.trim().toLowerCase()) && ownedEquipment.some((copy) => copy.equipmentId === gear.id)).map((gear) => {
+                  const copies = ownedEquipment.filter((copy) => copy.equipmentId === gear.id);
+                  return <article key={gear.id} className={styles.equipmentInventoryGroup}>
+                    <div className={styles.equipmentInventoryHeader}>
+                      <img src={assetPath(`/gear/${gear.id}.png`)} alt="" className={styles.equipmentInventoryIcon} style={{ borderColor: equipmentRarityColors[gear.rarity] }} />
+                      <div className={styles.equipmentInventoryName}><strong>{gear.name}</strong><small style={{ color: equipmentRarityColors[gear.rarity] }}>+{gear.percentage}% {gear.type === "weapon" ? "Damage" : "Health"} · {gear.rarity}</small></div>
+                      <span className={styles.equipmentInventoryQuantity}>×{copies.length}</span>
+                    </div>
+                    {copies.map((copy, index) => <div key={copy.id} className={styles.equipmentCopyRow}>
+                      <span>{copies.length > 1 ? `Item ${index + 1} · ` : ""}{copy.equippedTo ? `Equipped to ${copy.equippedTo.startsWith("inventory:") ? monsterById.get(copyMonsterId(copy.equippedTo.slice(10)))?.name ?? copy.equippedTo.slice(10) : `team slot ${Number(copy.equippedTo.slice(5)) + 1}`}` : "Unequipped"}{getAttributeSlotCount(gear.rarity) ? ` · ${copy.attributeIds.some(Boolean) ? copy.attributeIds.filter(Boolean).map((id) => getAttribute(id)?.name ?? id).join(", ") : "Attributes not selected"}` : ""}</span>
+                      {getAttributeSlotCount(gear.rarity) > 0 ? <button type="button" className={styles.smallButton} aria-expanded={editingEquipmentId === copy.id} onClick={() => setEditingEquipmentId((id) => id === copy.id ? null : copy.id)}>{editingEquipmentId === copy.id ? "Close" : "Attributes"}</button> : null}
+                      <button type="button" className={styles.smallButton} aria-label={`Remove ${gear.name}${copies.length > 1 ? ` item ${index + 1}` : ""}`} onClick={() => removeOwnedEquipmentCopy(copy)}>×</button>
+                      {getAttributeSlotCount(gear.rarity) > 0 && editingEquipmentId === copy.id ? <div className={styles.equipmentCopyEditor}>
+                        <div className={styles.equipmentAttributeHeading}><strong>{gear.type === "weapon" ? "Weapon" : "Armor"} Attributes</strong><small>Saved individually{copies.length > 1 ? ` · Item ${index + 1}` : ""}</small></div>
+                        <div className={styles.equipmentAttributeGrid}>
+                          {getFixedAttributeIds(gear.id).map((id) => <div key={`fixed-${id}`} className={styles.equipmentFixedAttribute} title={getAttribute(id)?.name ?? id}>
+                            <img src={assetPath(`/attributes/${id}.png`)} alt={getAttribute(id)?.name ?? id} />
+                            <span>FIXED</span>
+                          </div>)}
+                          {Array.from({ length: getAttributeSlotCount(gear.rarity) }, (_, slot) => <AttributeSelect
+                            key={`${copy.id}-${slot}`}
+                            label={`SLOT ${slot + 1}`}
+                            options={getAttributesForGear(gear.type)}
+                            value={copy.attributeIds[slot] || null}
+                            usedIds={copy.attributeIds.filter(Boolean)}
+                            onChangeAction={(value) => setOwnedEquipment((current) => current.map((item) => {
+                              if (item.id !== copy.id) return item;
+                              const next = Array.from({ length: getAttributeSlotCount(gear.rarity) }, (_, position) => item.attributeIds[position] ?? "");
+                              next[slot] = value ?? "";
+                              return { ...item, attributeIds: next };
+                            }))}
+                          />)}
+                        </div>
+                        <span className={styles.helper}>Fixed attributes are automatically included. Selectable slots use the Calculator’s attribute artwork and definitions.</span>
+                      </div> : null}
+                    </div>)}
+                  </article>;
+                })}
+                {!ownedEquipment.some((copy) => { const gear = EQUIPMENT.find((item) => item.id === copy.equipmentId); return gear && (equipmentFilter === "all" || gear.type === equipmentFilter) && gear.name.toLowerCase().includes(equipmentSearch.trim().toLowerCase()); }) ? <p className={styles.helper}>No owned equipment matches. Select a weapon or armor above and choose Add.</p> : null}
+              </div>
+            </div> : <div className={styles.inventoryEmptyTab} role="tabpanel">
+              <span className={styles.inventoryEmptyIcon}>◇</span>
+              <strong>Items inventory</strong>
+              <p>Item tracking will appear here in a future inventory update.</p>
+            </div>}
           </section>
 
           <div className={styles.center}>
@@ -748,7 +1408,7 @@ export function TeamComposition() {
                   <span className={styles.teamCount}>{Object.keys(savedTeams).length}/20 teams</span>
                   <button type="button" className={styles.ghostButton} aria-expanded={showRecommendations} onClick={() => setShowRecommendations((visible) => !visible)}>{showRecommendations ? "Hide recommendations" : "Find a team →"}</button>
                   <button type="button" className={styles.primaryButton} onClick={() => { setTeamLibraryOpen(true); setTeamSaveName(""); }}>Save / Load Team</button>
-                  <button type="button" className={styles.ghostButton} onClick={() => setTeam([makeBuild(null), makeBuild(null), makeBuild(null)])}>Reset</button>
+                  <button type="button" className={styles.ghostButton} onClick={() => { releaseReplacedTemporarySlots([makeBuild(null), makeBuild(null), makeBuild(null)]); setTeam([makeBuild(null), makeBuild(null), makeBuild(null)]); }}>Reset</button>
                 </div>
               </div>
 
@@ -765,41 +1425,53 @@ export function TeamComposition() {
                       >
                         ×
                       </button>
-                      <button type="button" className={styles.changeMonsterButton} onClick={() => { openMonsterPicker(index); }} aria-label={`Change monster in slot ${index + 1}`} title="Change monster">✎</button>
-                      <div className={styles.slotTop}>
+                      <button type="button" className={`${styles.slotTop} ${styles.slotMonsterPickerTrigger}`} onClick={() => openMonsterPicker(index)} aria-label={`Replace ${item.monster.name} in team slot ${index + 1}`} title="Choose a different monster">
                         <TeamMonsterPortrait monster={item.monster} className={styles.slotPortrait} alt={item.monster.name} />
                         <div className={styles.slotTitle}>
                     <span>Slot {index + 1} · {index === 0 ? "Main DPS" : index === 1 ? "Support" : "Utility"}</span>
                           <strong>{item.monster.name}</strong>
                           <span>{item.monster.element} · {item.monster.rarity}</span>
                         </div>
-                      </div>
+                      </button>
 
                       <div className={styles.compareQuickStats} aria-label="Current monster build; select any value to edit">
                         <button type="button" onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} level`}><span>Lv</span><b>{item.build.level}</b></button>
                         <button type="button" onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} rank`}><span>Rank</span><b style={{ color: item.build.rank ? BUILD_RANK_VISUALS[item.build.rank].color : undefined }}>{item.build.rank ?? "—"}</b></button>
                         <button type="button" onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} enhancement`}><span>Enh</span><b className={styles.quickEnhancement}>+{item.build.enhancement}</b></button>
-                        <button type="button" onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} genetic potential`} className={styles.quickGp}>
-                          <img src={assetPath("/icons/genetic-potential.png")} alt="" />
-                          <b>{item.build.damageGeneticPotential}% / {item.build.healthGeneticPotential}%</b>
-                          
+                        <button type="button" onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} genetic potential: attack ${item.build.damageGeneticPotential}%, health ${item.build.healthGeneticPotential}%`} title={`Genetic Potential · Attack ${item.build.damageGeneticPotential}% · Health ${item.build.healthGeneticPotential}%`} className={styles.quickGp}>
+                          <img src={assetPath("/icons/breed-attack.png")} alt="Attack genetic potential" />
+                          <b>{item.build.damageGeneticPotential}%</b>
+                          <img src={assetPath("/icons/breed-health.png")} alt="Health genetic potential" />
+                          <b>{item.build.healthGeneticPotential}%</b>
                         </button>
                         {(() => {
                           const trait = getAvailableTraits().find((entry) => entry.id === item.build.traitId);
-                          return trait ? <button type="button" className={styles.quickTrait} onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} trait: ${trait.name}`} title={`Trait: ${trait.name}`}><span>Trait</span><TraitIcon trait={trait} size="combat" /><b>{trait.name}</b></button> : null;
+                          const rarityColor = { rare: "#69c7ff", epic: "#e88bff", legendary: "#ffb15f", mythical: "#78dfac" }[trait?.rarity ?? "rare"];
+                          return <button type="button" className={styles.quickTrait} onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} trait: ${trait?.name ?? "None"}`} title={`Trait: ${trait?.name ?? "None"}`}>
+                            <span className={styles.quickTraitLabel}>Trait</span>
+                            <span className={styles.quickTraitIcon}>{trait ? <TraitIcon trait={trait} size="combat" /> : <span className={styles.quickTraitEmptyIcon}>◇</span>}</span>
+                            <b className={styles.quickTraitName} style={trait ? { color: rarityColor } : undefined}>{trait?.name ?? "None"}</b>
+                          </button>;
                         })()}
                       </div>
-                      <div className={styles.monsterCoreStats} aria-label={`${item.monster.name} current stats`}>
-                        <div><span><img src={assetPath("/account-icons/damage.png")} alt="" />Damage</span><strong>{formatStatNumber(item.stats?.damage ?? 0)}</strong></div>
-                        <div><span><img src={assetPath("/account-icons/health.png")} alt="" />Health</span><strong>{formatStatNumber(item.stats?.health ?? 0)}</strong></div>
-                        <div><span><img src={assetPath("/icons/dps.png")} alt="" />Skill DPS</span><strong>{formatStatNumber(item.dps)}</strong></div>
+                      <div className={styles.mutationSummary}>
+                        <span>Mutations</span><small>Click: Off → Normal → X → Off</small>
                       </div>
-                      <div className={styles.compareMutationLine} aria-label="Mutations; click an icon to cycle Normal, X, then Off">
+                      <div className={styles.compareMutationLine} role="group" aria-label={`${item.monster.name} mutations. Click to cycle Off, Normal, X`}>
                         {teamMutationFamilies.map((mutation) => {
                           const isX = item.build.mutations.includes(mutation.xId);
                           const active = isX || item.build.mutations.includes(mutation.id);
-                          return <button type="button" key={mutation.id} onClick={() => cycleTeamMutation(index, mutation)} className={active ? styles.compareMutationActive : ""} aria-pressed={active} aria-label={`${item.monster.name} ${mutation.label}: ${isX ? "X mutation" : active ? "Normal mutation" : "Off"}. Click to ${isX ? "turn off" : active ? "switch to X" : "enable Normal"}`} title={`${mutation.label}: ${isX ? "X" : active ? "Normal" : "Off"} — click to cycle Normal → X → Off`}>
+                          return <button
+                            type="button"
+                            key={mutation.id}
+                            onClick={() => setTeamMutation(index, mutation)}
+                            className={`${active ? styles.compareMutationActive : ""} ${isX ? styles.compareMutationX : ""}`}
+                            aria-pressed={active}
+                            aria-label={`${item.monster.name} ${mutation.label}: ${isX ? "X mutation" : active ? "Normal mutation" : "Off"}. Click to cycle Off, Normal, X`}
+                            title={`${mutation.label}: ${isX ? "X" : active ? "Normal" : "Off"} · Click to cycle Off → Normal → X → Off`}
+                          >
                             <img src={assetPath(isX ? mutation.xIcon : mutation.icon)} alt="" />
+                            {isX ? <span className={styles.mutationXBadge} aria-hidden="true">X</span> : null}
                           </button>;
                         })}
                       </div>
@@ -812,9 +1484,13 @@ export function TeamComposition() {
                           <span>{gear.label} <b>{gear.name}</b></span>
                         </button>)}
                       </div>
-                      <a className={styles.calculatorLink} href={`/#${item.monster.id}`}>▣ Open in Calculator</a>
+                      <div className={styles.monsterCoreStats} aria-label={`${item.monster.name} current stats`}>
+                        <div><span><img src={assetPath("/account-icons/damage.png")} alt="" />Damage</span><strong>{formatStatNumber(item.stats?.damage ?? 0)}</strong></div>
+                        <div><span><img src={assetPath("/account-icons/health.png")} alt="" />Health</span><strong>{formatStatNumber(item.stats?.health ?? 0)}</strong></div>
+                        <div><span><img src={assetPath("/icons/dps.png")} alt="" />Skill DPS</span><strong>{formatStatNumber(item.dps)}</strong></div>
+                      </div>
                       <details className={styles.compareEditor} open={editingTeamSlot === index} onToggle={(event) => { if (!event.currentTarget.open && editingTeamSlot === index) closeTeamEditor(); }}>
-                        <summary onClick={(event) => { event.preventDefault(); if (editingTeamSlot === index) closeTeamEditor(); else setEditingTeamSlot(index); }}><span>{editingTeamSlot === index ? `Close · Slot ${index + 1} · ${item.monster.name}` : "Edit build"}</span></summary>
+                        {editingTeamSlot === index ? <summary onClick={(event) => { event.preventDefault(); closeTeamEditor(); }}><span>Slot {index + 1} · {item.monster.name} · Build settings</span><span>✕ Close</span></summary> : null}
                         <div className={styles.compareEditorBody}>
                       <section className={styles.buildGroup}>
                         <div className={styles.buildGroupTitle}>
@@ -826,11 +1502,11 @@ export function TeamComposition() {
                           <input
                             type="number"
                             min={1}
-                            max={115}
+                            max={CURRENT_MAX_LEVEL}
                             value={item.build.level}
                             onChange={(event) =>
                               updateTeamBuild(index, {
-                                level: Math.max(1, Math.min(115, Number(event.target.value) || 1)),
+                                level: Math.max(1, Math.min(CURRENT_MAX_LEVEL, Number(event.target.value) || 1)),
                               })
                             }
                           />
@@ -877,7 +1553,7 @@ export function TeamComposition() {
                           <span>Mutations</span>
                           <b>{item.build.mutations.length} / 4</b>
                         </div>
-                        <p className={styles.cycleHint}>Click to cycle: Normal → X → Off</p>
+                        <p className={styles.cycleHint}>Click to cycle Off → Normal → X → Off</p>
                         <div className={styles.mutationGrid}>
                           {teamMutationFamilies.map((mutation) => {
                             const isX = item.build.mutations.includes(mutation.xId);
@@ -887,10 +1563,10 @@ export function TeamComposition() {
                                 key={mutation.id}
                                 type="button"
                                 aria-pressed={isSelected}
-                                aria-label={`${mutation.label}. ${isX ? "X Mutation" : isSelected ? "Selected" : "Not selected"}. Click to ${isX ? "remove" : isSelected ? `upgrade to ${mutation.label} X` : "select"}.`}
+                                aria-label={`${mutation.label}. ${isX ? "X Mutation" : isSelected ? "Selected" : "Not selected"}. Click to cycle Off, Normal, X.`}
                                 className={`${styles.mutationTile} ${isSelected ? styles.mutationActive : ""}`}
                                 style={isSelected ? { borderColor: mutation.accent, backgroundColor: `${mutation.accent}12` } : undefined}
-                                onClick={() => cycleTeamMutation(index, mutation)}
+                                onClick={() => setTeamMutation(index, mutation)}
                               >
                                 <img src={assetPath(isX ? mutation.xIcon : mutation.icon)} alt="" />
                                 <span><strong>{mutation.label}</strong><small style={{ color: isSelected ? mutation.accent : undefined }}>{isX ? "X Mutation" : isSelected ? "Selected" : "Not selected"}</small></span>
@@ -903,34 +1579,14 @@ export function TeamComposition() {
                       <section className={styles.buildGroup}>
                         <div className={styles.buildGroupTitle}><span>Trait & Equipment</span></div>
                         <div className={styles.traitControl}>
+                          <strong className={styles.traitEditorLabel}>Trait</strong>
                           <TraitSelect value={item.build.traitId} onChangeAction={(value) => updateTeamBuild(index, { traitId: value })} />
                         </div>
                         <div className={styles.equipmentGrid}>
-                          <EquipmentSelect label="Weapon" items={WEAPONS} value={item.build.weaponId} onChangeAction={(value) => updateTeamBuild(index, { weaponId: value, weaponAttributeIds: [] })} />
-                          <EquipmentSelect label="Armor" items={ARMORS} value={item.build.armorId} onChangeAction={(value) => updateTeamBuild(index, { armorId: value, armorAttributeIds: [] })} />
+                          <OwnedGearSelect label="Weapon" type="weapon" owner={teamOwner(team[index], index)} copies={ownedEquipment} onSelect={(id) => assignOwnedGear(teamOwner(team[index], index), "weapon", id, (changes) => { updateTeamBuild(index, changes); if (team[index].inventoryCopyId) updateInventoryBuild(team[index].inventoryCopyId, changes); })} />
+                          <OwnedGearSelect label="Armor" type="armor" owner={teamOwner(team[index], index)} copies={ownedEquipment} onSelect={(id) => assignOwnedGear(teamOwner(team[index], index), "armor", id, (changes) => { updateTeamBuild(index, changes); if (team[index].inventoryCopyId) updateInventoryBuild(team[index].inventoryCopyId, changes); })} />
                         </div>
-                        <div className={styles.equipmentGrid}>
-                          {(["weapon", "armor"] as const).map((type) => {
-                            const gear = (type === "weapon" ? WEAPONS : ARMORS).find((piece) => piece.id === item.build[type === "weapon" ? "weaponId" : "armorId"]);
-                            const key = type === "weapon" ? "weaponAttributeIds" : "armorAttributeIds";
-                            const selectedIds = item.build[key];
-                            const slots = getAttributeSlotCount(gear?.rarity);
-                            const fixedIds = getFixedAttributeIds(gear?.id ?? null);
-                            return <div key={type} className={styles.attributeGroup}>
-                              <strong>{type === "weapon" ? "Weapon" : "Armor"} Attributes</strong>
-                              <div className={styles.attributeSlots}>
-                                {fixedIds.map((id) => <div key={id} className={styles.fixedAttribute}><img src={assetPath(`/attributes/${id}.png`)} alt={getAttribute(id)?.name ?? id} /><span>FIXED</span></div>)}
-                                {Array.from({ length: slots }, (_, slot) => <AttributeSelect key={slot} label={`Slot ${slot + 1}`} options={getAttributesForGear(type)} value={selectedIds[slot] ?? null} usedIds={selectedIds} onChangeAction={(value) => {
-                                  const next = [...selectedIds];
-                                  if (value) next[slot] = value;
-                                  else next.splice(slot, 1);
-                                  updateTeamBuild(index, { [key]: next });
-                                }} />)}
-                              </div>
-                              {!gear ? <small>Select gear first.</small> : slots === 0 && fixedIds.length === 0 ? <small>Attributes require Legendary gear or higher.</small> : null}
-                            </div>;
-                          })}
-                        </div>
+                        <small className={styles.helper}>Edit attributes on individual items in Equipment inventory. Equipped stats update automatically.</small>
                       </section>
 
                         </div>
@@ -980,13 +1636,13 @@ export function TeamComposition() {
                   <p className={styles.kicker}>Combined</p>
                   <h2>Team Overview</h2>
                 </div>
-                <span className="text-xs text-[#8da0b7]">{totals.monsters} / 3 · {combatContext === "boss" ? "Boss" : combatContext === "rift" ? "Rift" : combatContext === "dungeon" ? "Dungeon" : "Standard"}</span>
+                <span className="text-xs text-[#8da0b7]">{totals.monsters} / 3 · {combatContextLabel(combatContext)}</span>
               </div>
               <div className={styles.overviewGrid}>
                 <div className={styles.overviewCard}><span className={styles.overviewLabel}><OverviewIcon kind="damage" />Total Damage</span><strong>{formatStatNumber(totals.damage)}</strong></div>
                 <div className={styles.overviewCard}><span className={styles.overviewLabel}><OverviewIcon kind="health" />Total Health</span><strong>{formatStatNumber(totals.health)}</strong></div>
                 <div className={styles.overviewCard}><span className={styles.overviewLabel}><OverviewIcon kind="dps" />Average DPS</span><strong>{formatStatNumber(totals.monsters ? totals.dps / totals.monsters : 0)}</strong></div>
-                <div className={styles.overviewCard}><span className={styles.overviewLabel}><OverviewIcon kind="survivability" />Team Survivability</span><strong className={styles.overviewAccent}>{totals.monsters === 3 ? "High" : totals.monsters ? "Building" : "—"}</strong></div>
+                <div className={styles.overviewCard} title="Effective HP after active incoming-damage and encounter guard passives"><span className={styles.overviewLabel}><OverviewIcon kind="survivability" />Effective HP</span><strong className={styles.overviewAccent}>{totals.monsters ? formatStatNumber(totals.effectiveHealth) : "—"}</strong></div>
                 <div className={`${styles.overviewCard} ${styles.synergyMetric}`}><span className={styles.overviewLabel}><OverviewIcon kind="synergy" />Synergy Score</span><strong>{Math.min(100, Object.keys(teamUtility).length * 8 + totals.monsters * 18)} / 100</strong></div>
               </div>
 
@@ -1108,26 +1764,16 @@ export function TeamComposition() {
                     <button type="button" className={styles.removeButton} onClick={() => setEditingInventoryId(null)} aria-label="Close inventory editor">×</button>
                   </div>
                   <div className={styles.inventoryEditorGrid}>
-                    <label>Level<input type="number" min={1} max={115} value={build.level} onChange={(event) => updateInventoryBuild(editingInventoryId, { level: Math.max(1, Math.min(115, Number(event.target.value) || 1)) })} /></label>
+                    <label>Level<input type="number" min={1} max={CURRENT_MAX_LEVEL} value={build.level} onChange={(event) => updateInventoryBuild(editingInventoryId, { level: Math.max(1, Math.min(CURRENT_MAX_LEVEL, Number(event.target.value) || 1)) })} /></label>
                     <label>Rank<select value={build.rank ?? "E"} onChange={(event) => updateInventoryBuild(editingInventoryId, { rank: event.target.value as Rank })}>{ranks.map((rank) => <option key={rank}>{rank}</option>)}</select></label>
                     <label>Enhancement<select value={build.enhancement} onChange={(event) => updateInventoryBuild(editingInventoryId, { enhancement: Number(event.target.value) })}>{Array.from({ length: 11 }, (_, value) => <option key={value} value={value}>+{value}</option>)}</select></label>
                     <label>GP Damage<select aria-label="GP Damage" value={build.damageGeneticPotential} onChange={(event) => updateInventoryBuild(editingInventoryId, { damageGeneticPotential: Number(event.target.value) })}>{GENETIC_POTENTIAL_VALUES.map((value) => <option key={value} value={value}>{value}%</option>)}</select></label>
                     <label>GP Health<select aria-label="GP Health" value={build.healthGeneticPotential} onChange={(event) => updateInventoryBuild(editingInventoryId, { healthGeneticPotential: Number(event.target.value) })}>{GENETIC_POTENTIAL_VALUES.map((value) => <option key={value} value={value}>{value}%</option>)}</select></label>
                     <div className={styles.attributeGroup}><strong>Trait</strong><TraitSelect value={build.traitId} onChangeAction={(value)=>updateInventoryBuild(editingInventoryId,{traitId:value})}/></div>
-                    <EquipmentSelect label="Weapon" items={WEAPONS} value={build.weaponId} onChangeAction={(value)=>updateInventoryBuild(editingInventoryId,{weaponId:value,weaponAttributeIds:[]})}/>
-                    <EquipmentSelect label="Armor" items={ARMORS} value={build.armorId} onChangeAction={(value)=>updateInventoryBuild(editingInventoryId,{armorId:value,armorAttributeIds:[]})}/>
+                    <OwnedGearSelect label="Weapon" type="weapon" owner={inventoryOwner(editingInventoryId)} copies={ownedEquipment} onSelect={(id) => assignOwnedGear(inventoryOwner(editingInventoryId), "weapon", id, (changes) => { updateInventoryBuild(editingInventoryId, changes); setTeam((current) => current.map((item) => item.inventoryCopyId === editingInventoryId && item.monsterId ? sanitizeBuild({ ...item, ...changes }, item.monsterId) : item)); })} />
+                    <OwnedGearSelect label="Armor" type="armor" owner={inventoryOwner(editingInventoryId)} copies={ownedEquipment} onSelect={(id) => assignOwnedGear(inventoryOwner(editingInventoryId), "armor", id, (changes) => { updateInventoryBuild(editingInventoryId, changes); setTeam((current) => current.map((item) => item.inventoryCopyId === editingInventoryId && item.monsterId ? sanitizeBuild({ ...item, ...changes }, item.monsterId) : item)); })} />
                   </div>
-                  <div className={styles.equipmentGrid}>
-                    {(["weapon","armor"] as const).map((type)=>{
-                      const gear=(type==="weapon"?WEAPONS:ARMORS).find((piece)=>piece.id===build[type==="weapon"?"weaponId":"armorId"]);
-                      const key=type==="weapon"?"weaponAttributeIds":"armorAttributeIds";
-                      const selectedIds=build[key];
-                      return <div key={type} className={styles.attributeGroup}><strong>{type==="weapon"?"Weapon":"Armor"} Attributes</strong><div className={styles.attributeSlots}>
-                        {getFixedAttributeIds(gear?.id??null).map((id)=><div key={id} className={styles.fixedAttribute}><img src={assetPath(`/attributes/${id}.png`)} alt={getAttribute(id)?.name??id}/><span>FIXED</span></div>)}
-                        {Array.from({length:getAttributeSlotCount(gear?.rarity)},(_,slot)=><AttributeSelect key={slot} label={`Slot ${slot+1}`} options={getAttributesForGear(type)} value={selectedIds[slot]??null} usedIds={selectedIds} onChangeAction={(value)=>{const next=[...selectedIds];if(value)next[slot]=value;else next.splice(slot,1);updateInventoryBuild(editingInventoryId,{[key]:next})}}/>)}
-                      </div>{!gear?<small>Select gear first.</small>:null}</div>;
-                    })}
-                  </div>
+                  <small className={styles.helper}>Equipment attributes are managed per item in the Equipment inventory.</small>
                   {monster.isEvolved ? <label className={styles.control}>Evolution %
                     <input aria-label="Evolution %" type="number" min={MIN_EVOLUTION_PERCENT} max={MAX_EVOLUTION_PERCENT} step={0.01} value={build.evolutionPercent} onChange={(event) => updateInventoryBuild(editingInventoryId, { evolutionPercent: Number(event.target.value) })} />
                   </label> : null}
@@ -1169,6 +1815,7 @@ export function TeamComposition() {
                     <option value="standard">Standard</option>
                     <option value="boss">Boss</option>
                     <option value="rift">Rift</option>
+                    <option value="spire">Tower / Spire</option>
                     <option value="dungeon">Dungeon</option>
                   </select>
                 </div>
@@ -1180,39 +1827,60 @@ export function TeamComposition() {
               {recommendationMode === "improve" ? (
                 <article className={`${styles.recommendCard} ${styles.improvementPanel}`}>
                   <h3>Who should I improve?</h3>
-                  <p className={styles.helper}>Owned builds only · {goalTitle(goal)} · {combatContext}. Suggested team members appear first. Each preview changes one upgrade at a time, without changing your inventory.</p>
+                  <p className={styles.helper}>Compare your saved Damage, Health, and Skill DPS against one upgrade at a time. These are individual monster gains, not team totals.</p>
+                  <div className={styles.improvementScope} role="group" aria-label="Improvement candidates">
+                    <button type="button" aria-pressed={improvementScope === "team"} onClick={() => setImprovementScope("team")}>Suggested team</button>
+                    <button type="button" aria-pressed={improvementScope === "all"} onClick={() => setImprovementScope("all")}>All owned</button>
+                  </div>
                   {improvementTargets.length ? <div className={styles.improvementList}>
                     {improvementTargets.map(({ copyId, monster, saved, best, options, selected }) => (
                       <div className={styles.improvementCard} key={copyId}>
                         <div className={styles.improvementHeader}>
                           <TeamMonsterPortrait monster={monster} className={styles.improvementPortrait} />
-                          <div><strong>{monster.name}{copyId.includes("::copy-") ? ` · Copy ${copyId.split("::copy-")[1]}` : ""}</strong><small>{compactBuildLabel(saved)}</small></div>
-                          {selected ? <span className={styles.improvementBadge}>Suggested team</span> : null}
+                          <div className={styles.improvementIdentity}>
+                            <strong>{monster.name}{copyId.includes("::copy-") ? ` · Build ${copyId.split("::copy-")[1]}` : ""}</strong>
+                            <small>{compactBuildLabel(saved)}</small>
+                          </div>
+                          {selected ? <span className={styles.improvementBadge}>In suggested team</span> : null}
                         </div>
-                        <div className={styles.improvementNext}><span>Next upgrade to consider</span><strong>{best.label}</strong></div>
-                        <div className={styles.improvementGains}><span>Skill DPS <b>{signedPercent(best.dpsGain)}</b></span><span>Health <b>{signedPercent(best.healthGain)}</b></span></div>
-                        <small className={styles.improvementOther}>Other previews: {options.slice(1).map((option) => option.label).join(" · ") || "No other basic upgrades available"}</small>
+                        <div className={styles.improvementNext}>
+                          <span>{best.category}{best.hypothetical ? " · Not owned" : ""}</span>
+                          <strong>{best.label}</strong>
+                        </div>
+                        {upgradeStatRows(best.before, best.after)}
+                        {improvementScope === "all" && !selected ? <p className={styles.improvementReason}>Shown because this owned monster has an upgrade preview. It is not on your currently suggested team.</p> : null}
+                        {options.length > 1 ? <details className={styles.improvementOther}>
+                          <summary>Other upgrade paths ({options.length - 1})</summary>
+                          <div className={styles.improvementOtherList}>
+                            {options.slice(1).map((option) => <div className={styles.improvementOtherItem} key={option.category}>
+                              <strong>{option.category}{option.hypothetical ? " · Not owned" : ""}</strong>
+                              <span>{option.label}</span>
+                              {upgradeStatRows(option.before, option.after)}
+                            </div>)}
+                          </div>
+                        </details> : null}
                         <button type="button" className={styles.ghostButton} onClick={() => setEditingInventoryId(copyId)}>Edit in Inventory →</button>
                       </div>
                     ))}
-                  </div> : <p className={styles.helper}>Add owned monsters with upgrades remaining to see improvement suggestions.</p>}
-                  <p className={styles.helper}>Estimated stat gains are relative to each monster's current build, not team-wide gains. No upgrade costs, gear availability, or combat rotation are modeled. Level previews stop at 110.</p>
+                  </div> : <p className={styles.helper}>No upgrades found for this view. Try All owned, or add monsters to your inventory.</p>}
+                  <p className={styles.helper}>Previews change one category at a time; gains cannot be added together. Upgrade costs, mutation availability, and skill rotations are not modeled. Level previews stop at {CURRENT_MAX_LEVEL}, rank previews stop at S. Gear you do not own is clearly marked.</p>
                 </article>
               ) : <>
               <button type="button" className={styles.analyzeButton} onClick={() => setAnalysisRun((value) => value + 1)}>✦ {analysisRun ? "Analysis Updated" : "Analyze My Inventory"}</button>
               <article className={`${styles.recommendCard} ${styles.optimizerNotes}`}>
                 <div className={styles.recommendTitleRow}>
                   <div>
-                    <h3>{goalTitle(goal)} · {combatContext === "standard" ? "Standard" : combatContext === "boss" ? "Boss" : combatContext === "rift" ? "Rift" : "Dungeon"}</h3>
+                    <h3>{goalTitle(goal)} · {combatContextLabel(combatContext)}</h3>
                     <p className={`${styles.helper} mt-1`}>{goalDescription(goal)}</p>
                   </div>
-                  {recommendation ? <span className={styles.compositionScore}>{recommendation.scorePercent}</span> : null}
+                  {recommendation ? <span className={styles.compositionScore} title="Gear-aware estimate; not a guaranteed optimal result">Gear-aware</span> : null}
                 </div>
                 {recommendation ? (
                   <>
                     <div className={styles.recommendMetrics}>
                       <div><span>Team DPS</span><strong>{formatStatNumber(recommendation.totalDps)}</strong></div>
                       <div><span>Team HP</span><strong>{formatStatNumber(recommendation.totalHealth)}</strong></div>
+                      {recommendation.totalEffectiveHealth > recommendation.totalHealth * 1.001 ? <div title="Health after active incoming-damage passives, including Rift Guard and Tower/Spire Guard"><span>Effective HP</span><strong>{formatStatNumber(recommendation.totalEffectiveHealth)}</strong></div> : null}
                     </div>
 
                     <div className={styles.scoreBreakdown}>
@@ -1240,7 +1908,7 @@ export function TeamComposition() {
                     </div>
 
                     <div className={styles.recommendList}>
-                      {recommendation.members.map(({ monster, build, dps, health }) => {
+                      {recommendation.members.map(({ monster, build, dps, health }, memberIndex) => {
                         const explanation = recommendation.memberReasons.find((reason) => reason.monsterId === monster.id);
                         return (
                           <div className={styles.recommendRow} key={monster.id}>
@@ -1251,6 +1919,10 @@ export function TeamComposition() {
                               <strong>{monster.name}</strong>
                               <span>{compactBuildLabel(build)}</span>
                               <span>DPS {formatStatNumber(dps)} · HP {formatStatNumber(health)}</span>
+                              {gearRecommendation?.assignments.filter((assignment) => assignment.memberIndex === memberIndex).map(({ copy, from }) => {
+                                const gear = EQUIPMENT.find((item) => item.id === copy.equipmentId);
+                                return gear ? <small key={copy.id} className={styles.helper}>{gear.type === "weapon" ? "⚔" : "⬡"} {gear.name} · owned #{copy.id.slice(-6)}{from && from !== inventoryOwner(build.inventoryCopyId ?? "") ? " · reassign" : ""}</small> : null;
+                              })}
                               {explanation ? <em>{explanation.reasons.join(" · ")}</em> : null}
                             </div>
                           </div>
@@ -1279,7 +1951,7 @@ export function TeamComposition() {
               <article className={styles.recommendCard}>
                 <h3>How the optimizer chose it</h3>
                 <p className={`${styles.helper} mt-2`}>
-                  Recommendations are estimates from a shortlist of up to 26 owned builds, not a guaranteed best team. Skill DPS sums damage per cooldown; it does not simulate cast timing, buff uptime, healing, or shields. Utility scores reward effect coverage. Boss, Rift, and Dungeon apply to both recommendations and Team Overview.
+                  Recommendations compare up to 26 owned builds and allocate unique gear. DPS includes active encounter damage passives and transferable teammate passives; survivability uses effective HP after active guard passives, plus defensive skill coverage. Tower means Spire in the calculator. Skill DPS does not simulate casting, buff uptime, healing or shields. This is a shortlist estimate, not a guaranteed optimum.
                 </p>
                 {recommendation?.alternatives.length ? (
                   <div className={styles.alternativeList}>
@@ -1298,7 +1970,7 @@ export function TeamComposition() {
                             {signedPercent(alternative.dpsDelta)} DPS
                           </span>
                           <span className={alternative.healthDelta >= 0 ? styles.positiveDelta : styles.negativeDelta}>
-                            {signedPercent(alternative.healthDelta)} HP
+                            {signedPercent(alternative.healthDelta)} effective HP
                           </span>
                         </div>
                         <div className={styles.alternativeMembers}>
@@ -1310,10 +1982,14 @@ export function TeamComposition() {
                             {alternative.lostUtility.length ? <span>Loses {alternative.lostUtility.join(", ")}</span> : null}
                           </div>
                         ) : null}
-                        <button type="button" className={styles.alternativeUseButton} onClick={() => setTeam(Array.from({ length: 3 }, (_, memberIndex) => {
-                          const member = alternative.members[memberIndex];
-                          return member ? sanitizeBuild(member.build, member.monster.id) : makeBuild(null);
-                        }))}>Use This Team</button>
+                        <button type="button" className={styles.alternativeUseButton} onClick={() => {
+                          const nextTeam = Array.from({ length: 3 }, (_, memberIndex) => {
+                            const member = alternative.members[memberIndex];
+                            return member ? sanitizeBuild(member.build, member.monster.id) : makeBuild(null);
+                          });
+                          releaseReplacedTemporarySlots(nextTeam);
+                          setTeam(nextTeam);
+                        }}>Use This Team</button>
                       </div>
                     ))}
                   </div>
@@ -1326,7 +2002,7 @@ export function TeamComposition() {
         <section className={styles.useCases} aria-label="Team use cases">
           <div><strong>Combat Context</strong><span>Apply content-specific modifiers independently of your team goal.</span></div>
           <nav aria-label="Choose team use case">
-            {(["standard", "boss", "dungeon", "rift"] as TeamCombatContext[]).map((value) => <button key={value} type="button" className={combatContext === value ? styles.useCaseActive : ""} onClick={() => setCombatContext(value)}>{value === "standard" ? "General" : value === "boss" ? "Bosses" : value === "dungeon" ? "Dungeons" : "Rifts"}</button>)}
+            {(["standard", "boss", "dungeon", "rift", "spire"] as TeamCombatContext[]).map((value) => <button key={value} type="button" className={combatContext === value ? styles.useCaseActive : ""} onClick={() => setCombatContext(value)}>{value === "standard" ? "General" : value === "boss" ? "Bosses" : value === "dungeon" ? "Dungeons" : value === "spire" ? "Tower" : "Rifts"}</button>)}
           </nav>
         </section>
       </div>
