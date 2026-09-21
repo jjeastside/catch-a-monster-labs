@@ -560,12 +560,12 @@ export function TeamComposition() {
     const score = (dps: number, health: number) => goal === "damage" ? dps
       : goal === "survivability" ? health * 0.8 + dps * 0.2
       : goal === "support" ? dps * 0.45 + health * 0.55 : dps * 0.6 + health * 0.4;
-    const withCopy = (build: Build, copy: OwnedEquipmentCopy) => {
+    const withCopy = (build: Build, copy: OwnedEquipmentCopy): Build => {
       const gear = EQUIPMENT.find((item) => item.id === copy.equipmentId)!;
       return gear.type === "weapon" ? { ...build, weaponId: gear.id, weaponAttributeIds: [...copy.attributeIds] }
         : { ...build, armorId: gear.id, armorAttributeIds: [...copy.attributeIds] };
     };
-    const baseline = (build: Build, type: "weapon" | "armor") => type === "weapon"
+    const baseline = (build: Build, type: "weapon" | "armor"): Build => type === "weapon"
       ? { ...build, weaponId: null, weaponAttributeIds: [] }
       : { ...build, armorId: null, armorAttributeIds: [] };
     return { assess, score, withCopy, baseline };
@@ -581,7 +581,7 @@ export function TeamComposition() {
       let candidate = saved;
       for (const type of ["weapon", "armor"] as const) {
         const initial = equipmentPreview.baseline(candidate, type);
-        let best = initial;
+        let best: Build = initial;
         const baseStats = equipmentPreview.assess(monster, initial);
         let highest = equipmentPreview.score(1, 1);
         for (const copy of ownedEquipment) {
