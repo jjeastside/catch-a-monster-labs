@@ -1768,7 +1768,7 @@
 .compareQuickStats { display:flex; flex-wrap:wrap; gap:5px 12px; margin:10px 0 6px; padding:8px; border:1px solid #294967; border-radius:7px; background:#0d2236; color:#91abc6; font-size:11px; }
 .compareQuickStats b { color:#f2f7ff; font-weight:800; }
 .compareGearLine { display:flex; flex-wrap:wrap; gap:5px 11px; padding:2px 1px 9px; color:#8caac5; font-size:10px; }
-.compareGearLine span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.compareGearLine button > span:not(.traitIconFrame):not(.emptyGearIcon) { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .compareGearLine b { color:#e6f0ff; font-weight:700; }
 .compareMutationLine { display:flex; gap:5px; padding:3px 0 8px; }
 .compareMutationLine span { min-width:0; flex:1; height:30px; display:flex; align-items:center; justify-content:center; gap:3px; border:1px solid #29435c; border-radius:6px; background:#0c1a29; color:#b4c6da; font-size:10px; }
@@ -2300,23 +2300,22 @@ button.emptySlot .emptySlotContent small {
 .compareQuickStats .quickTrait > span:nth-child(2) { width:22px; height:22px; flex:0 0 22px; }
 .monsterCoreStats:has(.traitStat) { grid-template-columns:repeat(3,minmax(0,1fr)); }
 
-/* Match the two-layer portrait frame and backgrounds in MonsterOverviewCard. */
+/* Preserve monster rarity frames in team cards and inventory. */
 .slotPortrait[data-rarity="Common"], .inventoryPortrait[data-rarity="Common"] { border-color:#707070; background:linear-gradient(145deg,#353535,#171717); }
 .slotPortrait[data-rarity="Uncommon"], .inventoryPortrait[data-rarity="Uncommon"] { border-color:#28a745; background:linear-gradient(145deg,#174d24,#0c2512); }
 .slotPortrait[data-rarity="Rare"], .inventoryPortrait[data-rarity="Rare"] { border-color:#299ddd; background:linear-gradient(145deg,#17486a,#0b2131); }
 .slotPortrait[data-rarity="Epic"], .inventoryPortrait[data-rarity="Epic"] { border-color:#bd45d8; background:linear-gradient(145deg,#5b1e64,#27102d); }
-.slotPortrait[data-rarity="Legendary"], .inventoryPortrait[data-rarity="Legendary"] { border-color:transparent; background:#f28a22; }
-.slotPortrait[data-rarity="Mythical"], .inventoryPortrait[data-rarity="Mythical"] { border-color:transparent; background:linear-gradient(to right,#ff3347,#ff8a1f,#ffe13b,#35e56f,#22bde8,#b43cff); box-shadow:0 0 12px rgba(124,107,255,.38); }
-.slotPortrait[data-rarity="Secret"], .inventoryPortrait[data-rarity="Secret"] { border-color:transparent; background:#ff2738; }
-.slotPortrait[data-rarity="Void"], .inventoryPortrait[data-rarity="Void"] { border-color:transparent; background:linear-gradient(135deg,#84ff00,#4cff8f,#00f2ff,#0096c7); }
-.portraitInner { width:100%; height:100%; min-width:0; min-height:0; display:grid; place-items:center; overflow:hidden; border-radius:inherit; background:rgba(16,20,29,.85); }
-.portraitInner img { width:100%; height:100%; object-fit:contain; background:transparent; }
+.slotPortrait[data-rarity="Legendary"], .inventoryPortrait[data-rarity="Legendary"] { border-color:#ff9f43; background:linear-gradient(145deg,#6a3a12,#291608); }
+.slotPortrait[data-rarity="Mythical"], .inventoryPortrait[data-rarity="Mythical"] { border-color:transparent; background:linear-gradient(135deg,#ff3347,#ff8a1f,#ffe13b,#35e56f,#22bde8,#b43cff); box-shadow:0 0 12px rgba(124,107,255,.38); }
+.slotPortrait[data-rarity="Secret"], .inventoryPortrait[data-rarity="Secret"] { border-color:#ff7139; background:linear-gradient(145deg,#5d1714,#21130b); box-shadow:0 0 10px rgba(255,74,48,.22); }
+.slotPortrait[data-rarity="Void"], .inventoryPortrait[data-rarity="Void"] { border-color:#35e9d0; background:linear-gradient(135deg,#123c43,#101d2b); box-shadow:0 0 10px rgba(53,233,208,.24); }
+.slotPortrait[data-rarity] img, .inventoryPortrait[data-rarity] img { border-radius:inherit; background:rgba(5,15,25,.86); }
 
 .useCases { display: flex; align-items: center; justify-content: space-between; gap: 20px; border: 1px solid #244b6d; border-radius: 9px; background: #07192a; padding: 8px 14px; }
 .useCases > div { display: grid; }
 .useCases strong { font-size: 12px; }
 .useCases span { margin-top: 2px; color: #89a6c1; font-size: 10px; }
-.useCases nav { display: grid; grid-template-columns: repeat(4, minmax(74px,1fr)); gap: 8px; width: min(520px,55%); }
+.useCases nav { display: grid; grid-template-columns: repeat(6, minmax(74px,1fr)); gap: 8px; width: min(610px,55%); }
 .useCases button { border: 1px solid #2d5273; border-radius: 6px; background: #081726; padding: 7px 11px; color: #bdd3e8; font-size: 10px; }
 .useCases button:hover, .useCases .useCaseActive { border-color: #25a9ff; background: linear-gradient(#126fb9,#0b4b82); color: white; box-shadow: 0 0 12px rgba(18,140,236,.2); }
 
@@ -2353,34 +2352,500 @@ button.emptySlot .emptySlotContent small {
   .useCases nav { grid-template-columns: repeat(3,1fr); }
 }
 
-.goalContextGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-@media (max-width: 560px) { .goalContextGrid { grid-template-columns: 1fr; } }
+/* Compact inventory, with category shells ready for future equipment and item systems. */
+.inventoryOwnedCount { color:#9ab7d5; font-size:10px; white-space:nowrap; }
+.inventoryTabs { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:4px; padding:7px 8px 0; }
+.inventoryTab { min-width:0; border:1px solid #2b4d6b; border-radius:7px; background:#0a1a2c; padding:8px 3px; color:#b9cde2; font-size:10px; white-space:nowrap; }
+.inventoryTab span { color:#91a9c4; }
+.inventoryTabActive { border-color:#2699ff; background:linear-gradient(180deg,#134579,#0b3153); color:#fff; box-shadow:0 0 0 1px #135b95 inset; }
+.inventoryTabActive span { color:#d1e8ff; }
+.inventoryQuickFilters { display:flex; gap:5px; margin-top:8px; overflow-x:auto; padding-bottom:2px; }
+.inventoryQuickFilters .filterChip { border-radius:6px; white-space:nowrap; padding:6px 8px; }
+.inventoryEmptyTab { min-height:240px; padding:42px 18px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px; text-align:center; }
+.inventoryEmptyIcon { font-size:30px; color:#6cb7ff; }
+.inventoryEmptyTab strong { color:#e8f5ff; font-size:13px; }
+.inventoryEmptyTab p { max-width:245px; color:#91acc7; font-size:11px; line-height:1.6; }
+.inventoryRow { grid-template-columns:36px minmax(0,1fr) auto; min-height:45px; gap:7px; margin-bottom:3px; padding:4px 5px; background:#0a1d30; border-color:#294765; }
+.inventoryPortrait { width:34px; height:34px; }
+.inventoryName { font-size:11px; }
+.inventoryMeta { font-size:9px; }
+.inventoryRow .rowActions { display:flex; flex-direction:row; align-items:center; gap:3px; opacity:1; }
+.inventoryBadges span, .inventoryBadges b { font-size:9px; padding:2px 4px; }
+.favoriteButton { display:grid!important; place-items:center; min-width:22px; height:25px; border:0; background:transparent; color:#8098b3; font-size:21px; cursor:pointer; }
+.favoriteButtonActive { color:#6cafff; }
+.favoriteButton:hover { color:#a8d5ff; }
+.inventoryRow .rowActions > .favoriteButton { display:grid!important; }
+.inventoryRow:hover .inventoryBadges, .inventoryRow:focus-within .inventoryBadges { display:flex; }
+.copyList { grid-column:1/-1; margin-top:0; }
+.copyList:not([open]) { border:0; }
+.copyList summary { font-size:9px; padding:2px 3px; }
+/* Portrait gradients are defined by the shared Calculator portrait helper. */
+.inventoryPortrait[data-rarity] img { background:transparent; }
 
-/* Team metrics reuse the Team Builder stat artwork; utility icons remain outlined SVGs. */
-.overviewCard .overviewLabel { display: flex; align-items: center; gap: 6px; line-height: 1.25; }
-.overviewIcon { display: block; flex: 0 0 15px; width: 15px; height: 15px; }
-.overviewIcon_damage { color: #ff6284; }
-.overviewIcon_health { color: #61e48b; }
-.overviewIcon_dps { color: #ffcd62; }
-.overviewIcon_survivability { color: #67c3ff; }
-.overviewIcon_synergy { color: #d397ff; }
+/* Owned equipment inventory */
+.equipmentAddRow { display:flex; gap:6px; margin-bottom:9px; }
+.equipmentAddRow select { flex:1; min-width:0; }
+.equipmentAddRow button { flex-shrink:0; }
+.equipmentInventoryGroup { padding:7px; margin:5px 0; background:#0a1e31; border:1px solid #284968; border-radius:9px; }
+.equipmentInventoryHeader { display:flex; align-items:center; gap:8px; min-width:0; }
+.equipmentInventoryIcon { width:37px; height:37px; object-fit:contain; border:1px solid; border-radius:7px; background:#10273a; }
+.equipmentInventoryName { min-width:0; flex:1; display:flex; flex-direction:column; gap:2px; }
+.equipmentInventoryName strong { font-size:11px; color:#eaf5ff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.equipmentInventoryName small { font-size:10px; }
+.equipmentInventoryQuantity { color:#a3cff1; background:#152d45; border:1px solid #305576; border-radius:5px; padding:2px 6px; font-size:11px; }
+.equipmentCopyRow { display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin-top:6px; padding-top:6px; border-top:1px solid #23435c; }
+.equipmentCopyRow > span { min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:10px; color:#a9c7e0; }
+.equipmentCopyEditor { flex-basis:100%; display:grid; gap:6px; padding:5px 0; }
+.equipmentCopyEditor label { display:grid; gap:3px; font-size:10px; color:#b4d1e8; }
+.equipmentCopyEditor select { min-width:0; width:100%; background:#061727; border:1px solid #335777; border-radius:5px; padding:7px; color:#e8f4ff; }
 
-/* Inventory improvement recommendations */
-.recommendModeTabs { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
-.recommendModeTabs button { border: 1px solid #2b5274; border-radius: 7px; padding: 9px 6px; background: #091e31; color: #a5c3de; font-size: 11px; font-weight: 800; }
-.recommendModeTabs button[aria-pressed="true"] { border-color: #48a6ff; background: #12385c; color: #f3faff; }
-.improvementPanel { display: grid; gap: 9px; }
-.improvementList { display: grid; gap: 8px; }
-.improvementCard { display: grid; gap: 8px; padding: 10px; border: 1px solid #2a4a68; border-radius: 9px; background: #0b2136; min-width: 0; }
-.improvementHeader { display: flex; gap: 8px; align-items: center; min-width: 0; flex-wrap: wrap; }
-.improvementHeader > div:nth-child(2) { display: grid; gap: 3px; flex: 1; min-width: 100px; }
-.improvementHeader strong { font-size: 12px; }
-.improvementHeader small, .improvementOther { color: #91acc5; font-size: 10px; }
-.improvementPortrait { flex: 0 0 42px; width: 42px; height: 42px; border: 2px solid; border-radius: 9px; overflow: hidden; }
-.improvementBadge { border: 1px solid #397aa8; background: #123858; color: #88d0ff; border-radius: 15px; padding: 3px 6px; font-size: 9px; font-weight: 800; }
-.improvementNext { display: grid; gap: 3px; }
-.improvementNext span { color: #95afc8; font-size: 10px; }
-.improvementNext strong { color: #d5ebff; font-size: 12px; }
-.improvementGains { display: flex; gap: 8px; flex-wrap: wrap; font-size: 10px; color: #9db7d0; }
-.improvementGains b { color: #64e2a6; }
-.improvementCard .ghostButton { width: 100%; }
+/* Owned gear: reuse the Calculator's visual attribute selector and rarity artwork. */
+.equipmentAttributeHeading { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:5px; color:#ecf5ff; font-size:12px; }
+.equipmentAttributeHeading small { color:#96b9d1; font-size:10px; }
+.equipmentAttributeGrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+.equipmentAttributeGrid > * { min-width:0; }
+.equipmentFixedAttribute { position:relative; display:grid; place-items:center; aspect-ratio:2.85 / 1; min-height:54px; overflow:hidden; padding:2px; border:1px solid #b77e34; border-radius:6px; background:#081a2c; }
+.equipmentFixedAttribute img { width:100%; max-height:100%; object-fit:contain; }
+.equipmentFixedAttribute span { position:absolute; top:3px; right:3px; padding:2px 4px; font-size:8px; font-weight:700; color:#ffc57b; background:#24180bde; border-radius:3px; }
+
+/* Owned gear picker: individual inventory copies with their Calculator rarity and attributes. */
+.ownedGearSelect { position:relative; min-width:0; border:1px solid #345777; background:#0a2034; border-radius:8px; color:#eaf5ff; }
+.ownedGearSelect summary { list-style:none; cursor:pointer; padding:7px; min-width:0; }
+.ownedGearSelect summary::-webkit-details-marker { display:none; }
+.ownedGearLabel { display:block; font-size:10px; color:#91bfdf; margin-bottom:4px; }
+.ownedGearCurrent { display:flex; align-items:center; gap:7px; min-width:0; }
+.ownedGearCurrent img, .ownedGearOptions img { width:32px; height:32px; flex-shrink:0; object-fit:contain; background:#10273a; border:1px solid; border-radius:6px; }
+.ownedGearCurrent span, .ownedGearOptions button > span { min-width:0; display:flex; flex-direction:column; gap:3px; font-size:11px; overflow-wrap:anywhere; }
+.ownedGearCurrent small, .ownedGearOptions small { color:#9fc3dc; font-size:10px; font-weight:normal; }
+.ownedGearOptions { display:grid; gap:3px; margin:3px 5px 6px; max-height:220px; overflow:auto; }
+.ownedGearOptions button { display:flex; align-items:center; text-align:left; gap:7px; width:100%; padding:5px; border:1px solid #284961; border-radius:6px; background:#102a42; color:#eaf5ff; cursor:pointer; }
+.ownedGearOptions button:hover:not(:disabled), .ownedGearActive { border-color:#66bcf5 !important; background:#163d58 !important; }
+.ownedGearOptions button:disabled { opacity:.52; cursor:not-allowed; }
+
+/* Step 6: readable recommendation controls and cards at narrow sidebar widths. */
+.recommendModeTabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+  margin: 10px 0;
+  min-width: 0;
+}
+.recommendModeTabs button {
+  min-width: 0;
+  min-height: 36px;
+  padding: 7px 5px;
+  border: 1px solid #315779;
+  border-radius: 7px;
+  background: #0b2034;
+  color: #bad5ec;
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.25;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+  cursor: pointer;
+}
+.recommendModeTabs button[aria-pressed="true"] {
+  border-color: #399efa;
+  background: linear-gradient(180deg, #15558a, #10385d);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px #266ea4;
+}
+.recommendModeTabs button:hover { border-color: #60b8fa; }
+.recommendTitleRow > div { flex: 1 1 0; min-width: 0; }
+.recommendTitleRow h3 { overflow-wrap: anywhere; }
+.compositionScore {
+  display: inline-flex;
+  width: auto;
+  height: auto;
+  min-height: 24px;
+  max-width: 88px;
+  padding: 4px 7px;
+  flex: 0 0 auto;
+  border-radius: 6px;
+  font-size: 9px;
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.recommendDetails { min-width: 0; }
+.recommendDetails strong { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ownedGearCurrent { min-width: 0; }
+.ownedGearCurrent > span { flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; }
+.ownedGearOptions button > span { flex: 1 1 0; }
+.equipmentCopyRow > button { flex: 0 0 auto; }
+@media (max-width: 420px) {
+  .recommendModeTabs button { font-size: 10px; }
+  .equipmentAttributeGrid { grid-template-columns: minmax(0, 1fr); }
+  .equipmentAddRow { flex-wrap: wrap; }
+  .equipmentAddRow select { flex: 1 1 100%; }
+  .inventoryTabs { gap: 3px; }
+  .inventoryTab { padding-inline: 2px; font-size: 9px; }
+}
+
+/* Compact three-way equipment row and click-to-replace portrait/name. */
+.slotMonsterPickerTrigger {
+  display:grid; width:100%; border:0; background:transparent; color:inherit;
+  cursor:pointer; font:inherit;
+}
+.slotMonsterPickerTrigger:hover .slotPortrait,
+.slotMonsterPickerTrigger:focus-visible .slotPortrait { outline:2px solid #62baff; outline-offset:2px; }
+.slotMonsterPickerTrigger:focus-visible { outline:2px solid #62baff; outline-offset:2px; border-radius:8px; }
+.compareGearLine { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.compareGearLine .gearTrait > span:last-child { min-width:0; }
+.compareGearLine .gearTrait > span:last-child b { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.monsterCoreStats { margin-top:6px; }
+@media(max-width:640px) {
+  .compareGearLine { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .compareGearLine button { padding:4px 3px; gap:3px; }
+  .compareGearLine .gearTrait > span:last-child b { font-size:7px; }
+}
+
+/* Single, explicit team-card gear layout. Trait spans two columns so its full
+   name remains visible even on narrow screens. Only label spans are truncated;
+   never apply clipping or full-width selectors to the nested TraitIcon. */
+.compareGearLine { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px; }
+.compareGearLine > button { min-width:0; }
+.compareGearLine > button.gearTrait {
+  grid-column:1 / -1; display:flex; align-items:center; justify-content:flex-start;
+  min-height:38px; padding:5px 7px; gap:8px; overflow:visible;
+}
+.compareGearLine button.gearTrait > .traitIconFrame {
+  display:inline-flex; flex:0 0 28px; width:28px; height:28px;
+  min-width:28px; max-width:28px; overflow:visible; white-space:normal;
+}
+.compareGearLine button.gearTrait .traitIconFrame span {
+  min-width:0; max-width:none; overflow:visible; white-space:normal;
+  text-overflow:clip; flex-shrink:0;
+}
+.compareGearLine button.gearTrait .traitIconFrame > span { width:28px; height:28px; }
+.compareGearLine button.gearTrait .traitIconFrame > span > span { overflow:hidden; }
+.compareGearLine button.gearTrait > .gearTraitText {
+  display:flex; flex:1 1 auto; flex-direction:row; align-items:center;
+  justify-content:flex-start; flex-wrap:wrap; gap:4px 8px; width:auto;
+  min-width:0; max-width:none; overflow:visible; white-space:normal;
+  text-align:left;
+}
+.compareGearLine button.gearTrait .gearTraitLabel {
+  display:inline; width:auto; flex:none; color:#91aec9;
+  font-size:10px; font-weight:800; line-height:1.2;
+  white-space:nowrap; overflow:visible;
+}
+.compareGearLine button.gearTrait .gearTraitText b {
+  display:inline; width:auto; max-width:none; color:#e8f2ff;
+  font-size:11px; line-height:1.2; white-space:normal;
+  overflow:visible; text-overflow:clip; overflow-wrap:anywhere;
+}
+.traitEditorLabel { display:block; margin-bottom:6px; color:#9ebdd8; font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+
+/* Team trait is OUTSIDE compareGearLine: legacy gear-row span selectors must not
+   clip the shared TraitIcon's nested frame, surface, or symbol. */
+.teamTraitRow {
+  display:flex; align-items:center; width:100%; min-width:0; min-height:38px;
+  gap:8px; padding:5px 8px; margin:0 0 5px;
+  background:#091a2c; border:1px solid #2d5578; border-radius:6px;
+  color:#eaf3ff; text-align:left; cursor:pointer;
+}
+.teamTraitRow:hover, .teamTraitRow:focus-visible { border-color:#4699d6; background:#102b45; }
+.teamTraitRow > :first-child { flex:0 0 28px; }
+.teamTraitEmptyIcon { display:grid; place-items:center; width:28px; height:28px; color:#708ca7; }
+.teamTraitLabel { flex:0 0 auto; color:#9ab7d2; font-size:10px; font-weight:800; }
+.teamTraitName { min-width:0; color:#eaf3ff; font-size:11px; font-weight:800; white-space:normal; overflow-wrap:anywhere; }
+
+/* Team Overview: image assets and SVGs must be small inline labels, even on
+   wide screens. Previously overviewIcon/overviewLabel had no CSS at all. */
+.overviewCard { min-width: 0; }
+.overviewCard .overviewLabel {
+  display: flex; align-items: center; gap: 6px; min-width: 0;
+  color: #9ebbd5; font-size: 10px; line-height: 1.3;
+}
+.overviewCard .overviewIcon,
+.overviewCard .overviewLabel > img,
+.overviewCard .overviewLabel > svg {
+  display: block; width: 17px; height: 17px;
+  min-width: 17px; max-width: 17px; max-height: 17px;
+  flex: 0 0 17px; object-fit: contain;
+}
+.overviewCard strong { overflow-wrap: anywhere; }
+
+/* Improve My Monsters: scoped card layout; prevents raw, unstyled content
+   from growing portraits and joining labels/values at sidebar widths. */
+.recommendBody:has(.improvementPanel) { display: block; min-width: 0; }
+.improvementPanel { min-width: 0; overflow: hidden; }
+.improvementPanel > h3 { margin: 0 0 5px; }
+.improvementPanel .helper {
+  margin: 6px 0 10px; color: #94b5d0;
+  font-size: 10px; line-height: 1.5; overflow-wrap: anywhere;
+}
+.improvementScope { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; margin: 10px 0; }
+.improvementScope button {
+  min-width: 0; border: 1px solid #325773; border-radius: 6px;
+  padding: 7px 5px; background: #0b1d30; color: #a9c8e0;
+  font-size: 10px; line-height: 1.25; font-weight: 750; cursor: pointer;
+}
+.improvementScope button[aria-pressed="true"] { border-color: #349ff0; background: #123f67; color: #fff; }
+.improvementList { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.improvementCard {
+  min-width: 0; padding: 10px; border: 1px solid #315672;
+  border-radius: 8px; background: linear-gradient(150deg, #112940, #081a2c);
+}
+.improvementHeader { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; min-width: 0; margin-bottom: 10px; }
+.improvementPortrait {
+  display: block; width: 44px; height: 44px; max-width: 44px;
+  flex: 0 0 44px; overflow: hidden; border: 2px solid #41759c;
+  border-radius: 7px; background: #081727;
+}
+.improvementPortrait > div { width: 100%; height: 100%; }
+.improvementPortrait img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.improvementIdentity { display: flex; flex: 1 1 115px; flex-direction: column; gap: 3px; min-width: 0; }
+.improvementIdentity strong { color: #f0f7ff; font-size: 11px; line-height: 1.3; overflow-wrap: anywhere; }
+.improvementIdentity small { color: #9ab9d3; font-size: 10px; }
+.improvementBadge {
+  border: 1px solid #39867e; border-radius: 5px; padding: 3px 5px;
+  background: #0d373b; color: #9ff1d5; font-size: 9px; line-height: 1.2;
+}
+.improvementNext { display: flex; flex-direction: column; gap: 3px; min-width: 0; margin: 0 0 8px; }
+.improvementNext > span { color: #84b9e4; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+.improvementNext > strong { color: #f2f7ff; font-size: 12px; line-height: 1.35; overflow-wrap: anywhere; }
+.improvementStatRows { display: grid; gap: 3px; min-width: 0; }
+.improvementStatRow {
+  display: grid; grid-template-columns: 56px minmax(0,1fr); align-items: baseline;
+  column-gap: 6px; row-gap: 2px; min-width: 0;
+  padding: 5px 6px; border: 1px solid #26455f; border-radius: 5px;
+  background: #071a2b; font-variant-numeric: tabular-nums;
+}
+.improvementStatRow > span { color: #94bad7; font-size: 9px; font-weight: 750; }
+.improvementStatRow > strong { color: #eaf7ff; font-size: 10px; font-weight: 800; line-height: 1.3; overflow-wrap: anywhere; }
+.improvementStatRow > strong > span { color: #6f9ebf; padding-inline: 1px; }
+.improvementStatRow > small { grid-column: 2; color: #70dbac; font-size: 9px; font-weight: 800; }
+.improvementReason { margin-top: 8px; color: #93b1ce; font-size: 10px; line-height: 1.45; }
+.improvementOther { min-width: 0; margin: 10px 0; border-top: 1px solid #294967; padding-top: 8px; }
+.improvementOther summary { color: #9ad3fc; cursor: pointer; font-size: 10px; font-weight: 800; }
+.improvementOtherList { display: grid; gap: 7px; margin-top: 8px; }
+.improvementOtherItem { min-width: 0; border: 1px solid #284966; border-radius: 6px; padding: 7px; background: #0a2034; }
+.improvementOtherItem > strong, .improvementOtherItem > span { display: block; overflow-wrap: anywhere; }
+.improvementOtherItem > strong { color: #b4dcfc; font-size: 10px; }
+.improvementOtherItem > span { margin: 3px 0 6px; color: #d9eaff; font-size: 10px; }
+.improvementCard > .ghostButton { width: 100%; margin-top: 9px; }
+
+
+/* v5: weapon and armor occupy the gear row. Trait returns to the compact
+   level/rank/enhancement/genetic-potential line, without an extra gear tile. */
+.compareGearLine { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px; padding:4px 0 5px; }
+.compareGearLine > button { min-width:0; min-height:34px; width:100%; padding:4px 6px; }
+.compareGearLine > button > span:not(.emptyGearIcon) { min-width:0; }
+.compareGearLine > button > span b { font-size:9px; }
+
+.compareQuickStats {
+  display:flex; justify-content:center; align-items:center;
+  flex-wrap:wrap; column-gap:4px !important; row-gap:2px; margin:2px 0 6px;
+}
+.compareQuickStats .quickGp { display:inline-flex; align-items:center; margin-left:0; gap:2px; }
+.compareQuickStats .quickGp img { width:12px; height:12px; flex:0 0 12px; object-fit:contain; }
+.compareQuickStats .quickGp b { font-size:9px; font-variant-numeric:tabular-nums; }
+.compareQuickStats button.quickTrait {
+  display:inline-flex; align-items:center; justify-content:center; flex:0 1 auto;
+  gap:3px; min-width:0; max-width:100%; border:0; border-radius:4px;
+  padding:2px 3px; background:transparent; color:#91abc6;
+}
+.compareQuickStats button.quickTrait:hover,
+.compareQuickStats button.quickTrait:focus-visible { background:#163148; outline:1px solid #47749c; }
+.compareQuickStats .quickTraitLabel { width:auto; flex:0 0 auto; font-size:9px; white-space:nowrap; }
+.compareQuickStats .quickTraitIcon {
+  display:inline-flex; align-items:center; justify-content:center;
+  flex:0 0 19px; width:19px; height:19px; overflow:visible;
+}
+/* Limit ONLY the outer frame; keep the nested rarity artwork/symbol intact. */
+.compareQuickStats .quickTraitIcon > span { width:19px; height:19px; min-width:19px; min-height:19px; flex:0 0 19px; }
+.compareQuickStats .quickTraitEmptyIcon { display:grid; place-items:center; font-size:15px; }
+.compareQuickStats .quickTraitName {
+  display:block; min-width:0; max-width:90px; overflow:hidden;
+  color:#edf5ff; font-size:10px; font-weight:800;
+  text-overflow:ellipsis; white-space:nowrap;
+}
+
+/* Use the Calculator's image-rich equipment picker for the inventory Add Gear
+   control; the selection and all options include their own gear illustrations. */
+.equipmentAddRow { display:flex; align-items:flex-end; flex-wrap:nowrap; gap:6px; margin-bottom:9px; }
+.equipmentAddPicker { flex:1 1 0; min-width:0; }
+.equipmentAddPicker > div { min-width:0; }
+.equipmentAddPicker > div > button { max-width:100%; }
+.equipmentAddRow > button { flex:0 0 auto; min-height:39px; }
+.equipmentAddRow .equipmentAddPicker [role="listbox"] { z-index:70; }
+@media (max-width:420px) {
+  .equipmentAddRow { flex-wrap:nowrap; }
+  .equipmentAddPicker { flex:1 1 0; min-width:0; }
+  .compareQuickStats .quickTraitName { max-width:78px; }
+}
+
+
+/* v6: keep Inventory actions inside their panel at every sidebar width. */
+.inventoryPanelHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  column-gap: 7px;
+  row-gap: 6px;
+}
+.inventoryHeaderTitle { flex: 1 1 95px; min-width: 0; }
+.inventoryPanelHeader .inventoryOwnedCount { flex: 0 0 auto; }
+.inventoryPanelHeader .inventoryPortability {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 100%;
+  gap: 4px;
+  margin-left: auto;
+}
+.inventoryPanelHeader .inventoryPortability button { flex: 0 0 auto; }
+
+/* v6: an in-flow, panel-width image picker. Unlike the shared absolute menu,
+   it cannot escape or be clipped horizontally by the Inventory panel. */
+.equipmentAddControl { min-width: 0; width: 100%; margin-bottom: 9px; }
+.equipmentAddControl .equipmentAddRow { margin-bottom: 0; }
+.equipmentAddPicker { flex: 1 1 0; min-width: 0; }
+.equipmentAddLabel {
+  display: block; margin-bottom: 5px; color: #91abc6;
+  font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em;
+}
+.equipmentAddTrigger {
+  display: flex; align-items: center; gap: 6px;
+  width: 100%; min-width: 0; min-height: 39px; box-sizing: border-box;
+  border: 1px solid #315d82; border-radius: 7px; background: #081c2d;
+  padding: 4px 7px; text-align: left; color: #e8f4ff; cursor: pointer;
+}
+.equipmentAddTrigger:hover, .equipmentAddTrigger:focus-visible { border-color: #65b6ee; outline-offset: 2px; }
+.equipmentAddSelected { display: flex; flex: 1 1 0; min-width: 0; align-items: center; gap: 5px; }
+.equipmentAddSelected img { width: 29px; height: 29px; flex: 0 0 29px; object-fit: contain; border: 1px solid; border-radius: 5px; background: #132b40; }
+.equipmentAddSelected > span { display: flex; flex: 1 1 0; flex-direction: column; min-width: 0; gap: 2px; }
+.equipmentAddSelected strong, .equipmentAddSelected small {
+  display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.equipmentAddSelected strong { font-size: 10px; }
+.equipmentAddSelected small { font-size: 9px; }
+.equipmentAddPlaceholder { flex: 1 1 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; color: #9fb7cf; }
+.equipmentAddCaret { flex: 0 0 auto; font-size: 10px; color: #9db8d2; }
+.equipmentAddMenu {
+  display: grid; gap: 3px; box-sizing: border-box;
+  width: 100%; min-width: 0; max-height: min(310px, 48vh); overflow-y: auto;
+  margin-top: 5px; padding: 5px;
+  border: 1px solid #315d82; border-radius: 8px;
+  background: #071a2c; scrollbar-color: #3d7098 transparent;
+}
+.equipmentAddOption {
+  display: flex; align-items: center; gap: 7px;
+  width: 100%; min-width: 0; box-sizing: border-box;
+  padding: 5px; border: 1px solid transparent; border-radius: 6px;
+  background: transparent; color: #e8f4ff; text-align: left; cursor: pointer;
+}
+.equipmentAddOption:hover, .equipmentAddOption:focus-visible, .equipmentAddOptionActive {
+  border-color: #3b769f; background: #133750;
+}
+.equipmentAddOption img {
+  width: 36px; height: 36px; flex: 0 0 36px; object-fit: contain;
+  border: 1px solid; border-radius: 6px; background: #132b40;
+}
+.equipmentAddOption > span:not(.equipmentAddCheck) { display: flex; flex: 1 1 0; flex-direction: column; min-width: 0; gap: 3px; }
+.equipmentAddOption strong, .equipmentAddOption small {
+  display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.equipmentAddOption strong { font-size: 11px; }
+.equipmentAddOption small { font-size: 9px; }
+.equipmentAddCheck { flex: 0 0 auto; color: #77c6ff; }
+
+/* v7: remove the redundant pencil and closed editor row; quick values and gear
+   tiles still open the existing build-settings overlay when clicked. */
+.changeMonsterButton { display: none; }
+.compareEditor:not([open]) { display: none; }
+.compareEditor[open] > summary { display: flex; justify-content: space-between; gap: 12px; }
+.compareEditor[open] > summary span:first-child { margin-left: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.compareEditor[open] > summary span:last-child { margin-left: auto; white-space: nowrap; cursor: pointer; color: #b5dcff; }
+.slotTitle span:first-child { width: calc(100% - 42px); }
+
+/* Four mutation choices always visible: grayscale means not selected, color
+   means normal or X. No legacy display:none rule should hide this row. */
+.mutationSummary { display:flex; align-items:center; justify-content:space-between; gap:5px; margin:5px 0 3px; color:#91acc9; font-size:9px; }
+.mutationSummary > span { flex:0 0 auto; font-weight:800; letter-spacing:.045em; text-transform:uppercase; }
+.mutationSummary > small { min-width:0; overflow:hidden; color:#7593af; font-size:8px; text-overflow:ellipsis; white-space:nowrap; }
+.compareMutationLine { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:5px; padding:0 0 6px; }
+.compareMutationLine button { position:relative; display:flex; min-width:0; width:100%; height:33px; align-items:center; justify-content:center; border:1px solid #29435c; border-radius:6px; padding:3px 5px; background:#091a2a; cursor:pointer; }
+.compareMutationLine button img { display:block; width:23px; height:23px; object-fit:contain; filter:grayscale(1); opacity:.33; }
+.compareMutationLine button.compareMutationActive { border-color:#47769d; background:#143047; }
+.compareMutationLine button.compareMutationActive img { filter:none; opacity:1; }
+.compareMutationLine button.compareMutationX { border-color:#8c6adc; background:#221c3e; }
+.compareMutationLine button:hover, .compareMutationLine button:focus-visible { border-color:#70bafa; background:#183853; outline-offset:2px; }
+.compareMutationLine button .mutationXBadge { position:absolute; top:1px; right:3px; width:auto; height:auto; min-width:0; flex:none; border:0; padding:0; background:transparent; color:#e4cdff; font-size:9px; font-weight:900; line-height:1; }
+
+/* v9 — compact inventory: one filter row, one sort/favorites row, and
+   secondary import/visibility tools behind a disclosure. Avoid another
+   horizontal carousel in the already narrow inventory panel. */
+.inventoryBody { min-width: 0; }
+.inventoryToolbar { display: flex; flex-direction: column; gap: 6px; min-width: 0; margin-top: 7px; }
+.inventoryFilters {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px; min-width: 0; overflow: visible;
+}
+.inventoryFilters .filterChip { min-width: 0; padding: 6px 1px; font-size: 10px; }
+.inventoryTools { display: grid; grid-template-columns: minmax(0, 1fr) minmax(82px, 0.85fr); gap: 5px; min-width: 0; }
+.inventoryTools > button { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.inventoryTools .inventorySort { width: 100%; min-width: 0; }
+.inventoryExtras { margin-top: 7px; border: 1px solid #264a67; border-radius: 6px; background: #091b2d; }
+.inventoryExtras > summary {
+  padding: 6px 9px; color: #95b5d3; font-size: 10px;
+  font-weight: 700; cursor: pointer; list-style: none;
+}
+.inventoryExtras > summary::-webkit-details-marker { display: none; }
+.inventoryExtras > summary::before { content: '▸'; display: inline-block; margin-right: 6px; }
+.inventoryExtras[open] > summary::before { transform: rotate(90deg); }
+.inventoryExtras .pickerPreferences { padding: 3px 8px 8px; margin: 0; flex-wrap: wrap; }
+.inventoryExtras .indexImportButton { margin: 0 8px 8px; width: calc(100% - 16px); min-height: 29px; font-size: 10px; }
+.inventoryList { margin-top: 7px; }
+.inventoryRow { position: relative; padding: 6px 5px; gap: 5px; grid-template-columns: 35px minmax(0, 1fr) auto; }
+.inventoryRow .rowActions { padding-right: 20px; gap: 3px; }
+.inventoryRow .rowActions > button { display: none; }
+.inventoryRow .rowActions > .ownedButton,
+.inventoryRow .rowActions > .favoriteButton:focus-visible,
+.inventoryRow .rowActions > .inventoryActionButton:focus-visible { display: grid; }
+.inventoryRow:hover .rowActions > button,
+.inventoryRow:focus-within .rowActions > button { display: grid; }
+.inventoryRow:hover .inventoryBadges,
+.inventoryRow:focus-within .inventoryBadges { display: none; }
+.inventoryName { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.inventoryMeta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* The saved-build menu is accessible on the card, but no longer takes a
+   dedicated explanatory line under every monster in a 200+ entry list. */
+.copyList { grid-column: 1 / -1; width: 100%; margin: 0; border: 0; }
+.copyList > summary {
+  position: absolute; top: 50%; right: 4px; transform: translateY(-50%);
+  display: grid; place-items: center; width: 20px; height: 24px;
+  padding: 0; margin: 0; border: 1px solid transparent; border-radius: 5px;
+  color: #93b9d7; font-size: 17px; line-height: 1;
+}
+.copyList > summary::before { content: none; }
+.copyList[open] > summary { top: 18px; transform: none; border-color: #366b91; background: #123450; }
+.copyList > summary:hover, .copyList > summary:focus-visible { border-color: #559ad0; color: white; }
+.copyList .copyRow { margin-top: 6px; border-top: 1px solid #224565; }
+@media (hover: none) {
+  .inventoryRow .inventoryBadges { display: none; }
+  .inventoryRow .rowActions > button { display: grid; }
+}
+/* Override legacy !important rules on the favorite icon without removing the
+   important Add/+ button. Touch devices keep all actions accessible. */
+@media (hover: hover) {
+  .inventoryRow:not(:hover):not(:focus-within) .rowActions > .favoriteButton,
+  .inventoryRow:not(:hover):not(:focus-within) .rowActions > .inventoryActionButton:not(.ownedButton):not([title="Add to inventory"]) {
+    display: none !important;
+  }
+}
+.inventoryRow .rowActions > .ownedButton,
+.inventoryRow .rowActions > button[title="Add to inventory"] { display: grid !important; }
+@media (hover: none) {
+  .inventoryRow .rowActions > .favoriteButton,
+  .inventoryRow .rowActions > .inventoryActionButton { display: grid !important; }
+}
+.inventoryBadges > span { display: flex; align-items: center; gap: 2px; white-space: nowrap; }
+.inventoryBadges > span b { min-width: 0; padding: 0; border: 0; background: transparent; font-size: inherit; }

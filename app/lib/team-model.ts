@@ -1,6 +1,8 @@
 import { monsters } from "../data/monsters";
 import { getMonsterStatData } from "../data/monster-stats";
 import { getSkill } from "../data/skills";
+import { mergeUniquePassives } from "../data/passives";
+import { getPassiveEffectTotals } from "./calculations/passive-effects";
 import { ARMORS, WEAPONS } from "../data/equipments";
 import { getAvailableTraits } from "../data/traits";
 import { getAttribute } from "../data/attributes";
@@ -10,7 +12,7 @@ import { getAttributeSlotCount } from "./calculations/attributes";
 import { clampEvolutionPercent } from "./calculations/evolution";
 import { GENETIC_POTENTIAL_VALUES } from "./calculations/genetic-potential";
 import { EXPERIMENTAL_MAX_LEVEL, MIN_LEVEL } from "./level-config";
-import { createDefaultBuild, type Build, type Mutation, type Rank } from "../types/build";
+import { createDefaultBuild, type Build, type MonsterPassive, type Mutation, type Rank } from "../types/build";
 import type { Monster } from "../types/monster";
 
 export const TEAM_STORAGE_KEY = "cam-lab-team-composition-v1";
@@ -28,9 +30,9 @@ export const mutationOptions: Array<{ id: Mutation; label: string }> = [
   { id: "fairy-x", label: "Fairy X" },
 ];
 export type TeamGoal = "damage" | "balanced" | "survivability" | "support";
-export type TeamCombatContext = "standard" | "boss" | "rift" | "dungeon";
+export type TeamCombatContext = "standard" | "boss" | "rift" | "spire" | "dungeon";
 export function normalizeCombatContext(value: unknown): TeamCombatContext {
-  return value === "boss" || value === "rift" || value === "dungeon" ? value : "standard";
+  return value === "boss" || value === "rift" || value === "spire" || value === "dungeon" ? value : "standard";
 }
 export function migrateGoalContext(goal: unknown, context: unknown): { goal: TeamGoal; combatContext: TeamCombatContext } {
   const legacyContext = normalizeCombatContext(goal);
@@ -100,7 +102,7 @@ export function sanitizeBuild(saved: Partial<Build>, monsterId: string): Build {
     ...base,
     monsterId,
     inventoryCopyId: typeof saved.inventoryCopyId === "string" &&
-      (saved.inventoryCopyId === monsterId || /^.+::copy-[2-9]\d*$/.test(saved.inventoryCopyId)) &&
+      (saved.inventoryCopyId === monsterId || /^.+::copy-(?:[2-9]|[1-9]\d+)$/.test(saved.inventoryCopyId)) &&
       copyMonsterId(saved.inventoryCopyId) === monsterId ? saved.inventoryCopyId : undefined,
     rank: ranks.includes(saved.rank as Rank) ? (saved.rank as Rank) : "E",
     level: integer(saved.level, MIN_LEVEL, EXPERIMENTAL_MAX_LEVEL, base.level),
@@ -256,16 +258,43 @@ export function mergeIndexProgress(current: InventoryBuilds, value: unknown) {
   return { inventory, imported };
 }
 
+/** Use the exact passive de-duplication and transfer rules from Calculator Results. */
+export function getEffectiveTeamPassives(monster: Monster, build: Build): MonsterPassive[] {
+  const teamPassives = build.teammateMonsterIds.map((id) => id ? monsterById.get(id)?.passives : undefined);
+  return mergeUniquePassives(monster.passives, ...teamPassives);
+}
+
+/** HP expressed as the amount of pre-mitigation damage the build can take.
+ * General and encounter-specific incoming-damage modifiers belong to separate
+ * categories and are multiplied, as in the calculator's category model.
+ */
+export function effectiveTeamHealth(monster: Monster, build: Build, health: number): number {
+  if (health <= 0) return 0;
+  const effects = getPassiveEffectTotals(getEffectiveTeamPassives(monster, build), {
+    combatContext: build.combatContext,
+    targetIsBoss: build.targetIsBoss,
+    currentHpPercent: build.currentHpPercent,
+  });
+  const encounter = build.targetIsBoss ? effects.bossIncomingDamage
+    : build.combatContext === "rift" ? effects.riftIncomingDamage
+    : build.combatContext === "spire" ? effects.spireIncomingDamage
+    : build.combatContext === "dungeon" ? effects.dungeonIncomingDamage : 0;
+  const incomingFactor = Math.max(0.05, 1 + effects.incomingDamage / 100)
+    * Math.max(0.05, 1 + encounter / 100);
+  return health / incomingFactor;
+}
+
 export function monsterDps(monster: Monster, build: Build): number {
   const statData = getMonsterStatData(monster.id);
   if (!statData) return 0;
-  const stats = calculateStats(statData, build, monster.passives ?? []);
+  const effectivePassives = getEffectiveTeamPassives(monster, build);
+  const stats = calculateStats(statData, build, effectivePassives);
   if (!stats) return 0;
 
   return monster.skillIds.reduce((sum, skillId) => {
     const skill = getSkill(skillId);
     if (!skill) return sum;
-    return sum + (calculateSkillSummary(monster, skill, stats, build, monster.passives ?? []).dps ?? 0);
+    return sum + (calculateSkillSummary(monster, skill, stats, build, effectivePassives).dps ?? 0);
   }, 0);
 }
 
@@ -364,7 +393,7 @@ export function goalTitle(goal: TeamGoal): string {
 
 export function goalDescription(goal: TeamGoal): string {
   if (goal === "damage") return "Ranks candidate teams by calculated skill DPS only.";
-  if (goal === "survivability") return "Prioritizes total Health plus healing, shielding, mitigation, and other defensive utility.";
+  if (goal === "survivability") return "Prioritizes effective HP after active guard passives, plus defensive skill utility.";
   if (goal === "support") return "Prioritizes teams with broad buffs, debuffs, healing, shielding, and control without ignoring combat stats.";
   return "Balances calculated DPS, Health, and non-overlapping team utility.";
 }
@@ -398,14 +427,24 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
           combatContext,
         );
         const statData = getMonsterStatData(monster.id);
-        const stats = statData ? calculateStats(statData, baseBuild, monster.passives ?? []) : null;
+        const stats = statData ? calculateStats(statData, baseBuild, getEffectiveTeamPassives(monster, baseBuild)) : null;
         const dps = monsterDps(monster, baseBuild);
         const utility = utilityWeights(monster);
+        const encounterPassives = getPassiveEffectTotals(monster.passives ?? [], {
+          combatContext: baseBuild.combatContext, targetIsBoss: baseBuild.targetIsBoss,
+          currentHpPercent: baseBuild.currentHpPercent,
+        });
+        const encounterDamage = combatContext === "boss" ? encounterPassives.bossDamage
+          : combatContext === "rift" ? encounterPassives.riftDamage
+          : combatContext === "spire" ? encounterPassives.spireDamage
+          : combatContext === "dungeon" ? encounterPassives.dungeonDamage : 0;
         return {
           monster,
           savedBuild: saved,
           dps,
           health: stats?.health ?? 0,
+          effectiveHealth: effectiveTeamHealth(monster, baseBuild, stats?.health ?? 0),
+          encounterDamage,
           utility,
         };
       });
@@ -413,12 +452,12 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
     if (ownedCandidates.length === 0) return null;
 
     const maxIndividualDps = Math.max(1, ...ownedCandidates.map((item) => item.dps));
-    const maxIndividualHealth = Math.max(1, ...ownedCandidates.map((item) => item.health));
+    const maxIndividualHealth = Math.max(1, ...ownedCandidates.map((item) => item.effectiveHealth));
     const maxIndividualUtility = Math.max(1, ...ownedCandidates.map((item) => item.utility.total));
 
     const roughScore = (item: (typeof ownedCandidates)[number]) => {
       const dps = item.dps / maxIndividualDps;
-      const health = item.health / maxIndividualHealth;
+      const health = item.effectiveHealth / maxIndividualHealth;
       const utility = item.utility.total / maxIndividualUtility;
       if (goal === "damage") return dps;
       if (goal === "survivability") return health * 0.67 + utility * 0.25 + dps * 0.08;
@@ -426,12 +465,20 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
       return dps * 0.48 + health * 0.32 + utility * 0.2;
     };
 
-    // Keep combination evaluation quick even with a nearly complete inventory, while
-    // preserving dedicated utility monsters that may not rank highly by raw stats.
-    const statLeaders = [...ownedCandidates].sort((a, b) => roughScore(b) - roughScore(a)).slice(0, 18);
-    const utilityLeaders = [...ownedCandidates].sort((a, b) => b.utility.total - a.utility.total).slice(0, 8);
+    // Preserve encounter specialists even if their level-one base stats are
+    // smaller than generalists. A transferable +Rift/Tower Damage passive can
+    // raise all three members' DPS, and Guard can raise all three members' eHP.
+    const statLeaders = [...ownedCandidates].sort((a, b) => roughScore(b) - roughScore(a)).slice(0, 16);
+    const utilityLeaders = [...ownedCandidates].sort((a, b) => b.utility.total - a.utility.total).slice(0, 6);
+    const encounterDamageLeaders = combatContext === "standard" ? [] : [...ownedCandidates]
+      .filter((item) => item.encounterDamage > 0)
+      .sort((a, b) => b.encounterDamage - a.encounterDamage).slice(0, 2);
+    const guardLeaders = [...ownedCandidates]
+      .filter((item) => item.effectiveHealth > item.health * 1.001)
+      .sort((a, b) => (b.effectiveHealth / Math.max(1, b.health)) - (a.effectiveHealth / Math.max(1, a.health)))
+      .slice(0, 2);
     const poolMap = new Map<string, (typeof ownedCandidates)[number]>();
-    [...statLeaders, ...utilityLeaders].forEach((item) => poolMap.set(item.savedBuild.inventoryCopyId ?? item.monster.id, item));
+    [...statLeaders, ...utilityLeaders, ...encounterDamageLeaders, ...guardLeaders].forEach((item) => poolMap.set(item.savedBuild.inventoryCopyId ?? item.monster.id, item));
     const pool = [...poolMap.values()];
     const targetSize = Math.min(3, pool.length);
 
@@ -463,10 +510,10 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
           combatContext,
         );
         const statData = getMonsterStatData(item.monster.id);
-        const stats = statData ? calculateStats(statData, build, item.monster.passives ?? []) : null;
+        const stats = statData ? calculateStats(statData, build, getEffectiveTeamPassives(item.monster, build)) : null;
         const dps = monsterDps(item.monster, build);
         const utility = utilityWeights(item.monster);
-        return { monster: item.monster, build, dps, health: stats?.health ?? 0, damage: stats?.damage ?? 0, utility };
+        return { monster: item.monster, build, dps, health: stats?.health ?? 0, effectiveHealth: effectiveTeamHealth(item.monster, build, stats?.health ?? 0), damage: stats?.damage ?? 0, utility };
       });
 
       const utilityLabels: Record<string, number> = {};
@@ -492,6 +539,7 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
         members: resolvedMembers,
         totalDps: resolvedMembers.reduce((sum, member) => sum + member.dps, 0),
         totalHealth: resolvedMembers.reduce((sum, member) => sum + member.health, 0),
+        totalEffectiveHealth: resolvedMembers.reduce((sum, member) => sum + member.effectiveHealth, 0),
         utilityScore,
         offenseUtility,
         defenseUtility,
@@ -500,7 +548,7 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
     });
 
     const maxDps = Math.max(1, ...evaluated.map((team) => team.totalDps));
-    const maxHealth = Math.max(1, ...evaluated.map((team) => team.totalHealth));
+    const maxHealth = Math.max(1, ...evaluated.map((team) => team.totalEffectiveHealth));
     const maxUtility = Math.max(1, ...evaluated.map((team) => team.utilityScore));
     const maxOffenseUtility = Math.max(1, ...evaluated.map((team) => team.offenseUtility));
     const maxDefenseUtility = Math.max(1, ...evaluated.map((team) => team.defenseUtility));
@@ -508,7 +556,7 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
     const weights = goalWeights(goal);
     const scored = evaluated.map((team) => {
       const dps = team.totalDps / maxDps;
-      const health = team.totalHealth / maxHealth;
+      const health = team.totalEffectiveHealth / maxHealth;
       const utility = team.utilityScore / maxUtility;
       const offense = team.offenseUtility / maxOffenseUtility;
       const defense = team.defenseUtility / maxDefenseUtility;
@@ -530,12 +578,13 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
     if (!best) return null;
 
     const bestDps = Math.max(1, ...best.members.map((member) => member.dps));
-    const bestHealth = Math.max(1, ...best.members.map((member) => member.health));
+    const bestHealth = Math.max(1, ...best.members.map((member) => member.effectiveHealth));
     const memberReasons = best.members.map((member) => {
       const reasons: string[] = [];
       const teamDpsShare = best.totalDps > 0 ? member.dps / best.totalDps : 0;
       if (member.dps >= bestDps * 0.95) reasons.push(`Top DPS · ${Math.round(teamDpsShare * 100)}% of team`);
-      if (member.health >= bestHealth * 0.95) reasons.push("Highest team HP");
+      if (member.effectiveHealth >= bestHealth * 0.95) reasons.push("Highest effective HP");
+      if (member.effectiveHealth > member.health * 1.001) reasons.push("Active guard / damage resistance");
 
       const utilityLabels = Object.entries(member.utility.labels)
         .sort((a, b) => b[1] - a[1])
@@ -559,7 +608,7 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
           ? `${removed.length ? `Replace ${removed.join(" + ")}` : "Change team"}${added.length ? ` with ${added.join(" + ")}` : ""}`
           : "Same core composition",
         dpsDelta: best.totalDps > 0 ? (alternative.totalDps - best.totalDps) / best.totalDps : 0,
-        healthDelta: best.totalHealth > 0 ? (alternative.totalHealth - best.totalHealth) / best.totalHealth : 0,
+        healthDelta: best.totalEffectiveHealth > 0 ? (alternative.totalEffectiveHealth - best.totalEffectiveHealth) / best.totalEffectiveHealth : 0,
         gainedUtility,
         lostUtility,
       };
