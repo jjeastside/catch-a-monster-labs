@@ -9,6 +9,8 @@ import { getSkill, getSkillDisplayName } from "../../data/skills";
 import { getMonsterPortraitStyles } from "../monster-overview-card";
 import { ARMORS, WEAPONS, EQUIPMENT } from "../../data/equipments";
 import { getAvailableTraits } from "../../data/traits";
+import { chooseUniqueGear, rankTeamCandidates } from "../../lib/team-optimizer";
+import { withTeamDungeonLevel, teamForCombatContext, DUNGEON_TEAM_LEVEL } from "../../lib/team-dungeon-level";
 import { TraitSelect } from "../trait-select";
 import { TraitIcon } from "../trait-icon";
 import { AttributeSelect } from "../attribute-select";
@@ -32,7 +34,7 @@ import {
   ranks, mutationOptions, availableMonsters, monsterById,
   makeBuild, sanitizeBuild, defaultTeam, defaultInventory, copyMonsterId, nextCopyKey,
   monsterDps, getEffectiveTeamPassives, effectiveTeamHealth, buildSignature, getTeamRole, effectSummaryLabel, compactBuildLabel,
-  buildForGoal, goalTitle, goalDescription, signedPercent, recommendTeams,
+  buildForGoal, goalTitle, goalDescription, signedPercent, recommendTeams, teamSynergyForBuilds,
   type TeamGoal, type TeamCombatContext, type InventoryBuilds, type InventoryFilter, type InventorySort, type SavedTeams,
   loadTeamStorage, mergeIndexProgress,
 } from "../../lib/team-model";
@@ -54,6 +56,29 @@ function TeamMonsterPortrait({ monster, className, alt = "" }: { monster: Monste
         <img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt={alt} />
       </div>
     </div>
+  );
+}
+
+// Keep S rank consistent with the Calculator's rainbow rank label.
+// BUILD_RANK_VISUALS is the shared source of truth for all rank colors.
+function TeamRankText({ rank }: { rank: Rank | null | undefined }) {
+  if (!rank) return <span>—</span>;
+  const visual = BUILD_RANK_VISUALS[rank];
+  return (
+    <span
+      style={visual.labelBackground
+        ? {
+            display: "inline-block",
+            backgroundImage: visual.labelBackground,
+            backgroundClip: "text",
+            WebkitBackgroundClip: "text",
+            color: "transparent",
+            filter: "drop-shadow(0 1px 0 #050608)",
+          }
+        : { color: visual.color }}
+    >
+      {rank}
+    </span>
   );
 }
 
@@ -267,6 +292,7 @@ export function TeamComposition() {
   const [teamLibraryOpen, setTeamLibraryOpen] = useState(false);
   const [teamSaveName, setTeamSaveName] = useState("");
   const [showRecommendations, setShowRecommendations] = useState(true);
+  const [isSynergyExpanded, setIsSynergyExpanded] = useState(false);
   const [recommendationMode, setRecommendationMode] = useState<"team" | "improve">("team");
   const [improvementScope, setImprovementScope] = useState<"team" | "all">("team");
   const [editingTeamSlot, setEditingTeamSlot] = useState<number | null>(null);
@@ -275,7 +301,6 @@ export function TeamComposition() {
   const [replacementSearch, setReplacementSearch] = useState("");
   const [hiddenMonsterIds, setHiddenMonsterIds] = useState<string[]>([]);
   const [showHiddenMonsters, setShowHiddenMonsters] = useState(false);
-  const [analysisRun, setAnalysisRun] = useState(0);
 
   useEffect(() => {
     try {
@@ -336,8 +361,8 @@ export function TeamComposition() {
         }
       }
       setOwnedEquipment(restoredEquipment);
-      setTeam(restored.team.map((build, index) => build.monsterId && !blockedStorageKeys.current.has(OWNED_EQUIPMENT_KEY)
-        ? withOwnedGear(build, teamOwner(build, index), restoredEquipment) : build));
+      setTeam(teamForCombatContext(restored.team.map((build, index) => build.monsterId && !blockedStorageKeys.current.has(OWNED_EQUIPMENT_KEY)
+        ? withOwnedGear(build, teamOwner(build, index), restoredEquipment) : build), restored.combatContext));
       setGoal(restored.goal);
       setCombatContext(restored.combatContext ?? "standard");
       setInventoryBuilds(Object.fromEntries(Object.entries(restored.inventory).map(([copyId, build]) => [
@@ -485,6 +510,11 @@ export function TeamComposition() {
     return result;
   }, {});
 
+  // A recommendation and the active Team Overview call the very same scorer.
+  // Keep actual owned gear on the equipped team before scoring it.
+  const teamSynergy = teamSynergyForBuilds(
+    resolvedTeam.map((item) => item.build), accountBuild.accountMultipliers, combatContext);
+
   const totals = resolvedTeam.reduce(
     (result, item) => ({
       health: result.health + (item.stats?.health ?? 0),
@@ -560,12 +590,12 @@ export function TeamComposition() {
     const score = (dps: number, health: number) => goal === "damage" ? dps
       : goal === "survivability" ? health * 0.8 + dps * 0.2
       : goal === "support" ? dps * 0.45 + health * 0.55 : dps * 0.6 + health * 0.4;
-    const withCopy = (build: Build, copy: OwnedEquipmentCopy): Build => {
+    const withCopy = (build: Build, copy: OwnedEquipmentCopy) => {
       const gear = EQUIPMENT.find((item) => item.id === copy.equipmentId)!;
       return gear.type === "weapon" ? { ...build, weaponId: gear.id, weaponAttributeIds: [...copy.attributeIds] }
         : { ...build, armorId: gear.id, armorAttributeIds: [...copy.attributeIds] };
     };
-    const baseline = (build: Build, type: "weapon" | "armor"): Build => type === "weapon"
+    const baseline = (build: Build, type: "weapon" | "armor") => type === "weapon"
       ? { ...build, weaponId: null, weaponAttributeIds: [] }
       : { ...build, armorId: null, armorAttributeIds: [] };
     return { assess, score, withCopy, baseline };
@@ -581,7 +611,7 @@ export function TeamComposition() {
       let candidate = saved;
       for (const type of ["weapon", "armor"] as const) {
         const initial = equipmentPreview.baseline(candidate, type);
-        let best: Build = initial;
+        let best = initial;
         const baseStats = equipmentPreview.assess(monster, initial);
         let highest = equipmentPreview.score(1, 1);
         for (const copy of ownedEquipment) {
@@ -604,64 +634,91 @@ export function TeamComposition() {
     [optimizedCandidates, accountBuild.accountMultipliers, goal, combatContext],
   );
 
-  // Allocate each physical copy only once across the suggested team. Reassigning
-  // an equipped copy is permitted as a recommendation, not an automatic mutation.
-  const gearRecommendation = useMemo(() => {
+  // All finalist trios receive their own non-conflicting gear allocation FIRST.
+  // Only THEN do we select the team. Otherwise a single armor can appear on
+  // three shortlisted monsters and an unprotected support may incorrectly win.
+  const rankedRecommendations = useMemo(() => {
     if (!preliminaryRecommendation) return null;
-    const members = preliminaryRecommendation.members;
-    const builds = members.map(({ build }) => {
-      let base = { ...build };
+    const scored = preliminaryRecommendation.finalists.map((candidate) => {
+      // A legacy build may still mention an unequipped item. Only a physical
+      // owned copy assigned here may contribute to the recommendation: the
+      // live Team Overview applies the same rule through withOwnedGear().
+      const builds = candidate.members.map(({ build }) =>
+        equipmentPreview.baseline(equipmentPreview.baseline({ ...build }, "weapon"), "armor"));
+      const assignments: Array<{ memberIndex: number; copy: OwnedEquipmentCopy; gain: number; from?: string }> = [];
+      const used = new Set<string>();
       for (const type of ["weapon", "armor"] as const) {
-        if (ownedEquipment.some((copy) => EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type === type))
-          base = equipmentPreview.baseline(base, type);
-      }
-      return base;
-    });
-    const assignments: Array<{ memberIndex: number; copy: OwnedEquipmentCopy; gain: number; from?: string }> = [];
-    const used = new Set<string>();
-    for (const type of ["weapon", "armor"] as const) {
-      // Optimize the weighted incremental benefit across all three members.
-      const candidates: Array<{ memberIndex: number; copy: OwnedEquipmentCopy; gain: number }> = [];
-      members.forEach(({ monster }, memberIndex) => {
-        const base = equipmentPreview.baseline(builds[memberIndex], type);
-        const before = equipmentPreview.assess(monster, base);
-        ownedEquipment.forEach((copy) => {
-          if (EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type !== type) return;
-          const after = equipmentPreview.assess(monster, equipmentPreview.withCopy(base, copy));
-          const gain = equipmentPreview.score(after.dps / Math.max(1, before.dps), after.health / Math.max(1, before.health)) - equipmentPreview.score(1, 1);
-          candidates.push({ memberIndex, copy, gain });
+        const choices: Array<{ memberIndex: number; copy: OwnedEquipmentCopy; gain: number }> = [];
+        candidate.members.forEach(({ monster }, memberIndex) => {
+          const base = equipmentPreview.baseline(builds[memberIndex], type);
+          const before = equipmentPreview.assess(monster, base);
+          ownedEquipment.forEach((copy) => {
+            if (EQUIPMENT.find((gear) => gear.id === copy.equipmentId)?.type !== type) return;
+            const after = equipmentPreview.assess(monster, equipmentPreview.withCopy(base, copy));
+            const gain = equipmentPreview.score(after.dps / Math.max(1, before.dps), after.health / Math.max(1, before.health)) - equipmentPreview.score(1, 1);
+            choices.push({ memberIndex, copy, gain });
+          });
         });
-      });
-      candidates.sort((a, b) => b.gain - a.gain);
-      const assignedMembers = new Set<number>();
-      for (const candidate of candidates) {
-        if (candidate.gain <= 0 || assignedMembers.has(candidate.memberIndex) || used.has(candidate.copy.id)) continue;
-        used.add(candidate.copy.id);
-        assignedMembers.add(candidate.memberIndex);
-        builds[candidate.memberIndex] = equipmentPreview.withCopy(builds[candidate.memberIndex], candidate.copy);
-        assignments.push({ ...candidate, from: candidate.copy.equippedTo });
+        const optimal = chooseUniqueGear(choices.map((choice) => ({
+          ...choice, copyId: choice.copy.id,
+        })), candidate.members.length);
+        for (const choice of optimal) {
+          if (used.has(choice.copy.id)) continue;
+          used.add(choice.copy.id);
+          builds[choice.memberIndex] = equipmentPreview.withCopy(builds[choice.memberIndex], choice.copy);
+          assignments.push({ ...choice, from: choice.copy.equippedTo });
+        }
       }
-    }
-    return { builds, assignments };
-  }, [preliminaryRecommendation, ownedEquipment, equipmentPreview]);
-
-  const recommendation = useMemo(() => {
-    if (!preliminaryRecommendation || !gearRecommendation) return preliminaryRecommendation;
-    const members = preliminaryRecommendation.members.map((member, index) => {
-      const build = gearRecommendation.builds[index];
-      const contextual = buildForGoal({ ...build,
-        teammateMonsterIds: preliminaryRecommendation.members.filter((_, i) => i !== index).map((other) => other.monster.id).slice(0, 2) as [string, string],
-      }, combatContext);
-      const data = getMonsterStatData(member.monster.id);
-      const stats = data ? calculateStats(data, contextual, getEffectiveTeamPassives(member.monster, contextual)) : null;
-      return { ...member, build, dps: monsterDps(member.monster, contextual), health: stats?.health ?? 0,
-        effectiveHealth: effectiveTeamHealth(member.monster, contextual, stats?.health ?? 0), damage: stats?.damage ?? 0 };
+      const members = candidate.members.map((member, index) => {
+        const build = buildForGoal({ ...builds[index],
+          teammateMonsterIds: candidate.members.filter((_, i) => i !== index)
+            .map((other) => other.monster.id).slice(0, 2) as [string, string],
+        }, combatContext);
+        const data = getMonsterStatData(member.monster.id);
+        const stats = data ? calculateStats(data, build, getEffectiveTeamPassives(member.monster, build)) : null;
+        return { ...member, build, dps: monsterDps(member.monster, build), health: stats?.health ?? 0,
+          effectiveHealth: effectiveTeamHealth(member.monster, build, stats?.health ?? 0), damage: stats?.damage ?? 0 };
+      });
+      const synergy = teamSynergyForBuilds(members.map((member) => member.build), accountBuild.accountMultipliers, combatContext);
+      return { ...candidate, members, synergy, synergyScore: synergy.score,
+        weakestEffectiveHp: members.length ? Math.min(...members.map((member) => member.effectiveHealth)) : 0, assignments,
+        totalDps: members.reduce((sum, member) => sum + member.dps, 0),
+        totalHealth: members.reduce((sum, member) => sum + member.health, 0),
+        totalEffectiveHealth: members.reduce((sum, member) => sum + member.effectiveHealth, 0) };
     });
-    return { ...preliminaryRecommendation, members,
-      totalDps: members.reduce((sum, member) => sum + member.dps, 0),
-      totalHealth: members.reduce((sum, member) => sum + member.health, 0),
-      totalEffectiveHealth: members.reduce((sum, member) => sum + member.effectiveHealth, 0) };
-  }, [preliminaryRecommendation, gearRecommendation, combatContext]);
+    const ordered = rankTeamCandidates(scored, goal);
+    const best = ordered[0];
+    if (!best) return null;
+    const memberReasons = best.members.map((member) => {
+      const reasons: string[] = [];
+      if (member.dps / Math.max(1, best.totalDps) >= .5) reasons.push("Primary damage dealer");
+      if (member.effectiveHealth > member.health * 1.001) reasons.push("Encounter damage resistance");
+      const effects = Object.keys(member.utility.labels).slice(0, 2);
+      if (effects.length) reasons.push(effects.join(" + "));
+      if (!reasons.length) reasons.push("Contributes calculated DPS and effective HP");
+      return { monsterId: member.monster.id, reasons };
+    });
+    const alternatives = ordered.slice(1, 3).map((alternative) => {
+      const bestIds = new Set(best.members.map((member) => member.build.inventoryCopyId ?? member.monster.id));
+      const altIds = new Set(alternative.members.map((member) => member.build.inventoryCopyId ?? member.monster.id));
+      const removed = best.members.filter((member) => !altIds.has(member.build.inventoryCopyId ?? member.monster.id)).map((member) => member.monster.name);
+      const added = alternative.members.filter((member) => !bestIds.has(member.build.inventoryCopyId ?? member.monster.id)).map((member) => member.monster.name);
+      return { ...alternative, swapLabel: removed.length || added.length
+        ? `${removed.length ? `Replace ${removed.join(" + ")}` : "Change team"}${added.length ? ` with ${added.join(" + ")}` : ""}`
+        : "Different owned builds", dpsDelta: best.totalDps > 0 ? (alternative.totalDps - best.totalDps) / best.totalDps : 0,
+        healthDelta: best.weakestEffectiveHp > 0 ? (alternative.weakestEffectiveHp - best.weakestEffectiveHp) / best.weakestEffectiveHp : 0,
+        gainedUtility: Object.keys(alternative.utilityLabels).filter((label) => !best.utilityLabels[label]),
+        lostUtility: Object.keys(best.utilityLabels).filter((label) => !alternative.utilityLabels[label]),
+      };
+    });
+    return { ...best, memberReasons, alternatives };
+  }, [preliminaryRecommendation, ownedEquipment, equipmentPreview, accountBuild.accountMultipliers, combatContext, goal]);
+
+  const recommendation = rankedRecommendations;
+  const gearRecommendation = recommendation ? { assignments: recommendation.assignments } : null;
+  // Recommendation and Overview use the identical scoring calculation and
+  // the exact gear-assigned builds; no second optimizer rating is displayed.
+  const recommendedSynergy = recommendation?.synergy ?? null;
 
   // Improvement previews compare actual stats, not percentages relative to a
   // level-one baseline. Only assigned team members are shown by default; the
@@ -690,7 +747,7 @@ export function TeamComposition() {
       type Upgrade = { label: string; category: string; build: Build; hypothetical?: boolean };
       const upgrades: Upgrade[] = [];
       if (saved.level < CURRENT_MAX_LEVEL) upgrades.push({ category: "Level", label: `Level ${saved.level} → ${CURRENT_MAX_LEVEL}`, build: { ...saved, level: CURRENT_MAX_LEVEL } });
-      if (ranks.indexOf(saved.rank ?? "E") < ranks.indexOf("S")) upgrades.push({ category: "Rank", label: `Rank ${saved.rank ?? "E"} → S`, build: { ...saved, rank: "S" } });
+      if (ranks.indexOf(saved.rank ?? "E") < ranks.indexOf("SS")) upgrades.push({ category: "Rank", label: `Rank ${saved.rank ?? "E"} → SS`, build: { ...saved, rank: "SS" } });
       if (saved.enhancement < 10) upgrades.push({ category: "Enhancement", label: `Enhancement +${saved.enhancement} → +10`, build: { ...saved, enhancement: 10 } });
       for (const family of teamMutationFamilies) {
         if (saved.mutations.includes(family.xId)) continue;
@@ -816,7 +873,8 @@ export function TeamComposition() {
   const updateTeamBuild = (index: number, changes: Partial<Build>) => {
     if (changes.monsterId === null) releaseTemporarySlot(index);
     setTeam((current) =>
-      current.map((build, buildIndex) => (buildIndex === index ? (changes.monsterId === null ? makeBuild(null) : build.monsterId ? sanitizeBuild({ ...build, ...changes }, build.monsterId) : build) : build)),
+      current.map((build, buildIndex) => (buildIndex === index ? (changes.monsterId === null ? makeBuild(null) : build.monsterId
+        ? withTeamDungeonLevel(sanitizeBuild({ ...build, ...changes }, build.monsterId), combatContext === "dungeon") : build) : build)),
     );
   };
 
@@ -858,7 +916,10 @@ export function TeamComposition() {
     // build. Changes (including traits) must update its visible team card too.
     setTeam((current) => current.map((item) => {
       if (!item.monsterId || !(item.inventoryCopyId === copyId || (!item.inventoryCopyId && item.monsterId === copyId))) return item;
-      return { ...sanitizeBuild({ ...item, ...changes }, item.monsterId), inventoryCopyId: copyId };
+      const revised = combatContext === "dungeon" && changes.level !== undefined
+        ? { ...item, ...changes, level: DUNGEON_TEAM_LEVEL, preDungeonLevel: changes.level }
+        : { ...item, ...changes };
+      return { ...withTeamDungeonLevel(sanitizeBuild(revised, item.monsterId), combatContext === "dungeon"), inventoryCopyId: copyId };
     }));
   };
 
@@ -948,7 +1009,7 @@ export function TeamComposition() {
     }
     const savedBuild = inventoryBuilds[copyId] ?? makeBuild(monster.id);
     setTeam((current) =>
-      current.map((build, index) => (index === emptyIndex ? { ...sanitizeBuild(savedBuild, monster.id), inventoryCopyId: copyId } : build)),
+      current.map((build, index) => (index === emptyIndex ? { ...withTeamDungeonLevel(sanitizeBuild(savedBuild, monster.id), combatContext === "dungeon"), inventoryCopyId: copyId } : build)),
     );
     setInventoryBuilds((current) =>
       current[copyId] ? current : { ...current, [copyId]: { ...makeBuild(monster.id), inventoryCopyId: copyId } },
@@ -969,7 +1030,7 @@ export function TeamComposition() {
     const saved = inventoryBuilds[copyId] ?? makeBuild(monster.id);
     releaseTemporarySlot(index);
     setTeam((current) => current.map((build, slot) => slot === index
-      ? { ...sanitizeBuild(saved, monster.id), inventoryCopyId: copyId }
+      ? { ...withTeamDungeonLevel(sanitizeBuild(saved, monster.id), combatContext === "dungeon"), inventoryCopyId: copyId }
       : build));
     setInventoryBuilds((current) => current[copyId] ? current : {
       ...current, [copyId]: { ...makeBuild(monster.id), inventoryCopyId: copyId },
@@ -1002,7 +1063,9 @@ export function TeamComposition() {
       setTeam((current) => current.map((item, slot) => slot === index ? { ...item, inventoryCopyId: copyId } : item));
     }
     setInventoryBuilds((current) => ({ ...current, [copyId]: {
-      ...sanitizeBuild(build, build.monsterId!), inventoryCopyId: copyId,
+      // Dungeon's 60 is a temporary encounter level; retain the original
+      // inventory level when the monster editor commits its other changes.
+      ...sanitizeBuild(combatContext === "dungeon" ? { ...build, level: build.preDungeonLevel ?? build.level, preDungeonLevel: null } : build, build.monsterId!), inventoryCopyId: copyId,
     } }));
   };
 
@@ -1027,12 +1090,12 @@ export function TeamComposition() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingTeamSlot, team]);
 
-  const useRecommendation = () => {
-    if (!recommendation) return;
-    const selected = gearRecommendation?.assignments ?? [];
+  const useRecommendation = (choice: Pick<NonNullable<typeof recommendation>, "members" | "assignments"> | null = recommendation) => {
+    if (!choice) return;
+    const selected = choice.assignments;
     const newOwners = new Map(selected.map(({ copy, memberIndex }) => [copy.id,
-      teamOwner(recommendation.members[memberIndex].build, memberIndex)]));
-    const selectedOwners = new Set(recommendation.members.map((member, index) => teamOwner(member.build, index)));
+      teamOwner(choice.members[memberIndex].build, memberIndex)]));
+    const selectedOwners = new Set(choice.members.map((member, index) => teamOwner(member.build, index)));
     const affectedOwners = new Set<string>([...selectedOwners, "team:0", "team:1", "team:2"]);
     for (const { copy } of selected) if (copy.equippedTo) affectedOwners.add(copy.equippedTo);
     // All changes are applied in one transaction: remove previous ownership,
@@ -1054,7 +1117,7 @@ export function TeamComposition() {
           ? { ...old, weaponId: null, weaponAttributeIds: [] }
           : { ...old, armorId: null, armorAttributeIds: [] };
       }
-      recommendation.members.forEach((member, index) => {
+      choice.members.forEach((member, index) => {
         const copyId = member.build.inventoryCopyId;
         if (!copyId || !next[copyId]) return;
         let updated: Build = { ...member.build };
@@ -1065,8 +1128,8 @@ export function TeamComposition() {
       });
       return next;
     });
-    setTeam(Array.from({ length: 3 }, (_, index) => {
-      const member = recommendation.members[index];
+    setTeam(teamForCombatContext(Array.from({ length: 3 }, (_, index) => {
+      const member = choice.members[index];
       if (!member) return makeBuild(null);
       let build = { ...member.build };
       for (const type of ["weapon", "armor"] as const) {
@@ -1075,7 +1138,7 @@ export function TeamComposition() {
         if (choice) build = equipmentPreview.withCopy(build, choice.copy);
       }
       return sanitizeBuild(build, member.monster.id);
-    }));
+    }), combatContext));
   };
 
   const saveTeamPreset = () => {
@@ -1101,7 +1164,7 @@ export function TeamComposition() {
     }
     const nextTeam = saved.builds.map((build) => (build.monsterId ? sanitizeBuild(build, build.monsterId) : makeBuild(null)));
     releaseReplacedTemporarySlots(nextTeam);
-    setTeam(nextTeam);
+    setTeam(teamForCombatContext(nextTeam, saved.combatContext));
     setGoal(saved.goal);
     setCombatContext(saved.combatContext);
     setTeamPresetMessage(`Loaded ${selectedTeamSlot.replace("slot-", "Team ")}.`);
@@ -1114,6 +1177,13 @@ export function TeamComposition() {
       return next;
     });
     setTeamPresetMessage(`Cleared ${selectedTeamSlot.replace("slot-", "Team ")}.`);
+  };
+
+  const changeCombatContext = (nextContext: TeamCombatContext) => {
+    // Unlike the inventory, team levels are encounter-specific. Switching out
+    // of Dungeon restores each monster's own level, including after a reload.
+    setTeam((current) => teamForCombatContext(current, nextContext));
+    setCombatContext(nextContext);
   };
 
   return (
@@ -1264,7 +1334,7 @@ export function TeamComposition() {
                         <div className={styles.inventoryMeta}>{monster.element} · {monster.rarity}{copies.length > 1 ? ` · ${copies.length} builds` : ""}</div>
                       </div>
                       <div className={styles.rowActions}>
-                        {savedBuild ? <div className={styles.inventoryBadges}><span>Lv{savedBuild.level} · <b style={{ color: savedBuild.rank ? BUILD_RANK_VISUALS[savedBuild.rank].color : undefined }}>{savedBuild.rank ?? "E"}</b></span></div> : null}
+                        {savedBuild ? <div className={styles.inventoryBadges}><span>Lv{savedBuild.level} · <b><TeamRankText rank={savedBuild.rank ?? "E"} /></b></span></div> : null}
                         <button type="button" className={`${styles.favoriteButton} ${favoriteMonsterIds.includes(monster.id) ? styles.favoriteButtonActive : ""}`} onClick={() => toggleInventoryFavorite(monster.id)} aria-pressed={favoriteMonsterIds.includes(monster.id)} aria-label={`${favoriteMonsterIds.includes(monster.id) ? "Remove" : "Add"} ${monster.name} ${favoriteMonsterIds.includes(monster.id) ? "from" : "to"} favorites`} title="Toggle favorite">{favoriteMonsterIds.includes(monster.id) ? "★" : "☆"}</button>
                         {savedBuild && copies[0] ? <button type="button" className={styles.inventoryActionButton} onClick={() => setEditingInventoryId(copies[0])} title={`Edit ${monster.name}`} aria-label={`Edit ${monster.name}`}>✎</button> : null}
                         <button
@@ -1436,7 +1506,7 @@ export function TeamComposition() {
 
                       <div className={styles.compareQuickStats} aria-label="Current monster build; select any value to edit">
                         <button type="button" onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} level`}><span>Lv</span><b>{item.build.level}</b></button>
-                        <button type="button" onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} rank`}><span>Rank</span><b style={{ color: item.build.rank ? BUILD_RANK_VISUALS[item.build.rank].color : undefined }}>{item.build.rank ?? "—"}</b></button>
+                        <button type="button" onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} rank`}><span>Rank</span><b><TeamRankText rank={item.build.rank} /></b></button>
                         <button type="button" onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} enhancement`}><span>Enh</span><b className={styles.quickEnhancement}>+{item.build.enhancement}</b></button>
                         <button type="button" onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} genetic potential: attack ${item.build.damageGeneticPotential}%, health ${item.build.healthGeneticPotential}%`} title={`Genetic Potential · Attack ${item.build.damageGeneticPotential}% · Health ${item.build.healthGeneticPotential}%`} className={styles.quickGp}>
                           <img src={assetPath("/icons/breed-attack.png")} alt="Attack genetic potential" />
@@ -1502,8 +1572,10 @@ export function TeamComposition() {
                           <input
                             type="number"
                             min={1}
-                            max={CURRENT_MAX_LEVEL}
+                            max={combatContext === "dungeon" ? DUNGEON_TEAM_LEVEL : CURRENT_MAX_LEVEL}
                             value={item.build.level}
+                            disabled={combatContext === "dungeon"}
+                            title={combatContext === "dungeon" ? "Dungeon mode forces Level 60. Your previous level returns outside Dungeon." : undefined}
                             onChange={(event) =>
                               updateTeamBuild(index, {
                                 level: Math.max(1, Math.min(CURRENT_MAX_LEVEL, Number(event.target.value) || 1)),
@@ -1641,10 +1713,50 @@ export function TeamComposition() {
               <div className={styles.overviewGrid}>
                 <div className={styles.overviewCard}><span className={styles.overviewLabel}><OverviewIcon kind="damage" />Total Damage</span><strong>{formatStatNumber(totals.damage)}</strong></div>
                 <div className={styles.overviewCard}><span className={styles.overviewLabel}><OverviewIcon kind="health" />Total Health</span><strong>{formatStatNumber(totals.health)}</strong></div>
-                <div className={styles.overviewCard}><span className={styles.overviewLabel}><OverviewIcon kind="dps" />Average DPS</span><strong>{formatStatNumber(totals.monsters ? totals.dps / totals.monsters : 0)}</strong></div>
-                <div className={styles.overviewCard} title="Effective HP after active incoming-damage and encounter guard passives"><span className={styles.overviewLabel}><OverviewIcon kind="survivability" />Effective HP</span><strong className={styles.overviewAccent}>{totals.monsters ? formatStatNumber(totals.effectiveHealth) : "—"}</strong></div>
-                <div className={`${styles.overviewCard} ${styles.synergyMetric}`}><span className={styles.overviewLabel}><OverviewIcon kind="synergy" />Synergy Score</span><strong>{Math.min(100, Object.keys(teamUtility).length * 8 + totals.monsters * 18)} / 100</strong></div>
+                <div className={styles.overviewCard} title="Sum of calculated skill DPS; skill rotations, casting and buff uptime are not simulated"><span className={styles.overviewLabel}><OverviewIcon kind="dps" />Team Skill DPS</span><strong>{formatStatNumber(totals.dps)}</strong></div>
+                <div className={styles.overviewCard} title="Combined effective HP after modeled damage resistance and encounter guard passives; healing and shields are not included"><span className={styles.overviewLabel}><OverviewIcon kind="survivability" />Effective HP</span><strong className={styles.overviewAccent}>{totals.monsters ? formatStatNumber(totals.effectiveHealth) : "—"}</strong><small className={styles.overviewWeakest}>Weakest: {totals.monsters ? formatStatNumber(Math.min(...resolvedTeam.filter((item) => item.monster).map((item) => effectiveTeamHealth(item.monster!, item.build, item.stats?.health ?? 0)))) : "—"}</small></div>
+                <button
+                  type="button"
+                  className={`${styles.overviewCard} ${styles.synergyMetric} ${styles.synergyTrigger}`}
+                  aria-expanded={isSynergyExpanded}
+                  aria-controls="team-synergy-explanation"
+                  onClick={() => setIsSynergyExpanded((expanded) => !expanded)}
+                  title="Open the breakdown of passives, support effects, control, and team combos"
+                >
+                  <span className={styles.overviewLabel}><OverviewIcon kind="synergy" />Synergy Score</span>
+                  <strong>{teamSynergy.score} / 100</strong>
+                  <small>Team composition · estimated</small>
+                  <span className={styles.synergyCue}>
+                    {isSynergyExpanded ? "Hide why this score" : "Why this score?"}
+                    <span aria-hidden="true">{isSynergyExpanded ? "▴" : "▾"}</span>
+                  </span>
+                </button>
               </div>
+
+              <section
+                id="team-synergy-explanation"
+                className={styles.synergyBreakdown}
+                aria-label="Synergy score explanation"
+                hidden={!isSynergyExpanded}
+              >
+                <div className={styles.synergyExplanationHeading}>
+                  <div>
+                    <h3>Why this synergy score?</h3>
+                    <p>Points reflect teammate benefits, reliable utility, encounter-fit passives and complementary coverage—not raw damage or a win-rate prediction.</p>
+                  </div>
+                  <button type="button" onClick={() => setIsSynergyExpanded(false)} aria-label="Collapse synergy score explanation">Hide <span aria-hidden="true">▴</span></button>
+                </div>
+                <div className={styles.synergyCategories}>
+                  {teamSynergy.categories.map((category) => (
+                    <div className={styles.synergyCategory} key={category.key}>
+                      <div className={styles.synergyCategoryHeading}><strong>{category.label}</strong><span>{category.score.toFixed(1)} / {category.max}</span></div>
+                      <div className={styles.synergyBar} role="meter" aria-label={category.label} aria-valuemin={0} aria-valuemax={category.max} aria-valuenow={category.score}><i style={{ width: `${category.score / category.max * 100}%` }} /></div>
+                      {category.details.length ? <ul>{category.details.map((detail) => <li key={detail}>{detail}</li>)}</ul> : <p>No qualifying effect or interaction detected.</p>}
+                    </div>
+                  ))}
+                </div>
+                <p className={styles.synergyNote}>{teamSynergy.summary} The score does not measure absolute monster power.</p>
+              </section>
 
               <div className={styles.teamAnalysis}>
                 <div className={styles.analysisBlock}>
@@ -1770,8 +1882,8 @@ export function TeamComposition() {
                     <label>GP Damage<select aria-label="GP Damage" value={build.damageGeneticPotential} onChange={(event) => updateInventoryBuild(editingInventoryId, { damageGeneticPotential: Number(event.target.value) })}>{GENETIC_POTENTIAL_VALUES.map((value) => <option key={value} value={value}>{value}%</option>)}</select></label>
                     <label>GP Health<select aria-label="GP Health" value={build.healthGeneticPotential} onChange={(event) => updateInventoryBuild(editingInventoryId, { healthGeneticPotential: Number(event.target.value) })}>{GENETIC_POTENTIAL_VALUES.map((value) => <option key={value} value={value}>{value}%</option>)}</select></label>
                     <div className={styles.attributeGroup}><strong>Trait</strong><TraitSelect value={build.traitId} onChangeAction={(value)=>updateInventoryBuild(editingInventoryId,{traitId:value})}/></div>
-                    <OwnedGearSelect label="Weapon" type="weapon" owner={inventoryOwner(editingInventoryId)} copies={ownedEquipment} onSelect={(id) => assignOwnedGear(inventoryOwner(editingInventoryId), "weapon", id, (changes) => { updateInventoryBuild(editingInventoryId, changes); setTeam((current) => current.map((item) => item.inventoryCopyId === editingInventoryId && item.monsterId ? sanitizeBuild({ ...item, ...changes }, item.monsterId) : item)); })} />
-                    <OwnedGearSelect label="Armor" type="armor" owner={inventoryOwner(editingInventoryId)} copies={ownedEquipment} onSelect={(id) => assignOwnedGear(inventoryOwner(editingInventoryId), "armor", id, (changes) => { updateInventoryBuild(editingInventoryId, changes); setTeam((current) => current.map((item) => item.inventoryCopyId === editingInventoryId && item.monsterId ? sanitizeBuild({ ...item, ...changes }, item.monsterId) : item)); })} />
+                    <OwnedGearSelect label="Weapon" type="weapon" owner={inventoryOwner(editingInventoryId)} copies={ownedEquipment} onSelect={(id) => assignOwnedGear(inventoryOwner(editingInventoryId), "weapon", id, (changes) => { updateInventoryBuild(editingInventoryId, changes); setTeam((current) => current.map((item) => item.inventoryCopyId === editingInventoryId && item.monsterId ? withTeamDungeonLevel(sanitizeBuild({ ...item, ...changes }, item.monsterId), combatContext === "dungeon") : item)); })} />
+                    <OwnedGearSelect label="Armor" type="armor" owner={inventoryOwner(editingInventoryId)} copies={ownedEquipment} onSelect={(id) => assignOwnedGear(inventoryOwner(editingInventoryId), "armor", id, (changes) => { updateInventoryBuild(editingInventoryId, changes); setTeam((current) => current.map((item) => item.inventoryCopyId === editingInventoryId && item.monsterId ? withTeamDungeonLevel(sanitizeBuild({ ...item, ...changes }, item.monsterId), combatContext === "dungeon") : item)); })} />
                   </div>
                   <small className={styles.helper}>Equipment attributes are managed per item in the Equipment inventory.</small>
                   {monster.isEvolved ? <label className={styles.control}>Evolution %
@@ -1804,14 +1916,14 @@ export function TeamComposition() {
                   <label htmlFor="team-goal">Team Goal</label>
                   <select id="team-goal" value={goal} onChange={(event) => setGoal(event.target.value as TeamGoal)}>
                     <option value="balanced">Balanced</option>
-                    <option value="damage">Highest DPS</option>
+                    <option value="damage">Damage Focus</option>
                     <option value="survivability">Survivability</option>
                     <option value="support">Support / Utility</option>
                   </select>
                 </div>
                 <div className={styles.goalPicker}>
                   <label htmlFor="team-combat-context">Combat Context</label>
-                  <select id="team-combat-context" value={combatContext} onChange={(event) => setCombatContext(event.target.value as TeamCombatContext)}>
+                  <select id="team-combat-context" value={combatContext} onChange={(event) => changeCombatContext(event.target.value as TeamCombatContext)}>
                     <option value="standard">Standard</option>
                     <option value="boss">Boss</option>
                     <option value="rift">Rift</option>
@@ -1863,52 +1975,30 @@ export function TeamComposition() {
                       </div>
                     ))}
                   </div> : <p className={styles.helper}>No upgrades found for this view. Try All owned, or add monsters to your inventory.</p>}
-                  <p className={styles.helper}>Previews change one category at a time; gains cannot be added together. Upgrade costs, mutation availability, and skill rotations are not modeled. Level previews stop at {CURRENT_MAX_LEVEL}, rank previews stop at S. Gear you do not own is clearly marked.</p>
+                  <p className={styles.helper}>Previews change one category at a time; gains cannot be added together. Upgrade costs, mutation availability, and skill rotations are not modeled. Level previews stop at {CURRENT_MAX_LEVEL}, rank previews stop at SS. Gear you do not own is clearly marked.</p>
                 </article>
               ) : <>
-              <button type="button" className={styles.analyzeButton} onClick={() => setAnalysisRun((value) => value + 1)}>✦ {analysisRun ? "Analysis Updated" : "Analyze My Inventory"}</button>
+              <p className={styles.helper}>Recommendations recalculate automatically when you change your team goal, inventory, gear, or encounter.</p>
               <article className={`${styles.recommendCard} ${styles.optimizerNotes}`}>
                 <div className={styles.recommendTitleRow}>
                   <div>
                     <h3>{goalTitle(goal)} · {combatContextLabel(combatContext)}</h3>
                     <p className={`${styles.helper} mt-1`}>{goalDescription(goal)}</p>
                   </div>
-                  {recommendation ? <span className={styles.compositionScore} title="Gear-aware estimate; not a guaranteed optimal result">Gear-aware</span> : null}
+                  {recommendation ? <span className={styles.compositionScore} title="Equipment is allocated separately for each shortlisted team">Unique gear checked</span> : null}
                 </div>
                 {recommendation ? (
                   <>
                     <div className={styles.recommendMetrics}>
                       <div><span>Team DPS</span><strong>{formatStatNumber(recommendation.totalDps)}</strong></div>
-                      <div><span>Team HP</span><strong>{formatStatNumber(recommendation.totalHealth)}</strong></div>
-                      {recommendation.totalEffectiveHealth > recommendation.totalHealth * 1.001 ? <div title="Health after active incoming-damage passives, including Rift Guard and Tower/Spire Guard"><span>Effective HP</span><strong>{formatStatNumber(recommendation.totalEffectiveHealth)}</strong></div> : null}
+                      <div><span>Weakest member eHP</span><strong>{formatStatNumber(recommendation.weakestEffectiveHp)}</strong></div>
+                      <div><span>Synergy Score</span><strong>{recommendedSynergy?.score ?? "—"} / 100</strong></div>
                     </div>
 
-                    <div className={styles.scoreBreakdown}>
-                      <span className={styles.reasonLabel}>Score breakdown</span>
-                      {([
-                        ["DPS", recommendation.normalized.dps, recommendation.weights.dps],
-                        ["Health", recommendation.normalized.health, recommendation.weights.health],
-                        ["Utility", recommendation.normalized.utility, recommendation.weights.utility],
-                        ["Offense", recommendation.normalized.offense, recommendation.weights.offense],
-                        ["Defense", recommendation.normalized.defense, recommendation.weights.defense],
-                      ] as const)
-                        .filter(([, , weight]) => weight > 0)
-                        .map(([label, value, weight]) => (
-                          <div className={styles.scoreRow} key={label}>
-                            <div>
-                              <span>{label}</span>
-                              <small>{Math.round(weight * 100)}% weight</small>
-                            </div>
-                            <div className={styles.scoreTrack}>
-                              <span style={{ width: `${Math.max(3, Math.round(value * 100))}%` }} />
-                            </div>
-                            <strong>{Math.round(value * 100)}</strong>
-                          </div>
-                        ))}
-                    </div>
+                    <p className={styles.helper}>This {recommendedSynergy?.score ?? "—"}/100 Synergy Score uses the same formula and equipped builds as Team Overview. It measures team interactions, not survival or raw monster power. Damage and weakest-member eHP are shown separately above; no minimum HP is required.</p>
 
                     <div className={styles.recommendList}>
-                      {recommendation.members.map(({ monster, build, dps, health }, memberIndex) => {
+                      {recommendation.members.map(({ monster, build, dps, health, effectiveHealth }, memberIndex) => {
                         const explanation = recommendation.memberReasons.find((reason) => reason.monsterId === monster.id);
                         return (
                           <div className={styles.recommendRow} key={monster.id}>
@@ -1918,7 +2008,7 @@ export function TeamComposition() {
                             <div className={styles.recommendDetails}>
                               <strong>{monster.name}</strong>
                               <span>{compactBuildLabel(build)}</span>
-                              <span>DPS {formatStatNumber(dps)} · HP {formatStatNumber(health)}</span>
+                              <span>DPS {formatStatNumber(dps)} · HP {formatStatNumber(health)} · eHP {formatStatNumber(effectiveHealth)}</span>
                               {gearRecommendation?.assignments.filter((assignment) => assignment.memberIndex === memberIndex).map(({ copy, from }) => {
                                 const gear = EQUIPMENT.find((item) => item.id === copy.equipmentId);
                                 return gear ? <small key={copy.id} className={styles.helper}>{gear.type === "weapon" ? "⚔" : "⬡"} {gear.name} · owned #{copy.id.slice(-6)}{from && from !== inventoryOwner(build.inventoryCopyId ?? "") ? " · reassign" : ""}</small> : null;
@@ -1939,7 +2029,7 @@ export function TeamComposition() {
                         </div>
                       </div>
                     ) : null}
-                    <button type="button" className={styles.primaryButton} onClick={useRecommendation}>
+                    <button type="button" className={styles.primaryButton} onClick={() => useRecommendation()}>
                       Use This Team
                     </button>
                   </>
@@ -1951,11 +2041,11 @@ export function TeamComposition() {
               <article className={styles.recommendCard}>
                 <h3>How the optimizer chose it</h3>
                 <p className={`${styles.helper} mt-2`}>
-                  Recommendations compare up to 26 owned builds and allocate unique gear. DPS includes active encounter damage passives and transferable teammate passives; survivability uses effective HP after active guard passives, plus defensive skill coverage. Tower means Spire in the calculator. Skill DPS does not simulate casting, buff uptime, healing or shields. This is a shortlist estimate, not a guaranteed optimum.
+                  The optimizer shortlists your owned builds, assigns each physical gear copy to at most one monster in each candidate team, then recalculates every finalist with teammate passives. Your selected goal weighs calculated DPS, weakest-member eHP and the same Synergy Score shown in Team Overview, without a minimum HP requirement. Skill DPS does not simulate casting or the uptime of buffs, healing or shields; no score predicts combat outcomes.
                 </p>
                 {recommendation?.alternatives.length ? (
                   <div className={styles.alternativeList}>
-                    <span className={styles.reasonLabel}>Close alternatives & tradeoffs</span>
+                    <span className={styles.reasonLabel}>Close alternatives & tradeoffs · unique gear included</span>
                     {recommendation.alternatives.map((alternative, index) => (
                       <div className={styles.alternativeCard} key={`alternative-${index}`}>
                         <div className={styles.alternativeHeader}>
@@ -1963,14 +2053,14 @@ export function TeamComposition() {
                             <strong>{alternative.swapLabel}</strong>
                             <span>{alternative.members.map((member) => member.monster.name).join(" · ")}</span>
                           </div>
-                          <b>{Math.round(alternative.score * 100)}</b>
+                          <b title="Recalculated with unique owned gear and teammate passives">{alternative.synergy.score} synergy</b>
                         </div>
                         <div className={styles.tradeoffRow}>
                           <span className={alternative.dpsDelta >= 0 ? styles.positiveDelta : styles.negativeDelta}>
                             {signedPercent(alternative.dpsDelta)} DPS
                           </span>
                           <span className={alternative.healthDelta >= 0 ? styles.positiveDelta : styles.negativeDelta}>
-                            {signedPercent(alternative.healthDelta)} effective HP
+                            {signedPercent(alternative.healthDelta)} weakest eHP
                           </span>
                         </div>
                         <div className={styles.alternativeMembers}>
@@ -1982,14 +2072,7 @@ export function TeamComposition() {
                             {alternative.lostUtility.length ? <span>Loses {alternative.lostUtility.join(", ")}</span> : null}
                           </div>
                         ) : null}
-                        <button type="button" className={styles.alternativeUseButton} onClick={() => {
-                          const nextTeam = Array.from({ length: 3 }, (_, memberIndex) => {
-                            const member = alternative.members[memberIndex];
-                            return member ? sanitizeBuild(member.build, member.monster.id) : makeBuild(null);
-                          });
-                          releaseReplacedTemporarySlots(nextTeam);
-                          setTeam(nextTeam);
-                        }}>Use This Team</button>
+                        <button type="button" className={styles.alternativeUseButton} onClick={() => useRecommendation(alternative)}>Use This Team</button>
                       </div>
                     ))}
                   </div>
@@ -2002,7 +2085,7 @@ export function TeamComposition() {
         <section className={styles.useCases} aria-label="Team use cases">
           <div><strong>Combat Context</strong><span>Apply content-specific modifiers independently of your team goal.</span></div>
           <nav aria-label="Choose team use case">
-            {(["standard", "boss", "dungeon", "rift", "spire"] as TeamCombatContext[]).map((value) => <button key={value} type="button" className={combatContext === value ? styles.useCaseActive : ""} onClick={() => setCombatContext(value)}>{value === "standard" ? "General" : value === "boss" ? "Bosses" : value === "dungeon" ? "Dungeons" : value === "spire" ? "Tower" : "Rifts"}</button>)}
+            {(["standard", "boss", "dungeon", "rift", "spire"] as TeamCombatContext[]).map((value) => <button key={value} type="button" className={combatContext === value ? styles.useCaseActive : ""} onClick={() => changeCombatContext(value)}>{value === "standard" ? "General" : value === "boss" ? "Bosses" : value === "dungeon" ? "Dungeons" : value === "spire" ? "Tower" : "Rifts"}</button>)}
           </nav>
         </section>
       </div>
@@ -2010,9 +2093,9 @@ export function TeamComposition() {
         <section className={styles.libraryDialog} role="dialog" aria-modal="true" aria-label="Team library">
           <div className={styles.libraryHeader}><div><span className={styles.kicker}>TEAM LIBRARY · {Object.keys(savedTeams).length}/20</span><h2>Save current team</h2><p>Save three monster builds, equipment, attributes, mutations and your team goal and combat context.</p></div><button type="button" className={styles.ghostButton} onClick={() => setTeamLibraryOpen(false)}>✕</button></div>
           <div className={styles.libraryActions}><input aria-label="Team name" placeholder="Team name" value={teamSaveName} onChange={(event) => setTeamSaveName(event.target.value)} /><button type="button" className={styles.primaryButton} disabled={Object.keys(savedTeams).length >= 20} onClick={() => { const id = Array.from({length:20},(_,i)=>`slot-${i+1}`).find((candidate)=>!savedTeams[candidate]); if(id){setSelectedTeamSlot(id); setSavedTeams((current)=>({...current,[id]:{builds:team.map((build)=>build.monsterId?sanitizeBuild(build,build.monsterId):makeBuild(null)),goal,combatContext,name:teamSaveName.trim()||`Team ${id.replace('slot-','')}`,updatedAt:Date.now()}})); setTeamPresetMessage('Team saved.');setTeamLibraryOpen(false);} }}>Save New Team</button></div>
-          <div className={styles.libraryPreview}><span className={styles.kicker}>CURRENT TEAM PREVIEW</span><div className={styles.libraryMembers}>{team.map((build,index)=>{const monster=build.monsterId?monsterById.get(build.monsterId):null;return <div key={index} className={styles.libraryMember}>{monster?<img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt=""/>:null}<strong>{monster?.name??'Empty slot'}</strong><small>Lv {build.level} · {build.rank} · +{build.enhancement}</small></div>})}</div></div>
+          <div className={styles.libraryPreview}><span className={styles.kicker}>CURRENT TEAM PREVIEW</span><div className={styles.libraryMembers}>{team.map((build,index)=>{const monster=build.monsterId?monsterById.get(build.monsterId):null;return <div key={index} className={styles.libraryMember}>{monster?<img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt=""/>:null}<strong>{monster?.name??'Empty slot'}</strong><small>Lv {build.level} · <TeamRankText rank={build.rank} /> · +{build.enhancement}</small></div>})}</div></div>
           <input className={styles.librarySearch} aria-label="Search saved teams" placeholder="Search saved teams..." value={teamSearch} onChange={(event)=>setTeamSearch(event.target.value)}/>
-          <div className={styles.libraryGrid}>{Object.entries(savedTeams).filter(([id,saved])=>(saved.name??`Team ${id.replace('slot-','')}`).toLowerCase().includes(teamSearch.toLowerCase())||saved.builds.some((build)=>monsterById.get(build.monsterId??'')?.name.toLowerCase().includes(teamSearch.toLowerCase()))).sort((a,b)=>b[1].updatedAt-a[1].updatedAt).map(([id,saved])=><article key={id} className={styles.libraryCard}><div className={styles.libraryCardHeader}><strong>{saved.name??`Team ${id.replace('slot-','')}`}</strong><small>Slot {id.replace('slot-','')} · {new Date(saved.updatedAt).toLocaleDateString()}</small></div><div className={styles.libraryMembers}>{saved.builds.map((build,index)=>{const monster=build.monsterId?monsterById.get(build.monsterId):null;return <div key={index} className={styles.libraryMember}>{monster?<img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt=""/>:null}<strong>{monster?.name??'Empty slot'}</strong><small>Lv {build.level} · {build.rank} · +{build.enhancement}</small></div>})}</div><div className={styles.libraryCardActions}><button type="button" className={styles.primaryButton} onClick={()=>{setTeam(saved.builds.map((build)=>build.monsterId?sanitizeBuild(build,build.monsterId):makeBuild(null)));setGoal(saved.goal);setCombatContext(saved.combatContext);setTeamLibraryOpen(false);setTeamPresetMessage('Team loaded.')}}>Load Team</button><button type="button" className={styles.ghostButton} onClick={()=>{setSelectedTeamSlot(id);setSavedTeams((current)=>({...current,[id]:{builds:team.map((build)=>build.monsterId?sanitizeBuild(build,build.monsterId):makeBuild(null)),goal,combatContext,name:saved.name||`Team ${id.replace('slot-','')}`,updatedAt:Date.now()}}));setTeamPresetMessage('Team overwritten.')}}>Overwrite</button><button type="button" className={styles.ghostButton} onClick={()=>{const name=window.prompt('Rename team',saved.name??'');if(name?.trim())setSavedTeams((current)=>({...current,[id]:{...saved,name:name.trim()}}))}}>Rename</button><button type="button" className={styles.ghostButton} onClick={()=>{if(window.confirm('Delete this saved team?'))setSavedTeams((current)=>{const next={...current};delete next[id];return next})}}>Delete</button></div></article>)}</div>
+          <div className={styles.libraryGrid}>{Object.entries(savedTeams).filter(([id,saved])=>(saved.name??`Team ${id.replace('slot-','')}`).toLowerCase().includes(teamSearch.toLowerCase())||saved.builds.some((build)=>monsterById.get(build.monsterId??'')?.name.toLowerCase().includes(teamSearch.toLowerCase()))).sort((a,b)=>b[1].updatedAt-a[1].updatedAt).map(([id,saved])=><article key={id} className={styles.libraryCard}><div className={styles.libraryCardHeader}><strong>{saved.name??`Team ${id.replace('slot-','')}`}</strong><small>Slot {id.replace('slot-','')} · {new Date(saved.updatedAt).toLocaleDateString()}</small></div><div className={styles.libraryMembers}>{saved.builds.map((build,index)=>{const monster=build.monsterId?monsterById.get(build.monsterId):null;return <div key={index} className={styles.libraryMember}>{monster?<img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt=""/>:null}<strong>{monster?.name??'Empty slot'}</strong><small>Lv {build.level} · <TeamRankText rank={build.rank} /> · +{build.enhancement}</small></div>})}</div><div className={styles.libraryCardActions}><button type="button" className={styles.primaryButton} onClick={()=>{setTeam(teamForCombatContext(saved.builds.map((build)=>build.monsterId?sanitizeBuild(build,build.monsterId):makeBuild(null)),saved.combatContext));setGoal(saved.goal);setCombatContext(saved.combatContext);setTeamLibraryOpen(false);setTeamPresetMessage('Team loaded.')}}>Load Team</button><button type="button" className={styles.ghostButton} onClick={()=>{setSelectedTeamSlot(id);setSavedTeams((current)=>({...current,[id]:{builds:team.map((build)=>build.monsterId?sanitizeBuild(build,build.monsterId):makeBuild(null)),goal,combatContext,name:saved.name||`Team ${id.replace('slot-','')}`,updatedAt:Date.now()}}));setTeamPresetMessage('Team overwritten.')}}>Overwrite</button><button type="button" className={styles.ghostButton} onClick={()=>{const name=window.prompt('Rename team',saved.name??'');if(name?.trim())setSavedTeams((current)=>({...current,[id]:{...saved,name:name.trim()}}))}}>Rename</button><button type="button" className={styles.ghostButton} onClick={()=>{if(window.confirm('Delete this saved team?'))setSavedTeams((current)=>{const next={...current};delete next[id];return next})}}>Delete</button></div></article>)}</div>
         </section>
       </div>}
     </main>
