@@ -2925,3 +2925,58 @@ button.emptySlot .emptySlotContent small {
 .inventoryResultCount { margin: 6px 1px 0; color: #89a7c5; font-size: 10px; line-height: 1.3; }
 
 .inventoryFavoriteFilter.filterChipActive { border-color: #2d91f5; background: #12365b; color: #d9edff; }
+
+/* Explain the composition estimate without crowding the compact stat cards. */
+.synergyMetric small { display: block; margin-top: 3px; color: #aa9ec5; font-size: 9px; }
+.synergyBreakdown { margin: 0 10px 10px; border: 1px solid #50456e; border-radius: 9px; background: #0b1426; }
+.synergyTrigger { display: block; width: 100%; text-align: left; color: inherit; font: inherit; cursor: pointer; transition: border-color .15s ease, background .15s ease; }
+.synergyTrigger:hover, .synergyTrigger[aria-expanded="true"] { border-color: #aa7be8; background: linear-gradient(145deg, #2f1d4b, #101a30); }
+.synergyTrigger:focus-visible, .synergyExplanationHeading button:focus-visible { outline: 2px solid #d5a7ff; outline-offset: 2px; }
+.synergyMetric .synergyCue { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 7px; color: #d6b7ff; font-size: 10px; font-weight: 800; letter-spacing: normal; line-height: 1.25; text-transform: none; }
+.synergyMetric .synergyCue > span { color: inherit; font-size: 13px; }
+.synergyBreakdown[hidden] { display: none; }
+.synergyExplanationHeading { display: flex; justify-content: space-between; align-items: start; gap: 12px; padding: 11px 12px 10px; }
+.synergyExplanationHeading h3 { color: #dcc1ff; font-size: 12px; font-weight: 850; }
+.synergyExplanationHeading p { margin-top: 3px; color: #93a4c1; font-size: 10px; line-height: 1.45; }
+.synergyExplanationHeading button { flex-shrink: 0; border: 1px solid #6a4a98; border-radius: 6px; background: #24173d; color: #dcc1ff; padding: 4px 9px; font-size: 10px; font-weight: 750; cursor: pointer; }
+.synergyExplanationHeading button:hover { border-color: #c99afa; }
+.synergyCategories { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; padding: 0 10px 10px; }
+.synergyCategory { min-width: 0; border: 1px solid #303956; border-radius: 7px; background: #09192a; padding: 9px; }
+.synergyCategoryHeading { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 5px; font-size: 10px; }
+.synergyCategoryHeading span { color: #d4a9ff; white-space: nowrap; font-weight: 800; }
+.synergyBar { overflow: hidden; height: 5px; margin-top: 7px; border-radius: 999px; background: #263348; }
+.synergyBar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #6578ff, #cd8dff); }
+.synergyCategory ul { margin: 8px 0 0; padding-left: 14px; color: #9babc2; font-size: 9px; line-height: 1.55; }
+.synergyCategory li + li { margin-top: 4px; }
+.synergyCategory p { margin-top: 8px; color: #8192aa; font-size: 9px; }
+.synergyNote { margin: 0 12px 12px; color: #8f9fba; font-size: 10px; line-height: 1.5; }
+@media (max-width: 1120px) { .synergyCategories { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .synergyCategories { grid-template-columns: 1fr; } }
+
+/* Endgame shortlist: individual survivability is explicit and user-adjustable. */
+.recommendScorePair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin: 9px 0; }
+.recommendScorePair > div { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 10px; border: 1px solid #344d69; border-radius: 8px; background: #0b1b2d; }
+.recommendScorePair span { color: #9cbad6; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+.recommendScorePair strong { color: #d6b0ff; font-size: 17px; }
+.recommendScorePair small { color: #92a9c0; font-size: 9px; line-height: 1.4; }
+
+/* Keep the weakest teammate visible: total eHP alone can conceal a fragile support. */
+.overviewWeakest {
+  display: block;
+  margin-top: 3px;
+  color: #9eb9d3;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+/* Current optimizer: don't hide the survival and single-score diagnostics with
+   old compact-dashboard styles, and show every member's actual gear-aware HP. */
+.recommendMetrics { display: grid; }
+.recommendReasons { display: block; }
+.recommendList { grid-template-columns: minmax(0, 1fr); }
+.recommendRow { display: grid; grid-template-columns: 46px minmax(0, 1fr); align-items: center; gap: 8px; padding: 7px; text-align: left; }
+.recommendMonster { width: 46px; height: 46px; margin: 0; }
+.recommendDetails span:nth-of-type(2), .recommendDetails em { display: block; }
+.recommendDetails span { white-space: normal; overflow-wrap: anywhere; }
+.optimizerNotes { opacity: 1; }

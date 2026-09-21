@@ -4,7 +4,7 @@ import { getSkill } from "../data/skills";
 import { mergeUniquePassives } from "../data/passives";
 import { getPassiveEffectTotals } from "./calculations/passive-effects";
 import { ARMORS, WEAPONS } from "../data/equipments";
-import { getAvailableTraits } from "../data/traits";
+import { getAvailableTraits, getTrait } from "../data/traits";
 import { getAttribute } from "../data/attributes";
 import { calculateSkillSummary } from "./calculations/skill-summary";
 import { calculateStats } from "./calculations/stats";
@@ -12,6 +12,8 @@ import { getAttributeSlotCount } from "./calculations/attributes";
 import { clampEvolutionPercent } from "./calculations/evolution";
 import { GENETIC_POTENTIAL_VALUES } from "./calculations/genetic-potential";
 import { CURRENT_MAX_LEVEL, MIN_LEVEL } from "./level-config";
+import { DUNGEON_TEAM_LEVEL } from "./team-dungeon-level";
+import { calculateTeamSynergy, type TeamSynergy } from "./team-synergy";
 import { createDefaultBuild, type Build, type MonsterPassive, type Mutation, type Rank } from "../types/build";
 import type { Monster } from "../types/monster";
 
@@ -126,7 +128,8 @@ export function sanitizeBuild(saved: Partial<Build>, monsterId: string): Build {
     // not leak into the regular Team Overview or saved presets.
     targetIsBoss: false,
     combatContext: "standard",
-    preDungeonLevel: null,
+    preDungeonLevel: saved.preDungeonLevel == null ? null
+      : integer(saved.preDungeonLevel, MIN_LEVEL, CURRENT_MAX_LEVEL, base.level),
     accountMultipliers: { completedAchievementIds: [] },
     teammateMonsterIds: [null, null],
   };
@@ -298,6 +301,44 @@ export function monsterDps(monster: Monster, build: Build): number {
   }, 0);
 }
 
+/**
+ * One scoring path for the current equipped team and the recommended team.
+ * It deliberately uses the SAME contextual calculator, skill summaries, trait
+ * and solo baseline for both views; no separate public optimizer rating.
+ */
+export function teamSynergyForBuilds(builds: Build[], account: Build["accountMultipliers"], context: TeamCombatContext): TeamSynergy {
+  const members = builds.flatMap((saved, index) => {
+    const monster = saved.monsterId ? monsterById.get(saved.monsterId) : null;
+    if (!monster) return [];
+    const teammateIds = builds.filter((_, i) => i !== index).flatMap((candidate) => candidate.monsterId ? [candidate.monsterId] : []);
+    const build = buildForGoal({ ...saved, accountMultipliers: account,
+      teammateMonsterIds: [teammateIds[0] ?? null, teammateIds[1] ?? null],
+      evolutionPercent: monster.isEvolved ? saved.evolutionPercent : 100 }, context);
+    const statData = getMonsterStatData(monster.id);
+    if (!statData) return [];
+    const passives = getEffectiveTeamPassives(monster, build);
+    const stats = calculateStats(statData, build, passives);
+    if (!stats) return [];
+    const skills = monster.skillIds.flatMap((id) => {
+      const skill = getSkill(id);
+      if (!skill) return [];
+      return [{ ...skill, cooldown: calculateSkillSummary(monster, skill, stats, build, passives).cooldown }];
+    });
+    const dps = monsterDps(monster, build);
+    const solo = { ...build, teammateMonsterIds: [null, null] as [null, null] };
+    const soloStats = calculateStats(statData, solo, getEffectiveTeamPassives(monster, solo));
+    const trait = getTrait(build.traitId);
+    const statusDamagePercent = trait?.effects.reduce((sum, effect) =>
+      sum + (effect.type === "damage" && effect.condition === "targetStatused" ? effect.percentage : 0), 0) ?? 0;
+    return [{ id: `${monster.id}:${index}`, name: monster.name, passives: monster.passives ?? [],
+      skills, dps, effectiveHealth: effectiveTeamHealth(monster, build, stats.health),
+      soloDps: soloStats ? monsterDps(monster, solo) : 0,
+      soloEffectiveHealth: soloStats ? effectiveTeamHealth(monster, solo, soloStats.health) : 0,
+      statusDamagePercent }];
+  });
+  return calculateTeamSynergy(members, context);
+}
+
 export function buildSignature(build: Build): string {
   return JSON.stringify({
     level: build.level,
@@ -349,6 +390,9 @@ export function compactBuildLabel(build: Build): string {
 export function buildForGoal(build: Build, combatContext: TeamCombatContext): Build {
   return {
     ...build,
+    // Recommendations, previews and the visible cards must evaluate Dungeon
+    // at the same level even when an inventory copy is saved at another level.
+    level: combatContext === "dungeon" ? DUNGEON_TEAM_LEVEL : build.level,
     targetIsBoss: combatContext === "boss",
     combatContext: combatContext === "boss" ? "standard" : combatContext,
   };
@@ -385,17 +429,17 @@ export function utilityWeights(monster: Monster): { total: number; offense: numb
 }
 
 export function goalTitle(goal: TeamGoal): string {
-  if (goal === "damage") return "Highest DPS Composition";
+  if (goal === "damage") return "Damage-Focused Composition";
   if (goal === "survivability") return "Survivability Composition";
   if (goal === "support") return "Support Composition";
   return "Balanced Composition";
 }
 
 export function goalDescription(goal: TeamGoal): string {
-  if (goal === "damage") return "Ranks candidate teams by calculated skill DPS only.";
-  if (goal === "survivability") return "Prioritizes effective HP after active guard passives, plus defensive skill utility.";
-  if (goal === "support") return "Prioritizes teams with broad buffs, debuffs, healing, shielding, and control without ignoring combat stats.";
-  return "Balances calculated DPS, Health, and non-overlapping team utility.";
+  if (goal === "damage") return "Prioritizes calculated skill DPS while still considering team synergy and each member’s effective HP.";
+  if (goal === "survivability") return "Prioritizes the weakest member’s effective HP after active guard passives.";
+  if (goal === "support") return "Prioritizes the shared Synergy Score without ignoring team DPS or the weakest member.";
+  return "Balances calculated DPS, weakest-member effective HP, and shared team synergy.";
 }
 
 export function goalWeights(goal: TeamGoal) {
@@ -439,6 +483,7 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
           : combatContext === "spire" ? encounterPassives.spireDamage
           : combatContext === "dungeon" ? encounterPassives.dungeonDamage : 0;
         return {
+          id,
           monster,
           savedBuild: saved,
           dps,
@@ -468,8 +513,9 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
     // Preserve encounter specialists even if their level-one base stats are
     // smaller than generalists. A transferable +Rift/Tower Damage passive can
     // raise all three members' DPS, and Guard can raise all three members' eHP.
-    const statLeaders = [...ownedCandidates].sort((a, b) => roughScore(b) - roughScore(a)).slice(0, 16);
-    const utilityLeaders = [...ownedCandidates].sort((a, b) => b.utility.total - a.utility.total).slice(0, 6);
+    const statLeaders = [...ownedCandidates].sort((a, b) => roughScore(b) - roughScore(a)).slice(0, 12);
+    const survivalLeaders = [...ownedCandidates].sort((a, b) => b.effectiveHealth - a.effectiveHealth).slice(0, 6);
+    const utilityLeaders = [...ownedCandidates].sort((a, b) => b.utility.total - a.utility.total).slice(0, 4);
     const encounterDamageLeaders = combatContext === "standard" ? [] : [...ownedCandidates]
       .filter((item) => item.encounterDamage > 0)
       .sort((a, b) => b.encounterDamage - a.encounterDamage).slice(0, 2);
@@ -478,7 +524,7 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
       .sort((a, b) => (b.effectiveHealth / Math.max(1, b.health)) - (a.effectiveHealth / Math.max(1, a.health)))
       .slice(0, 2);
     const poolMap = new Map<string, (typeof ownedCandidates)[number]>();
-    [...statLeaders, ...utilityLeaders, ...encounterDamageLeaders, ...guardLeaders].forEach((item) => poolMap.set(item.savedBuild.inventoryCopyId ?? item.monster.id, item));
+    [...statLeaders, ...survivalLeaders, ...utilityLeaders, ...encounterDamageLeaders, ...guardLeaders].forEach((item) => poolMap.set(item.id, item));
     const pool = [...poolMap.values()];
     const targetSize = Math.min(3, pool.length);
 
@@ -537,6 +583,7 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
 
       return {
         members: resolvedMembers,
+        weakestEffectiveHp: resolvedMembers.length ? Math.min(...resolvedMembers.map((member) => member.effectiveHealth)) : 0,
         totalDps: resolvedMembers.reduce((sum, member) => sum + member.dps, 0),
         totalHealth: resolvedMembers.reduce((sum, member) => sum + member.health, 0),
         totalEffectiveHealth: resolvedMembers.reduce((sum, member) => sum + member.effectiveHealth, 0),
@@ -560,65 +607,37 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
       const utility = team.utilityScore / maxUtility;
       const offense = team.offenseUtility / maxOffenseUtility;
       const defense = team.defenseUtility / maxDefenseUtility;
-      const score =
+      const baseFit =
         dps * weights.dps +
         health * weights.health +
         utility * weights.utility +
         offense * weights.offense +
         defense * weights.defense;
+      const score = baseFit;
       return {
         ...team,
+        baseFit,
         score,
         normalized: { dps, health, utility, offense, defense },
       };
     });
 
+    // Coarse scan narrows the combinatorial search; retain damage, survival and
+    // utility specialists so a strong interaction is not pruned by raw stats.
     scored.sort((a, b) => b.score - a.score);
-    const best = scored[0];
+    const shortlist = new Map<string, (typeof scored)[number]>();
+    const keyFor = (candidate: (typeof scored)[number]) => candidate.members.map((m) => m.build.inventoryCopyId ?? m.monster.id).sort().join("|");
+    const keep = (candidate: (typeof scored)[number]) => shortlist.set(keyFor(candidate), candidate);
+    scored.slice(0, 16).forEach(keep);
+    [...scored].sort((a, b) => b.totalDps - a.totalDps).slice(0, 5).forEach(keep);
+    [...scored].sort((a, b) => b.weakestEffectiveHp - a.weakestEffectiveHp).slice(0, 5).forEach(keep);
+    [...scored].sort((a, b) => b.utilityScore - a.utilityScore).slice(0, 5).forEach(keep);
+    // The UI rechecks ALL shortlisted trios with unique physical equipment
+    // BEFORE choosing a winner. Do not present a pre-gear ranking as final.
+    const finalists = [...shortlist.values()];
+    const best = finalists[0];
     if (!best) return null;
 
-    const bestDps = Math.max(1, ...best.members.map((member) => member.dps));
-    const bestHealth = Math.max(1, ...best.members.map((member) => member.effectiveHealth));
-    const memberReasons = best.members.map((member) => {
-      const reasons: string[] = [];
-      const teamDpsShare = best.totalDps > 0 ? member.dps / best.totalDps : 0;
-      if (member.dps >= bestDps * 0.95) reasons.push(`Top DPS · ${Math.round(teamDpsShare * 100)}% of team`);
-      if (member.effectiveHealth >= bestHealth * 0.95) reasons.push("Highest effective HP");
-      if (member.effectiveHealth > member.health * 1.001) reasons.push("Active guard / damage resistance");
+    return { ...best, finalists };
 
-      const utilityLabels = Object.entries(member.utility.labels)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 2)
-        .map(([label]) => label);
-      if (utilityLabels.length) reasons.push(utilityLabels.join(" + "));
-      if (!reasons.length) reasons.push("Strong overall fit for this goal");
-      return { monsterId: member.monster.id, reasons };
-    });
-
-    const alternatives = scored.slice(1, 3).map((alternative) => {
-      const bestIds = new Set(best.members.map((member) => member.monster.id));
-      const altIds = new Set(alternative.members.map((member) => member.monster.id));
-      const removed = best.members.filter((member) => !altIds.has(member.monster.id)).map((member) => member.monster.name);
-      const added = alternative.members.filter((member) => !bestIds.has(member.monster.id)).map((member) => member.monster.name);
-      const gainedUtility = Object.keys(alternative.utilityLabels).filter((label) => !best.utilityLabels[label]);
-      const lostUtility = Object.keys(best.utilityLabels).filter((label) => !alternative.utilityLabels[label]);
-      return {
-        ...alternative,
-        swapLabel: removed.length || added.length
-          ? `${removed.length ? `Replace ${removed.join(" + ")}` : "Change team"}${added.length ? ` with ${added.join(" + ")}` : ""}`
-          : "Same core composition",
-        dpsDelta: best.totalDps > 0 ? (alternative.totalDps - best.totalDps) / best.totalDps : 0,
-        healthDelta: best.totalEffectiveHealth > 0 ? (alternative.totalEffectiveHealth - best.totalEffectiveHealth) / best.totalEffectiveHealth : 0,
-        gainedUtility,
-        lostUtility,
-      };
-    });
-
-    return {
-      ...best,
-      scorePercent: Math.round(best.score * 100),
-      weights,
-      memberReasons,
-      alternatives,
-    };
 }
