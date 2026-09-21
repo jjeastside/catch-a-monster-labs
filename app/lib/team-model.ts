@@ -11,7 +11,7 @@ import { calculateStats } from "./calculations/stats";
 import { getAttributeSlotCount } from "./calculations/attributes";
 import { clampEvolutionPercent } from "./calculations/evolution";
 import { GENETIC_POTENTIAL_VALUES } from "./calculations/genetic-potential";
-import { EXPERIMENTAL_MAX_LEVEL, MIN_LEVEL } from "./level-config";
+import { CURRENT_MAX_LEVEL, MIN_LEVEL } from "./level-config";
 import { createDefaultBuild, type Build, type MonsterPassive, type Mutation, type Rank } from "../types/build";
 import type { Monster } from "../types/monster";
 
@@ -105,7 +105,7 @@ export function sanitizeBuild(saved: Partial<Build>, monsterId: string): Build {
       (saved.inventoryCopyId === monsterId || /^.+::copy-(?:[2-9]|[1-9]\d+)$/.test(saved.inventoryCopyId)) &&
       copyMonsterId(saved.inventoryCopyId) === monsterId ? saved.inventoryCopyId : undefined,
     rank: ranks.includes(saved.rank as Rank) ? (saved.rank as Rank) : "E",
-    level: integer(saved.level, MIN_LEVEL, EXPERIMENTAL_MAX_LEVEL, base.level),
+    level: integer(saved.level, MIN_LEVEL, CURRENT_MAX_LEVEL, base.level),
     enhancement: integer(saved.enhancement, 0, 10, base.enhancement),
     damageGeneticPotential: gp(saved.damageGeneticPotential),
     healthGeneticPotential: gp(saved.healthGeneticPotential),

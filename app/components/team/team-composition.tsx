@@ -78,6 +78,9 @@ function OverviewIcon({ kind }: { kind: OverviewIconKind }) {
   return <svg className={`${styles.overviewIcon} ${styles[`overviewIcon_${kind}`]}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[kind]}</svg>;
 }
 
+const INVENTORY_ELEMENTS = [...new Set(availableMonsters.map((monster) => monster.element))].sort();
+const INVENTORY_RARITIES = [...new Set(availableMonsters.map((monster) => monster.rarity))].sort();
+
 const combatContextLabel = (context: TeamCombatContext) => ({
   standard: "Standard", boss: "Boss", rift: "Rift", spire: "Tower / Spire", dungeon: "Dungeon",
 })[context];
@@ -244,6 +247,9 @@ export function TeamComposition() {
   const [combatContext, setCombatContext] = useState<TeamCombatContext>("standard");
   const [inventoryFilter, setInventoryFilter] = useState<InventoryFilter>("all");
   const [inventorySort, setInventorySort] = useState<InventorySort>("name");
+  const [inventoryFilterPanel, setInventoryFilterPanel] = useState<"sort" | "browse" | null>(null);
+  const [inventoryElement, setInventoryElement] = useState("all");
+  const [inventoryRarity, setInventoryRarity] = useState("all");
   const [ownedEquipment, setOwnedEquipment] = useState<OwnedEquipmentCopy[]>([]);
   const [equipmentSearch, setEquipmentSearch] = useState("");
   const [equipmentFilter, setEquipmentFilter] = useState<"all" | "weapon" | "armor">("all");
@@ -518,6 +524,9 @@ export function TeamComposition() {
         if (inventoryFilter === "owned" && !owned) return false;
         if (inventoryFilter === "unowned" && owned) return false;
         if (inventoryFilter === "team" && !teamIds.includes(monster.id)) return false;
+        if (inventoryElement !== "all" && monster.element !== inventoryElement) return false;
+        if (inventoryRarity !== "all" && monster.rarity !== inventoryRarity) return false;
+        if (favoritesOnly && !favoriteMonsterIds.includes(monster.id)) return false;
         return true;
       })
       .sort((a, b) => {
@@ -527,7 +536,16 @@ export function TeamComposition() {
         if (inventorySort === "health") return getSavedStats(b).health - getSavedStats(a).health || a.name.localeCompare(b.name);
         return a.name.localeCompare(b.name);
       });
-  }, [search, inventoryFilter, inventorySort, inventoryBuilds, accountBuild.accountMultipliers, teamIds, hiddenMonsterIds, showHiddenMonsters, ownedIds]);
+  }, [search, inventoryFilter, inventorySort, inventoryElement, inventoryRarity, favoritesOnly, favoriteMonsterIds, inventoryBuilds, accountBuild.accountMultipliers, teamIds, hiddenMonsterIds, showHiddenMonsters, ownedIds]);
+
+  const activeInventoryFilters = Number(inventoryFilter !== "all") + Number(favoritesOnly)
+    + Number(inventoryElement !== "all") + Number(inventoryRarity !== "all");
+  const clearInventoryFilters = () => {
+    setInventoryFilter("all");
+    setFavoritesOnly(false);
+    setInventoryElement("all");
+    setInventoryRarity("all");
+  };
 
   // Compare individual gear copies with their real saved attributes, using the
   // same contextual calculator as the build editor. Never treat a DB entry as owned.
@@ -1179,37 +1197,48 @@ export function TeamComposition() {
               ))}
             </div>
             {inventoryTab === "monsters" ? <div className={styles.inventoryBody}>
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                className={styles.search}
-                placeholder="Search monsters..."
-                aria-label="Search inventory monsters"
-              />
-              <div className={styles.inventoryToolbar}>
-                <div className={styles.inventoryFilters}>
-                  {([
-                    ["all", "All"],
-                    ["owned", "Owned"],
-                    ["unowned", "Missing"],
-                    ["team", "Team"],
-                  ] as const).map(([value, label]) => (
-                    <button key={value} type="button" className={`${styles.filterChip} ${inventoryFilter === value ? styles.filterChipActive : ""}`} onClick={() => setInventoryFilter(value)}>
-                      {label}
-                    </button>
+              <div className={styles.inventorySearchRow}>
+                <label className={styles.inventorySearchBox}>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5" /></svg>
+                  <input
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    type="search"
+                    placeholder="Search monsters"
+                    aria-label="Search inventory monsters"
+                  />
+                </label>
+                <button type="button" className={`${styles.inventoryFilterTrigger} ${inventoryFilterPanel === "sort" ? styles.inventoryFilterTriggerActive : ""}`} aria-label="Sort inventory monsters" aria-expanded={inventoryFilterPanel === "sort"} aria-controls="inventory-sort-panel" title="Sort inventory" onClick={() => setInventoryFilterPanel((current) => current === "sort" ? null : "sort")}>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16M7 12h10M10 18h4" /></svg>
+                </button>
+                <button type="button" className={`${styles.inventoryFilterTrigger} ${inventoryFilterPanel === "browse" || activeInventoryFilters ? styles.inventoryFilterTriggerActive : ""}`} aria-label="Filter inventory monsters" aria-expanded={inventoryFilterPanel === "browse"} aria-controls="inventory-browse-panel" title="Filter inventory" onClick={() => setInventoryFilterPanel((current) => current === "browse" ? null : "browse")}>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16l-6.5 7.2V18l-3 1.5v-7.3L4 5Z" /></svg>
+                  {activeInventoryFilters > 0 ? <span className={styles.inventoryFilterBadge}>{activeInventoryFilters}</span> : null}
+                </button>
+              </div>
+              {inventoryFilterPanel === "sort" ? <div id="inventory-sort-panel" className={styles.inventoryFilterPanel}>
+                <div className={styles.inventoryFilterPanelHeading}><strong>Sort by</strong><button type="button" onClick={() => setInventoryFilterPanel(null)} aria-label="Close sort options">×</button></div>
+                <div className={styles.inventorySortOptions}>
+                  {([ ["name", "Name"], ["rank", "Rank"], ["level", "Level"], ["dps", "Skill DPS"], ["health", "Health"] ] as const).map(([value, label]) => (
+                    <button key={value} type="button" className={`${styles.filterChip} ${inventorySort === value ? styles.filterChipActive : ""}`} aria-pressed={inventorySort === value} onClick={() => { setInventorySort(value); setInventoryFilterPanel(null); }}>{label}</button>
                   ))}
                 </div>
-                <div className={styles.inventoryTools}>
-                  <button type="button" className={`${styles.filterChip} ${favoritesOnly ? styles.filterChipActive : ""}`} onClick={() => setFavoritesOnly((value) => !value)} aria-pressed={favoritesOnly} title="Show favorites only">{favoritesOnly ? "★ Favorites" : "☆ Favorites"}</button>
-                  <select className={styles.inventorySort} value={inventorySort} onChange={(event) => setInventorySort(event.target.value as InventorySort)} aria-label="Sort inventory">
-                    <option value="name">Name</option>
-                    <option value="rank">Rank</option>
-                    <option value="level">Level</option>
-                    <option value="dps">DPS</option>
-                    <option value="health">Health</option>
-                  </select>
+              </div> : null}
+              {inventoryFilterPanel === "browse" ? <div id="inventory-browse-panel" className={styles.inventoryFilterPanel}>
+                <div className={styles.inventoryFilterPanelHeading}><strong>Browse filters</strong><button type="button" onClick={clearInventoryFilters} disabled={!activeInventoryFilters}>Clear all</button></div>
+                <span className={styles.inventoryFilterLabel}>Collection</span>
+                <div className={styles.inventoryFilterChoices}>
+                  {([ ["all", "All"], ["owned", "Owned"], ["unowned", "Missing"], ["team", "In team"] ] as const).map(([value, label]) => (
+                    <button key={value} type="button" className={`${styles.filterChip} ${inventoryFilter === value ? styles.filterChipActive : ""}`} aria-pressed={inventoryFilter === value} onClick={() => setInventoryFilter(value)}>{label}</button>
+                  ))}
                 </div>
-              </div>
+                <button type="button" className={`${styles.inventoryFavoriteFilter} ${favoritesOnly ? styles.filterChipActive : ""}`} aria-pressed={favoritesOnly} onClick={() => setFavoritesOnly((value) => !value)}>{favoritesOnly ? "★" : "☆"} Favorites only</button>
+                <div className={styles.inventoryFilterSelects}>
+                  <label>Element<select value={inventoryElement} onChange={(event) => setInventoryElement(event.target.value)}><option value="all">All elements</option>{INVENTORY_ELEMENTS.map((element) => <option key={element} value={element}>{element}</option>)}</select></label>
+                  <label>Rarity<select value={inventoryRarity} onChange={(event) => setInventoryRarity(event.target.value)}><option value="all">All rarities</option>{INVENTORY_RARITIES.map((rarity) => <option key={rarity} value={rarity}>{rarity}</option>)}</select></label>
+                </div>
+              </div> : null}
+              <p className={styles.inventoryResultCount}>{filteredInventory.length} of {availableMonsters.length} monsters{activeInventoryFilters ? ` · ${activeInventoryFilters} active ${activeInventoryFilters === 1 ? "filter" : "filters"}` : ""}</p>
               <details className={styles.inventoryExtras}>
                 <summary>Inventory tools{hiddenMonsterIds.length ? ` · ${hiddenMonsterIds.length} hidden` : ""}</summary>
                 <div className={styles.pickerPreferences}>
@@ -1222,7 +1251,7 @@ export function TeamComposition() {
               </details>
               {inventoryMessage ? <p role="status" className={styles.inventoryMessage}>{inventoryMessage}</p> : null}
               <div className={styles.inventoryList}>
-                {filteredInventory.filter((monster) => !favoritesOnly || favoriteMonsterIds.includes(monster.id)).map((monster) => {
+                {filteredInventory.map((monster) => {
                   const copies = copiesFor(monster.id);
                   const savedBuild = inventoryBuilds[monster.id] ?? (copies[0] ? inventoryBuilds[copies[0]] : undefined);
                   const owned = copies.length > 0;
@@ -1265,6 +1294,7 @@ export function TeamComposition() {
                     </article>
                   );
                 })}
+                {filteredInventory.length === 0 ? <p className={styles.pickerEmpty}>No monsters match. Try clearing filters or changing your search.</p> : null}
               </div>
             </div> : inventoryTab === "equipment" ? <div className={styles.inventoryBody} role="tabpanel">
               <div className={styles.equipmentAddControl} onKeyDown={(event) => {
@@ -1472,11 +1502,11 @@ export function TeamComposition() {
                           <input
                             type="number"
                             min={1}
-                            max={115}
+                            max={CURRENT_MAX_LEVEL}
                             value={item.build.level}
                             onChange={(event) =>
                               updateTeamBuild(index, {
-                                level: Math.max(1, Math.min(115, Number(event.target.value) || 1)),
+                                level: Math.max(1, Math.min(CURRENT_MAX_LEVEL, Number(event.target.value) || 1)),
                               })
                             }
                           />
@@ -1734,7 +1764,7 @@ export function TeamComposition() {
                     <button type="button" className={styles.removeButton} onClick={() => setEditingInventoryId(null)} aria-label="Close inventory editor">×</button>
                   </div>
                   <div className={styles.inventoryEditorGrid}>
-                    <label>Level<input type="number" min={1} max={115} value={build.level} onChange={(event) => updateInventoryBuild(editingInventoryId, { level: Math.max(1, Math.min(115, Number(event.target.value) || 1)) })} /></label>
+                    <label>Level<input type="number" min={1} max={CURRENT_MAX_LEVEL} value={build.level} onChange={(event) => updateInventoryBuild(editingInventoryId, { level: Math.max(1, Math.min(CURRENT_MAX_LEVEL, Number(event.target.value) || 1)) })} /></label>
                     <label>Rank<select value={build.rank ?? "E"} onChange={(event) => updateInventoryBuild(editingInventoryId, { rank: event.target.value as Rank })}>{ranks.map((rank) => <option key={rank}>{rank}</option>)}</select></label>
                     <label>Enhancement<select value={build.enhancement} onChange={(event) => updateInventoryBuild(editingInventoryId, { enhancement: Number(event.target.value) })}>{Array.from({ length: 11 }, (_, value) => <option key={value} value={value}>+{value}</option>)}</select></label>
                     <label>GP Damage<select aria-label="GP Damage" value={build.damageGeneticPotential} onChange={(event) => updateInventoryBuild(editingInventoryId, { damageGeneticPotential: Number(event.target.value) })}>{GENETIC_POTENTIAL_VALUES.map((value) => <option key={value} value={value}>{value}%</option>)}</select></label>

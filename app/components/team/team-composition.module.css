@@ -2849,3 +2849,79 @@ button.emptySlot .emptySlotContent small {
 }
 .inventoryBadges > span { display: flex; align-items: center; gap: 2px; white-space: nowrap; }
 .inventoryBadges > span b { min-width: 0; padding: 0; border: 0; background: transparent; font-size: inherit; }
+
+/* v10: Match the Calculator browser's Search / Sort / Filter pattern.
+   The panels stay in document flow so the narrow inventory never clips them. */
+.inventorySearchRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 39px 39px;
+  gap: 7px;
+  align-items: stretch;
+  min-width: 0;
+}
+.inventorySearchBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 38px;
+  border: 1px solid #294862;
+  border-radius: 8px;
+  background: #081a2b;
+  padding: 0 10px;
+  color: #859fb9;
+}
+.inventorySearchBox:focus-within { border-color: #70bafa; }
+.inventorySearchBox svg { flex: 0 0 15px; width: 15px; height: 15px; }
+.inventorySearchBox input {
+  flex: 1 1 0; width: 100%; min-width: 0;
+  background: transparent; outline: 0; border: 0;
+  color: #e8f3ff; font-size: 12px;
+}
+.inventorySearchBox input::placeholder { color: #8399b0; }
+.inventoryFilterTrigger {
+  position: relative; display: grid; place-items: center;
+  width: 39px; min-width: 0; min-height: 38px;
+  border: 1px solid #294862; border-radius: 8px;
+  background: #081a2b; color: #8eabc5; cursor: pointer;
+}
+.inventoryFilterTrigger svg { width: 18px; height: 18px; }
+.inventoryFilterTrigger:hover, .inventoryFilterTrigger:focus-visible,
+.inventoryFilterTriggerActive { border-color: #4a91c3; background: #153650; color: #cce8ff; }
+.inventoryFilterBadge {
+  position: absolute; top: -5px; right: -5px;
+  display: grid; place-items: center; width: 16px; height: 16px;
+  border-radius: 50%; border: 1px solid #081a2b;
+  background: #427ec7; color: white; font-size: 9px; font-weight: 800;
+}
+.inventoryFilterPanel {
+  display: flex; flex-direction: column; gap: 8px;
+  min-width: 0; margin-top: 7px; padding: 10px;
+  border: 1px solid #2c5573; border-radius: 8px;
+  background: #091c2e; box-shadow: 0 8px 20px #0003;
+}
+.inventoryFilterPanelHeading { display: flex; align-items: center; justify-content: space-between; gap: 7px; }
+.inventoryFilterPanelHeading strong,
+.inventoryFilterLabel { font-size: 10px; font-weight: 800; color: #adc9e4; }
+.inventoryFilterPanelHeading button {
+  border: 0; background: transparent; color: #8fb6d7;
+  font-size: 11px; cursor: pointer;
+}
+.inventoryFilterPanelHeading button:disabled { opacity: .45; cursor: default; }
+.inventoryFilterLabel { font-size: 9px; text-transform: uppercase; letter-spacing: .06em; }
+.inventorySortOptions, .inventoryFilterChoices { display: flex; flex-wrap: wrap; gap: 5px; min-width: 0; }
+.inventorySortOptions .filterChip, .inventoryFilterChoices .filterChip { border-radius: 7px; font-size: 10px; padding: 6px 9px; }
+.inventoryFavoriteFilter {
+  align-self: flex-start; border: 1px solid #334a65; border-radius: 7px;
+  background: #0b1726; color: #9bb3cc;
+  padding: 6px 9px; font-size: 10px; font-weight: 800;
+}
+.inventoryFilterSelects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; min-width: 0; }
+.inventoryFilterSelects label { display: flex; flex-direction: column; gap: 4px; min-width: 0; font-size: 9px; color: #a3bdd6; }
+.inventoryFilterSelects select {
+  width: 100%; min-width: 0; border: 1px solid #334a65; border-radius: 6px;
+  background: #081827; color: #d9e9fa; padding: 6px 4px; font-size: 10px;
+}
+.inventoryResultCount { margin: 6px 1px 0; color: #89a7c5; font-size: 10px; line-height: 1.3; }
+
+.inventoryFavoriteFilter.filterChipActive { border-color: #2d91f5; background: #12365b; color: #d9edff; }
