@@ -107,7 +107,7 @@ function sourceLabel(monster: GeneratedMonster): string {
     // sources such as Strange Rift, Rift Chest, shops, events, etc. should
     // keep their actual source name instead of being replaced by the
     // location where that source is found.
-    if (source.type === "Island Spawn") {
+    if (source.type === "Island Spawn" || source.type === "Island Special Spawn") {
         return source.location || source.name;
     }
 
@@ -353,6 +353,11 @@ function MonsterCard({
                                 loading="lazy"
                                 decoding="async"
                                 className="size-6 rounded-md border border-[#344050] bg-[#0d131d] object-cover sm:size-7"
+                                onError={(event) => {
+                                    event.currentTarget.onerror = null;
+                                    event.currentTarget.src = assetPath(`/element-icons/${skill.element.toLowerCase()}.png`);
+                                    event.currentTarget.className = "size-6 rounded-md border border-[#344050] bg-[#0d131d] object-contain p-1 sm:size-7";
+                                }}
                             />
                         ) : null,
                     )}
@@ -465,6 +470,11 @@ function DetailPanel({
                                             src={assetPath(getDatabaseSkillIconPath(skill.id))}
                                             alt=""
                                             className="size-10 shrink-0 rounded-md border border-[#344050] object-cover"
+                                            onError={(event) => {
+                                                event.currentTarget.onerror = null;
+                                                event.currentTarget.src = assetPath(`/element-icons/${skill.element.toLowerCase()}.png`);
+                                                event.currentTarget.className = "size-10 shrink-0 rounded-md border border-[#344050] bg-[#0d131d] object-contain p-1.5";
+                                            }}
                                         />
                                         <div className="min-w-0">
                                             <div className="flex items-center gap-2">
@@ -966,7 +976,7 @@ export function MonsterDatabase() {
         const islandLocations = new Set(
             GENERATED_MONSTERS.flatMap((monster) =>
                 monster.sources
-                    .filter((source) => source.type === "Island Spawn")
+                    .filter((source) => source.type === "Island Spawn" || source.type === "Island Special Spawn")
                     .map((source) => source.location)
                     .filter((value): value is string => Boolean(value)),
             ),

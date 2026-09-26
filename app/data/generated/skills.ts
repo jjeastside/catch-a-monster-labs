@@ -389,7 +389,7 @@ export const GENERATED_SKILLS = {
       }
     ],
     "notes": "Target: Enemy. Enemy effects: Knockback + Stun for 2 Second",
-    "validationStatus": ""
+    "validationStatus": "Ready"
   },
   "egg-blast": {
     "id": "egg-blast",
@@ -2159,6 +2159,35 @@ export const GENERATED_SKILLS = {
     "notes": "Target: Enemy.",
     "validationStatus": "Ready"
   },
+  "siphon-breath": {
+    "id": "siphon-breath",
+    "name": "Siphon Breath",
+    "element": "Dark",
+    "description": "Sprays a stream of balefire forward, siphoning attack from enemies and damaging foes in front.",
+    "damageInstances": [
+      {
+        "multiplier": 0.5,
+        "hits": 5
+      }
+    ],
+    "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Team",
+        "amountPercent": 50,
+        "durationSeconds": 4
+      },
+      {
+        "type": "damageDecrease",
+        "target": "Enemy",
+        "amountPercent": 15,
+        "durationSeconds": 10
+      }
+    ],
+    "notes": "Target: Enemy | Allies. Enemy effects: 15% decreased damage for 10 secs; Ally effects: 50% team damage for 4 secs",
+    "validationStatus": "Ready"
+  },
   "solar-beam": {
     "id": "solar-beam",
     "name": "Solar Beam",
@@ -2870,6 +2899,6 @@ export const GENERATED_SKILLS = {
       }
     ],
     "notes": "Target: Enemy | Self. Ally effects: Chance for one of the following to activate:; 20% vulnerability on self for 2 secs; 25% self damage for 2 secs; 50% self damage for 2 secs; 100% self damage for 2 secs; 25% Max Hp self shield for 2 secs; 50% Max Hp self shield for 2 secs; 60% Damage reflection for 2 secs; 95% Damage reduction for 2 secs",
-    "validationStatus": "ready"
+    "validationStatus": "Ready"
   }
 } as const satisfies Record<string, Skill>;

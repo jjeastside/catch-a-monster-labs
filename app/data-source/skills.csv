@@ -51,7 +51,7 @@ earth-smash,Earth Smash,Ground,"[
 ]",8,"Smashes the ground, launching and damaging all nearby enemies.",Target: Enemy.,Ready
 earth-shatter,Earthshatter,Ground,"[
   { multiplier: 2, hits: 1 },
-]",8,"Smashes the ground, damaging all nearby enemies, knocking back nearby enemies and stunning them.",Target: Enemy. Enemy effects: Knockback + Stun for 2 Second,
+]",8,"Smashes the ground, damaging all nearby enemies, knocking back nearby enemies and stunning them.",Target: Enemy. Enemy effects: Knockback + Stun for 2 Second,Ready
 egg-blast,Egg Blast,Common,"[
   { multiplier: 1.5, hits: 1 },
 ]",3,Throw an Easter egg and gain one random effect. (All effects can appear!),Target: Enemy | Self. Ally effects: Chance for one of the following to activate:; 20% vulnerability on self for 2 secs; 25% self damage for 2 secs; 50% self damage for 2 secs; 100% self damage for 2 secs; 25% Max Hp self shield for 2 secs; 50% Max Hp self shield for 2 secs; 60% Damage reflection for 2 secs; 95% Damage reduction for 2 secs,Ready
@@ -292,6 +292,9 @@ scorching-fireball,Scorching Fireball,Fire,"[
 seed-grenade,Seed Grenade,Grass,"[
   { multiplier: 1.2, hits: 1 },
 ]",3,Launches an explosive seed.,Target: Enemy.,Ready
+siphon-breath,Siphon Breath,Dark,"[
+  { multiplier: 0.5, hits: 5 },
+]",8,"Sprays a stream of balefire forward, siphoning attack from enemies and damaging foes in front.",Target: Enemy | Allies. Enemy effects: 15% decreased damage for 10 secs; Ally effects: 50% team damage for 4 secs,Ready
 solar-beam,Solar Beam,Grass,"[
   { multiplier: 2, hits: 1 },
 ]",6,Absorbs solar energy and unleashes a powerful beam forward.,Target: Enemy.,Ready
@@ -383,4 +386,4 @@ wind-disc-purple,Wind Disc (Purple),Common,"[
 ]",3,Throws a piercing purple wind disc forward.,Target: Enemy.,Ready
 windmill-blast,Windmill Blast,Common,"[
   { multiplier: 1.5, hits: 1 },
-]",3,Throw a windmill and gain one random effect. (All effects can appear!),Target: Enemy | Self. Ally effects: Chance for one of the following to activate:; 20% vulnerability on self for 2 secs; 25% self damage for 2 secs; 50% self damage for 2 secs; 100% self damage for 2 secs; 25% Max Hp self shield for 2 secs; 50% Max Hp self shield for 2 secs; 60% Damage reflection for 2 secs; 95% Damage reduction for 2 secs,ready
+]",3,Throw a windmill and gain one random effect. (All effects can appear!),Target: Enemy | Self. Ally effects: Chance for one of the following to activate:; 20% vulnerability on self for 2 secs; 25% self damage for 2 secs; 50% self damage for 2 secs; 100% self damage for 2 secs; 25% Max Hp self shield for 2 secs; 50% Max Hp self shield for 2 secs; 60% Damage reflection for 2 secs; 95% Damage reduction for 2 secs,Ready

@@ -103,7 +103,6 @@ export function getRallyingWarCryTeamDamageIncrease(skillIds: readonly string[])
         ...skillIds
             .map((skillId) => getSkill(skillId))
             .filter((skill): skill is Skill => skill !== null)
-            .filter((skill) => getSkillDisplayName(skill.name) === "Rallying War Cry")
             .flatMap((skill) => skill.statusEffects ?? [])
             .filter((effect) => effect.type === "damageIncrease" && effect.target === "Team")
             .map((effect) => effect.amountPercent ?? 0),

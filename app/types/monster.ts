@@ -72,6 +72,7 @@ export const ISLANDS = [
   "Nova Coast",
   "Splash Isle",
   "Coilwork City",
+  "Shroomvale",
 ] as const;
 
 export type Island = (typeof ISLANDS)[number];

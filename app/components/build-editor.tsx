@@ -1916,7 +1916,7 @@ export function BuildEditor({
                         >
                             <span className="flex items-center gap-2">
                                 <img src={assetPath("/icons/damage-increase.png")} alt="" className="size-5 object-contain" />
-                                Rallying War Cry (+{rallyingWarCryDamageIncrease}% Damage)
+                                Team Damage Increase (+{rallyingWarCryDamageIncrease}% Damage)
                             </span>
                             <span>{build.rallyingWarCryActive ? "Active" : "Inactive"}</span>
                         </button>

@@ -23,9 +23,35 @@ type Patch = {
 
 const patches: Patch[] = [
     {
+        version: "Update 0.50",
+        date: "September 25, 2026",
+        label: "Latest",
+        sections: [
+            {
+                title: "Aether Event & Shroomvale",
+                changes: [
+                    "Added the Aether Event.",
+                    "Added a new island: Shroomvale.",
+                ],
+            },
+            {
+                title: "Evolution & Berserkor",
+                changes: [
+                    "A new evolution for Aetherpanther is now available.",
+                    "Defeat Berserkor on the new island to receive evolution materials.",
+                ],
+            },
+            {
+                title: "PvP",
+                changes: [
+                    "Fixed a bug where some pet skills did not work in PvP Mode.",
+                ],
+            },
+        ],
+    },
+    {
         version: "Update 0.49",
         date: "September 19, 2026",
-        label: "Latest",
         sections: [
             {
                 title: "World Boss Event",

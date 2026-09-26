@@ -7,9 +7,19 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.19",
+        date: "September 26, 2026",
+        label: "Latest",
+        changes: [
+            "Added Catch a Monster Update 0.50 support for the Shroomvale monsters, Berserkor, and Plasmapanther, including their skills, sources, and evolution data.",
+            "Added Shroomvale to island filters and corrected island badges for special island spawns such as Berserkor.",
+            "Fixed Siphon Breath's missing effects: it now displays 15% enemy Damage Decrease for 10 seconds and 50% team Damage Increase for 4 seconds.",
+            "Updated Combat Conditions so Siphon Breath's team Damage Increase can be applied to calculated skill damage.",
+        ],
+    },
+    {
         version: "v1.0.18",
         date: "September 20, 2026",
-        label: "Latest",
         changes: [
             "Redesigned Team Builder cards to display each monster's individual Health, Damage, Total Skill DPS, and combat stats while keeping equipment controls compact and labels readable.",
             "Reworked the owned-monster inventory to more closely match the in-game inventory, retained the Import Missing Monsters action, and fixed inventory editing and copy controls.",

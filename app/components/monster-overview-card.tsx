@@ -66,7 +66,8 @@ const elementIconPaths: Record<Monster["element"], string> = {
 
 function getSourceLabel(source: Monster["sources"][number]): string {
     if (
-        source.type === "Island Spawn"
+        source.type === "Island Spawn" ||
+        source.type === "Island Special Spawn"
     ) {
         return source.location || source.name;
     }
