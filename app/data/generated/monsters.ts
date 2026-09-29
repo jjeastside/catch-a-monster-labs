@@ -7686,8 +7686,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "aetherpanther",
-    "baseDamageELevel1": 9218200,
-    "baseHealthELevel1": 341150000,
+    "baseDamageELevel1": 5915300,
+    "baseHealthELevel1": 253000000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 237
