@@ -47,6 +47,15 @@ const patches: Patch[] = [
                     "Fixed a bug where some pet skills did not work in PvP Mode.",
                 ],
             },
+            {
+                title: "Update 0.50.1",
+                date: "September 28, 2026",
+                changes: [
+                    "Fixed the code bug.",
+                    "New Code: codebug",
+                    "Old Code: toadstool berserker",
+                ],
+            },
         ],
     },
     {
