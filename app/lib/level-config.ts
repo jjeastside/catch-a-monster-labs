@@ -5,7 +5,7 @@
  * Experimental Mode always previews the next EXPERIMENTAL_LEVEL_INCREMENT levels.
  */
 export const MIN_LEVEL = 1;
-export const CURRENT_MAX_LEVEL = 110;
+export const CURRENT_MAX_LEVEL = 115;
 export const EXPERIMENTAL_LEVEL_INCREMENT = 5;
 export const EXPERIMENTAL_MAX_LEVEL =
     CURRENT_MAX_LEVEL + EXPERIMENTAL_LEVEL_INCREMENT;
