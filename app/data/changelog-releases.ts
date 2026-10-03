@@ -7,9 +7,23 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.20",
+        date: "October 3, 2026",
+        label: "Latest",
+        changes: [
+            "Added Catch a Monster Update 0.51 monsters: Thornewarden, Thaunimp, Ignimp, and Marimp, with updated monster data and artwork.",
+            "Raised the maximum level to 115 and the Experimental Mode preview to 120.",
+            "Made gear and attributes importable from CSV through the existing data importer, including validation, fixed attributes, and editable random slots.",
+            "Added Block Buster and its secret attribute, Rude Awakening, with a Combat Conditions toggle for triggered 2× damage after being stunned. Its situational activation chance does not increase baseline DPS.",
+            "Added Vital Barrier at the end of builder trait selectors. After casting a skill, it grants a non-stacking shield equal to 5% of Max Health for 6 seconds, displayed using the existing Shield card.",
+            "Fixed fixed gear attributes applying across rarities, including Radish Lance, and made random attribute slot counts follow the gear CSV.",
+            "Updated game Patch Notes with Update 0.51 news and a separate 0.51.1 section for Thornewarden dropping Rainimp’s evolution material.",
+            "Corrected new monster artwork filenames to lowercase so images load on GitHub Pages.",
+        ],
+    },
+    {
         version: "v1.0.19",
         date: "September 26, 2026",
-        label: "Latest",
         changes: [
             "Added Catch a Monster Update 0.50 support for the Shroomvale monsters, Berserkor, and Plasmapanther, including their skills, sources, and evolution data.",
             "Added Shroomvale to island filters and corrected island badges for special island spawns such as Berserkor.",
