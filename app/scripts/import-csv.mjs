@@ -635,6 +635,49 @@ const passiveEffects = {
     ],
 };
 
+// Gear catalogs are CSV-driven; validate all rows before writing generated files.
+const gearRows = parseCsv("gear.csv");
+const attributeRows = parseCsv("attributes.csv");
+const rarities = new Set(["Rare", "Epic", "Legendary", "Mythical", "Secret"]);
+const effectTypes = new Set(["skill_damage", "skill_resistance", "shield_damage", "heal_effectiveness", "shield_effectiveness", "life_steal", "cooldown_skip", "damage_redirect", "damage_immunity", "max_hp_regen", "damage_double"]);
+function validateCatalog(rows, file, idColumn, columns) {
+    assertCsvColumns(file, rows, columns);
+    const ids = new Set();
+    for (const [index, row] of rows.entries()) {
+        for (const key of Object.keys(row)) row[key] = row[key].trim();
+        if (!row[idColumn] || ids.has(row[idColumn])) throw new Error(`${file} row ${index + 2}: missing or duplicate ${idColumn}`);
+        ids.add(row[idColumn]);
+        if (!row.name || !rarities.has(row.rarity)) throw new Error(`${file} row ${index + 2}: invalid name or rarity`);
+    }
+}
+validateCatalog(attributeRows, "attributes.csv", "attribute_id", ["attribute_id", "rarity", "name", "gear_type", "Tier", "effect_type", "value", "skill_element", "hp_condition"]);
+const generatedAttributes = attributeRows.map((row) => {
+    const effectType = row.effect_type === "healing_pulse" ? "max_hp_regen" : row.effect_type;
+    if (!effectTypes.has(effectType) || !["weapon", "armor"].includes(row.gear_type)) throw new Error(`attributes.csv: invalid type for ${row.attribute_id}`);
+    const value = number(row.value);
+    if (value === null || value < 0 || (effectType === "damage_double" && value > 100)) throw new Error(`attributes.csv: invalid value for ${row.attribute_id}`);
+    const tier = number(row.Tier);
+    if (tier !== null && (!Number.isInteger(tier) || tier < 1)) throw new Error(`attributes.csv: invalid tier for ${row.attribute_id}`);
+    if (row.hp_condition && !/^[<>]\d+(?:\.\d+)?$/.test(row.hp_condition)) throw new Error(`attributes.csv: invalid HP condition for ${row.attribute_id}`);
+    const skillElement = row.skill_element.toLowerCase();
+    if (skillElement && !["earth", "ground", "ice", "grass", "water", "fire", "dragon", "mechanical", "dark", "light", "electric"].includes(skillElement)) throw new Error(`attributes.csv: invalid element for ${row.attribute_id}`);
+    return { id: row.attribute_id, rarity: row.rarity, name: row.name, gearType: row.gear_type, tier, effectType, value, skillElement: skillElement || null, hpCondition: row.hp_condition || null };
+});
+validateCatalog(gearRows, "gear.csv", "equipment_id", ["equipment_id", "rarity", "name", "type", "percentage", "attributes"]);
+const attributesById = new Map(generatedAttributes.map((attribute) => [attribute.id, attribute]));
+const generatedEquipment = gearRows.map((row) => {
+    const type = ({ hp: "armor", dmg: "weapon", armor: "armor", weapon: "weapon" })[row.type];
+    const percentage = number(row.percentage);
+    if (!type || percentage === null || percentage < 0) throw new Error(`gear.csv: invalid type or percentage for ${row.equipment_id}`);
+    const attributes = row.attributes.split("|").map((id) => id.trim()).filter(Boolean);
+    for (const id of attributes) {
+        if (id === "random") continue;
+        const attribute = attributesById.get(id);
+        if (!attribute || attribute.gearType !== type) throw new Error(`gear.csv: unknown or incompatible attribute ${id} on ${row.equipment_id}`);
+    }
+    return { id: row.equipment_id, name: row.name, rarity: row.rarity, type, percentage, attributes };
+});
+
 const monsterRows = parseCsv("monsters.csv");
 const skills = parseCsv("skills.csv");
 const achievementRows = parseCsv("achievements.csv");
@@ -1035,6 +1078,15 @@ fs.mkdirSync(outputDir, {
 
 const banner =
     "// Generated from app/data-source/*.csv by app/scripts/import-csv.mjs. Do not edit manually.\n";
+
+for (const [file, type, name, data] of [
+    ["equipments.ts", "Equipment", "GENERATED_EQUIPMENT", generatedEquipment],
+    ["attributes.ts", "GearAttribute", "GENERATED_ATTRIBUTES", generatedAttributes],
+]) {
+    const typeFile = type === "Equipment" ? "equipment" : "attribute";
+    fs.writeFileSync(path.join(outputDir, file), `${banner}import type { ${type} } from "../../types/${typeFile}";\n\nexport const ${name}: ${type}[] = ${JSON.stringify(data, null, 2)};\n`);
+}
+console.log(`Imported ${generatedEquipment.length} gear items and ${generatedAttributes.length} attributes.`);
 
 fs.writeFileSync(
     path.join(outputDir, "skills.ts"),

@@ -82,6 +82,7 @@ export type Build = {
   targetIsBoss: boolean;
   rallyingWarCryActive: boolean;
   vulnerabilityActive: boolean;
+  rudeAwakeningActive: boolean;
 
 
   selectedSkillId: SkillId | null;
@@ -121,6 +122,7 @@ export function createDefaultBuild(
     targetIsBoss: false,
     rallyingWarCryActive: false,
     vulnerabilityActive: false,
+    rudeAwakeningActive: false,
     selectedSkillId: null,
     weaponId: null,
     armorId: null,

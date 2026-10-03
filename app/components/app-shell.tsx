@@ -40,6 +40,7 @@ function normalizeSavedBuild(saved: Partial<Build>): Build {
         targetIsBoss: saved.targetIsBoss === true || legacyBossContext,
         rallyingWarCryActive: saved.rallyingWarCryActive === true,
         vulnerabilityActive: saved.vulnerabilityActive === true,
+        rudeAwakeningActive: saved.rudeAwakeningActive === true,
         combatContext: legacyBossContext
             ? "standard"
             : saved.combatContext ?? "standard",
@@ -240,6 +241,7 @@ export function AppShell() {
                             targetIsBoss: parsed.targetIsBoss === true,
                             rallyingWarCryActive: parsed.rallyingWarCryActive === true,
                             vulnerabilityActive: parsed.vulnerabilityActive === true,
+                            rudeAwakeningActive: parsed.rudeAwakeningActive === true,
                             weaponAttributeIds: Array.isArray(parsed.weaponAttributeIds)
                                 ? parsed.weaponAttributeIds
                                 : [],
@@ -310,6 +312,7 @@ export function AppShell() {
                             targetIsBoss: parsed.targetIsBoss === true,
                             rallyingWarCryActive: parsed.rallyingWarCryActive === true,
                             vulnerabilityActive: parsed.vulnerabilityActive === true,
+                            rudeAwakeningActive: parsed.rudeAwakeningActive === true,
                             weaponAttributeIds: Array.isArray(parsed.weaponAttributeIds)
                                 ? parsed.weaponAttributeIds
                                 : [],
@@ -569,6 +572,7 @@ export function AppShell() {
                 targetIsBoss: parsed.targetIsBoss === true,
                 rallyingWarCryActive: parsed.rallyingWarCryActive === true,
                 vulnerabilityActive: parsed.vulnerabilityActive === true,
+                rudeAwakeningActive: parsed.rudeAwakeningActive === true,
                 weaponAttributeIds: Array.isArray(parsed.weaponAttributeIds) ? parsed.weaponAttributeIds : [],
                 armorAttributeIds: Array.isArray(parsed.armorAttributeIds) ? parsed.armorAttributeIds : [],
                 combatContext: parsed.combatContext,

@@ -26,6 +26,7 @@ export const TRAITS: Trait[] = [
     { id: "fragility-status", name: "Fragility - Burn/Poison Damage", rarity: "mythical", image: "/trait-icons/fragility.png", symbolImage: "/trait-symbols/fragility.png", naturalSource: "Celestian & Veloros", effects: [
             { type: "damage", percentage: 50, description: "+50% Damage to Burning or Poisoned targets", condition: "targetStatused" },
         ] },
+    { id: "vital-barrier", name: "Vital Barrier", rarity: "mythical", image: "/trait-icons/Vital Barrier.png", symbolImage: "/trait-symbols/vital-barrier.png", effects: [{ type: "postCastShield", percentage: 5, description: "After casting a skill, gain a shield equal to 5% of Max Health for 6 seconds. Does not stack." }] },
 ];
 
 export function getTrait(id: string | null | undefined): Trait | null {

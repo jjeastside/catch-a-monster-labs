@@ -93,12 +93,12 @@ export function sanitizeBuild(saved: Partial<Build>, monsterId: string): Build {
   }
   const weapon = WEAPONS.find(({ id }) => id === saved.weaponId);
   const armor = ARMORS.find(({ id }) => id === saved.armorId);
-  const attributes = (value: unknown, type: "weapon" | "armor", rarity?: string) =>
+  const attributes = (value: unknown, type: "weapon" | "armor", rarity?: string, equipmentId?: string) =>
     (Array.isArray(value) ? value : []).filter((id): id is string => {
       if (typeof id !== "string") return false;
       const attribute = getAttribute(id);
       return attribute?.gearType === type && attribute.rarity !== "Secret";
-    }).slice(0, getAttributeSlotCount(rarity));
+    }).slice(0, getAttributeSlotCount(rarity, equipmentId ?? null));
 
   return {
     ...base,
@@ -114,10 +114,11 @@ export function sanitizeBuild(saved: Partial<Build>, monsterId: string): Build {
     evolutionPercent: monster.isEvolved ? clampEvolutionPercent(finite(saved.evolutionPercent, 100)) : 100,
     mutations,
     traitId: getAvailableTraits().some(({ id }) => id === saved.traitId) ? saved.traitId! : null,
+    rudeAwakeningActive: weapon?.id === "block-buster" && saved.rudeAwakeningActive === true,
     weaponId: weapon?.id ?? null,
     armorId: armor?.id ?? null,
-    weaponAttributeIds: attributes(saved.weaponAttributeIds, "weapon", weapon?.rarity),
-    armorAttributeIds: attributes(saved.armorAttributeIds, "armor", armor?.rarity),
+    weaponAttributeIds: attributes(saved.weaponAttributeIds, "weapon", weapon?.rarity, weapon?.id),
+    armorAttributeIds: attributes(saved.armorAttributeIds, "armor", armor?.rarity, armor?.id),
     currentHpPercent: Math.max(0, Math.min(100, finite(saved.currentHpPercent, 100))),
     selectedSkillId:
       saved.selectedSkillId && monster.skillIds.includes(saved.selectedSkillId)

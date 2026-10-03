@@ -10,9 +10,10 @@ type AttributeBuild = Pick<
     | "weaponAttributeIds"
     | "armorAttributeIds"
     | "currentHpPercent"
->;
+> & { rudeAwakeningActive?: boolean };
 
-export function getAttributeSlotCount(rarity: string | undefined): number {
+export function getAttributeSlotCount(rarity: string | undefined, equipmentId?: string | null): number {
+    if (equipmentId !== undefined) return getEquipment(equipmentId)?.attributes.filter((id) => id === "random").length ?? 0;
     if (rarity === "Legendary") return 1;
     if (rarity === "Mythical" || rarity === "Secret") return 2;
     return 0;
@@ -20,9 +21,7 @@ export function getAttributeSlotCount(rarity: string | undefined): number {
 
 export function getFixedAttributeIds(equipmentId: string | null): string[] {
     const equipment = getEquipment(equipmentId);
-    return equipment?.rarity === "Secret"
-        ? equipment.attributes.filter((id) => id !== "random")
-        : [];
+    return equipment?.attributes.filter((id) => id !== "random") ?? [];
 }
 
 export function hpConditionMatches(condition: string | null, hpPercent: number): boolean {
@@ -34,12 +33,17 @@ export function hpConditionMatches(condition: string | null, hpPercent: number):
 }
 
 export function getActiveAttributeIds(build: AttributeBuild): string[] {
-    return [
-        ...getFixedAttributeIds(build.weaponId),
-        ...build.weaponAttributeIds,
-        ...getFixedAttributeIds(build.armorId),
-        ...build.armorAttributeIds,
-    ];
+    const forGear = (equipmentId: string | null, selected: string[]) => {
+        const gear = getEquipment(equipmentId);
+        if (!gear) return [];
+        const fixed = getFixedAttributeIds(equipmentId);
+        const random = [...new Set(selected)].filter((id) => {
+            const attribute = getAttribute(id);
+            return !fixed.includes(id) && attribute?.gearType === gear.type && attribute.rarity !== "Secret";
+        }).slice(0, getAttributeSlotCount(gear.rarity, gear.id));
+        return [...fixed, ...random];
+    };
+    return [...forGear(build.weaponId, build.weaponAttributeIds), ...forGear(build.armorId, build.armorAttributeIds)];
 }
 
 export function calculateSkillAttributeEffects(
@@ -72,14 +76,22 @@ export function calculateSkillAttributeEffects(
         1,
     );
 
+    const rudeAwakeningActive = build.weaponId === "block-buster" && build.rudeAwakeningActive === true && total("damage_double") > 0;
+    const triggeredDamageMultiplier = rudeAwakeningActive ? 2 : 1;
+
     return {
+        rudeAwakeningActive,
+        triggeredDamageMultiplier,
         active,
         applicable,
         // Skill-damage attributes stack multiplicatively in-game. For example,
         // Water Damage III (+18%) and All Damage II (+15%) combine to
         // 1.18 * 1.15 = 1.357x, not 1 + (18 + 15)% = 1.33x.
         skillDamageBonus: (skillDamageMultiplier - 1) * 100,
-        skillDamageMultiplier,
+        skillDamageMultiplier: skillDamageMultiplier * triggeredDamageMultiplier,
+        damageDoubleChance: total("damage_double"),
+        // Stun-dependent proc: only the explicit combat toggle affects damage.
+        expectedDamageMultiplier: 1,
         skillResistance: total("skill_resistance"),
         shieldDamage: total("shield_damage"),
         healEffectiveness: total("heal_effectiveness"),

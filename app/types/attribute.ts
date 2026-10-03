@@ -5,7 +5,7 @@ export type AttributeEffectType =
     | "skill_damage" | "skill_resistance" | "shield_damage"
     | "heal_effectiveness" | "shield_effectiveness" | "life_steal"
     | "cooldown_skip" | "damage_redirect" | "damage_immunity"
-    | "max_hp_regen";
+    | "max_hp_regen" | "damage_double";
 
 export type GearAttribute = {
     id: string;
@@ -15,6 +15,6 @@ export type GearAttribute = {
     tier: number | null;
     effectType: AttributeEffectType;
     value: number;
-    skillElement: Lowercase<SkillElement> | null;
+    skillElement: Lowercase<SkillElement> | "earth" | null;
     hpCondition: string | null;
 };

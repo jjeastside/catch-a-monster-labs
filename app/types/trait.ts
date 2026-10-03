@@ -1,4 +1,5 @@
 export type TraitEffectType =
+    | "postCastShield"
     | "damage"
     | "damageReduction"
     | "cooldownReduction"

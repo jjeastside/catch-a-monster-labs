@@ -13,6 +13,8 @@ import {
   getTraitDamageMultiplier,
   getTraitCooldownMultiplier,
   getTraitEffectValue,
+  getTraitPostCastShield,
+  getTraitPostCastShieldEffect,
 } from "./traits";
 import type { CalculatedStats } from "./stats";
 import type { Build, MonsterPassive } from "../../types/build";
@@ -96,12 +98,14 @@ export function calculateSkillSummary(
   const damaging = skill.damageInstances.length > 0;
   return {
     combatDamage,
+    postCastShieldEffect: getTraitPostCastShieldEffect(build.traitId),
+    postCastShield: getTraitPostCastShield(build.traitId, stats.health),
     normalDamage: damaging ? combatDamage.normalDamage : null,
     criticalDamage: damaging ? combatDamage.criticalDamage : null,
     cooldown: displayedCooldown,
     dps:
       damaging && displayedCooldown !== null && displayedCooldown > 0
-        ? expectedDamage / displayedCooldown
+        ? expectedDamage * attributeEffects.expectedDamageMultiplier / displayedCooldown
         : null,
   };
 }

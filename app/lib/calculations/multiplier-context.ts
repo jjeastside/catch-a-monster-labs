@@ -47,6 +47,7 @@ type MultiplierBuild = Pick<
     | "armorId"
     | "weaponAttributeIds"
     | "armorAttributeIds"
+    | "rudeAwakeningActive"
     | "currentHpPercent"
     | "accountMultipliers"
 >;
