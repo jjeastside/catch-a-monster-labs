@@ -488,7 +488,7 @@ function DamageReflectionEffect({ effect }: { effect: SkillStatusEffect }) {
     );
 }
 
-function ShieldEffect({ effect }: { effect: SkillStatusEffect }) {
+function ShieldEffect({ effect, shieldAmount }: { effect: SkillStatusEffect; shieldAmount?: number }) {
     const amount = effect.amountPercent ?? 0;
     const displayTarget = effect.target === "Team" ? "Team" : effect.target === "Self" ? "Self" : "Enemy";
     const durationLabel = `${formatNumber(effect.durationSeconds ?? 2)}s`;
@@ -504,7 +504,9 @@ function ShieldEffect({ effect }: { effect: SkillStatusEffect }) {
         effect.chancePercent !== undefined
             ? `${formatNumber(effect.chancePercent)}% activation chance.`
             : null,
-        effect.condition ? `Requires: ${effect.condition}.` : null,
+        effect.maxStacks === 1 ? "Does not stack." : null,
+        shieldAmount !== undefined ? `${formatStatNumber(shieldAmount)} shield.` : null,
+        effect.condition ? `Trigger: ${effect.condition}.` : null,
     ].filter(Boolean).join(" ");
 
     return (
@@ -1249,8 +1251,8 @@ function SkillDamagePanel({
 
     const expectedDamage =
         isDamagingSkill
-            ? combatDamage.normalDamage * (1 - critChance) +
-            combatDamage.criticalDamage * critChance
+            ? (combatDamage.normalDamage * (1 - critChance) +
+            combatDamage.criticalDamage * critChance) * attributeEffects.expectedDamageMultiplier
             : null;
 
     const skillDps = skillSummary.dps;
@@ -1261,14 +1263,14 @@ function SkillDamagePanel({
             ? (
                 damageIncreaseCombatDamage.normalDamage * (1 - critChance) +
                 damageIncreaseCombatDamage.criticalDamage * critChance
-            ) / displayedCooldown
+            ) * attributeEffects.expectedDamageMultiplier / displayedCooldown
             : null;
     const vulnerabilityDps =
         vulnerabilityCombatDamage !== null && displayedCooldown !== null && displayedCooldown > 0
             ? (
                 vulnerabilityCombatDamage.normalDamage * (1 - critChance) +
                 vulnerabilityCombatDamage.criticalDamage * critChance
-            ) / displayedCooldown
+            ) * attributeEffects.expectedDamageMultiplier / displayedCooldown
             : null;
 
     // Any heal calculated from the caster's Damage or Health has a concrete HPS.
@@ -1329,9 +1331,10 @@ function SkillDamagePanel({
     const healingEffects = (skill.statusEffects ?? []).filter(
         (effect) => effect.type === "healing",
     );
-    const shieldEffects = (skill.statusEffects ?? []).filter(
-        (effect) => effect.type === "shield",
-    );
+    const shieldEffects = [
+        ...(skill.statusEffects ?? []).filter((effect) => effect.type === "shield"),
+        ...(skillSummary.postCastShieldEffect ? [skillSummary.postCastShieldEffect] : []),
+    ];
     const damageReflectionEffects = (skill.statusEffects ?? []).filter(
         (effect) => effect.type === "damageReflection",
     );
@@ -1850,6 +1853,7 @@ function SkillDamagePanel({
                         <ShieldEffect
                             key={`${effect.type}-${effect.target}-${effect.amountPercent}-${effect.durationSeconds}-${effect.chancePercent}-${index}`}
                             effect={effect}
+                            shieldAmount={effect === skillSummary.postCastShieldEffect ? skillSummary.postCastShield : undefined}
                         />
                     ))}
                 </div>
@@ -2188,7 +2192,7 @@ function SkillDamagePanel({
                                 </div>
                             )}
 
-                            {(attributeEffects.cooldownSkipChance > 0 ||
+                            {(attributeEffects.damageDoubleChance > 0 || attributeEffects.cooldownSkipChance > 0 ||
                                 totalHealingEffectiveness > 0 ||
                                 attributeEffects.shieldEffectiveness > 0 ||
                                 attributeEffects.shieldDamage > 0 ||
@@ -2199,6 +2203,7 @@ function SkillDamagePanel({
                                 <div className="rounded-lg border border-[#284d69] bg-[#0d151f] p-3">
                                     <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Other Attribute Effects</p>
                                     <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                                        {attributeEffects.damageDoubleChance > 0 && <span className="rounded bg-[#342612] px-2 py-1 text-[#f4bd6a]">Rude Awakening: {attributeEffects.rudeAwakeningActive ? "Active · 2× damage" : `${attributeEffects.damageDoubleChance}% chance after being stunned · not included in baseline DPS`}</span>}
                                         {attributeEffects.cooldownSkipChance > 0 && <span className="rounded bg-[#201b35] px-2 py-1 text-[#c28cff]">{attributeEffects.cooldownSkipChance}% cooldown-skip chance</span>}
                                         {totalHealingEffectiveness > 0 && <span className="rounded bg-[#202846] px-2 py-1 text-[#7182ff]">+{formatNumber(totalHealingEffectiveness)}% healing effectiveness</span>}
                                         {attributeEffects.shieldEffectiveness > 0 && <span className="rounded bg-[#17283a] px-2 py-1 text-[#70b7ff]">+{attributeEffects.shieldEffectiveness}% shield gain</span>}

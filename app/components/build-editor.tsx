@@ -1780,7 +1780,7 @@ export function BuildEditor({
                             type: "armor" as const,
                             key: "armorAttributeIds" as const
                         }].map(({equipment, type, key}) => {
-                            const slots = getAttributeSlotCount(equipment?.rarity);
+                            const slots = getAttributeSlotCount(equipment?.rarity, equipment?.id ?? null);
                             const fixedIds = getFixedAttributeIds(equipment?.id ?? null);
                             const selectedIds = build[key];
                             return (
@@ -1903,6 +1903,22 @@ export function BuildEditor({
                         <span>Target is Burning or Poisoned</span>
                         <span>{build.targetStatused ? "Active" : "Inactive"}</span>
                     </button>
+                    {build.weaponId === "block-buster" && (
+                        <button
+                            type="button"
+                            onClick={() => update("rudeAwakeningActive", !build.rudeAwakeningActive)}
+                            aria-pressed={build.rudeAwakeningActive}
+                            title="Calculate a triggered Rude Awakening hit after being stunned at 2× damage. The stun-dependent chance is not included in baseline DPS."
+                            className={`mt-3 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-xs font-semibold transition ${
+                                build.rudeAwakeningActive
+                                    ? "border-[#f0a14a]/55 bg-[#3a2818]/45 text-[#f3b767]"
+                                    : "border-[#25475f] bg-[#071b2b] text-[#8e99ad] hover:border-[#3984af] hover:text-[#e3e8f1]"
+                            }`}
+                        >
+                            <span>Rude Awakening (2× Damage)</span>
+                            <span>{build.rudeAwakeningActive ? "Active" : "Inactive"}</span>
+                        </button>
+                    )}
                     {rallyingWarCryDamageIncrease > 0 && (
                         <button
                             type="button"

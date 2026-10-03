@@ -1,4 +1,5 @@
 import { getTrait } from "../../data/traits";
+import type { SkillStatusEffect } from "../../types/skill";
 import type { TraitEffectType } from "../../types/trait";
 
 export type TraitContext = {
@@ -25,4 +26,23 @@ export function getTraitDamageMultiplier(traitId: string | null, context: TraitC
 
 export function getTraitCooldownMultiplier(traitId: string | null): number {
     return 1 - getTraitEffectValue(traitId, "cooldownReduction") / 100;
+}
+
+// Each cast grants a shield lasting six seconds, with at most one stack.
+export function getTraitPostCastShield(traitId: string | null, maxHealth: number): number {
+    return maxHealth * getTraitEffectValue(traitId, "postCastShield") / 100;
+}
+
+export function getTraitPostCastShieldEffect(traitId: string | null): SkillStatusEffect | null {
+    const amountPercent = getTraitEffectValue(traitId, "postCastShield");
+    return amountPercent > 0 ? {
+        type: "shield",
+        target: "Self",
+        amountPercent,
+        scaling: "MaxHealth",
+        durationSeconds: 6,
+        stacks: 1,
+        maxStacks: 1,
+        condition: "Vital Barrier · After casting a skill · Does not stack",
+    } : null;
 }

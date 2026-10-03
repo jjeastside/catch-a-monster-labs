@@ -128,7 +128,7 @@ function validOwnedEquipment(value: unknown): OwnedEquipmentCopy[] {
     const gear = EQUIPMENT.find((item) => item.id === record.equipmentId)!;
     const choices = getAttributesForGear(gear.type);
     const usedAttributeIds = new Set<string>();
-    const attributeIds = Array.from({ length: getAttributeSlotCount(gear.rarity) }, (_, slot) => {
+    const attributeIds = Array.from({ length: getAttributeSlotCount(gear.rarity, gear.id) }, (_, slot) => {
       const id = Array.isArray(record.attributeIds) ? record.attributeIds[slot] : null;
       if (typeof id !== "string" || usedAttributeIds.has(id) || !choices.some((attr) => attr.id === id)) return "";
       usedAttributeIds.add(id);
@@ -230,7 +230,7 @@ function OwnedGearSelect({ label, type, owner, copies, onSelect }: {
     <summary><span className={styles.ownedGearLabel}>{label}</span><span className={styles.ownedGearCurrent}>
       {current ? <img src={assetPath(`/gear/${current.id}.png`)} alt="" style={{ borderColor: equipmentRarityColors[current.rarity] }} /> : null}
       <span>{current?.name ?? `No ${label.toLowerCase()}`}
-        <small>{current ? `+${current.percentage}% ${type === "weapon" ? "Damage" : "Health"}${getAttributeSlotCount(current.rarity) ? ` · ${assigned!.attributeIds.filter(Boolean).map((id) => getAttribute(id)?.name ?? id).join(", ") || "Attributes not selected"}` : ""}` : "Unequipped"}</small></span>
+        <small>{current ? `+${current.percentage}% ${type === "weapon" ? "Damage" : "Health"}${getAttributeSlotCount(current.rarity, current.id) ? ` · ${assigned!.attributeIds.filter(Boolean).map((id) => getAttribute(id)?.name ?? id).join(", ") || "Attributes not selected"}` : ""}` : "Unequipped"}</small></span>
     </span></summary>
     <div className={styles.ownedGearOptions}>
       <button type="button" onClick={() => choose(null)}>Unequip {label}</button>
@@ -240,7 +240,7 @@ function OwnedGearSelect({ label, type, owner, copies, onSelect }: {
         return <button type="button" key={copy.id} disabled={unavailable} onClick={() => choose(copy.id)} className={copy.id === assigned?.id ? styles.ownedGearActive : ""}>
           <img src={assetPath(`/gear/${gear.id}.png`)} alt="" style={{ borderColor: equipmentRarityColors[gear.rarity] }} />
           <span><strong style={{ color: equipmentRarityColors[gear.rarity] }}>{gear.name} · +{gear.percentage}% {type === "weapon" ? "Damage" : "Health"}</strong>
-          {getAttributeSlotCount(gear.rarity) ? <small>{copy.attributeIds.filter(Boolean).map((id) => getAttribute(id)?.name ?? id).join(", ") || "Attributes not selected"}</small> : null}
+          {getAttributeSlotCount(gear.rarity, gear.id) ? <small>{copy.attributeIds.filter(Boolean).map((id) => getAttribute(id)?.name ?? id).join(", ") || "Attributes not selected"}</small> : null}
           {copy.equippedTo ? <small>{unavailable ? `Equipped to ${copy.equippedTo.startsWith("inventory:") ? copy.equippedTo.slice(10) : `team slot ${Number(copy.equippedTo.slice(5)) + 1}`}` : "Equipped here"}</small> : null}</span>
         </button>;
       })}
@@ -1429,17 +1429,17 @@ export function TeamComposition() {
                       <span className={styles.equipmentInventoryQuantity}>×{copies.length}</span>
                     </div>
                     {copies.map((copy, index) => <div key={copy.id} className={styles.equipmentCopyRow}>
-                      <span>{copies.length > 1 ? `Item ${index + 1} · ` : ""}{copy.equippedTo ? `Equipped to ${copy.equippedTo.startsWith("inventory:") ? monsterById.get(copyMonsterId(copy.equippedTo.slice(10)))?.name ?? copy.equippedTo.slice(10) : `team slot ${Number(copy.equippedTo.slice(5)) + 1}`}` : "Unequipped"}{getAttributeSlotCount(gear.rarity) ? ` · ${copy.attributeIds.some(Boolean) ? copy.attributeIds.filter(Boolean).map((id) => getAttribute(id)?.name ?? id).join(", ") : "Attributes not selected"}` : ""}</span>
-                      {getAttributeSlotCount(gear.rarity) > 0 ? <button type="button" className={styles.smallButton} aria-expanded={editingEquipmentId === copy.id} onClick={() => setEditingEquipmentId((id) => id === copy.id ? null : copy.id)}>{editingEquipmentId === copy.id ? "Close" : "Attributes"}</button> : null}
+                      <span>{copies.length > 1 ? `Item ${index + 1} · ` : ""}{copy.equippedTo ? `Equipped to ${copy.equippedTo.startsWith("inventory:") ? monsterById.get(copyMonsterId(copy.equippedTo.slice(10)))?.name ?? copy.equippedTo.slice(10) : `team slot ${Number(copy.equippedTo.slice(5)) + 1}`}` : "Unequipped"}{getAttributeSlotCount(gear.rarity, gear.id) ? ` · ${copy.attributeIds.some(Boolean) ? copy.attributeIds.filter(Boolean).map((id) => getAttribute(id)?.name ?? id).join(", ") : "Attributes not selected"}` : ""}</span>
+                      {getAttributeSlotCount(gear.rarity, gear.id) > 0 ? <button type="button" className={styles.smallButton} aria-expanded={editingEquipmentId === copy.id} onClick={() => setEditingEquipmentId((id) => id === copy.id ? null : copy.id)}>{editingEquipmentId === copy.id ? "Close" : "Attributes"}</button> : null}
                       <button type="button" className={styles.smallButton} aria-label={`Remove ${gear.name}${copies.length > 1 ? ` item ${index + 1}` : ""}`} onClick={() => removeOwnedEquipmentCopy(copy)}>×</button>
-                      {getAttributeSlotCount(gear.rarity) > 0 && editingEquipmentId === copy.id ? <div className={styles.equipmentCopyEditor}>
+                      {getAttributeSlotCount(gear.rarity, gear.id) > 0 && editingEquipmentId === copy.id ? <div className={styles.equipmentCopyEditor}>
                         <div className={styles.equipmentAttributeHeading}><strong>{gear.type === "weapon" ? "Weapon" : "Armor"} Attributes</strong><small>Saved individually{copies.length > 1 ? ` · Item ${index + 1}` : ""}</small></div>
                         <div className={styles.equipmentAttributeGrid}>
                           {getFixedAttributeIds(gear.id).map((id) => <div key={`fixed-${id}`} className={styles.equipmentFixedAttribute} title={getAttribute(id)?.name ?? id}>
                             <img src={assetPath(`/attributes/${id}.png`)} alt={getAttribute(id)?.name ?? id} />
                             <span>FIXED</span>
                           </div>)}
-                          {Array.from({ length: getAttributeSlotCount(gear.rarity) }, (_, slot) => <AttributeSelect
+                          {Array.from({ length: getAttributeSlotCount(gear.rarity, gear.id) }, (_, slot) => <AttributeSelect
                             key={`${copy.id}-${slot}`}
                             label={`SLOT ${slot + 1}`}
                             options={getAttributesForGear(gear.type)}
@@ -1447,7 +1447,7 @@ export function TeamComposition() {
                             usedIds={copy.attributeIds.filter(Boolean)}
                             onChangeAction={(value) => setOwnedEquipment((current) => current.map((item) => {
                               if (item.id !== copy.id) return item;
-                              const next = Array.from({ length: getAttributeSlotCount(gear.rarity) }, (_, position) => item.attributeIds[position] ?? "");
+                              const next = Array.from({ length: getAttributeSlotCount(gear.rarity, gear.id) }, (_, position) => item.attributeIds[position] ?? "");
                               next[slot] = value ?? "";
                               return { ...item, attributeIds: next };
                             }))}

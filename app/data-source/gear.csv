@@ -1,0 +1,22 @@
+equipment_id,rarity,name,type,percentage,attributes
+aether-battery,Rare,Aether Battery,hp,5,
+bloodrend-claws,Rare,Bloodrend Claws,dmg,5,
+honeycore-starflower,Epic,Honeycore Starflower,hp,5,
+bone-ripper,Epic,Bone Ripper,dmg,5,
+glowbud-starflower,Epic,Glowbud Starflower,hp,8,
+bonebreaker-pincer,Epic,Bonebreak Pincer,dmg,8,
+ancient-coin-charm,Legendary,Ancient Coin Charm,hp,12,random
+riftfang-skullhelm,Legendary,Riftfang Skullhelm,dmg,12,random
+solar-core,Legendary,Solar Core,hp,15,random
+steelshade-claw,Legendary,Steelshade Claw,dmg,15,random
+verdant-elixir,Mythical,Verdant Elixir,hp,20,random | random
+gale-wingblade,Mythical,Gale Wingblade,dmg,20,random | random
+aegislight-power-orb,Mythical,Aegislight Power Orb,hp,24,random | random
+void-tendril-whip,Mythical,Void Tendril Whip,dmg,24,random | random
+radish-lance,Mythical,Radish Lance,dmg,26,all-damage-2 | dominance
+inferno-dragon-ring,Secret,Inferno Dragon Ring,hp,30,damage-redirect | random | random
+stellar-wing-amulet,Secret,Stellar Wing Amulet,hp,30,moment-of-serenity | random | random
+dragon-remains-staff,Secret,Dragon Remains Staff,dmg,30,life-siphon | random | random
+solar-stellar-chronometer,Secret,Solar-Stellar Chronometer,dmg,30,dual-cast | random | random
+block-buster,Secret,Block Buster,dmg,30,rude-awakening | random | random
+nectar-heart,Secret,Nectar Heart,hp,32,healing-pulse | random | random

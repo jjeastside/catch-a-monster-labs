@@ -23,9 +23,42 @@ type Patch = {
 
 const patches: Patch[] = [
     {
+        version: "Update 0.51",
+        date: "October 3, 2026",
+        label: "Latest",
+        sections: [
+            {
+                title: "Shroomvale & Evolution",
+                changes: [
+                    "Added a new boss on Shroomvale.",
+                    "A new evolution for Rainimp is now available.",
+                ],
+            },
+            {
+                title: "Events",
+                changes: [
+                    "The Boss Event is live!",
+                    "Admin Abuse will be held twice for different time zones.",
+                ],
+            },
+            {
+                title: "Codes",
+                changes: [
+                    "New Code: absbug",
+                    "Old Code: thornewarden",
+                ],
+            },
+            {
+                title: "Update 0.51.1",
+                changes: [
+                    "Updated Thornewarden to drop Rainimp's evolution material.",
+                ],
+            },
+        ],
+    },
+    {
         version: "Update 0.50",
         date: "September 25, 2026",
-        label: "Latest",
         sections: [
             {
                 title: "Aether Event & Shroomvale",

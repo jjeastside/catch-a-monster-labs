@@ -72,6 +72,7 @@ type StatsBuild = Pick<
     | "armorId"
     | "weaponAttributeIds"
     | "armorAttributeIds"
+    | "rudeAwakeningActive"
     | "currentHpPercent"
     | "accountMultipliers"
 >;
