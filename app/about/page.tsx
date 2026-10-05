@@ -101,7 +101,7 @@ const tools: { title: string; description: string; href: string; icon: IconName;
     {
         title: "Build Calculator",
         description: "Plan and optimize your builds with powerful calculations and real-time results.",
-        href: "/",
+        href: "/calculator",
         icon: "calculator",
         accent: "text-[#58a9ff] border-[#1464b9] bg-[#092548]",
     },

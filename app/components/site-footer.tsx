@@ -7,7 +7,10 @@ import { assetPath } from "../lib/asset-path";
 import { latestVersion } from "../data/changelog-releases";
 
 const exploreLinks = [
-    { label: "Calculator", href: "/" },
+    { label: "Home", href: "/" },
+    { label: "Calculator", href: "/calculator" },
+    { label: "Monster Compare", href: "/compare" },
+    { label: "Team Builder", href: "/team" },
     { label: "Monster Database", href: "/monster-database" },
     { label: "Index Tracker", href: "/index-tracker" },
     { label: "Patch Notes", href: "/updates" },

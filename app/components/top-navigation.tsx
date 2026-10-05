@@ -8,7 +8,8 @@ import { useState } from "react";
 import { assetPath } from "../lib/asset-path";
 
 const navItems = [
-    { label: "Calculator", href: "/", icon: "/icons/monster-calculator.png" },
+    { label: "Home", href: "/", icon: "/branding/cam-lab-logo.png" },
+    { label: "Calculator", href: "/calculator", icon: "/icons/monster-calculator.png" },
     { label: "Monster Compare", href: "/compare", icon: "/icons/monster-compare.png" },
     { label: "Team Builder", href: "/team", icon: "/team-builder.png" },
     { label: "Monster Database", href: "/monster-database", icon: "/icons/monster-database.png" },
@@ -80,19 +81,19 @@ export function TopNavigation() {
                     md:grid-cols-[112px_1fr_112px]
                     md:px-6
 
-                    lg:h-[92px]
-                    lg:max-w-[1520px]
-                    lg:grid-cols-[minmax(0,1fr)_auto]
-                    lg:gap-2
-                    lg:pl-0
-                    lg:pr-[128px]
+                    xl:h-[92px]
+                    xl:max-w-[1580px]
+                    xl:grid-cols-[minmax(0,1fr)_auto]
+                    xl:gap-2
+                    xl:pl-0
+                    xl:pr-[136px]
 
-                    xl:gap-3
-                    xl:pr-[144px]
+                    2xl:gap-3
+                    2xl:pr-[148px]
                 "
             >
                 {/* Balances the mobile grid so the logo stays truly centered */}
-                <div aria-hidden="true" className="lg:hidden" />
+                <div aria-hidden="true" className="xl:hidden" />
 
                 {/* Logo */}
                 <Link
@@ -106,8 +107,8 @@ export function TopNavigation() {
                         flex shrink-0 items-center
                         justify-self-center
 
-                        lg:col-start-1
-                        lg:justify-self-center
+                        xl:col-start-1
+                        xl:justify-self-center
                     "
                 >
                     <span className="relative block h-[40px] w-[150px] sm:h-[44px] sm:w-[164px] md:h-[50px] md:w-[186px] lg:h-[64px] lg:w-[244px] xl:h-[70px] xl:w-[272px] 2xl:h-[72px] 2xl:w-[280px]">
@@ -127,12 +128,10 @@ export function TopNavigation() {
                 <div
                     className="
                         hidden min-w-0
-                        lg:col-start-2
-                        lg:flex
-                        lg:items-center
-                        lg:justify-self-end
-                        lg:gap-0
-
+                        xl:col-start-2
+                        xl:flex
+                        xl:items-center
+                        xl:justify-self-end
                         xl:gap-0.5
                     "
                 >
@@ -187,7 +186,7 @@ export function TopNavigation() {
                         px-3 py-1.5
                         text-xs font-semibold text-[#bfc7d5]
 
-                        lg:hidden
+                        xl:hidden
                     "
                 >
                     <span aria-hidden="true">☰</span>
@@ -198,7 +197,7 @@ export function TopNavigation() {
             {isMobileMenuOpen && (
                 <div
                     id="mobile-primary-navigation"
-                    className="relative z-10 border-t border-[#16345e] bg-[#061023]/95 px-3 py-2 lg:hidden"
+                    className="relative z-10 border-t border-[#16345e] bg-[#061023]/95 px-3 py-2 xl:hidden"
                 >
                     <div className="mx-auto grid max-w-[900px] gap-1 px-3 sm:px-4 md:px-6">
                         {navItems.map((item) => {

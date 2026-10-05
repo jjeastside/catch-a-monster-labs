@@ -4845,7 +4845,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "skillIds": [
-      "ghost-impact-vulnerability",
+      "ghost-impact",
       "soul-reap-chain-vulnerability"
     ],
     "passives": [

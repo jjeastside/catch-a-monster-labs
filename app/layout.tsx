@@ -14,9 +14,9 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
     metadataBase: new URL(homeUrl),
-    title: "Cam Lab — Catch a Monster Build Calculator",
+    title: "Cam Lab — Catch a Monster Companion",
     description:
-        "Build and compare Catch a Monster builds with combat stats, skill damage, DPS, equipment, traits, mutations, passives, and account multipliers.",
+        "A community-driven Catch a Monster companion with a build calculator, Monster Database, Team Builder, Monster Compare, Index Tracker, and game updates.",
     icons: {
         icon: [
             { url: assetPath("/favicon.ico") },
@@ -26,33 +26,33 @@ export const metadata: Metadata = {
         apple: assetPath("/apple-icon.png"),
     },
     openGraph: {
-        title: "Cam Lab — Catch a Monster Build Calculator",
+        title: "Cam Lab — Catch a Monster Companion",
         description:
-            "Build and compare Catch a Monster builds with combat stats, skill damage, DPS, equipment, traits, mutations, passives, and account multipliers.",
+            "Plan builds, compare monsters, build teams, browse game data, and track your Catch a Monster collection with Cam Lab.",
         siteName: "Cam Lab",
         type: "website",
         url: homeUrl,
         images: [
             {
                 url: homePreviewUrl,
-                width: 807,
-                height: 493,
-                alt: "Cam Lab — Catch a Monster Build Calculator",
+                width: 1438,
+                height: 571,
+                alt: "Cam Lab — Catch a Monster Companion",
             },
         ],
     },
     twitter: {
         card: "summary_large_image",
-        title: "Cam Lab — Catch a Monster Build Calculator",
+        title: "Cam Lab — Catch a Monster Companion",
         description:
-            "Build and compare Catch a Monster builds with combat stats, skill damage, DPS, equipment, traits, mutations, passives, and account multipliers.",
+            "Plan builds, compare monsters, build teams, browse game data, and track your Catch a Monster collection with Cam Lab.",
         images: [homePreviewUrl],
     },
 };
 
 export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
+    children,
+}: Readonly<{
     children: React.ReactNode;
 }>) {
     return (

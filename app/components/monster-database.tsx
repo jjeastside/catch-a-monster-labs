@@ -576,7 +576,7 @@ function DetailPanel({
 
                     <div className="mt-4 grid gap-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
                         <Link
-                            href={`/#${monsterHash(monster)}`}
+                            href={`/calculator/#${monsterHash(monster)}`}
                             className="rounded-lg bg-[#586af0] px-3 py-2.5 text-center text-sm font-black text-white transition hover:bg-[#7182ff]"
                         >
                             Open in Calculator

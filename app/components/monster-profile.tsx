@@ -211,7 +211,7 @@ export function MonsterProfile({ monsterId }: { monsterId: string }) {
                             Copy Profile Link
                         </button>
                         <Link
-                            href={`/#${monsterHash(monster)}`}
+                            href={`/calculator/#${monsterHash(monster)}`}
                             className="rounded-lg bg-[#586af0] px-4 py-2 text-xs font-black text-white transition hover:bg-[#7182ff]"
                         >
                             Open in Calculator

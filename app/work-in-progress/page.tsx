@@ -15,7 +15,7 @@ export default function WorkInProgressPage() {
             <section className="relative w-full max-w-lg rounded-2xl border border-[#343b4b] bg-[#11151e]/95 p-8 text-center shadow-2xl shadow-black/30 sm:p-11">
                 <PageHeading title="Coming Soon" image="/icons/damage-increase.png">More tools are on the way to <span className="text-[#ffb566]">help you plan your next build.</span></PageHeading>
                 <Link
-                    href="/"
+                    href="/calculator"
                     className="mt-7 inline-flex rounded-lg bg-[#7585ff] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#8d9aff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#aeb7ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#11151e]"
                 >
                     Back to calculator
