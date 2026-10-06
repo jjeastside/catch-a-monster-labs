@@ -7,9 +7,23 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.21",
+        date: "October 5, 2026",
+        label: "Latest",
+        changes: [
+            "Added a dedicated Cam Lab home page and moved the Build Calculator to /calculator, giving the site a clearer landing page while keeping the calculator one click away.",
+            "Added new Catch a Monster-inspired homepage artwork with a low-poly Solgryph hero scene and a Leafet and Flamix forest banner, with responsive framing that keeps the monsters visible instead of cropping them off-screen.",
+            "Added homepage quick links for Build Calculator, Monster Database, Index Tracker, Monster Compare, Team Builder, and Patch Notes using the same icons as the top navigation.",
+            "Replaced screenshot-style feature previews with compact handcrafted previews that summarize what the Calculator, Database, Index Tracker, Monster Compare, and Team Builder actually do.",
+            "Added homepage project stats, Latest Updates, and About Cam Lab sections so the landing page provides a useful overview of the site without needing to open another page first.",
+            "Refined homepage copy and presentation to be more understated, removing promotional labels and decorative text while keeping the focus on Cam Lab's tools and game data.",
+            "Added a legacy hash redirect so older calculator monster and shared-build links continue opening correctly after the calculator route moved to /calculator.",
+            "Updated the Cam Lab home/social preview image to use the new Solgryph homepage hero design.",
+        ],
+    },
+    {
         version: "v1.0.20",
         date: "October 3, 2026",
-        label: "Latest",
         changes: [
             "Added Catch a Monster Update 0.51 monsters: Thornewarden, Thaunimp, Ignimp, and Marimp, with updated monster data and artwork.",
             "Raised the maximum level to 115 and the Experimental Mode preview to 120.",

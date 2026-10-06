@@ -130,6 +130,7 @@ const featureCards = [
 ];
 
 const updateTitles: Record<string, string> = {
+    "v1.0.21": "Homepage Refresh",
     "v1.0.20": "Update 0.51 & Level 115",
     "v1.0.19": "Shroomvale Update",
     "v1.0.18": "Team Builder Expansion",
