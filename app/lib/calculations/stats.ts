@@ -6,6 +6,7 @@ import {
 } from "../../data/skills";
 
 import {
+    dragonCannelloniGrowth,
     dummeeDamageAtLevel,
     dummeeHealthAtLevel,
     standardGrowth,
@@ -235,21 +236,29 @@ function calculateStandardStats(
     level: number,
     multipliers: StatMultipliers,
 ): CalculatedStats {
-    const growthValue =
-        standardGrowth(level);
+    // Dragon Cannelloni has its own fitted growth coefficients; every
+    // other standard monster retains the original common multiplier.
+    const growth =
+        statData.monsterId === "dragon-cannelloni"
+            ? dragonCannelloniGrowth(level)
+            : standardGrowth(level);
+    const healthGrowth =
+        typeof growth === "number" ? growth : growth.health;
+    const damageGrowth =
+        typeof growth === "number" ? growth : growth.damage;
 
     const eRankHealth =
         statData.baseHealthELevel1 *
-        growthValue;
+        healthGrowth;
 
     const eRankDamage =
         statData.baseDamageELevel1 *
-        growthValue;
+        damageGrowth;
 
     return createCalculatedStats(
         eRankHealth,
         eRankDamage,
-        growthValue,
+        damageGrowth,
         "multiplier",
         multipliers,
     );
