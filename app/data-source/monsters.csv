@@ -78,7 +78,7 @@ King Penguin,Legendary,Water,626,6700,0,,Standard,Ex Water Jet,Wind Disc,,,Islan
 Fanglo,Legendary,Fire,21441,330370,0,,Standard,Dash,Fire Tornado,,Capturer's Boon | 5,"Rift | Strange Rift | Spire Shop | Current
 Chest | Rift Chest | Abyss Shop | Current",63
 Weasplash,Legendary,Water,113736,1216900,0,,Standard,Tsunami,Water Shuriken,,,Island Spawn | Natural Spawn | Tideland | Current,64
-Walrusk,Legendary,Water,138693,1465400,0,,Standard,Ice Road,Ex Water Shuriken,,,Island Special Spawn | Special Spawn | Tideland | Current,65
+Walrusk,Legendary,Water,138693,1465400,10,,Standard,Ice Road,Ex Water Shuriken,,,Island Special Spawn | Special Spawn | Tideland | Current,65
 Deerleaf,Legendary,Grass,198590,2124900,0,,Standard,Wind Disc (Purple),Leaf Surge,,,Island Spawn | Natural Spawn | Spirit Grove | Current,66
 Mintwolf,Legendary,Grass,287955,3081100,10,,Standard,Root Spike,Grass Tornado,,,"Egg | Giant Tree Egg | Spirit Grove | Current
 Chest | Mythical Chest | Limited Events | Current",67
@@ -188,7 +188,7 @@ Chest | Mythical Chest | Limited Events | Current",128
 Stellar Sentinel,Mythical,Water,2569600,19095000,10,,Standard,Ghost Impact,Soul Reap Chain,,,"Island Special Spawn | Special Spawn | Mobius Circus | Current
 Chest | Mythical Chest | Limited Events | Current",129
 Lampyr,Mythical,Water,1600000,38423000,0,,Standard,Void Orb,Thunder Stun,,,Egg | Lampyr's Egg | Mobius Circus | Current,130
-Umbra Reaver,Mythical,Dark,3746000,20454000,0,,Standard,Lightning Storm (Purple),Lightning Thrust,,Trial Power | 50,"Rift | Mobius Rift 3 | Mobius Circus | Current
+Umbra Reaver,Mythical,Dark,3746000,20454000,10,,Standard,Lightning Storm (Purple),Lightning Thrust,,Trial Power | 50,"Rift | Mobius Rift 3 | Mobius Circus | Current
 Chest | Mythical Chest | Limited Events | Current",131
 Lumen Knight,Mythical,Mechanical,1495800,64023300,10,,Standard,Lightning Storm (Blue),Lightning Thrust,,Dungeon Guard | 30,"Rift | Mobius Rift 3 | Mobius Circus | Current
 Chest | Mythical Chest | Limited Events | Current",132

@@ -1819,7 +1819,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 138693,
     "baseHealthELevel1": 1465400,
-    "baseCritChance": 0,
+    "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 65
   },
@@ -4091,7 +4091,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 3746000,
     "baseHealthELevel1": 20454000,
-    "baseCritChance": 0,
+    "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 131
   },
