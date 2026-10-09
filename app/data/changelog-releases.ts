@@ -7,9 +7,28 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.22",
+        date: "October 9, 2026",
+        label: "Latest",
+        changes: [
+            "Added a site-wide PvP Mode switch to desktop and mobile navigation, with the selected PvE or PvP mode remembered across pages and refreshes.",
+            "Added separate PvP base Health and Damage fields to monster data, keeping PvP and PvE calculations independent.",
+            "Updated the monster CSV importer to read the PvP Damage and PvP Health columns and generate pvpBaseDamageELevel1 and pvpBaseHealthELevel1; blank values stay unknown and invalid values are rejected.",
+            "Applied PvP base stats to the Build Calculator, Calculator Results, Monster Browser comparisons, Monster Database rankings, and Team Composition calculations and recommendations.",
+            "Extended PvP Mode to Monster Compare, including Shared Settings and Custom Builds, so each comparison uses PvP base Health and Damage rather than PvE reference stats.",
+            "Reduced the full selected Evolution Multiplier value to 50% effectiveness for evolved monsters in PvP while leaving non-evolved monsters at their normal PvP base values. PvE EM remains unchanged.",
+            "Added visible PvP EM effectiveness warnings with the applied percentage next to EM controls across the Build Calculator, Monster Browser, Monster Database, Monster Compare, and Team Composition.",
+            "Made monsters with unknown PvP base stats display unavailable results instead of silently substituting PvE stats, including in Monster Compare.",
+            "Disabled PvE-only dungeon and boss encounter conditions while calculating PvP stats without overwriting the user's saved PvE build settings.",
+            "Added a data-fitted Dragon Cannelloni growth curve with separate Health and Damage scaling based on recorded levels 1–115 and the existing level-65 breakpoint; other monsters retain their previous formulas.",
+            "Corrected Umbra Reaver and Walrusk base Critical Chance to 10%.",
+            "Added the new Home navigation icon.",
+            "Added regression tests for Dragon Cannelloni's growth curve and evolved versus non-evolved PvP EM scaling.",
+        ],
+    },
+    {
         version: "v1.0.21",
         date: "October 5, 2026",
-        label: "Latest",
         changes: [
             "Added a dedicated Cam Lab home page and moved the Build Calculator to /calculator, giving the site a clearer landing page while keeping the calculator one click away.",
             "Added new Catch a Monster-inspired homepage artwork with a low-poly Solgryph hero scene and a Leafet and Flamix forest banner, with responsive framing that keeps the monsters visible instead of cropping them off-screen.",

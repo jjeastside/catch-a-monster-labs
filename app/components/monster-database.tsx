@@ -1,4 +1,7 @@
 "use client";
+
+import { useCombatMode } from "../lib/combat-mode";
+import { EvolutionPvpNotice } from "./evolution-pvp-notice";
 import { PageHeading } from "./page-heading";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -267,7 +270,8 @@ function MonsterCard({
     const skills = monster.skillIds.map((id) => getSkill(id)).filter(Boolean).slice(0, 3);
     const passive = monster.passives?.[0] ?? null;
     const passiveImage = passive ? getPassiveImagePath(passive) : null;
-    const comparisonStats = getMonsterComparisonStats(monster, evolutionPercent, passiveCompareMode);
+    const [combatMode] = useCombatMode();
+    const comparisonStats = getMonsterComparisonStats(monster, evolutionPercent, passiveCompareMode, combatMode);
 
     return (
         <button
@@ -389,7 +393,8 @@ function DetailPanel({
     const skills = monster.skillIds.map((id) => getSkill(id)).filter(Boolean);
     const passive = monster.passives?.[0] ?? null;
     const passiveImage = passive ? getPassiveImagePath(passive) : null;
-    const comparisonStats = getMonsterComparisonStats(monster, evolutionPercent, passiveCompareMode)
+    const [combatMode] = useCombatMode();
+    const comparisonStats = getMonsterComparisonStats(monster, evolutionPercent, passiveCompareMode, combatMode)
 
     async function copyMonsterLink() {
         const url = `${window.location.origin}${assetPath(`/monster-database/${monster.id}/`)}`;
@@ -878,11 +883,13 @@ function DatabaseEvolutionMultiplierEditor({
                     </div>
                 </label>
             </div>
+            <EvolutionPvpNotice value={displayedValue} />
         </div>
     );
 }
 
 export function MonsterDatabase() {
+    const [combatMode] = useCombatMode();
     const [search, setSearch] = useState("");
     const [rarity, setRarity] = useState<(typeof rarities)[number]>("All");
     const [element, setElement] = useState<(typeof elements)[number]>("All");
@@ -1028,21 +1035,21 @@ export function MonsterDatabase() {
             .sort((a, b) => {
                 switch (sortBy) {
                     case "dps":
-                        return getMonsterComparisonStats(b, evolutionPercent, passiveCompareMode).dps - getMonsterComparisonStats(a, evolutionPercent, passiveCompareMode).dps;
+                        return getMonsterComparisonStats(b, evolutionPercent, passiveCompareMode, combatMode).dps - getMonsterComparisonStats(a, evolutionPercent, passiveCompareMode, combatMode).dps;
                     case "damage":
-                        return getMonsterComparisonStats(b, evolutionPercent, passiveCompareMode).damage - getMonsterComparisonStats(a, evolutionPercent, passiveCompareMode).damage;
+                        return getMonsterComparisonStats(b, evolutionPercent, passiveCompareMode, combatMode).damage - getMonsterComparisonStats(a, evolutionPercent, passiveCompareMode, combatMode).damage;
                     case "health":
-                        return getMonsterComparisonStats(b, evolutionPercent, passiveCompareMode).health - getMonsterComparisonStats(a, evolutionPercent, passiveCompareMode).health;
+                        return getMonsterComparisonStats(b, evolutionPercent, passiveCompareMode, combatMode).health - getMonsterComparisonStats(a, evolutionPercent, passiveCompareMode, combatMode).health;
                     case "index":
                     default:
                         return a.indexPosition - b.indexPosition;
                 }
             });
-    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, skillEffectFilter, evolutionFilter, sortBy, evolutionPercent, passiveCompareMode]);
+    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, skillEffectFilter, evolutionFilter, sortBy, evolutionPercent, passiveCompareMode, combatMode]);
 
     useEffect(() => {
         setVisibleMonsterCount(30);
-    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, skillEffectFilter, evolutionFilter, sortBy, evolutionPercent, passiveCompareMode]);
+    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, skillEffectFilter, evolutionFilter, sortBy, evolutionPercent, passiveCompareMode, combatMode]);
 
     useEffect(() => {
         const target = loadMoreRef.current;

@@ -7,6 +7,9 @@ import { getSkill, getSkillDisplayName } from "../data/skills";
 import { WEAPONS, ARMORS } from "../data/equipments";
 import { getAvailableTraits, getTrait } from "../data/traits";
 import { calculateStats } from "../lib/calculations/stats";
+import { buildForCombatMode } from "../lib/combat-mode-build";
+import { useCombatMode } from "../lib/combat-mode";
+import { EvolutionPvpNotice } from "./evolution-pvp-notice";
 import { calculateSkillSummary } from "../lib/calculations/skill-summary";
 import { GENETIC_POTENTIAL_VALUES } from "../lib/calculations/genetic-potential";
 import {
@@ -562,6 +565,8 @@ function SharedEvolutionMultiplier({
         </div>
       </div>
 
+      <EvolutionPvpNotice value={displayedValue} />
+
       {(!isNumeric || isOutOfRange) && (
         <p className={styles.sharedEvolutionError}>
           {!isNumeric
@@ -880,6 +885,7 @@ function CompareBuildControls({
 }
 
 export function MonsterCompare() {
+  const [combatMode] = useCombatMode();
   const [ids, setIds] = useState(() =>
     availableMonsters.slice(0, 2).map((monster) => monster.id),
   );
@@ -976,34 +982,40 @@ export function MonsterCompare() {
       monsterId: id,
       accountMultipliers: build.accountMultipliers,
     };
-    const calculationBuild = {
-      ...currentBuild,
-      evolutionPercent: monster.isEvolved ? currentBuild.evolutionPercent : 100,
-    };
+    const calculationBuild = buildForCombatMode(
+      {
+        ...currentBuild,
+        evolutionPercent: monster.isEvolved ? currentBuild.evolutionPercent : 100,
+      },
+      combatMode,
+    );
     const stats = calculateStats(
-      getMonsterStatData(id)!,
+      getMonsterStatData(id),
       calculationBuild,
       monster.passives ?? [],
-    )!;
-    const skills = monster.skillIds
-      .map(getSkill)
-      .filter((skill) => skill !== null)
-      .map((skill) => ({
-        skill,
-        ...calculateSkillSummary(
-          monster,
-          skill,
-          stats,
-          calculationBuild,
-          monster.passives ?? [],
-        ),
-      }));
+    );
+    // Unknown PvP bases should display as unavailable, never as PvE stats.
+    const skills = stats
+      ? monster.skillIds
+          .map(getSkill)
+          .filter((skill) => skill !== null)
+          .map((skill) => ({
+            skill,
+            ...calculateSkillSummary(
+              monster,
+              skill,
+              stats,
+              calculationBuild,
+              monster.passives ?? [],
+            ),
+          }))
+      : [];
     return {
       monster,
       build: currentBuild,
       stats,
       skills,
-      total: skills.reduce((sum, skill) => sum + (skill.dps ?? 0), 0),
+      total: stats ? skills.reduce((sum, skill) => sum + (skill.dps ?? 0), 0) : null,
     };
   });
   const maxSkills = Math.max(...columns.map((column) => column.skills.length));
@@ -1019,6 +1031,11 @@ export function MonsterCompare() {
       <PageHeading id="compare-heading" title="Monster Compare" image="/icons/monster-compare.png" aside="Pick monsters to compare their stats, skills, DPS, and different builds with global account multipliers.">
         Compare up to 4 monsters side by side with {mode === "shared" ? "shared settings" : "their own builds"}.
       </PageHeading>
+      {combatMode === "pvp" && (
+        <p role="note" className="rounded-md border border-[#ff91ad]/40 bg-[#301a2b]/50 px-3 py-2 text-xs text-[#ffb5c7]">
+          PvP mode: using PvP base Damage and Health. Evolved monsters use only 50% of the selected EM value; PvE combat conditions are disabled.
+        </p>
+      )}
       <div className={styles.account}>
         <AccountMultipliers build={build} onBuildChangeAction={setBuild} />
       </div>
@@ -1203,6 +1220,11 @@ export function MonsterCompare() {
             )}
             <section className={`${card} p-2`}>
               <h2 className={`${eyebrow} mb-1`}>Combat Stats</h2>
+              {!column.stats && (
+                <p role="status" className="mb-2 text-xs text-[#ff91ad]">
+                  {combatMode === "pvp" ? "PvP base stats are unavailable for this monster." : "Base stats are unavailable for this monster."}
+                </p>
+              )}
               <div className="grid grid-cols-4 gap-1">
                 {(
                   [
@@ -1216,12 +1238,12 @@ export function MonsterCompare() {
                     key={key}
                     label={label}
                     icon={`/account-icons/${icon}.png`}
-                    peers={columns.map((item) => item.stats[key])}
-                    value={column.stats[key]}
+                    peers={columns.map((item) => item.stats?.[key] ?? null)}
+                    value={column.stats?.[key] ?? null}
                     suffix={suffix}
                     best={isBestValue(
-                      column.stats[key],
-                      columns.map((item) => item.stats[key]),
+                      column.stats?.[key] ?? null,
+                      columns.map((item) => item.stats?.[key] ?? null),
                     )}
                     tone={key === "health" ? "green" : "gold"}
                   />

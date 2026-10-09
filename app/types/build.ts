@@ -67,6 +67,7 @@ export type MonsterPassive = {
 };
 
 export type Build = {
+  combatMode?: "pve" | "pvp";
   monsterId: string | null;
   /** Optional inventory instance. Existing monsters use their monster ID. */
   inventoryCopyId?: string;

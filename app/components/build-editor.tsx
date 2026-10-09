@@ -1,5 +1,9 @@
 "use client";
 
+import { useCombatMode } from "../lib/combat-mode";
+import { EvolutionPvpNotice } from "./evolution-pvp-notice";
+import { buildForCombatMode } from "../lib/combat-mode-build";
+
 import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from "react";
 
 import {
@@ -321,6 +325,7 @@ export function EvolutionMultiplierEditor({
                                        onChange,
                                        compact = false,
                                    }: EvolutionMultiplierEditorProps) {
+    const [combatMode] = useCombatMode();
     const [inputDraft, setInputDraft] = useState<string | null>(null);
     const [dragPreview, setDragPreview] = useState<number | null>(null);
     const [precisionRange, setPrecisionRange] = useState<{
@@ -381,7 +386,9 @@ export function EvolutionMultiplierEditor({
                     <p className={`${compact ? "text-[10px]" : "text-sm"} font-semibold text-[#e3e8f1]`}>EM</p>
                     <HelpTooltip
                         title="Evolution Multiplier (EM)"
-                        text="EM is the percentage of an evolved monster's base Damage and Health used by the game. 100% keeps its normal base stats; for example, 160% gives 1.60× base Damage and Health. Drag normally for quick changes. While dragging, slide upward to open the 0.01% precision range, then release to apply."
+                        text={combatMode === "pvp"
+                            ? "In PvP, EM has 50% effectiveness for evolved monsters. 100% selected applies 50% of PvP base Damage and Health; 160% selected applies 80%. Drag upward while adjusting for 0.01% precision."
+                            : "EM is the percentage of an evolved monster's base Damage and Health used by the game. 100% keeps its normal base stats; for example, 160% gives 1.60× base Damage and Health. Drag normally for quick changes. While dragging, slide upward to open the 0.01% precision range, then release to apply."}
                         align="left"
                     />
                 </div>
@@ -637,6 +644,8 @@ export function EvolutionMultiplierEditor({
                     </div>
                 </div>
             </div>
+
+            <EvolutionPvpNotice value={displayedValue} />
 
             {(!isNumeric || isOutOfRange) && (
                 <p className="mt-2 text-[10px] text-[#ff9a7f]">
@@ -1115,13 +1124,15 @@ type BuildEditorProps = {
 
 export function BuildEditor({
                                 monster,
-                                build,
+                                build: savedBuild,
                                 onBuildChangeAction,
                                 onResetAction,
                                 onOpenSaveBuildsAction,
                                 onOpenLoadBuildsAction,
                                 onShareBuildAction,
                             }: BuildEditorProps) {
+    const [combatMode] = useCombatMode();
+    const build = buildForCombatMode(savedBuild, combatMode);
     const [experimentalLevelMode, setExperimentalLevelMode] = useState(false);
     const maxSelectableLevel = getMaxLevel(experimentalLevelMode);
 
@@ -1284,7 +1295,11 @@ export function BuildEditor({
             level >= MIN_LEVEL &&
             level <= maxSelectableLevel
         ) {
-            update("level", level);
+            if (combatMode === "pvp" && savedBuild.combatContext === "dungeon") {
+                update("preDungeonLevel", level);
+            } else {
+                update("level", level);
+            }
         }
     };
 
@@ -1857,6 +1872,8 @@ export function BuildEditor({
                 </CollapsibleSection>
 
                 <CollapsibleSection title="Combat Conditions">
+                    {combatMode === "pvp" && <p className="mb-2 text-[11px] text-[#ff91ad]">Encounter and boss conditions are disabled in PvP mode.</p>}
+                    <fieldset disabled={combatMode === "pvp"} className={combatMode === "pvp" ? "opacity-50" : ""}>
                     <p className="mb-2.5 text-[11px] leading-4 text-[#7f8b9e]">
                         Select encounter, target, and active skill effects used by damage and resistance calculations.
                     </p>
@@ -1890,6 +1907,7 @@ export function BuildEditor({
                         <span>Target is Boss</span>
                         <span>{build.targetIsBoss ? "Active" : "Inactive"}</span>
                     </button>
+                    </fieldset>
                     <button
                         type="button"
                         onClick={() => update("targetStatused", !build.targetStatused)}

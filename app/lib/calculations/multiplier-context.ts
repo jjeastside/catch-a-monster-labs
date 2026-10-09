@@ -36,6 +36,7 @@ export type StatMultipliers = {
 
 type MultiplierBuild = Pick<
     Build,
+    | "combatMode"
     | "rank"
     | "enhancement"
     | "healthGeneticPotential"
@@ -57,6 +58,7 @@ export function createStatMultipliers(
     baseCritChance = 0,
     passiveCritChance = 0,
     passiveCritDamage = 0,
+    isEvolved = false,
 ): StatMultipliers | null {
     if (!build.rank) {
         return null;
@@ -76,9 +78,11 @@ export function createStatMultipliers(
             build.damageGeneticPotential,
         );
 
-    const evolution =
-        getEvolutionMultiplier(
+    const evolution = build.combatMode === "pvp" && !isEvolved
+        ? 1
+        : getEvolutionMultiplier(
             build.evolutionPercent,
+            build.combatMode,
         );
 
     const mutationEffects =

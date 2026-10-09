@@ -1,3 +1,6 @@
+
+import { useCombatMode } from "../lib/combat-mode";
+import { buildForCombatMode } from "../lib/combat-mode-build";
 import { formatNumber, formatStatNumber } from "../lib/format-numbers";
 import { calculateSkillDps, calculateSkillSummary } from "../lib/calculations/skill-summary";
 import { useEffect, useRef, useState } from "react";
@@ -2881,12 +2884,14 @@ type CalculatorResultsProps = {
 
 export function CalculatorResults({
                                       monster,
-                                      build,
+                                      build: savedBuild,
                                       isFavorite,
                                       onToggleFavorite,
                                       onMonsterSelectAction,
                                       onSharePreviewChange,
                                   }: CalculatorResultsProps) {
+    const [combatMode] = useCombatMode();
+    const build = buildForCombatMode(savedBuild, combatMode);
     const monsterSkills =
         monster?.skillIds
             .map(getSkill)

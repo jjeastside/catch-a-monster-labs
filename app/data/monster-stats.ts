@@ -4,6 +4,9 @@ import { GENERATED_MONSTERS } from "./generated/monsters";
 export const monsterStats: MonsterStatData[] = GENERATED_MONSTERS.map(
     (monster): MonsterStatData => {
         const shared = {
+            isEvolved: monster.isEvolved === true,
+            pvpBaseHealthELevel1: monster.pvpBaseHealthELevel1,
+            pvpBaseDamageELevel1: monster.pvpBaseDamageELevel1,
             baseHealthELevel1: monster.baseHealthELevel1,
             baseDamageELevel1: monster.baseDamageELevel1,
             baseCritChance: monster.baseCritChance,

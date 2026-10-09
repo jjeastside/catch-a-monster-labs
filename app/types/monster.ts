@@ -27,6 +27,8 @@ export type Monster = {
 };
 
 export type GeneratedMonster = Monster & {
+  pvpBaseDamageELevel1?: number;
+  pvpBaseHealthELevel1?: number;
   baseDamageELevel1: number;
   baseHealthELevel1: number;
   baseCritChance: number;

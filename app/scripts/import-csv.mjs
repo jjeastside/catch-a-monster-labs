@@ -715,6 +715,8 @@ const monsters = monsterRows.map((monster, index) => {
         name,
         damage: monster.Damage,
         health: monster.Health,
+        pvp_damage: monster["PvP Damage"],
+        pvp_health: monster["PvP Health"],
         crit_chance: monster["Crit Chance"],
         growth_type:
             growthType === "dummee" ||
@@ -1054,6 +1056,15 @@ const generatedMonsters = monsters.map(
             monster.health,
             0,
         ),
+
+        ...Object.fromEntries([
+            ["pvpBaseDamageELevel1", monster.pvp_damage],
+            ["pvpBaseHealthELevel1", monster.pvp_health],
+        ].filter(([, value]) => value != null && String(value).trim() !== "").map(([key, value]) => {
+            const parsed = Number(String(value).replaceAll(",", "").trim());
+            if (!Number.isFinite(parsed) || parsed < 0) throw new Error(`Invalid ${key} for ${monster.name}: ${value}`);
+            return [key, parsed];
+        })),
 
         baseCritChance: number(
             monster.crit_chance,

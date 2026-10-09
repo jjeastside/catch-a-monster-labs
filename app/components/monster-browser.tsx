@@ -1,5 +1,8 @@
 "use client";
 
+import { useCombatMode } from "../lib/combat-mode";
+import { EvolutionPvpNotice } from "./evolution-pvp-notice";
+
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { PASSIVE_DEFINITIONS } from "../data/passives";
@@ -234,7 +237,7 @@ function BrowserEvolutionMultiplierEditor({ value, onChange }: BrowserEvolutionM
                     <span className="inline-flex h-5 items-center text-[10px] font-medium uppercase tracking-[0.08em] leading-none text-[#8e99ad]">EM</span>
                     <span className="relative -top-px inline-flex h-5 items-center">
                         <InfoTooltip label="About evolution multiplier">
-                            Applied only to evolved forms when comparing DPS, Damage, and Health. Drag the bar normally for quick changes, or drag upward while adjusting to open the 0.01% precision slider. It does not affect Index sorting.
+                            Applied only to evolved forms when comparing DPS, Damage, and Health. In PvP, EM has only 50% effectiveness. Drag the bar normally for quick changes, or drag upward while adjusting for 0.01% precision. It does not affect Index sorting.
                         </InfoTooltip>
                     </span>
                 </div>
@@ -460,6 +463,7 @@ function BrowserEvolutionMultiplierEditor({ value, onChange }: BrowserEvolutionM
                 <span>{MIN_EVOLUTION_PERCENT.toFixed(0)}%</span>
                 <span>{MAX_EVOLUTION_PERCENT.toFixed(0)}%</span>
             </div>
+            <EvolutionPvpNotice value={displayedValue} />
         </div>
     );
 }
@@ -576,6 +580,7 @@ function MonsterBrowserContent({
                                    onSelectAction,
                                    onToggleFavoriteAction,
                                }: MonsterBrowserProps) {
+    const [combatMode] = useCombatMode();
     const [searchQuery, setSearchQuery] = useState("");
     const [sourceFilter, setSourceFilter] = useState("all");
     const [islandFilter, setIslandFilter] = useState("all");
@@ -643,8 +648,8 @@ function MonsterBrowserContent({
         });
 
         return matchingMonsters.sort((a, b) => {
-            const aValue = getMonsterComparisonValue(a, sortMode, browserEvolutionPercent, passiveCompareMode);
-            const bValue = getMonsterComparisonValue(b, sortMode, browserEvolutionPercent, passiveCompareMode);
+            const aValue = getMonsterComparisonValue(a, sortMode, browserEvolutionPercent, passiveCompareMode, combatMode);
+            const bValue = getMonsterComparisonValue(b, sortMode, browserEvolutionPercent, passiveCompareMode, combatMode);
             const direction = sortDescending ? -1 : 1;
 
             if (aValue === bValue) {
@@ -653,12 +658,12 @@ function MonsterBrowserContent({
 
             return (aValue - bValue) * direction;
         });
-    }, [monsters, searchQuery, sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, favoritesOnly, favoriteMonsterIds, sortMode, sortDescending, browserEvolutionPercent, passiveCompareMode]);
+    }, [monsters, searchQuery, sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, favoritesOnly, favoriteMonsterIds, sortMode, sortDescending, browserEvolutionPercent, passiveCompareMode, combatMode]);
 
     useEffect(() => {
         setBrowserVisibleMonsterCount(32);
         setVisibleMonsterCount(36);
-    }, [searchQuery, sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, favoritesOnly, sortMode, sortDescending, browserEvolutionPercent, passiveCompareMode]);
+    }, [searchQuery, sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, favoritesOnly, sortMode, sortDescending, browserEvolutionPercent, passiveCompareMode, combatMode]);
 
     const activeFilterCount = [sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter]
         .filter((value) => value !== "all").length + (favoritesOnly ? 1 : 0);

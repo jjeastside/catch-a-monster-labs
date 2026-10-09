@@ -1,5 +1,7 @@
 "use client";
 
+import { useCombatMode } from "../../lib/combat-mode";
+
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { AccountMultipliers } from "../account-multipliers";
@@ -19,7 +21,7 @@ import { getAttributeSlotCount, getFixedAttributeIds } from "../../lib/calculati
 import { assetPath } from "../../lib/asset-path";
 import { CURRENT_MAX_LEVEL } from "../../lib/level-config";
 import { calculateSkillSummary } from "../../lib/calculations/skill-summary";
-import { calculateStats } from "../../lib/calculations/stats";
+import { calculateStats as calculateStatsForBuild } from "../../lib/calculations/stats";
 import { formatStatNumber } from "../../lib/format-numbers";
 import { databaseSkillEffectDetails, getDatabaseSkillEffects } from "../../lib/skill-display";
 import { getPassiveDescription, getPassiveUiName } from "../../lib/passive-display";
@@ -33,8 +35,8 @@ import {
   TEAM_STORAGE_KEY, INVENTORY_STORAGE_KEY, SAVED_TEAMS_STORAGE_KEY,
   ranks, mutationOptions, availableMonsters, monsterById,
   makeBuild, sanitizeBuild, defaultTeam, defaultInventory, copyMonsterId, nextCopyKey,
-  monsterDps, getEffectiveTeamPassives, effectiveTeamHealth, buildSignature, getTeamRole, effectSummaryLabel, compactBuildLabel,
-  buildForGoal, goalTitle, goalDescription, signedPercent, recommendTeams, teamSynergyForBuilds,
+  monsterDps as monsterDpsForBuild, getEffectiveTeamPassives, effectiveTeamHealth, buildSignature, getTeamRole, effectSummaryLabel, compactBuildLabel,
+  buildForGoal as buildForGoalBase, goalTitle, goalDescription, signedPercent, recommendTeams, teamSynergyForBuilds,
   type TeamGoal, type TeamCombatContext, type InventoryBuilds, type InventoryFilter, type InventorySort, type SavedTeams,
   loadTeamStorage, mergeIndexProgress,
 } from "../../lib/team-model";
@@ -259,6 +261,11 @@ const teamMutationFamilies = [
 ] as const;
 
 export function TeamComposition() {
+  const [combatMode] = useCombatMode();
+  const calculateStats: typeof calculateStatsForBuild = (data, build, passives) => calculateStatsForBuild(data, { ...build, combatMode }, passives);
+  const monsterDps: typeof monsterDpsForBuild = (monster, build) => monsterDpsForBuild(monster, { ...build, combatMode });
+  const buildForGoal: typeof buildForGoalBase = (build, context) => buildForGoalBase({ ...build, combatMode }, context);
+
   const [search, setSearch] = useState("");
   const blockedStorageKeys = useRef(new Set<string>());
   const editorRef = useRef<HTMLDialogElement>(null);
@@ -566,7 +573,7 @@ export function TeamComposition() {
         if (inventorySort === "health") return getSavedStats(b).health - getSavedStats(a).health || a.name.localeCompare(b.name);
         return a.name.localeCompare(b.name);
       });
-  }, [search, inventoryFilter, inventorySort, inventoryElement, inventoryRarity, favoritesOnly, favoriteMonsterIds, inventoryBuilds, accountBuild.accountMultipliers, teamIds, hiddenMonsterIds, showHiddenMonsters, ownedIds]);
+  }, [combatMode, search, inventoryFilter, inventorySort, inventoryElement, inventoryRarity, favoritesOnly, favoriteMonsterIds, inventoryBuilds, accountBuild.accountMultipliers, teamIds, hiddenMonsterIds, showHiddenMonsters, ownedIds]);
 
   const activeInventoryFilters = Number(inventoryFilter !== "all") + Number(favoritesOnly)
     + Number(inventoryElement !== "all") + Number(inventoryRarity !== "all");
@@ -599,7 +606,7 @@ export function TeamComposition() {
       ? { ...build, weaponId: null, weaponAttributeIds: [] }
       : { ...build, armorId: null, armorAttributeIds: [] };
     return { assess, score, withCopy, baseline };
-  }, [accountBuild.accountMultipliers, combatContext, goal]);
+  }, [combatMode, accountBuild.accountMultipliers, combatContext, goal]);
 
   // The first pass allows each candidate to be evaluated with the best copy of
   // each gear type. The final three-member pass below resolves copy conflicts.
@@ -630,8 +637,8 @@ export function TeamComposition() {
     })), [inventoryBuilds, hiddenMonsterIds, ownedEquipment, equipmentPreview]);
 
   const preliminaryRecommendation = useMemo(
-    () => recommendTeams(optimizedCandidates, accountBuild.accountMultipliers, goal, combatContext),
-    [optimizedCandidates, accountBuild.accountMultipliers, goal, combatContext],
+    () => recommendTeams(optimizedCandidates, accountBuild.accountMultipliers, goal, combatContext, combatMode),
+    [combatMode, optimizedCandidates, accountBuild.accountMultipliers, goal, combatContext],
   );
 
   // All finalist trios receive their own non-conflicting gear allocation FIRST.
@@ -712,7 +719,7 @@ export function TeamComposition() {
       };
     });
     return { ...best, memberReasons, alternatives };
-  }, [preliminaryRecommendation, ownedEquipment, equipmentPreview, accountBuild.accountMultipliers, combatContext, goal]);
+  }, [combatMode, preliminaryRecommendation, ownedEquipment, equipmentPreview, accountBuild.accountMultipliers, combatContext, goal]);
 
   const recommendation = rankedRecommendations;
   const gearRecommendation = recommendation ? { assignments: recommendation.assignments } : null;
@@ -795,7 +802,7 @@ export function TeamComposition() {
       return [{ copyId, monster, saved, best: perCategory[0], options: perCategory, selected: selectedCopies.has(copyId) }];
     });
     return candidates.sort((a, b) => (Number(b.selected) - Number(a.selected)) || b.best.weightedGain - a.best.weightedGain || b.best.after.dps - a.best.after.dps).slice(0, 6);
-  }, [inventoryBuilds, accountBuild.accountMultipliers, combatContext, goal, hiddenMonsterIds, recommendation, ownedEquipment, equipmentPreview, improvementScope]);
+  }, [combatMode, inventoryBuilds, accountBuild.accountMultipliers, combatContext, goal, hiddenMonsterIds, recommendation, ownedEquipment, equipmentPreview, improvementScope]);
 
   const upgradeStatRows = (before: { dps: number; damage: number; health: number }, after: { dps: number; damage: number; health: number }) => (
     <div className={styles.improvementStatRows}>
@@ -1887,6 +1894,7 @@ export function TeamComposition() {
                   </div>
                   <small className={styles.helper}>Equipment attributes are managed per item in the Equipment inventory.</small>
                   {monster.isEvolved ? <label className={styles.control}>Evolution %
+                    {combatMode === "pvp" && <p>PvP mode uses half the full EM value.</p>}
                     <input aria-label="Evolution %" type="number" min={MIN_EVOLUTION_PERCENT} max={MAX_EVOLUTION_PERCENT} step={0.01} value={build.evolutionPercent} onChange={(event) => updateInventoryBuild(editingInventoryId, { evolutionPercent: Number(event.target.value) })} />
                   </label> : null}
                   <div className={styles.editorMutationRow}>

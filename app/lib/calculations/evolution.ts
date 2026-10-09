@@ -19,11 +19,10 @@ export function clampEvolutionPercent(
 
 export function getEvolutionMultiplier(
   evolutionPercent: number,
+  combatMode: "pve" | "pvp" = "pve",
 ): number {
-  const validPercent =
-    clampEvolutionPercent(evolutionPercent);
-
-  return validPercent / 100;
+  const validPercent = clampEvolutionPercent(evolutionPercent);
+  return validPercent / (combatMode === "pvp" ? 200 : 100);
 }
 
 export function getEvolutionBarFill(

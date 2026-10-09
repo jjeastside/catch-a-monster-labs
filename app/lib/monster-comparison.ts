@@ -1,3 +1,5 @@
+
+import { getEvolutionMultiplier } from "./calculations/evolution";
 import { GENERATED_MONSTERS } from "../data/generated/monsters";
 import { getSkill, getSkillTotalMultiplier } from "../data/skills";
 import type { GeneratedMonster, Monster } from "../types/monster";
@@ -49,10 +51,11 @@ export function getMonsterComparisonStats(
     monster: GeneratedMonster,
     evolutionPercent = 100,
     passiveMode: PassiveCompareMode = "always",
+    combatMode: "pve" | "pvp" = "pve",
 ): MonsterComparisonStats {
-    const evolutionMultiplier = monster.isEvolved ? evolutionPercent / 100 : 1;
-    const baseDamage = monster.baseDamageELevel1 * evolutionMultiplier;
-    const health = monster.baseHealthELevel1 * evolutionMultiplier;
+    const evolutionMultiplier = monster.isEvolved ? getEvolutionMultiplier(evolutionPercent, combatMode) : 1;
+    const baseDamage = (combatMode === "pvp" ? monster.pvpBaseDamageELevel1 ?? NaN : monster.baseDamageELevel1) * evolutionMultiplier;
+    const health = (combatMode === "pvp" ? monster.pvpBaseHealthELevel1 ?? NaN : monster.baseHealthELevel1) * evolutionMultiplier;
 
     const includedPassiveEffects = getIncludedPassiveEffects(monster, passiveMode);
 
@@ -122,6 +125,7 @@ export function getMonsterComparisonValue(
     mode: "index" | MonsterComparisonMode,
     evolutionPercent = 100,
     passiveMode: PassiveCompareMode = "always",
+    combatMode: "pve" | "pvp" = "pve",
 ): number {
     const data = generatedMonsterById.get(monster.id);
 
@@ -132,5 +136,6 @@ export function getMonsterComparisonValue(
         data,
         evolutionPercent,
         passiveMode,
+        combatMode,
     )[mode];
 }

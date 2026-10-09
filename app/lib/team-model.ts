@@ -455,7 +455,7 @@ export function signedPercent(value: number): string {
   return `${value > 0 ? "+" : ""}${Math.round(value * 100)}%`;
 }
 
-export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build["accountMultipliers"], goal: TeamGoal, combatContext: TeamCombatContext = "standard") {
+export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build["accountMultipliers"], goal: TeamGoal, combatContext: TeamCombatContext = "standard", combatMode: "pve" | "pvp" = "pve") {
   const ownedIds = Object.keys(inventoryBuilds);
     const ownedCandidates = ownedIds
       .map((id) => ({ id, monster: monsterById.get(copyMonsterId(id)) }))
@@ -465,6 +465,7 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
         const baseBuild = buildForGoal(
           {
             ...saved,
+            combatMode,
             accountMultipliers: account,
             teammateMonsterIds: [null, null],
             evolutionPercent: monster.isEvolved ? saved.evolutionPercent : 100,
@@ -550,6 +551,7 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
         const build = buildForGoal(
           {
             ...item.savedBuild,
+            combatMode,
             accountMultipliers: account,
             teammateMonsterIds: [teammateIds[0] ?? null, teammateIds[1] ?? null],
             evolutionPercent: item.monster.isEvolved ? item.savedBuild.evolutionPercent : 100,

@@ -6,16 +6,15 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { assetPath } from "../lib/asset-path";
+import { PvpModeToggle } from "./pvp-mode-toggle";
 
 const navItems = [
-    { label: "Home", href: "/", icon: "/branding/cam-lab-logo.png" },
+    { label: "Home", href: "/", icon: "/icons/home.png" },
     { label: "Calculator", href: "/calculator", icon: "/icons/monster-calculator.png" },
     { label: "Monster Compare", href: "/compare", icon: "/icons/monster-compare.png" },
     { label: "Team Builder", href: "/team", icon: "/team-builder.png" },
     { label: "Monster Database", href: "/monster-database", icon: "/icons/monster-database.png" },
     { label: "Index Tracker", href: "/index-tracker", icon: "/icons/index.png" },
-    { label: "Patch Notes", href: "/updates", icon: "/icons/patch-notes.png" },
-    { label: "Changelog", href: "/changelog", icon: "/icons/changelog.png" },
 ] as const;
 
 export function TopNavigation() {
@@ -65,36 +64,11 @@ export function TopNavigation() {
 
             <nav
                 aria-label="Primary navigation"
-                className="
-                    relative z-10 mx-auto
-                    grid h-[68px] w-full
-                    max-w-[920px]
-                    grid-cols-[84px_1fr_84px]
-                    items-center gap-2 px-4
-
-                    sm:max-w-[960px]
-                    sm:grid-cols-[96px_1fr_96px]
-                    sm:px-5
-
-                    md:h-[76px]
-                    md:max-w-[980px]
-                    md:grid-cols-[112px_1fr_112px]
-                    md:px-6
-
-                    xl:h-[92px]
-                    xl:max-w-[1580px]
-                    xl:grid-cols-[minmax(0,1fr)_auto]
-                    xl:gap-2
-                    xl:pl-0
-                    xl:pr-[136px]
-
-                    2xl:gap-3
-                    2xl:pr-[148px]
-                "
+                className="relative z-10 mx-auto grid w-full max-w-[1580px]
+                    grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-x-2 px-3 py-3
+                    sm:px-5 md:px-6
+                    2xl:grid-cols-[auto_minmax(0,1fr)_auto] 2xl:gap-x-5 2xl:py-4"
             >
-                {/* Balances the mobile grid so the logo stays truly centered */}
-                <div aria-hidden="true" className="xl:hidden" />
-
                 {/* Logo */}
                 <Link
                     href="/"
@@ -102,16 +76,9 @@ export function TopNavigation() {
                     onMouseEnter={() => router.prefetch("/")}
                     onFocus={() => router.prefetch("/")}
                     aria-label="Go to Cam Lab home"
-                    className="
-                        col-start-2
-                        flex shrink-0 items-center
-                        justify-self-center
-
-                        xl:col-start-1
-                        xl:justify-self-center
-                    "
+                    className="col-start-1 row-start-1 flex min-w-0 items-center justify-self-start"
                 >
-                    <span className="relative block h-[40px] w-[150px] sm:h-[44px] sm:w-[164px] md:h-[50px] md:w-[186px] lg:h-[64px] lg:w-[244px] xl:h-[70px] xl:w-[272px] 2xl:h-[72px] 2xl:w-[280px]">
+                    <span className="relative block h-[40px] w-[150px] max-w-full sm:h-[44px] sm:w-[164px] md:h-[50px] md:w-[186px] 2xl:h-[64px] 2xl:w-[244px]">
                         <Image
                             src={assetPath("/branding/cam-lab-logo-wide.png")}
                             width={280}
@@ -126,14 +93,7 @@ export function TopNavigation() {
 
                 {/* Desktop navigation */}
                 <div
-                    className="
-                        hidden min-w-0
-                        xl:col-start-2
-                        xl:flex
-                        xl:items-center
-                        xl:justify-self-end
-                        xl:gap-0.5
-                    "
+                    className="hidden min-w-0 2xl:col-start-2 2xl:row-start-1 2xl:flex 2xl:items-center 2xl:justify-center 2xl:gap-0.5"
                 >
                     {navItems.map((item) => {
                         const isActive = isItemActive(item.href);
@@ -176,8 +136,9 @@ export function TopNavigation() {
                     }
                     aria-expanded={isMobileMenuOpen}
                     aria-controls="mobile-primary-navigation"
+                    aria-label="Navigation menu"
                     className="
-                        col-start-3
+                        col-start-2 row-start-1
                         flex items-center gap-2
                         justify-self-end
                         rounded-md
@@ -186,18 +147,22 @@ export function TopNavigation() {
                         px-3 py-1.5
                         text-xs font-semibold text-[#bfc7d5]
 
-                        xl:hidden
+                        2xl:hidden
                     "
                 >
                     <span aria-hidden="true">☰</span>
-                    Menu
+                    <span className="hidden sm:inline">Menu</span>
                 </button>
+                {/* Global combat mode is separate from the page links at every size. */}
+                <div className="col-start-3 row-start-1 flex shrink-0 items-center justify-end">
+                    <PvpModeToggle />
+                </div>
             </nav>
 
             {isMobileMenuOpen && (
                 <div
                     id="mobile-primary-navigation"
-                    className="relative z-10 border-t border-[#16345e] bg-[#061023]/95 px-3 py-2 xl:hidden"
+                    className="relative z-10 border-t border-[#16345e] bg-[#061023]/95 px-3 py-2 2xl:hidden"
                 >
                     <div className="mx-auto grid max-w-[900px] gap-1 px-3 sm:px-4 md:px-6">
                         {navItems.map((item) => {

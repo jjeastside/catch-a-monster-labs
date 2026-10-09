@@ -29,6 +29,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 8,
     "baseHealthELevel1": 53,
+    "pvpBaseDamageELevel1": 554750,
+    "pvpBaseHealthELevel1": 7349000,
     "baseCritChance": 0,
     "growthType": "dummee",
     "indexPosition": 1
@@ -54,6 +56,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 7.25,
     "baseHealthELevel1": 43.5,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 4161800,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 2
@@ -79,6 +83,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 10.5,
     "baseHealthELevel1": 63.1,
+    "pvpBaseDamageELevel1": 346690,
+    "pvpBaseHealthELevel1": 4158700,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 3
@@ -104,6 +110,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 15.2,
     "baseHealthELevel1": 163.1,
+    "pvpBaseDamageELevel1": 346690,
+    "pvpBaseHealthELevel1": 7420100,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 4
@@ -130,6 +138,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 22.1,
     "baseHealthELevel1": 236.5,
+    "pvpBaseDamageELevel1": 346690,
+    "pvpBaseHealthELevel1": 7419600,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 5
@@ -156,6 +166,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 32,
     "baseHealthELevel1": 342.9,
+    "pvpBaseDamageELevel1": 346640,
+    "pvpBaseHealthELevel1": 7420200,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 6
@@ -188,6 +200,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 38.6,
     "baseHealthELevel1": 412.7,
+    "pvpBaseDamageELevel1": 136960,
+    "pvpBaseHealthELevel1": 2930600,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 7
@@ -220,6 +234,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 97.7,
     "baseHealthELevel1": 1040,
+    "pvpBaseDamageELevel1": 346700,
+    "pvpBaseHealthELevel1": 7400000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 8
@@ -252,6 +268,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 205.39,
     "baseHealthELevel1": 2197.8,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420100,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 9
@@ -297,6 +315,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 1915,
     "baseHealthELevel1": 29518,
+    "pvpBaseDamageELevel1": 288970,
+    "pvpBaseHealthELevel1": 8903700,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 10
@@ -323,6 +343,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 46.5,
     "baseHealthELevel1": 497.2,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7419200,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 11
@@ -349,6 +371,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 67.4,
     "baseHealthELevel1": 721,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7419700,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 12
@@ -375,6 +399,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 97.7,
     "baseHealthELevel1": 1040,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7419200,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 13
@@ -407,6 +433,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 170.59,
     "baseHealthELevel1": 1825,
+    "pvpBaseDamageELevel1": 605540,
+    "pvpBaseHealthELevel1": 12957000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 14
@@ -439,6 +467,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 117.65,
     "baseHealthELevel1": 1258.8,
+    "pvpBaseDamageELevel1": 417530,
+    "pvpBaseHealthELevel1": 8934500,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 15
@@ -465,6 +495,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 141.67,
     "baseHealthELevel1": 1510,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7419700,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 16
@@ -491,6 +523,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 205.42,
     "baseHealthELevel1": 2190,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 17
@@ -517,6 +551,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 431.9,
     "baseHealthELevel1": 4620,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 18
@@ -543,6 +579,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 626.25,
     "baseHealthELevel1": 6700,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 19
@@ -569,6 +607,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 908.07,
     "baseHealthELevel1": 9710,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 20
@@ -601,6 +641,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 626.2,
     "baseHealthELevel1": 6693,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 21
@@ -627,6 +669,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 2768,
     "baseHealthELevel1": 29620,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 22
@@ -653,6 +697,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 4010,
     "baseHealthELevel1": 42950,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 23
@@ -679,6 +725,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 12230,
     "baseHealthELevel1": 130940,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 24
@@ -705,6 +753,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 17736,
     "baseHealthELevel1": 189870,
+    "pvpBaseDamageELevel1": 287960,
+    "pvpBaseHealthELevel1": 6161800,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 25
@@ -750,6 +800,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 7032,
     "baseHealthELevel1": 108360,
+    "pvpBaseDamageELevel1": 288970,
+    "pvpBaseHealthELevel1": 8906700,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 26
@@ -776,6 +828,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 54090,
     "baseHealthELevel1": 578830,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 27
@@ -802,6 +856,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 78440,
     "baseHealthELevel1": 839300,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 28
@@ -828,6 +884,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 136961,
     "baseHealthELevel1": 1465000,
+    "pvpBaseDamageELevel1": 433440,
+    "pvpBaseHealthELevel1": 9278100,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 29
@@ -854,6 +912,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 164920,
     "baseHealthELevel1": 1764000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 30
@@ -880,6 +940,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 239130,
     "baseHealthELevel1": 2558000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 31
@@ -906,6 +968,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 287950,
     "baseHealthELevel1": 3080000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 32
@@ -932,6 +996,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 417530,
     "baseHealthELevel1": 4460000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 33
@@ -958,6 +1024,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 502780,
     "baseHealthELevel1": 5380000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 34
@@ -984,6 +1052,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 785270,
     "baseHealthELevel1": 8402200,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 35
@@ -1010,6 +1080,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 1018500,
     "baseHealthELevel1": 10898000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 36
@@ -1036,6 +1108,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 1651000,
     "baseHealthELevel1": 17666000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 37
@@ -1062,6 +1136,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 2222450,
     "baseHealthELevel1": 23780000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 38
@@ -1088,6 +1164,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 3471000,
     "baseHealthELevel1": 37141000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 39
@@ -1114,6 +1192,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 4180000,
     "baseHealthELevel1": 44726000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 40
@@ -1140,6 +1220,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 5420000,
     "baseHealthELevel1": 58011000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 41
@@ -1166,6 +1248,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 5840000,
     "baseHealthELevel1": 62486000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 42
@@ -1192,6 +1276,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 8465000,
     "baseHealthELevel1": 90606000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 43
@@ -1218,6 +1304,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 9120000,
     "baseHealthELevel1": 97596000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 44
@@ -1244,6 +1332,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 11400000,
     "baseHealthELevel1": 121970000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 45
@@ -1270,6 +1360,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 12280000,
     "baseHealthELevel1": 131375000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 46
@@ -1302,6 +1394,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 2767,
     "baseHealthELevel1": 29622,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 47
@@ -1328,6 +1422,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 297.86,
     "baseHealthELevel1": 3187,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 48
@@ -1360,6 +1456,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 358.66,
     "baseHealthELevel1": 3838,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 49
@@ -1386,6 +1484,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 1316,
     "baseHealthELevel1": 14088,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 50
@@ -1412,6 +1512,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 2293.1,
     "baseHealthELevel1": 24594,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 51
@@ -1438,6 +1540,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 1909,
     "baseHealthELevel1": 20426,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 52
@@ -1464,6 +1568,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 5821,
     "baseHealthELevel1": 62278,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 53
@@ -1496,6 +1602,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 14684,
     "baseHealthELevel1": 109115,
+    "pvpBaseDamageELevel1": 501180,
+    "pvpBaseHealthELevel1": 7445900,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 54
@@ -1522,6 +1630,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 10162,
     "baseHealthELevel1": 108740,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 55
@@ -1548,6 +1658,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 25727,
     "baseHealthELevel1": 275300,
+    "pvpBaseDamageELevel1": 417530,
+    "pvpBaseHealthELevel1": 8938700,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 56
@@ -1580,6 +1692,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 53904,
     "baseHealthELevel1": 400574,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 57
@@ -1608,6 +1722,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "icevolf",
     "baseDamageELevel1": 14777,
     "baseHealthELevel1": 227835,
+    "pvpBaseDamageELevel1": 288970,
+    "pvpBaseHealthELevel1": 8903000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 58
@@ -1636,6 +1752,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "icevolf",
     "baseDamageELevel1": 21292,
     "baseHealthELevel1": 158220,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6185000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 59
@@ -1664,6 +1782,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "icevolf",
     "baseDamageELevel1": 17743,
     "baseHealthELevel1": 189863,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 60
@@ -1696,6 +1816,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 37306,
     "baseHealthELevel1": 399190,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 61
@@ -1722,6 +1844,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 626,
     "baseHealthELevel1": 6700,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 62
@@ -1767,6 +1891,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 21441,
     "baseHealthELevel1": 330370,
+    "pvpBaseDamageELevel1": 288970,
+    "pvpBaseHealthELevel1": 8905200,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 63
@@ -1793,6 +1919,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 113736,
     "baseHealthELevel1": 1216900,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 64
@@ -1819,6 +1947,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 138693,
     "baseHealthELevel1": 1465400,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 65
@@ -1845,6 +1975,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 198590,
     "baseHealthELevel1": 2124900,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 66
@@ -1877,6 +2009,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 287955,
     "baseHealthELevel1": 3081100,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 67
@@ -1903,6 +2037,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 346740,
     "baseHealthELevel1": 3710100,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 68
@@ -1941,6 +2077,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 335184,
     "baseHealthELevel1": 8069450,
+    "pvpBaseDamageELevel1": 231150,
+    "pvpBaseHealthELevel1": 11134000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 69
@@ -1967,6 +2105,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 605420,
     "baseHealthELevel1": 6477600,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 70
@@ -1999,6 +2139,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 874800,
     "baseHealthELevel1": 6500500,
+    "pvpBaseDamageELevel1": 448190,
+    "pvpBaseHealthELevel1": 6659300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 71
@@ -2027,6 +2169,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "mintwolf",
     "baseDamageELevel1": 482759,
     "baseHealthELevel1": 3587200,
+    "pvpBaseDamageELevel1": 581320,
+    "pvpBaseHealthELevel1": 8639800,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 72
@@ -2053,6 +2197,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 1273000,
     "baseHealthELevel1": 13620000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 73
@@ -2081,6 +2227,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "mintwolf",
     "baseDamageELevel1": 335253,
     "baseHealthELevel1": 5165200,
+    "pvpBaseDamageELevel1": 403720,
+    "pvpBaseHealthELevel1": 12441000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 74
@@ -2113,6 +2261,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 1651000,
     "baseHealthELevel1": 17666000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 75
@@ -2158,6 +2308,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 2063300,
     "baseHealthELevel1": 22077000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 76
@@ -2184,6 +2336,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 2882750,
     "baseHealthELevel1": 30845000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 77
@@ -2210,6 +2364,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 3222700,
     "baseHealthELevel1": 34482400,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 78
@@ -2272,6 +2428,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 4338000,
     "baseHealthELevel1": 46418000,
+    "pvpBaseDamageELevel1": 1057130,
+    "pvpBaseHealthELevel1": 22622000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 79
@@ -2298,6 +2456,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 5033040,
     "baseHealthELevel1": 53856700,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 80
@@ -2324,6 +2484,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 6286000,
     "baseHealthELevel1": 67305000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 81
@@ -2350,6 +2512,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 9824000,
     "baseHealthELevel1": 105124000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 82
@@ -2376,6 +2540,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 13230000,
     "baseHealthELevel1": 141510000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 83
@@ -2402,6 +2568,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 754,
     "baseHealthELevel1": 8068,
+    "pvpBaseDamageELevel1": 417520,
+    "pvpBaseHealthELevel1": 8935600,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 84
@@ -2428,6 +2596,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 4013,
     "baseHealthELevel1": 42951,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7421340,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 85
@@ -2454,6 +2624,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 4027,
     "baseHealthELevel1": 62063,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904500,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 86
@@ -2480,6 +2652,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 333720,
     "baseHealthELevel1": 3970000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 87
@@ -2518,6 +2692,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 4817,
     "baseHealthELevel1": 35792,
+    "pvpBaseDamageELevel1": 416090,
+    "pvpBaseHealthELevel1": 6184100,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 88
@@ -2550,6 +2726,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 5217,
     "baseHealthELevel1": 28481,
+    "pvpBaseDamageELevel1": 450690,
+    "pvpBaseHealthELevel1": 4920700,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 89
@@ -2583,6 +2761,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 44770,
     "baseHealthELevel1": 332660,
+    "pvpBaseDamageELevel1": 416090,
+    "pvpBaseHealthELevel1": 6184060,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 90
@@ -2616,6 +2796,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 14787,
     "baseHealthELevel1": 227840,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904700,
     "baseCritChance": 20,
     "growthType": "standard",
     "indexPosition": 91
@@ -2650,6 +2832,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 25730,
     "baseHealthELevel1": 275300,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 92
@@ -2682,6 +2866,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 21290,
     "baseHealthELevel1": 158200,
+    "pvpBaseDamageELevel1": 416090,
+    "pvpBaseHealthELevel1": 6184100,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 93
@@ -2715,6 +2901,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 9822,
     "baseHealthELevel1": 236513,
+    "pvpBaseDamageELevel1": 231170,
+    "pvpBaseHealthELevel1": 11130400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 94
@@ -2741,6 +2929,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 21360,
     "baseHealthELevel1": 228620,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 95
@@ -2767,6 +2957,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 78440,
     "baseHealthELevel1": 839300,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 96
@@ -2793,6 +2985,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 2284,
     "baseHealthELevel1": 17024,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 97
@@ -2831,6 +3025,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 87686,
     "baseHealthELevel1": 938240,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 98
@@ -2859,6 +3055,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "dustwing",
     "baseDamageELevel1": 191350,
     "baseHealthELevel1": 2047400,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 99
@@ -2887,6 +3085,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "dustwing",
     "baseDamageELevel1": 267887,
     "baseHealthELevel1": 1462400,
+    "pvpBaseDamageELevel1": 485420,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 100
@@ -2915,6 +3115,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "dustwing",
     "baseDamageELevel1": 229600,
     "baseHealthELevel1": 1706200,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 101
@@ -2943,6 +3145,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "dustwing",
     "baseDamageELevel1": 159450,
     "baseHealthELevel1": 2454200,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904500,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 102
@@ -2988,6 +3192,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 75835,
     "baseHealthELevel1": 1168500,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904500,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 103
@@ -3039,6 +3245,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 91300,
     "baseHealthELevel1": 2200000,
+    "pvpBaseDamageELevel1": 231150,
+    "pvpBaseHealthELevel1": 11134000,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 104
@@ -3077,6 +3285,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 286960,
     "baseHealthELevel1": 2132300,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 105
@@ -3103,6 +3313,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 267300,
     "baseHealthELevel1": 2860400,
+    "pvpBaseDamageELevel1": 387680,
+    "pvpBaseHealthELevel1": 8295400,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 106
@@ -3148,6 +3360,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 185000,
     "baseHealthELevel1": 2850400,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904500,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 107
@@ -3193,6 +3407,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 467700,
     "baseHealthELevel1": 2553400,
+    "pvpBaseDamageELevel1": 485420,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 108
@@ -3231,6 +3447,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 542660,
     "baseHealthELevel1": 2962600,
+    "pvpBaseDamageELevel1": 467780,
+    "pvpBaseHealthELevel1": 5106800,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 109
@@ -3257,6 +3475,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 466770,
     "baseHealthELevel1": 4994400,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 110
@@ -3295,6 +3515,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 320800,
     "baseHealthELevel1": 2383700,
+    "pvpBaseDamageELevel1": 431860,
+    "pvpBaseHealthELevel1": 6417700,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 111
@@ -3346,6 +3568,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 335240,
     "baseHealthELevel1": 5165500,
+    "pvpBaseDamageELevel1": 278440,
+    "pvpBaseHealthELevel1": 8579800,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 112
@@ -3391,6 +3615,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 278400,
     "baseHealthELevel1": 4289700,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 113
@@ -3436,6 +3662,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 502780,
     "baseHealthELevel1": 5379400,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 114
@@ -3462,6 +3690,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 291670,
     "baseHealthELevel1": 12480000,
+    "pvpBaseDamageELevel1": 167060,
+    "pvpBaseHealthELevel1": 14300000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 115
@@ -3489,6 +3719,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 912900,
     "baseHealthELevel1": 4984000,
+    "pvpBaseDamageELevel1": 606840,
+    "pvpBaseHealthELevel1": 6625100,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 116
@@ -3534,6 +3766,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 466769,
     "baseHealthELevel1": 4994100,
+    "pvpBaseDamageELevel1": 321940,
+    "pvpBaseHealthELevel1": 6888900,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 117
@@ -3579,6 +3813,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 451200,
     "baseHealthELevel1": 10862000,
+    "pvpBaseDamageELevel1": 311196,
+    "pvpBaseHealthELevel1": 14983400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 118
@@ -3624,6 +3860,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 679160,
     "baseHealthELevel1": 10464000,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 119
@@ -3657,6 +3895,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 418977,
     "baseHealthELevel1": 6455200,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 120
@@ -3703,6 +3943,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 1323800,
     "baseHealthELevel1": 7226900,
+    "pvpBaseDamageELevel1": 485420,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 121
@@ -3760,6 +4002,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 1140000,
     "baseHealthELevel1": 12188000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 122
@@ -3792,6 +4036,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 704700,
     "baseHealthELevel1": 16965000,
+    "pvpBaseDamageELevel1": 288890,
+    "pvpBaseHealthELevel1": 13911000,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 123
@@ -3818,6 +4064,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 1782000,
     "baseHealthELevel1": 9728600,
+    "pvpBaseDamageELevel1": 485460,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 124
@@ -3857,6 +4105,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 981300,
     "baseHealthELevel1": 10500000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 125
@@ -3902,6 +4152,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 2452200,
     "baseHealthELevel1": 10250300,
+    "pvpBaseDamageELevel1": 597590,
+    "pvpBaseHealthELevel1": 4995500,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 126
@@ -3942,6 +4194,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 1707500,
     "baseHealthELevel1": 12688000,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 127
@@ -3988,6 +4242,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 1101000,
     "baseHealthELevel1": 26499000,
+    "pvpBaseDamageELevel1": 231180,
+    "pvpBaseHealthELevel1": 11131000,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 128
@@ -4020,6 +4276,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 2569600,
     "baseHealthELevel1": 19095000,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 129
@@ -4046,6 +4304,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 1600000,
     "baseHealthELevel1": 38423000,
+    "pvpBaseDamageELevel1": 258450,
+    "pvpBaseHealthELevel1": 12443600,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 130
@@ -4091,6 +4351,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 3746000,
     "baseHealthELevel1": 20454000,
+    "pvpBaseDamageELevel1": 912990,
+    "pvpBaseHealthELevel1": 9968400,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 131
@@ -4136,6 +4398,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 1495800,
     "baseHealthELevel1": 64023300,
+    "pvpBaseDamageELevel1": 173370,
+    "pvpBaseHealthELevel1": 14841000,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 132
@@ -4181,6 +4445,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 3105100,
     "baseHealthELevel1": 33220000,
+    "pvpBaseDamageELevel1": 502790,
+    "pvpBaseHealthELevel1": 10759000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 133
@@ -4213,6 +4479,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 3880400,
     "baseHealthELevel1": 41523000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 134
@@ -4245,6 +4513,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 3615000,
     "baseHealthELevel1": 55702000,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 135
@@ -4290,6 +4560,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 3482300,
     "baseHealthELevel1": 83841000,
+    "pvpBaseDamageELevel1": 268295,
+    "pvpBaseHealthELevel1": 12917000,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 136
@@ -4335,6 +4607,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 2813200,
     "baseHealthELevel1": 12041000,
+    "pvpBaseDamageELevel1": 173370,
+    "pvpBaseHealthELevel1": 14843000,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 137
@@ -4381,6 +4655,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 7007700,
     "baseHealthELevel1": 52071000,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 138
@@ -4431,6 +4707,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 6528000,
     "baseHealthELevel1": 69855000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 139
@@ -4476,6 +4754,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 9140000,
     "baseHealthELevel1": 49900000,
+    "pvpBaseDamageELevel1": 485474,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 140
@@ -4502,6 +4782,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 9140000,
     "baseHealthELevel1": 49900000,
+    "pvpBaseDamageELevel1": 450690,
+    "pvpBaseHealthELevel1": 4920700,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 141
@@ -4547,6 +4829,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 2700000,
     "baseHealthELevel1": 261900000,
+    "pvpBaseDamageELevel1": 115593,
+    "pvpBaseHealthELevel1": 22261000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 142
@@ -4592,6 +4876,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 11422420,
     "baseHealthELevel1": 62358000,
+    "pvpBaseDamageELevel1": 485474,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 143
@@ -4632,6 +4918,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 14062000,
     "baseHealthELevel1": 58772000,
+    "pvpBaseDamageELevel1": 554790,
+    "pvpBaseHealthELevel1": 4637800,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 144
@@ -4658,6 +4946,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 9824000,
     "baseHealthELevel1": 105120000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 145
@@ -4684,6 +4974,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 12698000,
     "baseHealthELevel1": 94362000,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 146
@@ -4729,6 +5021,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 11830000,
     "baseHealthELevel1": 126580000,
+    "pvpBaseDamageELevel1": 387690,
+    "pvpBaseHealthELevel1": 8295200,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 147
@@ -4774,6 +5068,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 16562000,
     "baseHealthELevel1": 90416300,
+    "pvpBaseDamageELevel1": 542690,
+    "pvpBaseHealthELevel1": 5925300,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 148
@@ -4800,6 +5096,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 4747000,
     "baseHealthELevel1": 457290000,
+    "pvpBaseDamageELevel1": 115580,
+    "pvpBaseHealthELevel1": 22261000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 149
@@ -4826,6 +5124,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 18410000,
     "baseHealthELevel1": 136800000,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 150
@@ -4865,6 +5165,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 8575100,
     "baseHealthELevel1": 367100000,
+    "pvpBaseDamageELevel1": 173370,
+    "pvpBaseHealthELevel1": 14843000,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 151
@@ -4904,6 +5206,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 20583500,
     "baseHealthELevel1": 152960000,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 152
@@ -4930,6 +5234,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 17092800,
     "baseHealthELevel1": 127030000,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 153
@@ -4962,6 +5268,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 25812000,
     "baseHealthELevel1": 276224000,
+    "pvpBaseDamageELevel1": 99619,
+    "pvpBaseHealthELevel1": 19186000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 154
@@ -4988,6 +5296,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 6884000,
     "baseHealthELevel1": 663070000,
+    "pvpBaseDamageELevel1": 433480,
+    "pvpBaseHealthELevel1": 9272000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 155
@@ -5014,6 +5324,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 40,
     "baseHealthELevel1": 500,
+    "pvpBaseDamageELevel1": 97904,
+    "pvpBaseHealthELevel1": 2447600,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 156
@@ -5042,6 +5354,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "flaragon",
     "baseDamageELevel1": 15817,
     "baseHealthELevel1": 117530,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 157
@@ -5070,6 +5384,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "flaragon",
     "baseDamageELevel1": 10980,
     "baseHealthELevel1": 169250,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 158
@@ -5098,6 +5414,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "flaragon",
     "baseDamageELevel1": 13179,
     "baseHealthELevel1": 141042,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 159
@@ -5126,6 +5444,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "glazadon",
     "baseDamageELevel1": 13180,
     "baseHealthELevel1": 141040,
+    "pvpBaseDamageELevel1": 310160,
+    "pvpBaseHealthELevel1": 6637900,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 160
@@ -5154,6 +5474,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "glazadon",
     "baseDamageELevel1": 12280,
     "baseHealthELevel1": 189210,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 161
@@ -5182,6 +5504,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "glazadon",
     "baseDamageELevel1": 15820,
     "baseHealthELevel1": 117530,
+    "pvpBaseDamageELevel1": 372240,
+    "pvpBaseHealthELevel1": 5531400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 162
@@ -5216,6 +5540,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 41706,
     "baseHealthELevel1": 446240,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 163
@@ -5244,6 +5570,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "mountusk",
     "baseDamageELevel1": 21370,
     "baseHealthELevel1": 228630,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 164
@@ -5272,6 +5600,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "mountusk",
     "baseDamageELevel1": 25600,
     "baseHealthELevel1": 190500,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 165
@@ -5300,6 +5630,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "mountusk",
     "baseDamageELevel1": 17804,
     "baseHealthELevel1": 274353,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 166
@@ -5328,6 +5660,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "shadeknight",
     "baseDamageELevel1": 113344,
     "baseHealthELevel1": 842200,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 167
@@ -5356,6 +5690,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "shadeknight",
     "baseDamageELevel1": 132230,
     "baseHealthELevel1": 721900,
+    "pvpBaseDamageELevel1": 485474,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 168
@@ -5384,6 +5720,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "shadeknight",
     "baseDamageELevel1": 94451,
     "baseHealthELevel1": 1010000,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 169
@@ -5412,6 +5750,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "shadeknight",
     "baseDamageELevel1": 78700,
     "baseHealthELevel1": 1212700,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 170
@@ -5440,6 +5780,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "noctane",
     "baseDamageELevel1": 136480,
     "baseHealthELevel1": 1014100,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 171
@@ -5468,6 +5810,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "noctane",
     "baseDamageELevel1": 94800,
     "baseHealthELevel1": 1460000,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 172
@@ -5496,6 +5840,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "hydribbit",
     "baseDamageELevel1": 205393,
     "baseHealthELevel1": 1526200,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 173
@@ -5524,6 +5870,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "hydribbit",
     "baseDamageELevel1": 142630,
     "baseHealthELevel1": 2200000,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 174
@@ -5552,6 +5900,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "gildron",
     "baseDamageELevel1": 158900,
     "baseHealthELevel1": 1700200,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 175
@@ -5580,6 +5930,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "gildron",
     "baseDamageELevel1": 190680,
     "baseHealthELevel1": 1416900,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 176
@@ -5608,6 +5960,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "gildron",
     "baseDamageELevel1": 222463,
     "baseHealthELevel1": 1214500,
+    "pvpBaseDamageELevel1": 485474,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 177
@@ -5636,6 +5990,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "tidevex",
     "baseDamageELevel1": 309100,
     "baseHealthELevel1": 2299000,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 178
@@ -5664,6 +6020,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "tidevex",
     "baseDamageELevel1": 214650,
     "baseHealthELevel1": 3307100,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 179
@@ -5692,6 +6050,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "voltgator",
     "baseDamageELevel1": 418400,
     "baseHealthELevel1": 2280000,
+    "pvpBaseDamageELevel1": 485474,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 180
@@ -5733,6 +6093,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "voltgator",
     "baseDamageELevel1": 298850,
     "baseHealthELevel1": 3200000,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 181
@@ -5761,6 +6123,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "frostwyrm",
     "baseDamageELevel1": 521800,
     "baseHealthELevel1": 5583000,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 182
@@ -5789,6 +6153,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "frostwyrm",
     "baseDamageELevel1": 730500,
     "baseHealthELevel1": 3987800,
+    "pvpBaseDamageELevel1": 485474,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 183
@@ -5835,6 +6201,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "nivisgon",
     "baseDamageELevel1": 1373930,
     "baseHealthELevel1": 7500500,
+    "pvpBaseDamageELevel1": 485474,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 184
@@ -5863,6 +6231,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "undine",
     "baseDamageELevel1": 1303900,
     "baseHealthELevel1": 5450200,
+    "pvpBaseDamageELevel1": 427760,
+    "pvpBaseHealthELevel1": 3575600,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 185
@@ -5891,6 +6261,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "undine",
     "baseDamageELevel1": 407500,
     "baseHealthELevel1": 17441000,
+    "pvpBaseDamageELevel1": 133660,
+    "pvpBaseHealthELevel1": 11442500,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 186
@@ -5919,6 +6291,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "dracospike",
     "baseDamageELevel1": 1060000,
     "baseHealthELevel1": 12368000,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 8113600,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 187
@@ -5947,6 +6321,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "dracospike",
     "baseDamageELevel1": 1480000,
     "baseHealthELevel1": 9589000,
+    "pvpBaseDamageELevel1": 485474,
+    "pvpBaseHealthELevel1": 6291100,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 188
@@ -5988,6 +6364,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "shadecloak",
     "baseDamageELevel1": 2490000,
     "baseHealthELevel1": 13590000,
+    "pvpBaseDamageELevel1": 485474,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 189
@@ -6016,6 +6394,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "mechavolt",
     "baseDamageELevel1": 2145900,
     "baseHealthELevel1": 11715000,
+    "pvpBaseDamageELevel1": 485474,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 190
@@ -6044,6 +6424,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "mechavolt",
     "baseDamageELevel1": 1532800,
     "baseHealthELevel1": 16401000,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 191
@@ -6072,6 +6454,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "cobaltwing",
     "baseDamageELevel1": 2670000,
     "baseHealthELevel1": 19814000,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 192
@@ -6100,6 +6484,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "cobaltwing",
     "baseDamageELevel1": 1851000,
     "baseHealthELevel1": 28537000,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 193
@@ -6141,6 +6527,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "rexie",
     "baseDamageELevel1": 4511500,
     "baseHealthELevel1": 24630000,
+    "pvpBaseDamageELevel1": 947580,
+    "pvpBaseHealthELevel1": 10345700,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 194
@@ -6169,6 +6557,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "thunderclaw",
     "baseDamageELevel1": 2676000,
     "baseHealthELevel1": 28635000,
+    "pvpBaseDamageELevel1": 729020,
+    "pvpBaseHealthELevel1": 15601300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 195
@@ -6197,6 +6587,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "thunderclaw",
     "baseDamageELevel1": 3211000,
     "baseHealthELevel1": 23860000,
+    "pvpBaseDamageELevel1": 874840,
+    "pvpBaseHealthELevel1": 13001300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 196
@@ -6225,6 +6617,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "lampyr",
     "baseDamageELevel1": 4013000,
     "baseHealthELevel1": 29825000,
+    "pvpBaseDamageELevel1": 649890,
+    "pvpBaseHealthELevel1": 9657700,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 197
@@ -6253,6 +6647,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "lampyr",
     "baseDamageELevel1": 3330000,
     "baseHealthELevel1": 35770000,
+    "pvpBaseDamageELevel1": 541590,
+    "pvpBaseHealthELevel1": 11584000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 198
@@ -6301,6 +6697,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "dummee",
     "baseDamageELevel1": 4502400,
     "baseHealthELevel1": 48175610,
+    "pvpBaseDamageELevel1": 433450,
+    "pvpBaseHealthELevel1": 9275200,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 199
@@ -6329,6 +6727,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "psyber",
     "baseDamageELevel1": 4480000,
     "baseHealthELevel1": 33340000,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 200
@@ -6357,6 +6757,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "psyber",
     "baseDamageELevel1": 3115000,
     "baseHealthELevel1": 48009000,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 201
@@ -6385,6 +6787,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "scareaper",
     "baseDamageELevel1": 3114000,
     "baseHealthELevel1": 75000000,
+    "pvpBaseDamageELevel1": 231170,
+    "pvpBaseHealthELevel1": 11131000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 202
@@ -6413,6 +6817,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "scareaper",
     "baseDamageELevel1": 4672480,
     "baseHealthELevel1": 49998500,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 203
@@ -6441,6 +6847,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "abyssaldrake",
     "baseDamageELevel1": 6528000,
     "baseHealthELevel1": 69855000,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 204
@@ -6469,6 +6877,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "abyssaldrake",
     "baseDamageELevel1": 5440000,
     "baseHealthELevel1": 83826000,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 205
@@ -6497,6 +6907,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "beatopus",
     "baseDamageELevel1": 6312000,
     "baseHealthELevel1": 97259000,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 206
@@ -6525,6 +6937,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "beatopus",
     "baseDamageELevel1": 7574000,
     "baseHealthELevel1": 81048000,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 207
@@ -6553,6 +6967,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "rainimp",
     "baseDamageELevel1": 9858400,
     "baseHealthELevel1": 151892000,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 208
@@ -6581,6 +6997,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "rainimp",
     "baseDamageELevel1": 11830000,
     "baseHealthELevel1": 126586000,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 209
@@ -6610,6 +7028,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "flaragon",
     "baseDamageELevel1": 25600,
     "baseHealthELevel1": 190500,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 210
@@ -6639,6 +7059,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "glazadon",
     "baseDamageELevel1": 21360,
     "baseHealthELevel1": 228630,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 211
@@ -6667,6 +7089,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "dragon-cannelloni",
     "baseDamageELevel1": 18450,
     "baseHealthELevel1": 100740,
+    "pvpBaseDamageELevel1": 485420,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 212
@@ -6695,6 +7119,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "dragon-cannelloni",
     "baseDamageELevel1": 28826,
     "baseHealthELevel1": 157390,
+    "pvpBaseDamageELevel1": 485420,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 213
@@ -6724,6 +7150,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "mountusk",
     "baseDamageELevel1": 46610,
     "baseHealthELevel1": 498820,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 214
@@ -6753,6 +7181,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "shadeknight",
     "baseDamageELevel1": 142140,
     "baseHealthELevel1": 1520000,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 215
@@ -6782,6 +7212,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "noctane",
     "baseDamageELevel1": 85581,
     "baseHealthELevel1": 3662000,
+    "pvpBaseDamageELevel1": 167050,
+    "pvpBaseHealthELevel1": 14300000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 216
@@ -6823,6 +7255,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "hydribbit",
     "baseDamageELevel1": 309100,
     "baseHealthELevel1": 2300000,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 217
@@ -6864,6 +7298,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "gildron",
     "baseDamageELevel1": 239120,
     "baseHealthELevel1": 2558600,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 218
@@ -6892,6 +7328,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "dustwing",
     "baseDamageELevel1": 298820,
     "baseHealthELevel1": 3200000,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 219
@@ -6933,6 +7371,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "tidevex",
     "baseDamageELevel1": 542600,
     "baseHealthELevel1": 2962000,
+    "pvpBaseDamageELevel1": 485420,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 220
@@ -6974,6 +7414,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "voltgator",
     "baseDamageELevel1": 629610,
     "baseHealthELevel1": 3437300,
+    "pvpBaseDamageELevel1": 485420,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 221
@@ -7020,6 +7462,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 660500,
     "baseHealthELevel1": 28270000,
+    "pvpBaseDamageELevel1": 193823,
+    "pvpBaseHealthELevel1": 16591000,
     "baseCritChance": 20,
     "growthType": "standard",
     "indexPosition": 222
@@ -7066,6 +7510,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 1920000,
     "baseHealthELevel1": 20500000,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 223
@@ -7107,6 +7553,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "mintwolf",
     "baseDamageELevel1": 403610,
     "baseHealthELevel1": 9716800,
+    "pvpBaseDamageELevel1": 231170,
+    "pvpBaseHealthELevel1": 11131000,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 224
@@ -7148,6 +7596,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "frostwyrm",
     "baseDamageELevel1": 1256000,
     "baseHealthELevel1": 5251400,
+    "pvpBaseDamageELevel1": 554790,
+    "pvpBaseHealthELevel1": 4637800,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 225
@@ -7189,6 +7639,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "undine",
     "baseDamageELevel1": 1418000,
     "baseHealthELevel1": 10537000,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 226
@@ -7230,6 +7682,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "dracospike",
     "baseDamageELevel1": 1060000,
     "baseHealthELevel1": 32700000,
+    "pvpBaseDamageELevel1": 231170,
+    "pvpBaseHealthELevel1": 14252000,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 227
@@ -7276,6 +7730,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 5040000,
     "baseHealthELevel1": 27531000,
+    "pvpBaseDamageELevel1": 485420,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 228
@@ -7317,6 +7773,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "mechavolt",
     "baseDamageELevel1": 3827000,
     "baseHealthELevel1": 16010000,
+    "pvpBaseDamageELevel1": 485420,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 229
@@ -7358,6 +7816,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "cobaltwing",
     "baseDamageELevel1": 859500,
     "baseHealthELevel1": 82776000,
+    "pvpBaseDamageELevel1": 115593,
+    "pvpBaseHealthELevel1": 22261000,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 230
@@ -7403,6 +7863,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "thunderclaw",
     "baseDamageELevel1": 5351300,
     "baseHealthELevel1": 22367000,
+    "pvpBaseDamageELevel1": 554790,
+    "pvpBaseHealthELevel1": 4637800,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 231
@@ -7444,6 +7906,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "lampyr",
     "baseDamageELevel1": 5016000,
     "baseHealthELevel1": 37271000,
+    "pvpBaseDamageELevel1": 812170,
+    "pvpBaseHealthELevel1": 12070000,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 232
@@ -7491,6 +7955,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "necro-dragon-cannelloni",
     "baseDamageELevel1": 10064800,
     "baseHealthELevel1": 42066000,
+    "pvpBaseDamageELevel1": 554800,
+    "pvpBaseHealthELevel1": 4637700,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 233
@@ -7532,6 +7998,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "psyber",
     "baseDamageELevel1": 1677800,
     "baseHealthELevel1": 161568500,
+    "pvpBaseDamageELevel1": 115583,
+    "pvpBaseHealthELevel1": 22261000,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 234
@@ -7572,6 +8040,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 13225000,
     "baseHealthELevel1": 141510000,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 235
@@ -7613,6 +8083,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "scareaper",
     "baseDamageELevel1": 9139800,
     "baseHealthELevel1": 49896000,
+    "pvpBaseDamageELevel1": 485420,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 236
@@ -7654,6 +8126,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "abyssaldrake",
     "baseDamageELevel1": 10604000,
     "baseHealthELevel1": 57892000,
+    "pvpBaseDamageELevel1": 485420,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 237
@@ -7694,6 +8168,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 23883000,
     "baseHealthELevel1": 177470000,
+    "pvpBaseDamageELevel1": 416100,
+    "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 238
@@ -7735,6 +8211,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "beatopus",
     "baseDamageELevel1": 4912000,
     "baseHealthELevel1": 210240000,
+    "pvpBaseDamageELevel1": 173375,
+    "pvpBaseHealthELevel1": 14840600,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 239
@@ -7776,6 +8254,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "aetherpanther",
     "baseDamageELevel1": 5915300,
     "baseHealthELevel1": 253100000,
+    "pvpBaseDamageELevel1": 173375,
+    "pvpBaseHealthELevel1": 14840600,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 240
@@ -7817,6 +8297,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "rainimp",
     "baseDamageELevel1": 9497100,
     "baseHealthELevel1": 228643000,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 13913000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 241
@@ -7862,6 +8344,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 2227000,
     "baseHealthELevel1": 12158000,
+    "pvpBaseDamageELevel1": 485420,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 242
@@ -7907,6 +8391,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 1778100,
     "baseHealthELevel1": 19029000,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 243
@@ -7940,6 +8426,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 687740,
     "baseHealthELevel1": 66232000,
+    "pvpBaseDamageELevel1": 115583,
+    "pvpBaseHealthELevel1": 22261000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 244
@@ -7985,6 +8473,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 1482000,
     "baseHealthELevel1": 35672000,
+    "pvpBaseDamageELevel1": 231170,
+    "pvpBaseHealthELevel1": 11131000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 245
@@ -8018,6 +8508,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 2484000,
     "baseHealthELevel1": 26585000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 246
@@ -8044,6 +8536,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": true,
     "baseDamageELevel1": 1057070,
     "baseHealthELevel1": 11311000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 247
@@ -8095,6 +8589,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 2090000,
     "baseHealthELevel1": 89450000,
+    "pvpBaseDamageELevel1": 173370,
+    "pvpBaseHealthELevel1": 14843000,
     "baseCritChance": 10,
     "growthType": "standard",
     "indexPosition": 248
@@ -8136,6 +8632,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "void-shadecloak",
     "baseDamageELevel1": 3350000,
     "baseHealthELevel1": 18300000,
+    "pvpBaseDamageELevel1": 485420,
+    "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 249
@@ -8181,6 +8679,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 1741000,
     "baseHealthELevel1": 167690000,
+    "pvpBaseDamageELevel1": 115583,
+    "pvpBaseHealthELevel1": 22261000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 250
@@ -8206,6 +8706,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 840000,
     "baseHealthELevel1": 13500000,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 20,
     "growthType": "standard",
     "indexPosition": 251

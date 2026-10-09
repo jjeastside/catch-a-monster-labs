@@ -61,6 +61,7 @@ export type CalculatedStats = {
 
 type StatsBuild = Pick<
     Build,
+    | "combatMode"
     | "level"
     | "rank"
     | "enhancement"
@@ -275,12 +276,18 @@ export function calculateStats(
         return null;
     }
 
+    if (build.combatMode === "pvp") {
+        if (statData.pvpBaseHealthELevel1 == null || statData.pvpBaseDamageELevel1 == null) return null;
+        statData = { ...statData, baseHealthELevel1: statData.pvpBaseHealthELevel1,
+            baseDamageELevel1: statData.pvpBaseDamageELevel1 };
+    }
     const passiveEffects = getPassiveEffectTotals(passives);
     const multipliers = createStatMultipliers(
         build,
         statData.baseCritChance,
         passiveEffects.critChance,
         passiveEffects.critDamage,
+        statData.isEvolved,
     );
 
     if (!multipliers) {
