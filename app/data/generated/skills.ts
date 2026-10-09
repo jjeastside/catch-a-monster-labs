@@ -1222,11 +1222,11 @@ export const GENERATED_SKILLS = {
       {
         "type": "healing",
         "target": "Team",
-        "amountPercent": 80,
+        "amountPercent": 160,
         "scaling": "Damage"
       }
     ],
-    "notes": "Target: Allies. Ally effects: 80% of damage team heal",
+    "notes": "Target: Allies. Ally effects: 160% of damage team heal",
     "validationStatus": "Ready"
   },
   "healing-shuriken": {
