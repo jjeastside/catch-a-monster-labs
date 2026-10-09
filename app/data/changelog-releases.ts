@@ -2,14 +2,29 @@ export type ChangelogRelease = {
     version: string;
     date: string;
     label?: string;
+    title?: string;
     changes: readonly string[];
 };
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.24",
+        date: "October 9, 2026",
+        title: "Exclusive Traits & Database Search",
+        label: "Latest",
+        changes: [
+            "Synced exclusive-trait source monsters with traits.csv, restoring missing sources across 10 exclusive traits and 14 monster-source associations, including all four Fortify IV sources, Avalanchewyrm, Venofrog, and Twirly Bird.",
+            "Added exclusive-trait icons to Monster Database cards and displayed the trait names and effect descriptions in monster details and individual profile pages.",
+            "Added an Exclusive Trait filter to Monster Database with Has Exclusive, No Exclusive, and each individual exclusive trait as options.",
+            "Made the database search recognize exclusive trait names and the term exclusive, so monsters can be found by their exclusive traits.",
+            "Updated trait selection and CSV import to derive exclusive-trait source associations from traits.csv instead of relying on manually maintained source lists.",
+            "Added regression tests for exclusive-trait source mappings, valid monster IDs, and the Fortify IV, Gallop, Vitiate, and Vital Barrier associations.",
+        ],
+    },
+    {
         version: "v1.0.23",
         date: "October 9, 2026",
-        label: "Latest",
+        title: "Max Stats & New Rift Monsters",
         changes: [
             "Added a Max Stats toggle to the Monster Database with Level 115, SS rank, +10 enhancement, 60% Attack and Health Genetic Potential, Secret gear, and the highest available unconditional damage trait.",
             "Added a choice between all four normal mutations and all four X mutations for the database Max Stats preset.",
@@ -22,6 +37,7 @@ export const releases: readonly ChangelogRelease[] = [
     {
         version: "v1.0.22",
         date: "October 9, 2026",
+        title: "Site-wide PvP Mode",
         changes: [
             "Added a site-wide PvP Mode switch to desktop and mobile navigation, with the selected PvE or PvP mode remembered across pages and refreshes.",
             "Added separate PvP base Health and Damage fields to monster data, keeping PvP and PvE calculations independent.",
@@ -41,6 +57,7 @@ export const releases: readonly ChangelogRelease[] = [
     {
         version: "v1.0.21",
         date: "October 5, 2026",
+        title: "Homepage Refresh",
         changes: [
             "Added a dedicated Cam Lab home page and moved the Build Calculator to /calculator, giving the site a clearer landing page while keeping the calculator one click away.",
             "Added new Catch a Monster-inspired homepage artwork with a low-poly Solgryph hero scene and a Leafet and Flamix forest banner, with responsive framing that keeps the monsters visible instead of cropping them off-screen.",
@@ -55,6 +72,7 @@ export const releases: readonly ChangelogRelease[] = [
     {
         version: "v1.0.20",
         date: "October 3, 2026",
+        title: "Update 0.51 & Level 115",
         changes: [
             "Added Catch a Monster Update 0.51 monsters: Thornewarden, Thaunimp, Ignimp, and Marimp, with updated monster data and artwork.",
             "Raised the maximum level to 115 and the Experimental Mode preview to 120.",
@@ -69,6 +87,7 @@ export const releases: readonly ChangelogRelease[] = [
     {
         version: "v1.0.19",
         date: "September 26, 2026",
+        title: "Shroomvale Update",
         changes: [
             "Added Catch a Monster Update 0.50 support for the Shroomvale monsters, Berserkor, and Plasmapanther, including their skills, sources, and evolution data.",
             "Added Shroomvale to island filters and corrected island badges for special island spawns such as Berserkor.",
@@ -79,6 +98,7 @@ export const releases: readonly ChangelogRelease[] = [
     {
         version: "v1.0.18",
         date: "September 20, 2026",
+        title: "Team Builder Expansion",
         changes: [
             "Redesigned Team Builder cards to display each monster's individual Health, Damage, Total Skill DPS, and combat stats while keeping equipment controls compact and labels readable.",
             "Reworked the owned-monster inventory to more closely match the in-game inventory, retained the Import Missing Monsters action, and fixed inventory editing and copy controls.",

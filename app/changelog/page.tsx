@@ -27,8 +27,13 @@ export default function ChangelogPage() {
                                 <div>
                                     <div className="flex flex-wrap items-center gap-2">
                                         <h2 className="text-lg font-bold text-[#e3e8f1]">
-                                            {release.version}
+                                            {release.title ?? release.version}
                                         </h2>
+                                        {release.title && (
+                                            <span className="rounded-md border border-[#344e73] bg-[#0d263b] px-2 py-0.5 text-xs font-semibold text-[#a3bbd5]">
+                                                {release.version}
+                                            </span>
+                                        )}
                                         {release.label && (
                                             <span className="rounded-full border border-[#7182ff]/40 bg-[#202846] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#aeb8ff]">
                                                 {release.label}

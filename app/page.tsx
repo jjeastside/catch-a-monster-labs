@@ -129,14 +129,6 @@ const featureCards = [
     },
 ];
 
-const updateTitles: Record<string, string> = {
-    "v1.0.21": "Homepage Refresh",
-    "v1.0.20": "Update 0.51 & Level 115",
-    "v1.0.19": "Shroomvale Update",
-    "v1.0.18": "Team Builder Expansion",
-};
-
-
 function MiniMonster({ name, image, meta }: { name: string; image: string; meta?: string }) {
     return (
         <div className="flex min-w-0 items-center gap-2 rounded-lg border border-[#1d3f61] bg-[#0a1b2d] px-2 py-2">
@@ -327,11 +319,11 @@ function PatchPreview() {
                 <span className="rounded-md bg-[#5f4de8] px-2.5 py-1 text-[10px] font-black text-white">{latestRelease.version}</span>
                 <span className="text-[10px] text-[#7187a8]">{latestRelease.date}</span>
             </div>
-            <ul className="mt-3 space-y-2 text-[10px] leading-4 text-[#a9b8ce]">
-                <li><span className="mr-1.5 font-black text-[#4ce778]">+</span>Update 0.51 monsters and artwork</li>
-                <li><span className="mr-1.5 font-black text-[#4ce778]">+</span>Maximum level raised to 115</li>
-                <li><span className="mr-1.5 font-black text-[#4ce778]">+</span>New gear, attributes, and Vital Barrier</li>
-                <li><span className="mr-1.5 font-black text-[#4ce778]">+</span>Patch notes, fixes, and data updates</li>
+            <p className="mt-3 text-xs font-black text-[#e4f2ff]">{latestRelease.title ?? "Latest Cam Lab Improvements"}</p>
+            <ul className="mt-2 space-y-2 text-[10px] leading-4 text-[#a9b8ce]">
+                {latestRelease.changes.slice(0, 3).map((change) => (
+                    <li key={change} className="line-clamp-2"><span className="mr-1.5 font-black text-[#4ce778]">+</span>{change}</li>
+                ))}
             </ul>
         </div>
     );
@@ -463,7 +455,7 @@ export default function HomePage() {
                                     <div key={release.version} className="grid gap-3 rounded-xl border border-[#1d3d64] bg-[#08182b] p-4 sm:grid-cols-[84px_1fr_auto] sm:items-start">
                                         <span className="w-fit rounded-lg bg-gradient-to-b from-[#6555e7] to-[#4355c9] px-3 py-1.5 text-xs font-black text-white">{release.version}</span>
                                         <div>
-                                            <h3 className="text-sm font-black text-white">{updateTitles[release.version] ?? `Cam Lab ${release.version}`}</h3>
+                                            <h3 className="text-sm font-black text-white">{release.title ?? "Cam Lab Improvements"}</h3>
                                             <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#9fb0c7]">{release.changes[0]}</p>
                                         </div>
                                         <span className="text-[11px] text-[#7085a4]">{release.date}</span>
