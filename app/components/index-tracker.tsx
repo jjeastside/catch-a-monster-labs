@@ -1,5 +1,6 @@
 "use client";
 import { PageHeading } from "./page-heading";
+import { TOOL_PAGE_CONTAINER } from "./tool-page-layout";
 
 import { type ChangeEvent, type CSSProperties, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
@@ -497,7 +498,7 @@ export function IndexTracker() {
     ];
 
     return (
-        <main className="mx-auto w-full max-w-[1800px] px-3 py-5 sm:px-5 lg:px-6">
+        <main className={`${TOOL_PAGE_CONTAINER} text-[#f6f8fc]`}>
             <div className="mb-4"><PageHeading title="Index Tracker" image="/icons/index.png">Track every monster and maximize your <span className="text-[#ffd53d]">Index Score.</span></PageHeading></div>
             <section className="mb-5 grid gap-4 xl:grid-cols-[1fr_560px]">
                 <div>

@@ -33,6 +33,7 @@ import { EquipmentSelect } from "./equipment-select";
 import { TraitIcon } from "./trait-icon";
 import styles from "./monster-compare.module.css";
 import { PageHeading } from "./page-heading";
+import { TOOL_PAGE_CONTAINER } from "./tool-page-layout";
 import { CombatRank, rankColors } from "./calculator-results";
 import {
   rarityBadgeClasses,
@@ -1034,7 +1035,7 @@ export function MonsterCompare() {
         : "xl:grid-cols-4";
 
   return (
-    <main className={`${styles.root} mx-auto w-full max-w-[2000px] space-y-2.5 px-3 py-3 text-[#f6f8fc] sm:px-4 xl:px-5`}>
+    <main className={`${styles.root} ${TOOL_PAGE_CONTAINER} space-y-2.5 text-[#f6f8fc]`}>
       <PageHeading id="compare-heading" title="Monster Compare" image="/icons/monster-compare.png" aside="Pick monsters to compare their stats, skills, DPS, and different builds with global account multipliers.">
         Compare up to 4 monsters side by side with {mode === "shared" ? "shared settings" : "their own builds"}.
       </PageHeading>

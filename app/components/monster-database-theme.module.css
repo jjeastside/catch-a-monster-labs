@@ -253,3 +253,211 @@ button.settingControl:hover,
 @media (prefers-reduced-motion: reduce) {
     .settingControl, .filterSelect, .passiveButton, .teamButton { transition: none; }
 }
+
+/* Monster cards: the restrained visual language of Monster Compare, with
+   dimensional artwork stages and quiet rarity accents instead of neon chrome. */
+.monsterCard {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 12px;
+    box-shadow: 0 7px 22px rgba(0, 8, 19, .21);
+    outline-offset: 3px;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.monsterCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 13px 30px rgba(0, 8, 19, .33), inset 0 1px 0 rgba(255,255,255,.04);
+}
+.monsterCard:focus-visible {
+    outline: 2px solid #8dbce9;
+}
+.monsterSelected {
+    outline: 2px solid rgba(115, 164, 221, .9);
+    box-shadow: 0 0 0 3px rgba(66, 131, 188, .14), 0 12px 25px rgba(0, 8, 19, .3);
+}
+.artArea {
+    position: relative;
+    isolation: isolate;
+    flex-shrink: 0;
+    background-color: #101f2e;
+}
+.artArea::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 45% 55% at 50% 56%, rgba(126, 173, 213, .11), transparent 85%),
+        linear-gradient(135deg, rgba(168, 205, 235, .045), transparent 40%);
+    pointer-events: none;
+}
+.artHalo {
+    position: absolute;
+    z-index: 0;
+    bottom: 10%;
+    left: 20%;
+    width: 60%;
+    height: 11%;
+    border-radius: 50%;
+    background: rgba(89, 146, 187, .13);
+    filter: blur(19px);
+    pointer-events: none;
+}
+.monsterArtwork {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 7px;
+    filter: drop-shadow(0 11px 12px rgba(0, 0, 0, .19));
+    transition: transform .2s ease;
+}
+.monsterCard:hover .monsterArtwork { transform: scale(1.045) translateY(-2px); }
+.artFade {
+    position: absolute;
+    z-index: 2;
+    inset: auto 0 0;
+    height: 20%;
+    background: linear-gradient(0deg, rgba(9, 22, 34, .91), transparent);
+    pointer-events: none;
+}
+.rankBadge {
+    position: absolute;
+    z-index: 4;
+    top: 10px;
+    left: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    max-width: calc(100% - 20px);
+    min-height: 26px;
+    padding: 4px 9px 4px 6px;
+    border: 1px solid #38536d;
+    border-radius: 999px;
+    background: rgba(7, 22, 36, .92);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .24);
+    color: #e6f2ff;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+    backdrop-filter: blur(7px);
+}
+.rankIcon { width: 16px; height: 16px; flex-shrink: 0; object-fit: contain; }
+.rankCaption { color: #a1bfd6; font-size: 10px; font-weight: 650; }
+.indexBadge { border-color: #4d6182; }
+.statRankBadge { border-color: #3c7393; }
+.unobtainable { z-index: 5; }
+.cardDetails {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    padding: 12px;
+    border-top: 1px solid rgba(140, 180, 217, .09);
+    background: linear-gradient(180deg, #102033 0%, #0c1928 100%);
+}
+.cardIdentity { min-width: 0; }
+.monsterName {
+    overflow: hidden;
+    color: #f5f8ff;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: -.015em;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.monsterType {
+    overflow: hidden;
+    margin-top: 4px;
+    color: #9cb8cf;
+    font-size: 11px;
+    font-weight: 550;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.monsterType > span { color: #5f7e95; }
+.statsGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 13px; }
+.statCell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    min-height: 47px;
+    padding: 7px 9px;
+    border: 1px solid #294357;
+    border-radius: 7px;
+    background: #071724;
+}
+.statCellActive {
+    border-color: #3b779d;
+    background: #102c40;
+    box-shadow: inset 0 1px 0 rgba(115, 188, 231, .07);
+}
+.statLabel {
+    color: #86a7bd;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .045em;
+    line-height: 1.1;
+}
+.statCellActive .statLabel { color: #8fd4f2; }
+.statNumber {
+    overflow: hidden;
+    color: #ecf4fd;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.15;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+.statCellActive .statNumber { color: #ddf5ff; }
+.abilityRow { display: flex; gap: 6px; align-items: center; min-height: 31px; margin-top: 11px; }
+.abilityIcon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border: 1px solid #304b60;
+    border-radius: 6px;
+    background: #091521;
+    object-fit: contain;
+    padding: 2px;
+}
+.abilityFallback { padding: 5px; }
+.sourceFooter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid rgba(126, 159, 188, .14);
+    color: #85a8c3;
+    font-size: 10px;
+    font-weight: 550;
+    line-height: 1.25;
+}
+.abilityRow + .sourceFooter { margin-top: 9px; }
+.sourceIcon { width: 13px; height: 13px; flex-shrink: 0; color: #70a6ce; }
+.sourceText { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 480px) {
+    .cardDetails { padding: 9px; }
+    .monsterName { font-size: 12px; }
+    .monsterType { font-size: 10px; }
+    .statCell { padding: 6px 4px; min-height: 43px; }
+    .statNumber { font-size: 11px; }
+    .rankBadge { top: 7px; left: 7px; gap: 4px; min-height: 23px; padding: 3px 7px 3px 4px; font-size: 10px; }
+    .rankIcon { width: 14px; height: 14px; }
+    .rankCaption { font-size: 9px; }
+    .abilityIcon { width: 25px; height: 25px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .monsterCard, .monsterArtwork { transition: none; }
+    .monsterCard:hover { transform: none; }
+    .monsterCard:hover .monsterArtwork { transform: none; }
+}

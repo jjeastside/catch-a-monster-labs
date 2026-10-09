@@ -3,6 +3,7 @@
 import { useCombatMode } from "../lib/combat-mode";
 import { EvolutionPvpNotice } from "./evolution-pvp-notice";
 import { PageHeading } from "./page-heading";
+import { TOOL_PAGE_CONTAINER } from "./tool-page-layout";
 import styles from "./monster-database-theme.module.css";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -319,14 +320,13 @@ function MonsterCard({
             id={`monster-${monster.id}`}
             type="button"
             onClick={onSelect}
-            className={`group cam-defer-card min-w-0 overflow-hidden rounded-xl border text-left shadow-[0_10px_24px_rgba(0,0,0,0.14)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.22)] ${rarityClasses[monster.rarity]} ${
-                selected ? "ring-1 ring-[#7182ff] ring-offset-2 ring-offset-[#0d131d] shadow-[0_0_24px_rgba(113,130,255,0.22)]" : ""
+            aria-pressed={selected}
+            className={`group cam-defer-card ${styles.monsterCard} min-w-0 overflow-hidden rounded-xl border text-left transition duration-200 ${rarityClasses[monster.rarity]} ${
+                selected ? styles.monsterSelected : ""
             }`}
         >
-            <div
-                className="relative aspect-square overflow-hidden sm:aspect-[4/3]"
-                style={rarityImageStyles[monster.rarity]}
-            >
+            <div className={`${styles.artArea} relative aspect-square overflow-hidden sm:aspect-[4/3]`} style={rarityImageStyles[monster.rarity]}>
+                <div className={styles.artHalo} aria-hidden="true" />
                 {monster.image ? (
                     <img
                         src={assetPath(monster.image)}
@@ -334,59 +334,54 @@ function MonsterCard({
                         loading={eagerImage ? "eager" : "lazy"}
                         decoding="async"
                         fetchPriority={eagerImage ? "high" : "auto"}
-                        className="h-full w-full object-contain p-2 transition duration-200 group-hover:scale-[1.035] sm:p-3"
+                        className={styles.monsterArtwork}
                     />
                 ) : null}
-                {sortBy === "index" && <span className={`absolute left-2 top-2 rounded-full border px-2 py-0.5 text-[9px] font-bold backdrop-blur-sm sm:text-[10px] ${
-                    sortBy === "index"
-                        ? "border-[#7182ff]/80 bg-[#18213a]/90 text-[#d6d9ff] shadow-[0_0_10px_rgba(113,130,255,0.2)]"
-                        : "border-[#3a4657] bg-[#0b111a]/82 text-[#aeb9cb]"
-                }`}>
-                    #{monster.indexPosition}
-                </span>}
-                {sortBy !== "index" && (
-                    <span
-                        title={Number.isFinite(comparisonStats[sortBy]) ? `Rank ${rank} by ${sortBy === "dps" ? "DPS" : sortBy} among the filtered monsters, using current stat settings` : "Ranking unavailable: missing stats"}
-                        className="absolute left-2 top-2 flex items-center gap-1 rounded-full border border-[#34d5ff]/70 bg-[#102631]/95 px-2 py-0.5 text-[9px] font-bold text-[#b8f3ff] backdrop-blur-sm sm:text-[10px]"
-                    >
-                        <img src={assetPath(sortBy === "dps" ? "/icons/dps.png" : `/account-icons/${sortBy}.png`)} alt="" className="size-3.5 object-contain" />
-                        {Number.isFinite(comparisonStats[sortBy]) ? `#${rank}` : "—"} {sortBy === "dps" ? "DPS" : sortBy === "damage" ? "Damage" : "Health"}
-                    </span>
-                )}
+                <span
+                    title={sortBy === "index"
+                        ? `Index #${monster.indexPosition}`
+                        : Number.isFinite(comparisonStats[sortBy])
+                            ? `Rank ${rank} by ${sortBy === "dps" ? "DPS" : sortBy} among filtered monsters using current settings`
+                            : "Ranking unavailable: missing stats"}
+                    className={`${styles.rankBadge} ${sortBy === "index" ? styles.indexBadge : styles.statRankBadge}`}
+                >
+                    <img
+                        src={assetPath(sortBy === "index" ? "/icons/index.png" : sortBy === "dps" ? "/icons/dps.png" : `/account-icons/${sortBy}.png`)}
+                        alt=""
+                        aria-hidden="true"
+                        className={styles.rankIcon}
+                    />
+                    <span>{sortBy === "index" ? `#${monster.indexPosition}` : Number.isFinite(comparisonStats[sortBy]) ? `#${rank}` : "—"}</span>
+                    <span className={styles.rankCaption}>{sortBy === "index" ? "Index" : sortBy === "dps" ? "DPS" : sortBy === "damage" ? "Damage" : "Health"}</span>
+                </span>
                 {!isObtainable(monster) ? (
-                    <span className="absolute bottom-2 left-2 z-10 rounded-full border border-[#7a4550] bg-[#2d1419]/90 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.08em] text-[#ff8f9c]">
+                    <span className={`${styles.unobtainable} absolute bottom-2 left-2 z-10 rounded-full border border-[#7a4550] bg-[#2d1419]/90 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.08em] text-[#ff8f9c]`}>
                         Unobtainable
                     </span>
                 ) : null}
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-[#121a25] via-[#121a25]/55 to-transparent" />
+                <div className={styles.artFade} aria-hidden="true" />
             </div>
 
-            <div className="border-t border-white/[0.035] bg-gradient-to-b from-[#121a25] to-[#101720] p-2.5 sm:p-3">
-                <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                        <h3 className="truncate text-xs font-bold text-[#f4f7fb] sm:text-sm">{monster.name}</h3>
-                        <p className="mt-0.5 truncate text-[9px] font-semibold text-[#9da9bb] sm:text-[11px]">
-                            {monster.rarity} · {monster.element}
-                        </p>
-                    </div>
+            <div className={styles.cardDetails}>
+                <div className={styles.cardIdentity}>
+                    <h3 className={styles.monsterName} title={monster.name}>{monster.name}</h3>
+                    <p className={styles.monsterType}>{monster.rarity} <span aria-hidden="true">·</span> {monster.element}</p>
                 </div>
 
-                <div className="mt-2 grid grid-cols-3 gap-1 text-[9px] sm:mt-3 sm:gap-1.5 sm:text-[10px]">
-                    <div className={`min-w-0 rounded-md border px-1 py-1.5 sm:px-2 ${sortBy === "damage" ? "border-[#34d5ff]/70 bg-[#102631]" : "border-[#293443]/90 bg-[#0d141e]/80"}`}>
-                        <span className={`block text-[8px] font-bold uppercase tracking-[0.06em] ${sortBy === "damage" ? "text-[#57dcff]" : "text-[#6f7c90]"}`}>DMG</span>
-                        <span className={`mt-0.5 block truncate font-bold ${sortBy === "damage" ? "text-[#b8f3ff]" : "text-[#dbe2ee]"}`}>{compactNumber(comparisonStats.damage)}</span>
-                    </div>
-                    <div className={`min-w-0 rounded-md border px-1 py-1.5 sm:px-2 ${sortBy === "health" ? "border-[#34d5ff]/70 bg-[#102631]" : "border-[#293443]/90 bg-[#0d141e]/80"}`}>
-                        <span className={`block text-[8px] font-bold uppercase tracking-[0.06em] ${sortBy === "health" ? "text-[#57dcff]" : "text-[#6f7c90]"}`}>HP</span>
-                        <span className={`mt-0.5 block truncate font-bold ${sortBy === "health" ? "text-[#b8f3ff]" : "text-[#dbe2ee]"}`}>{compactNumber(comparisonStats.health)}</span>
-                    </div>
-                    <div className={`min-w-0 rounded-md border px-1 py-1.5 sm:px-2 ${sortBy === "dps" ? "border-[#34d5ff]/70 bg-[#102631]" : "border-[#293443]/90 bg-[#0d141e]/80"}`}>
-                        <span className={`block text-[8px] font-bold uppercase tracking-[0.06em] ${sortBy === "dps" ? "text-[#57dcff]" : "text-[#7182ff]"}`}>DPS</span>
-                        <span className={`mt-0.5 block truncate font-bold ${sortBy === "dps" ? "text-[#b8f3ff]" : "text-[#dbe2ee]"}`}>{compactNumber(comparisonStats.dps)}</span>
-                    </div>
+                <div className={styles.statsGrid}>
+                    {([
+                        { key: "damage", label: "DMG", value: comparisonStats.damage },
+                        { key: "health", label: "HP", value: comparisonStats.health },
+                        { key: "dps", label: "DPS", value: comparisonStats.dps },
+                    ] as const).map((stat) => (
+                        <div key={stat.key} className={`${styles.statCell} ${sortBy === stat.key ? styles.statCellActive : ""}`}>
+                            <span className={styles.statLabel}>{stat.label}</span>
+                            <span className={styles.statNumber} title={`${stat.label}: ${stat.value.toLocaleString("en-US")}`}>{compactNumber(stat.value)}</span>
+                        </div>
+                    ))}
                 </div>
 
-                <div className="mt-2 flex min-h-6 items-center gap-1 sm:mt-3 sm:min-h-7 sm:gap-1.5">
+                <div className={styles.abilityRow}>
                     {passive && passiveImage ? (
                         <img
                             src={assetPath(passiveImage)}
@@ -394,7 +389,7 @@ function MonsterCard({
                             title={getPassiveUiName(passive)}
                             loading="lazy"
                             decoding="async"
-                            className="size-6 rounded-md border border-[#344050] bg-[#0d131d] object-contain p-0.5 sm:size-7"
+                            className={styles.abilityIcon}
                         />
                     ) : null}
                     {skills.map((skill, skillIndex) =>
@@ -406,20 +401,21 @@ function MonsterCard({
                                 title={getSkillDisplayName(skill.name)}
                                 loading="lazy"
                                 decoding="async"
-                                className="size-6 rounded-md border border-[#344050] bg-[#0d131d] object-cover sm:size-7"
+                                className={styles.abilityIcon}
                                 onError={(event) => {
                                     event.currentTarget.onerror = null;
                                     event.currentTarget.src = assetPath(`/element-icons/${skill.element.toLowerCase()}.png`);
-                                    event.currentTarget.className = "size-6 rounded-md border border-[#344050] bg-[#0d131d] object-contain p-1 sm:size-7";
+                                    event.currentTarget.classList.add(styles.abilityFallback);
                                 }}
                             />
                         ) : null,
                     )}
                 </div>
 
-                <p className="mt-3 hidden truncate border-t border-[#293443]/80 pt-2 text-[10px] font-medium text-[#8390a3] sm:block">
-                    {sourceLabel(monster)}
-                </p>
+                <div className={styles.sourceFooter} title={sourceDescription(monster)}>
+                    <DatabaseUiIcon name="pin" className={styles.sourceIcon} />
+                    <span className={styles.sourceText}>{sourceLabel(monster)}</span>
+                </div>
             </div>
         </button>
     );
@@ -1143,7 +1139,7 @@ export function MonsterDatabase() {
 
     return (
         <main className={`${styles.pageSurface} min-h-screen text-white`}>
-            <div className="mx-auto w-full max-w-[1800px] px-4 py-6 sm:px-6 lg:px-8">
+            <div className={TOOL_PAGE_CONTAINER}>
                 <div className="mb-4">
                     <PageHeading title="Monster Database" image="/icons/monster-database.png" aside={<span>{filteredMonsters.length} / {GENERATED_MONSTERS.length} monsters</span>}>Discover every monster and explore its <span className="text-[#69dfaa]">skills, stats, and locations.</span></PageHeading>
                 </div>
