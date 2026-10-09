@@ -1,3 +1,4 @@
+import { applyBreedingLimits, hasFixedBreeding } from "./breeding-limits";
 import { monsters } from "../data/monsters";
 import { getMonsterStatData } from "../data/monster-stats";
 import { getSkill } from "../data/skills";
@@ -109,11 +110,11 @@ export function sanitizeBuild(saved: Partial<Build>, monsterId: string): Build {
     rank: ranks.includes(saved.rank as Rank) ? (saved.rank as Rank) : "E",
     level: integer(saved.level, MIN_LEVEL, CURRENT_MAX_LEVEL, base.level),
     enhancement: integer(saved.enhancement, 0, 10, base.enhancement),
-    damageGeneticPotential: gp(saved.damageGeneticPotential),
-    healthGeneticPotential: gp(saved.healthGeneticPotential),
+    damageGeneticPotential: hasFixedBreeding(monsterId) ? 6 : gp(saved.damageGeneticPotential),
+    healthGeneticPotential: hasFixedBreeding(monsterId) ? 6 : gp(saved.healthGeneticPotential),
     evolutionPercent: monster.isEvolved ? clampEvolutionPercent(finite(saved.evolutionPercent, 100)) : 100,
     mutations,
-    traitId: getAvailableTraits().some(({ id }) => id === saved.traitId) ? saved.traitId! : null,
+    traitId: hasFixedBreeding(monsterId) ? null : getAvailableTraits().some(({ id }) => id === saved.traitId) ? saved.traitId! : null,
     rudeAwakeningActive: weapon?.id === "block-buster" && saved.rudeAwakeningActive === true,
     weaponId: weapon?.id ?? null,
     armorId: armor?.id ?? null,
@@ -389,6 +390,7 @@ export function compactBuildLabel(build: Build): string {
 }
 
 export function buildForGoal(build: Build, combatContext: TeamCombatContext): Build {
+    build = applyBreedingLimits(build, build.monsterId);
   return {
     ...build,
     // Recommendations, previews and the visible cards must evaluate Dungeon

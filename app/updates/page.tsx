@@ -23,9 +23,33 @@ type Patch = {
 
 const patches: Patch[] = [
     {
+        version: "Update 0.52",
+        date: "October 9, 2026",
+        label: "Latest",
+        sections: [
+            {
+                title: "Shroomvale Rift & Rewards",
+                changes: [
+                    "Added a new Rift to Shroomvale.",
+                    "Updated rewards for various chest rarities.",
+                ],
+            },
+            {
+                title: "Events",
+                changes: [
+                    "The Rift Event is live!",
+                    "Admin Abuse will be held twice for different time zones.",
+                ],
+            },
+            {
+                title: "New Code",
+                changes: ["cernunnos"],
+            },
+        ],
+    },
+    {
         version: "Update 0.51",
         date: "October 3, 2026",
-        label: "Latest",
         sections: [
             {
                 title: "Shroomvale & Evolution",

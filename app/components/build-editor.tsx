@@ -1,4 +1,5 @@
 "use client";
+import { hasFixedBreeding, BREEDING_LOCK_MESSAGE } from "../lib/breeding-limits";
 
 import { useCombatMode } from "../lib/combat-mode";
 import { EvolutionPvpNotice } from "./evolution-pvp-notice";
@@ -256,6 +257,7 @@ function HelpTooltip({
 }
 
 type GeneticPotentialSliderProps = {
+    disabled?: boolean;
     label: "Attack" | "Health";
     icon: string;
     value: number;
@@ -264,6 +266,7 @@ type GeneticPotentialSliderProps = {
 };
 
 function GeneticPotentialSlider({
+                                    disabled = false,
                                     label,
                                     icon,
                                     value,
@@ -306,6 +309,8 @@ function GeneticPotentialSlider({
                     step="6"
                     value={value}
                     onChange={(event) => onChange(Number(event.target.value))}
+                    disabled={disabled}
+                    title={disabled ? BREEDING_LOCK_MESSAGE : undefined}
                     aria-label={`${label} Genetic Potential`}
                     className="absolute inset-0 h-4 w-full cursor-pointer appearance-none bg-transparent outline-none [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#0f1620] [&::-moz-range-track]:bg-transparent [&::-webkit-slider-runnable-track]:h-4 [&::-webkit-slider-runnable-track]:bg-transparent [&::-webkit-slider-thumb]:mt-0 [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#0f1620] [&::-webkit-slider-thumb]:shadow-[0_0_0_2px_rgba(0,0,0,0.45)]"
                 />
@@ -1538,15 +1543,17 @@ export function BuildEditor({
                             </button>
                             <HelpTooltip
                                 title="Genetic Potential"
-                                text="Adds separate percentage bonuses to Attack and Health. Drag or click either bar; each segment is 6%, up to 60%."
+                                text={hasFixedBreeding(build.monsterId) ? BREEDING_LOCK_MESSAGE : "Adds separate percentage bonuses to Attack and Health. Drag or click either bar; each segment is 6%, up to 60%."}
                                 align="right"
                             />
                         </div>
 
                         {geneticPotentialOpen && (
                             <div id="genetic-potential-controls" className="border-t border-[#25475f] bg-[#071b2b] p-3">
+                                {hasFixedBreeding(build.monsterId) && <p className="mb-3 text-xs text-[#aeb9cb]">{BREEDING_LOCK_MESSAGE}</p>}
                                 <div className="space-y-3">
                                     <GeneticPotentialSlider
+                                        disabled={hasFixedBreeding(build.monsterId)}
                                         label="Attack"
                                         icon="/icons/breed-attack.png"
                                         value={build.damageGeneticPotential}
@@ -1554,6 +1561,7 @@ export function BuildEditor({
                                         onChange={(value) => update("damageGeneticPotential", value)}
                                     />
                                     <GeneticPotentialSlider
+                                        disabled={hasFixedBreeding(build.monsterId)}
                                         label="Health"
                                         icon="/icons/breed-health.png"
                                         value={build.healthGeneticPotential}
@@ -1743,10 +1751,10 @@ export function BuildEditor({
                         </span>
                     }
                 >
-                    <TraitSelect
+                    {hasFixedBreeding(build.monsterId) ? <p className="text-xs text-[#aeb9cb]">No Trait — this monster cannot have traits.</p> : <TraitSelect
                         value={build.traitId}
                         onChangeAction={(value) => update("traitId", value)}
-                    />
+                    />}
                 </CollapsibleSection>
 
                 <CollapsibleSection

@@ -19,7 +19,7 @@ import {
 } from "../lib/passive-display";
 import { getSkill, getSkillDisplayName } from "../data/skills";
 import { assetPath } from "../lib/asset-path";
-import { getMonsterComparisonStats, type PassiveCompareMode } from "../lib/monster-comparison";
+import { type MonsterComparisonStats, type PassiveCompareMode } from "../lib/monster-comparison";
 import {
     databaseSkillEffectDetails,
     databaseSkillEffectOptions,
@@ -34,7 +34,10 @@ import {
     clampEvolutionPercent,
     getEvolutionBarFill,
 } from "../lib/calculations/evolution";
-import type { Passive } from "../types/build";
+import { createDefaultBuild, type Passive } from "../types/build";
+import { DATABASE_MAX_PRESET, DATABASE_TEAM_PASSIVES, type DatabaseTeamPassive, getDatabaseStats } from "../lib/database-stats";
+import { useCompareAccount } from "../lib/use-compare-account";
+import { AccountMultipliers } from "./account-multipliers";
 import type { GeneratedMonster, Rarity } from "../types/monster";
 
 const rarityClasses: Record<Rarity, string> = {
@@ -253,25 +256,25 @@ function FilterSelect({
 function MonsterCard({
                          monster,
                          selected,
+                         rank,
                          onSelect,
-                         evolutionPercent,
-                         passiveCompareMode,
+                         comparisonStats,
                          sortBy,
                          eagerImage = false,
                      }: {
     monster: GeneratedMonster;
     selected: boolean;
+    rank: number;
     onSelect: () => void;
-    evolutionPercent: number;
-    passiveCompareMode: PassiveCompareMode;
+    comparisonStats: MonsterComparisonStats;
+    presetDescription: string;
     sortBy: SortKey;
     eagerImage?: boolean;
 }) {
     const skills = monster.skillIds.map((id) => getSkill(id)).filter(Boolean).slice(0, 3);
     const passive = monster.passives?.[0] ?? null;
     const passiveImage = passive ? getPassiveImagePath(passive) : null;
-    const [combatMode] = useCombatMode();
-    const comparisonStats = getMonsterComparisonStats(monster, evolutionPercent, passiveCompareMode, combatMode);
+
 
     return (
         <button
@@ -296,15 +299,24 @@ function MonsterCard({
                         className="h-full w-full object-contain p-2 transition duration-200 group-hover:scale-[1.035] sm:p-3"
                     />
                 ) : null}
-                <span className={`absolute right-2 top-2 rounded-full border px-2 py-0.5 text-[9px] font-bold backdrop-blur-sm sm:text-[10px] ${
+                {sortBy === "index" && <span className={`absolute left-2 top-2 rounded-full border px-2 py-0.5 text-[9px] font-bold backdrop-blur-sm sm:text-[10px] ${
                     sortBy === "index"
                         ? "border-[#7182ff]/80 bg-[#18213a]/90 text-[#d6d9ff] shadow-[0_0_10px_rgba(113,130,255,0.2)]"
                         : "border-[#3a4657] bg-[#0b111a]/82 text-[#aeb9cb]"
                 }`}>
                     #{monster.indexPosition}
-                </span>
+                </span>}
+                {sortBy !== "index" && (
+                    <span
+                        title={Number.isFinite(comparisonStats[sortBy]) ? `Rank ${rank} by ${sortBy === "dps" ? "DPS" : sortBy} among the filtered monsters, using current stat settings` : "Ranking unavailable: missing stats"}
+                        className="absolute left-2 top-2 flex items-center gap-1 rounded-full border border-[#34d5ff]/70 bg-[#102631]/95 px-2 py-0.5 text-[9px] font-bold text-[#b8f3ff] backdrop-blur-sm sm:text-[10px]"
+                    >
+                        <img src={assetPath(sortBy === "dps" ? "/icons/dps.png" : `/account-icons/${sortBy}.png`)} alt="" className="size-3.5 object-contain" />
+                        {Number.isFinite(comparisonStats[sortBy]) ? `#${rank}` : "—"} {sortBy === "dps" ? "DPS" : sortBy === "damage" ? "Damage" : "Health"}
+                    </span>
+                )}
                 {!isObtainable(monster) ? (
-                    <span className="absolute left-2 top-2 rounded-full border border-[#7a4550] bg-[#2d1419]/90 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.08em] text-[#ff8f9c]">
+                    <span className="absolute bottom-2 left-2 z-10 rounded-full border border-[#7a4550] bg-[#2d1419]/90 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.08em] text-[#ff8f9c]">
                         Unobtainable
                     </span>
                 ) : null}
@@ -377,15 +389,15 @@ function MonsterCard({
 
 function DetailPanel({
                          monster,
-                         evolutionPercent,
-                         passiveCompareMode,
+                         comparisonStats,
+                         presetDescription,
                          onMonsterSelect,
                          sortBy,
                          desktopInspector = false,
                      }: {
     monster: GeneratedMonster;
-    evolutionPercent: number;
-    passiveCompareMode: PassiveCompareMode;
+    comparisonStats: MonsterComparisonStats;
+    presetDescription: string;
     onMonsterSelect: (monsterId: string) => void;
     sortBy: SortKey;
     desktopInspector?: boolean;
@@ -393,8 +405,7 @@ function DetailPanel({
     const skills = monster.skillIds.map((id) => getSkill(id)).filter(Boolean);
     const passive = monster.passives?.[0] ?? null;
     const passiveImage = passive ? getPassiveImagePath(passive) : null;
-    const [combatMode] = useCombatMode();
-    const comparisonStats = getMonsterComparisonStats(monster, evolutionPercent, passiveCompareMode, combatMode)
+
 
     async function copyMonsterLink() {
         const url = `${window.location.origin}${assetPath(`/monster-database/${monster.id}/`)}`;
@@ -438,7 +449,7 @@ function DetailPanel({
                             <span className="group relative inline-flex">
                                 <button type="button" aria-label="Explain reference stats" className="grid size-5 place-items-center rounded-full border border-[#4b5b70] bg-[#121b27] text-[10px] font-black text-[#aeb9ca] transition hover:border-[#7182ff] hover:text-white focus:border-[#7182ff] focus:text-white focus:outline-none">?</button>
                                 <span role="tooltip" className="pointer-events-none absolute left-0 top-7 z-30 hidden w-72 max-w-[calc(100vw-3rem)] rounded-lg border border-[#43516a] bg-[#080e16] p-3 text-left text-[11px] font-medium normal-case leading-5 tracking-normal text-[#c5cedb] shadow-[0_12px_32px_rgba(0,0,0,0.65)] group-hover:block group-focus-within:block">
-                                    Comparison preset: Base E-rank / Level 1 · selected EM for evolved forms · {passiveCompareMode === "none" ? "no passives" : passiveCompareMode === "conditional" ? "always-active + conditional self passives" : "non-conditional self passives"} · expected crit · no gear, traits, mutations, account bonuses, or combat-context bonuses.
+                                    {presetDescription}
                                 </span>
                             </span>
                         </div>
@@ -901,6 +912,20 @@ export function MonsterDatabase() {
     const [evolutionFilter, setEvolutionFilter] = useState<EvolutionFilter>("all");
     const [evolutionPercent, setEvolutionPercent] = useState(MIN_EVOLUTION_PERCENT);
     const [passiveCompareMode, setPassiveCompareMode] = useState<PassiveCompareMode>("always");
+    const [teamPassives, setTeamPassives] = useState<DatabaseTeamPassive[]>([]);
+    const [maxStats, setMaxStats] = useState(false);
+    const [mutationMode, setMutationMode] = useState<"normal" | "x">("normal");
+    const [includeAccount, setIncludeAccount] = useState(false);
+    const [accountBuild, setAccountBuild] = useState(() => createDefaultBuild());
+    useCompareAccount(accountBuild.accountMultipliers, setAccountBuild);
+    const statsById = useMemo(() => new Map(GENERATED_MONSTERS.map(monster => [monster.id,
+        getDatabaseStats(monster, evolutionPercent, passiveCompareMode, combatMode, {
+            maxStats, mutationMode, teamPassives,
+            accountMultipliers: includeAccount ? accountBuild.accountMultipliers : undefined,
+        }),
+    ])), [evolutionPercent, passiveCompareMode, combatMode, maxStats, mutationMode, teamPassives, includeAccount, accountBuild.accountMultipliers]);
+    const presetDescription = `${maxStats ? DATABASE_MAX_PRESET + ` · all ${mutationMode === "x" ? "X" : "normal"} mutations` : "Base E-rank / Level 1"} · selected EM for evolved forms · ${passiveCompareMode === "none" ? "no self passives" : passiveCompareMode === "conditional" ? "always-active + conditional self passives" : "non-conditional self passives"} · team passives: ${DATABASE_TEAM_PASSIVES.filter(passive => teamPassives.includes(passive.id)).map(passive => `${passive.name} ${passive.bonus}`).join(", ") || "none"} · expected crit · account multipliers ${includeAccount ? "on" : "off"}`;
+
     const [sortBy, setSortBy] = useState<SortKey>("index");
     const [selectedId, setSelectedId] = useState("");
     const [filtersOpen, setFiltersOpen] = useState(false);
@@ -1033,23 +1058,19 @@ export function MonsterDatabase() {
                 return true;
             })
             .sort((a, b) => {
-                switch (sortBy) {
-                    case "dps":
-                        return getMonsterComparisonStats(b, evolutionPercent, passiveCompareMode, combatMode).dps - getMonsterComparisonStats(a, evolutionPercent, passiveCompareMode, combatMode).dps;
-                    case "damage":
-                        return getMonsterComparisonStats(b, evolutionPercent, passiveCompareMode, combatMode).damage - getMonsterComparisonStats(a, evolutionPercent, passiveCompareMode, combatMode).damage;
-                    case "health":
-                        return getMonsterComparisonStats(b, evolutionPercent, passiveCompareMode, combatMode).health - getMonsterComparisonStats(a, evolutionPercent, passiveCompareMode, combatMode).health;
-                    case "index":
-                    default:
-                        return a.indexPosition - b.indexPosition;
-                }
+                if (sortBy === "index") return a.indexPosition - b.indexPosition;
+                const aValue = statsById.get(a.id)![sortBy];
+                const bValue = statsById.get(b.id)![sortBy];
+                if (!Number.isFinite(aValue)) return Number.isFinite(bValue) ? 1 : a.indexPosition - b.indexPosition;
+                if (!Number.isFinite(bValue)) return -1;
+                return bValue - aValue || a.indexPosition - b.indexPosition;
             });
-    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, skillEffectFilter, evolutionFilter, sortBy, evolutionPercent, passiveCompareMode, combatMode]);
+    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, skillEffectFilter, evolutionFilter, sortBy, statsById]);
 
     useEffect(() => {
-        setVisibleMonsterCount(30);
-    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, skillEffectFilter, evolutionFilter, sortBy, evolutionPercent, passiveCompareMode, combatMode]);
+        const frame = requestAnimationFrame(() => setVisibleMonsterCount(30));
+        return () => cancelAnimationFrame(frame);
+    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, skillEffectFilter, evolutionFilter, sortBy, statsById]);
 
     useEffect(() => {
         const target = loadMoreRef.current;
@@ -1090,6 +1111,29 @@ export function MonsterDatabase() {
                 <div className="mb-4">
                     <PageHeading title="Monster Database" image="/icons/monster-database.png" aside={<span>{filteredMonsters.length} / {GENERATED_MONSTERS.length} monsters</span>}>Discover every monster and explore its <span className="text-[#69dfaa]">skills, stats, and locations.</span></PageHeading>
                 </div>
+
+                <section aria-label="Database stat settings" className="rounded-xl border border-[#293443] bg-[#111925] p-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <button type="button" aria-pressed={maxStats} onClick={() => setMaxStats(value => !value)} className={`rounded-lg border px-4 py-2 text-xs font-bold ${maxStats ? "border-[#7182ff] bg-[#7182ff] text-white" : "border-[#46546a] text-[#cbd5e1]"}`}>
+                            Max stats: {maxStats ? "On" : "Off"}
+                        </button>
+                        <label className="flex items-center gap-2 text-xs text-[#aeb9cb]">
+                            Mutations
+                            <select aria-label="Max stat mutations" value={mutationMode} onChange={event => setMutationMode(event.target.value as "normal" | "x")} className="rounded-lg border border-[#46546a] bg-[#141c28] px-3 py-2 text-white">
+                                <option value="normal">All normal</option>
+                                <option value="x">All X</option>
+                            </select>
+                        </label>
+                        <button type="button" aria-pressed={includeAccount} onClick={() => setIncludeAccount(value => !value)} className={`rounded-lg border px-4 py-2 text-xs font-bold ${includeAccount ? "border-[#69dfaa] bg-[#173a30] text-[#69dfaa]" : "border-[#46546a] text-[#cbd5e1]"}`}>
+                            Account multipliers: {includeAccount ? "On" : "Off"}
+                        </button>
+                    </div>
+                    <p className="mt-2 text-[11px] leading-5 text-[#8c9bb0]">{presetDescription}</p>
+                    {includeAccount && <details className="mt-2 text-xs text-[#aeb9cb]">
+                        <summary className="cursor-pointer py-1">Edit saved account multipliers ({accountBuild.accountMultipliers.completedAchievementIds.length} achievements)</summary>
+                        <AccountMultipliers build={accountBuild} onBuildChangeAction={setAccountBuild} />
+                    </details>}
+                </section>
 
                 <div className="sticky top-0 z-30 -mx-4 mt-4 border-y border-[#293443] bg-[#0d131d]/95 px-4 py-3 backdrop-blur md:hidden">
                     <div className="flex gap-2">
@@ -1219,8 +1263,8 @@ export function MonsterDatabase() {
                         <FilterSelect label="Sort" value={sortBy} onChange={(value) => setSortBy(value as SortKey)}>
                             <option value="index">Index</option>
                             <option value="dps">DPS</option>
-                            <option value="damage">Base Damage</option>
-                            <option value="health">Base Health</option>
+                            <option value="damage">Damage</option>
+                            <option value="health">Health</option>
                         </FilterSelect>
                     </div>
 
@@ -1246,7 +1290,7 @@ export function MonsterDatabase() {
                                                 ? "border-[#7182ff] bg-[#202846] text-[#c7ccff]"
                                                 : "border-[#344050] bg-[#141c28] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-white"
                                         }`}
-                                        title="Ignore all monster passives"
+                                        title="Ignore self passives; selected team passives still apply"
                                     >
                                         No Passives
                                     </button>
@@ -1280,6 +1324,27 @@ export function MonsterDatabase() {
                                     </button>
                                 </div>
 
+                                <div className="mt-3 border-t border-[#293443] pt-2">
+                                    <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#8290a5]">Team Passives</p>
+                                    <div className="grid grid-cols-2 gap-1.5">
+                                        {DATABASE_TEAM_PASSIVES.map(passive => {
+                                            const active = teamPassives.includes(passive.id);
+                                            return <button
+                                                key={passive.id}
+                                                type="button"
+                                                aria-pressed={active}
+                                                onClick={() => setTeamPassives(current => active ? current.filter(id => id !== passive.id) : [...current, passive.id])}
+                                                title={`${passive.bonus} ${passive.name} from a teammate. Does not stack with the same self passive.`}
+                                                className={`flex min-h-10 items-center justify-center gap-2 rounded-md border px-2 py-2 text-[10px] font-bold transition ${active ? "border-[#7182ff] bg-[#202846] text-[#c7ccff]" : "border-[#344050] bg-[#141c28] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-white"}`}
+                                            >
+                                                <img src={assetPath(passive.icon)} alt="" className="size-5 shrink-0 object-contain" />
+                                                <span>{passive.name} <span className="whitespace-nowrap">{passive.bonus}</span></span>
+                                            </button>;
+                                        })}
+                                    </div>
+                                    <p className="mt-1.5 text-[9px] leading-4 text-[#69768a]">Apply either or both to every monster. Duplicate self and team passives count once. Team passives remain active with No Passives selected.</p>
+                                </div>
+
                                 <p className="mt-1.5 text-[9px] leading-4 text-[#59677c]">
                                     Conditional currently adds supported self conditions such as Vital Surge. Boss, Rift, Spire, and Dungeon context passives remain excluded.
                                 </p>
@@ -1309,6 +1374,10 @@ export function MonsterDatabase() {
                                 setSortBy("index");
                                 setEvolutionPercent(MIN_EVOLUTION_PERCENT);
                                 setPassiveCompareMode("always");
+                                setTeamPassives([]);
+                                setMaxStats(false);
+                                setMutationMode("normal");
+                                setIncludeAccount(false);
                             }}
                             className="h-11 flex-1 rounded-lg border border-[#46546a] bg-[#141c28] text-xs font-bold text-[#aeb9cb]"
                         >
@@ -1332,13 +1401,14 @@ export function MonsterDatabase() {
                                     <MonsterCard
                                         key={monster.id}
                                         monster={monster}
+                                        rank={index + 1}
                                         selected={selectedMonster?.id === monster.id}
                                         onSelect={() => {
                                             setFiltersOpen(false);
                                             setSelectedId(monster.id);
                                         }}
-                                        evolutionPercent={evolutionPercent}
-                                        passiveCompareMode={passiveCompareMode}
+                                        comparisonStats={statsById.get(monster.id)!}
+                                        presetDescription={presetDescription}
                                         sortBy={sortBy}
                                         eagerImage={index < 8}
                                     />
@@ -1399,8 +1469,8 @@ export function MonsterDatabase() {
                                 <DetailPanel
                                     key={selectedMonster.id}
                                     monster={selectedMonster}
-                                    evolutionPercent={evolutionPercent}
-                                    passiveCompareMode={passiveCompareMode}
+                                    comparisonStats={statsById.get(selectedMonster.id)!}
+                                    presetDescription={presetDescription}
                                     onMonsterSelect={setSelectedId}
                                     sortBy={sortBy}
                                     desktopInspector
@@ -1439,8 +1509,8 @@ export function MonsterDatabase() {
                         <DetailPanel
                             key={selectedMonster.id}
                             monster={selectedMonster}
-                            evolutionPercent={evolutionPercent}
-                            passiveCompareMode={passiveCompareMode}
+                            comparisonStats={statsById.get(selectedMonster.id)!}
+                                    presetDescription={presetDescription}
                             onMonsterSelect={setSelectedId}
                             sortBy={sortBy}
                         />

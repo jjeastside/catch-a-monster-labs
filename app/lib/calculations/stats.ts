@@ -1,3 +1,4 @@
+import { applyBreedingLimits } from "../breeding-limits";
 import type { Build, MonsterPassive } from "../../types/build";
 import type { MonsterStatData } from "../../types/monster-stats";
 import {
@@ -275,6 +276,8 @@ export function calculateStats(
     if (!statData) {
         return null;
     }
+
+    build = applyBreedingLimits(build, statData.monsterId);
 
     if (build.combatMode === "pvp") {
         if (statData.pvpBaseHealthELevel1 == null || statData.pvpBaseDamageELevel1 == null) return null;

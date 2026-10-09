@@ -1,3 +1,4 @@
+import { applyBreedingLimits } from "../breeding-limits";
 import { monsters } from "../../data/monsters";
 import {
   getSkill,
@@ -27,6 +28,7 @@ export function calculateSkillSummary(
   build: Build,
   effectivePassives: MonsterPassive[],
 ) {
+  build = applyBreedingLimits(build, monster.id);
   const totalMultiplier = getSkillTotalMultiplier(skill);
 
   const attributeEffects = calculateSkillAttributeEffects(build, skill.element);

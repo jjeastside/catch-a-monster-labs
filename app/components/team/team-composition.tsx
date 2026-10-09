@@ -1,4 +1,5 @@
 "use client";
+import { applyBreedingLimits, hasFixedBreeding, BREEDING_LOCK_MESSAGE } from "../../lib/breeding-limits";
 
 import { useCombatMode } from "../../lib/combat-mode";
 
@@ -1617,11 +1618,11 @@ export function TeamComposition() {
                           <div className={styles.gpControls}>
                             <div className={styles.control}>
                               <label>Attack</label>
-                              <select aria-label="GP Damage" value={item.build.damageGeneticPotential} onChange={(event) => updateTeamBuild(index, { damageGeneticPotential: Number(event.target.value) })}>{GENETIC_POTENTIAL_VALUES.map((value) => <option key={value} value={value}>{value}%</option>)}</select>
+                              <select aria-label="GP Damage" disabled={hasFixedBreeding(item.monster?.id)} title={hasFixedBreeding(item.monster?.id) ? BREEDING_LOCK_MESSAGE : undefined} value={item.build.damageGeneticPotential} onChange={(event) => updateTeamBuild(index, { damageGeneticPotential: Number(event.target.value) })}>{GENETIC_POTENTIAL_VALUES.map((value) => <option key={value} value={value}>{value}%</option>)}</select>
                             </div>
                             <div className={styles.control}>
                               <label>Health</label>
-                              <select aria-label="GP Health" value={item.build.healthGeneticPotential} onChange={(event) => updateTeamBuild(index, { healthGeneticPotential: Number(event.target.value) })}>{GENETIC_POTENTIAL_VALUES.map((value) => <option key={value} value={value}>{value}%</option>)}</select>
+                              <select aria-label="GP Health" disabled={hasFixedBreeding(item.monster?.id)} title={hasFixedBreeding(item.monster?.id) ? BREEDING_LOCK_MESSAGE : undefined} value={item.build.healthGeneticPotential} onChange={(event) => updateTeamBuild(index, { healthGeneticPotential: Number(event.target.value) })}>{GENETIC_POTENTIAL_VALUES.map((value) => <option key={value} value={value}>{value}%</option>)}</select>
                             </div>
                           </div>
                         </details>
@@ -1659,7 +1660,7 @@ export function TeamComposition() {
                         <div className={styles.buildGroupTitle}><span>Trait & Equipment</span></div>
                         <div className={styles.traitControl}>
                           <strong className={styles.traitEditorLabel}>Trait</strong>
-                          <TraitSelect value={item.build.traitId} onChangeAction={(value) => updateTeamBuild(index, { traitId: value })} />
+                          {hasFixedBreeding(item.monster?.id) ? <span>No Trait — unavailable for this monster.</span> : <TraitSelect value={item.build.traitId} onChangeAction={(value) => updateTeamBuild(index, { traitId: value })} />}
                         </div>
                         <div className={styles.equipmentGrid}>
                           <OwnedGearSelect label="Weapon" type="weapon" owner={teamOwner(team[index], index)} copies={ownedEquipment} onSelect={(id) => assignOwnedGear(teamOwner(team[index], index), "weapon", id, (changes) => { updateTeamBuild(index, changes); if (team[index].inventoryCopyId) updateInventoryBuild(team[index].inventoryCopyId, changes); })} />
@@ -1872,7 +1873,7 @@ export function TeamComposition() {
 
           {editingInventoryId && inventoryBuilds[editingInventoryId] && monsterById.get(copyMonsterId(editingInventoryId)) ? (() => {
             const monster = monsterById.get(copyMonsterId(editingInventoryId))!;
-            const build = inventoryBuilds[editingInventoryId];
+            const build = applyBreedingLimits(inventoryBuilds[editingInventoryId], monster.id);
             return (
                 <dialog ref={editorRef} className={styles.inventoryEditor} aria-label={`Edit ${monster.name} inventory build`} onCancel={() => setEditingInventoryId(null)} onClick={(event) => { if (event.target === event.currentTarget) { const rect = event.currentTarget.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) setEditingInventoryId(null); } }}>
                   <div className={styles.inventoryEditorHeader}>
@@ -1886,9 +1887,9 @@ export function TeamComposition() {
                     <label>Level<input type="number" min={1} max={CURRENT_MAX_LEVEL} value={build.level} onChange={(event) => updateInventoryBuild(editingInventoryId, { level: Math.max(1, Math.min(CURRENT_MAX_LEVEL, Number(event.target.value) || 1)) })} /></label>
                     <label>Rank<select value={build.rank ?? "E"} onChange={(event) => updateInventoryBuild(editingInventoryId, { rank: event.target.value as Rank })}>{ranks.map((rank) => <option key={rank}>{rank}</option>)}</select></label>
                     <label>Enhancement<select value={build.enhancement} onChange={(event) => updateInventoryBuild(editingInventoryId, { enhancement: Number(event.target.value) })}>{Array.from({ length: 11 }, (_, value) => <option key={value} value={value}>+{value}</option>)}</select></label>
-                    <label>GP Damage<select aria-label="GP Damage" value={build.damageGeneticPotential} onChange={(event) => updateInventoryBuild(editingInventoryId, { damageGeneticPotential: Number(event.target.value) })}>{GENETIC_POTENTIAL_VALUES.map((value) => <option key={value} value={value}>{value}%</option>)}</select></label>
-                    <label>GP Health<select aria-label="GP Health" value={build.healthGeneticPotential} onChange={(event) => updateInventoryBuild(editingInventoryId, { healthGeneticPotential: Number(event.target.value) })}>{GENETIC_POTENTIAL_VALUES.map((value) => <option key={value} value={value}>{value}%</option>)}</select></label>
-                    <div className={styles.attributeGroup}><strong>Trait</strong><TraitSelect value={build.traitId} onChangeAction={(value)=>updateInventoryBuild(editingInventoryId,{traitId:value})}/></div>
+                    <label>GP Damage<select aria-label="GP Damage" disabled={hasFixedBreeding(monster.id)} title={hasFixedBreeding(monster.id) ? BREEDING_LOCK_MESSAGE : undefined} value={build.damageGeneticPotential} onChange={(event) => updateInventoryBuild(editingInventoryId, { damageGeneticPotential: Number(event.target.value) })}>{GENETIC_POTENTIAL_VALUES.map((value) => <option key={value} value={value}>{value}%</option>)}</select></label>
+                    <label>GP Health<select aria-label="GP Health" disabled={hasFixedBreeding(monster.id)} title={hasFixedBreeding(monster.id) ? BREEDING_LOCK_MESSAGE : undefined} value={build.healthGeneticPotential} onChange={(event) => updateInventoryBuild(editingInventoryId, { healthGeneticPotential: Number(event.target.value) })}>{GENETIC_POTENTIAL_VALUES.map((value) => <option key={value} value={value}>{value}%</option>)}</select></label>
+                    <div className={styles.attributeGroup}><strong>Trait</strong>{hasFixedBreeding(monster.id) ? <span>No Trait — unavailable for this monster.</span> : <TraitSelect value={build.traitId} onChangeAction={(value)=>updateInventoryBuild(editingInventoryId,{traitId:value})}/>}</div>
                     <OwnedGearSelect label="Weapon" type="weapon" owner={inventoryOwner(editingInventoryId)} copies={ownedEquipment} onSelect={(id) => assignOwnedGear(inventoryOwner(editingInventoryId), "weapon", id, (changes) => { updateInventoryBuild(editingInventoryId, changes); setTeam((current) => current.map((item) => item.inventoryCopyId === editingInventoryId && item.monsterId ? withTeamDungeonLevel(sanitizeBuild({ ...item, ...changes }, item.monsterId), combatContext === "dungeon") : item)); })} />
                     <OwnedGearSelect label="Armor" type="armor" owner={inventoryOwner(editingInventoryId)} copies={ownedEquipment} onSelect={(id) => assignOwnedGear(inventoryOwner(editingInventoryId), "armor", id, (changes) => { updateInventoryBuild(editingInventoryId, changes); setTeam((current) => current.map((item) => item.inventoryCopyId === editingInventoryId && item.monsterId ? withTeamDungeonLevel(sanitizeBuild({ ...item, ...changes }, item.monsterId), combatContext === "dungeon") : item)); })} />
                   </div>

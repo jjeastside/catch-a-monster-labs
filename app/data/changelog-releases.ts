@@ -7,9 +7,21 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
-        version: "v1.0.22",
+        version: "v1.0.23",
         date: "October 9, 2026",
         label: "Latest",
+        changes: [
+            "Added a Max Stats toggle to the Monster Database with Level 115, SS rank, +10 enhancement, 60% Attack and Health Genetic Potential, Secret gear, and the highest available unconditional damage trait.",
+            "Added a choice between all four normal mutations and all four X mutations for the database Max Stats preset.",
+            "Added toggleable Account Multipliers to database comparisons, with an expandable editor using saved account progress.",
+            "Updated database rankings, monster cards, and detail panels to use the selected stat preset and account multipliers consistently.",
+            "Added the new Rift monsters from Catch a Monster Update 0.52 to the site.",
+            "Updated game Patch Notes with Update 0.52: the new Shroomvale Rift, updated chest rewards, Rift Event, Admin Abuse sessions for different time zones, and code cernunnos.",
+        ],
+    },
+    {
+        version: "v1.0.22",
+        date: "October 9, 2026",
         changes: [
             "Added a site-wide PvP Mode switch to desktop and mobile navigation, with the selected PvE or PvP mode remembered across pages and refreshes.",
             "Added separate PvP base Health and Damage fields to monster data, keeping PvP and PvE calculations independent.",

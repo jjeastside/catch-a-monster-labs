@@ -1,4 +1,5 @@
 "use client";
+import { applyBreedingLimits, hasFixedBreeding, BREEDING_LOCK_MESSAGE } from "../lib/breeding-limits";
 
 import { useEffect, useRef, useState } from "react";
 import { monsters } from "../data/monsters";
@@ -211,6 +212,7 @@ type CompareSelectOption = {
 };
 
 function CompareSelect({
+  disabled = false,
   label,
   value,
   onChange,
@@ -223,6 +225,7 @@ function CompareSelect({
   label: string;
   value: number | string;
   onChange: (value: string) => void;
+  disabled?: boolean;
   options: CompareSelectOption[];
   ariaLabel: string;
   icon?: string;
@@ -245,6 +248,8 @@ function CompareSelect({
         )}
         <select
           className={`${control} mt-1 ${styles.compareSelect} ${icon ? styles.compareSelectWithIcon : ""} ${accent === "blue" ? styles.compareSelectBlue : ""}`.trim()}
+          disabled={disabled}
+          title={disabled ? BREEDING_LOCK_MESSAGE : undefined}
           aria-label={ariaLabel}
           value={value}
           onChange={(event) => onChange(event.target.value)}
@@ -758,7 +763,7 @@ function CompareTraitSelect({
 }
 
 function CompareBuildControls({
-  build,
+  build: savedBuild,
   onChange,
   compact = false,
 }: {
@@ -766,6 +771,7 @@ function CompareBuildControls({
   onChange: (build: Build) => void;
   compact?: boolean;
 }) {
+  const build = applyBreedingLimits(savedBuild, savedBuild.monsterId);
   function update<K extends keyof Build>(key: K, value: Build[K]) {
     onChange({ ...build, [key]: value });
   }
@@ -846,6 +852,7 @@ function CompareBuildControls({
                   : "GP HP"
                 : `Genetic Potential ${label}`
             }
+            disabled={hasFixedBreeding(build.monsterId)}
             ariaLabel={`Genetic Potential ${label}`}
             value={build[key]}
             icon={icon}
@@ -873,11 +880,11 @@ function CompareBuildControls({
           value={build.armorId}
           onChangeAction={(value) => update("armorId", value)}
         />
-        <CompareTraitSelect
+        {hasFixedBreeding(build.monsterId) ? <p className="text-xs text-[#aeb9cb]">No Trait — unavailable for this monster.</p> : <CompareTraitSelect
           compact={compact}
           value={build.traitId}
           onChange={(value) => update("traitId", value)}
-        />
+        />}
       </div>
       <CompareMutations build={build} onChange={onChange} compact={compact} />
     </div>
@@ -977,11 +984,11 @@ export function MonsterCompare() {
 
   const columns = ids.map((id, index) => {
     const monster = availableMonsters.find((item) => item.id === id)!;
-    const currentBuild = {
+    const currentBuild = applyBreedingLimits({
       ...(mode === "shared" ? build : customBuilds[index]),
       monsterId: id,
       accountMultipliers: build.accountMultipliers,
-    };
+    }, id);
     const calculationBuild = buildForCombatMode(
       {
         ...currentBuild,
@@ -1094,6 +1101,7 @@ export function MonsterCompare() {
       {mode === "shared" && (
         <section aria-label="Shared build" className={`${styles.sharedBuild} ${card} p-2.5`}>
           <CompareBuildControls build={build} onChange={setBuild} />
+            {ids.some(hasFixedBreeding) && <p className="mt-2 text-xs text-[#aeb9cb]">Cannelloni dragons and Necro Hydra Tortelloni stay at 6% Attack and Health Genetic Potential, and cannot have traits, regardless of shared settings.</p>}
           {hasSharedEvolvedMonster && (
             <SharedEvolutionMultiplier
               value={build.evolutionPercent}
@@ -1191,7 +1199,7 @@ export function MonsterCompare() {
                 <div className={styles.customBuildBody}>
                   <CompareBuildControls
                     compact
-                    build={customBuilds[columnIndex]}
+                    build={{ ...customBuilds[columnIndex], monsterId: column.monster.id }}
                     onChange={(next) =>
                       setCustomBuilds((current) =>
                         current.map((item, index) =>
