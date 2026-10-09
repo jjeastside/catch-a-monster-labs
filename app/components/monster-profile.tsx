@@ -7,6 +7,8 @@ import { useMemo, useState } from "react";
 
 import { GENERATED_MONSTERS } from "../data/generated/monsters";
 import { getPassiveImagePath } from "../data/passives";
+import { getMonsterExclusiveTraits } from "../data/traits";
+import { TraitIcon } from "./trait-icon";
 import {
     getPassiveConditionDescription,
     getPassiveDescription,
@@ -186,6 +188,7 @@ export function MonsterProfile({ monsterId }: { monsterId: string }) {
     const evolutionBarFill = getEvolutionBarFill(evolutionPercent);
     const evolutionFamily = getEvolutionFamily(monster);
     const skills = monster.skillIds.map((id) => getSkill(id)).filter(Boolean);
+    const exclusiveTraits = getMonsterExclusiveTraits(monster.id);
 
     async function copyProfileLink() {
         await navigator.clipboard.writeText(window.location.href);
@@ -507,6 +510,25 @@ export function MonsterProfile({ monsterId }: { monsterId: string }) {
                                 )}
                             </div>
                         </section>
+
+                        {exclusiveTraits.length > 0 && (
+                            <section className="rounded-2xl border border-[#344050] bg-[#111925] p-5">
+                                <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#92bad5]">Exclusive Traits</p>
+                                <h2 className="mt-1 text-xl font-black">Natural Traits</h2>
+                                <p className="mt-1 text-xs text-[#829bb0]">Traits naturally sourced from this monster, not transferred traits.</p>
+                                <div className="mt-4 grid gap-3">
+                                    {exclusiveTraits.map((trait) => (
+                                        <div key={trait.id} className="flex items-center gap-3 rounded-xl border border-[#304b60] bg-[#0d1c2a] p-3">
+                                            <TraitIcon trait={trait} size="selected" />
+                                            <div>
+                                                <p className="text-sm font-bold text-[#f0f7fc]">{trait.name}</p>
+                                                <p className="mt-1 text-xs text-[#a6bbcc]">{trait.effects.map(effect => effect.description).join(" · ")}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
 
                         <section className="rounded-2xl border border-[#344050] bg-[#111925] p-5">
                             <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#7182ff]">

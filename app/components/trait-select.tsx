@@ -151,7 +151,7 @@ export function TraitSelect({ value, onChangeAction }: TraitSelectProps) {
                                     </span>
                                     {trait.naturalSource && (
                                         <span className="mt-0.5 block text-[9px] text-[#7f8b9e]">
-                                            Exclusive to {trait.naturalSource} · Breed to transfer
+                                            Exclusive sources: {trait.naturalSource} · Breed to transfer
                                         </span>
                                     )}
                                 </span>

@@ -679,6 +679,8 @@ const generatedEquipment = gearRows.map((row) => {
 });
 
 const monsterRows = parseCsv("monsters.csv");
+const traitRows = parseCsv("traits.csv");
+assertCsvColumns("traits.csv", traitRows, ["trait_id", "exclusive_source"]);
 const skills = parseCsv("skills.csv");
 const achievementRows = parseCsv("achievements.csv");
 
@@ -1148,6 +1150,26 @@ export const GENERATED_ACHIEVEMENTS: Achievement[] = ${JSON.stringify(
     )};
 `,
 );
+
+// Exclusive trait ownership is defined in traits.csv; each source is a monster
+// that naturally carries the trait, not every monster that can inherit it.
+const monsterNamesById = new Map(monsters.map(({ monster_id, name }) => [monster_id, name]));
+const traitExclusiveSources = Object.fromEntries(traitRows
+    .filter((row) => row.exclusive_source.trim())
+    .map((row) => {
+        const ids = [...new Set(row.exclusive_source.split("|").map((name) => slug(name.trim())).filter(Boolean))];
+        for (const id of ids) {
+            if (!monsterNamesById.has(id)) {
+                throw new Error(`Trait ${row.trait_id} references unknown exclusive monster: ${id}`);
+            }
+        }
+        return [row.trait_id, ids.map((id) => ({ id, name: monsterNamesById.get(id) }))];
+    }));
+fs.writeFileSync(
+    path.join(outputDir, "trait-exclusive-sources.ts"),
+    `${banner}export const GENERATED_TRAIT_EXCLUSIVE_SOURCES: Record<string, { id: string; name: string }[]> = ${JSON.stringify(traitExclusiveSources, null, 2)};\n`,
+);
+console.log(`Imported exclusive trait sources for ${Object.keys(traitExclusiveSources).length} traits.`);
 
 console.log(
     `Imported ${monsters.length} monsters, ` +

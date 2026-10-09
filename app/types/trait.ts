@@ -26,4 +26,6 @@ export type Trait = {
     symbolImage?: string;
     effects: TraitEffect[];
     naturalSource?: string;
+    /** Canonical source monster IDs imported from traits.csv. */
+    exclusiveSourceIds?: string[];
 };

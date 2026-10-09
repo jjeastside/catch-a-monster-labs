@@ -1,6 +1,7 @@
 import type { Trait } from "../types/trait";
+import { GENERATED_TRAIT_EXCLUSIVE_SOURCES } from "./generated/trait-exclusive-sources";
 
-export const TRAITS: Trait[] = [
+const BASE_TRAITS: Trait[] = [
     { id: "impair-1", name: "Impair I", rarity: "rare", image: "/trait-icons/impair-1.png", symbolImage: "/trait-symbols/impair.png", effects: [{ type: "damage", percentage: 5, description: "+5% Skill Damage" }] },
     { id: "impair-2", name: "Impair II", rarity: "epic", image: "/trait-icons/impair-2.png", symbolImage: "/trait-symbols/impair.png", effects: [{ type: "damage", percentage: 10, description: "+10% Skill Damage" }] },
     { id: "impair-3", name: "Impair III", rarity: "legendary", image: "/trait-icons/impair-3.png", symbolImage: "/trait-symbols/impair.png", effects: [{ type: "damage", percentage: 15, description: "+15% Skill Damage" }] },
@@ -28,6 +29,21 @@ export const TRAITS: Trait[] = [
         ] },
     { id: "vital-barrier", name: "Vital Barrier", rarity: "mythical", image: "/trait-icons/Vital Barrier.png", symbolImage: "/trait-symbols/vital-barrier.png", effects: [{ type: "postCastShield", percentage: 5, description: "After casting a skill, gain a shield equal to 5% of Max Health for 6 seconds. Does not stack." }] },
 ];
+
+// Keep the labels and all source monsters synchronized with traits.csv.
+export const TRAITS: Trait[] = BASE_TRAITS.map((trait) => {
+    const sources = GENERATED_TRAIT_EXCLUSIVE_SOURCES[trait.id] ?? [];
+    return {
+        ...trait,
+        naturalSource: sources.length ? sources.map((source) => source.name).join(", ") : undefined,
+        exclusiveSourceIds: sources.map((source) => source.id),
+    };
+});
+
+/** Traits a monster naturally / exclusively originates with, not transferred traits. */
+export function getMonsterExclusiveTraits(monsterId: string): Trait[] {
+    return TRAITS.filter((trait) => trait.exclusiveSourceIds?.includes(monsterId));
+}
 
 export function getTrait(id: string | null | undefined): Trait | null {
     const migratedId = id === "fragility" ? "fragility-vulnerable" : id;

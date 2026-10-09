@@ -14,6 +14,8 @@ import { EvolutionTree } from "./evolution-tree";
 
 import { GENERATED_MONSTERS } from "../data/generated/monsters";
 import { getPassiveImagePath } from "../data/passives";
+import { getMonsterExclusiveTraits, TRAITS } from "../data/traits";
+import { TraitIcon } from "./trait-icon";
 import {
     getPassiveConditionDescription,
     getPassiveDescription,
@@ -92,6 +94,7 @@ type SourceFilter = "All" | string;
 type LocationFilter = "All" | string;
 type SkillEffectFilter = "all" | DatabaseSkillEffect;
 type EvolutionFilter = "all" | "can-evolve" | "evolved" | "no-evolution";
+type ExclusiveTraitFilter = "all" | "has" | "none" | string;
 
 
 function compactNumber(value: number): string {
@@ -261,7 +264,7 @@ function DatabaseUiIcon({ name, className = "" }: { name: DatabaseIconName; clas
 const filterIcons: Record<string, DatabaseIconName> = {
     Rarity: "star", Element: "leaf", "Source Type": "layers", Island: "pin",
     Obtainability: "flag", Passive: "feather", "Skill Effect": "sparkles",
-    Evolution: "branch", Sort: "sort",
+    Evolution: "branch", "Exclusive Trait": "sparkles", Sort: "sort",
 };
 
 function FilterSelect({
@@ -313,7 +316,7 @@ function MonsterCard({
     const skills = monster.skillIds.map((id) => getSkill(id)).filter(Boolean).slice(0, 3);
     const passive = monster.passives?.[0] ?? null;
     const passiveImage = passive ? getPassiveImagePath(passive) : null;
-
+    const exclusiveTraits = getMonsterExclusiveTraits(monster.id);
 
     return (
         <button
@@ -382,6 +385,11 @@ function MonsterCard({
                 </div>
 
                 <div className={styles.abilityRow}>
+                    {exclusiveTraits.map((trait) => (
+                        <span key={trait.id} className={styles.exclusiveTraitIcon} title={`Exclusive trait: ${trait.name} — ${trait.effects.map(e => e.description).join(" · ")}`} aria-label={`Exclusive trait: ${trait.name}`}>
+                            <TraitIcon trait={trait} size="combat" />
+                        </span>
+                    ))}
                     {passive && passiveImage ? (
                         <img
                             src={assetPath(passiveImage)}
@@ -439,7 +447,7 @@ function DetailPanel({
     const skills = monster.skillIds.map((id) => getSkill(id)).filter(Boolean);
     const passive = monster.passives?.[0] ?? null;
     const passiveImage = passive ? getPassiveImagePath(passive) : null;
-
+    const exclusiveTraits = getMonsterExclusiveTraits(monster.id);
 
     async function copyMonsterLink() {
         const url = `${window.location.origin}${assetPath(`/monster-database/${monster.id}/`)}`;
@@ -590,6 +598,24 @@ function DetailPanel({
                             <p className="mt-3 text-xs text-[#6f7c90]">No passive.</p>
                         )}
                     </section>
+
+                    {exclusiveTraits.length > 0 && (
+                        <section className="mt-4 border-t border-[#293443] pt-4">
+                            <h3 className="text-xs font-black uppercase tracking-[0.14em] text-[#9ac3df]">Exclusive Traits</h3>
+                            <p className="mt-1 text-[11px] text-[#829bb0]">Naturally sourced from this monster · can be inherited through breeding.</p>
+                            <div className="mt-3 grid gap-2">
+                                {exclusiveTraits.map((trait) => (
+                                    <div key={trait.id} className="flex items-center gap-3 rounded-lg border border-[#304b60] bg-[#0d1c2a] p-3">
+                                        <TraitIcon trait={trait} size="selected" />
+                                        <div className="min-w-0">
+                                            <p className="text-sm font-bold text-[#e8f3fb]">{trait.name}</p>
+                                            <p className="mt-1 text-xs leading-5 text-[#a5bed1]">{trait.effects.map(effect => effect.description).join(" · ")}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
 
                     <section className="mt-4 border-t border-[#293443] pt-4">
                         <h3 className="text-xs font-black uppercase tracking-[0.14em] text-[#8290ff]">Obtained From</h3>
@@ -940,6 +966,7 @@ export function MonsterDatabase() {
     const [location, setLocation] = useState<LocationFilter>("All");
     const [obtainability, setObtainability] = useState<ObtainabilityFilter>("all");
     const [passiveFilter, setPassiveFilter] = useState<PassiveFilter>("all");
+    const [exclusiveTraitFilter, setExclusiveTraitFilter] = useState<ExclusiveTraitFilter>("all");
     const [skillEffectFilter, setSkillEffectFilter] = useState<SkillEffectFilter>("all");
     const [evolutionFilter, setEvolutionFilter] = useState<EvolutionFilter>("all");
     const [evolutionPercent, setEvolutionPercent] = useState(MIN_EVOLUTION_PERCENT);
@@ -1070,7 +1097,10 @@ export function MonsterDatabase() {
 
         return [...GENERATED_MONSTERS]
             .filter((monster) => {
-                if (normalizedSearch && !monster.name.toLowerCase().includes(normalizedSearch)) return false;
+                const exclusiveTraits = getMonsterExclusiveTraits(monster.id);
+                if (normalizedSearch && !monster.name.toLowerCase().includes(normalizedSearch) &&
+                    !exclusiveTraits.some((trait) => trait.name.toLowerCase().includes(normalizedSearch)) &&
+                    !(normalizedSearch === "exclusive" && exclusiveTraits.length > 0)) return false;
                 if (rarity !== "All" && monster.rarity !== rarity) return false;
                 if (element !== "All" && monster.element !== element) return false;
                 if (sourceType !== "All" && !monster.sources.some((source) => source.type === sourceType)) return false;
@@ -1085,6 +1115,10 @@ export function MonsterDatabase() {
                 ) {
                     return false;
                 }
+                if (exclusiveTraitFilter === "has" && exclusiveTraits.length === 0) return false;
+                if (exclusiveTraitFilter === "none" && exclusiveTraits.length !== 0) return false;
+                if (exclusiveTraitFilter !== "all" && exclusiveTraitFilter !== "has" && exclusiveTraitFilter !== "none" &&
+                    !exclusiveTraits.some((trait) => trait.id === exclusiveTraitFilter)) return false;
                 if (skillEffectFilter !== "all" && !monsterHasSkillEffect(monster, skillEffectFilter)) return false;
                 if (!matchesEvolutionFilter(monster, evolutionFilter)) return false;
                 return true;
@@ -1097,12 +1131,12 @@ export function MonsterDatabase() {
                 if (!Number.isFinite(bValue)) return -1;
                 return bValue - aValue || a.indexPosition - b.indexPosition;
             });
-    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, skillEffectFilter, evolutionFilter, sortBy, statsById]);
+    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, exclusiveTraitFilter, skillEffectFilter, evolutionFilter, sortBy, statsById]);
 
     useEffect(() => {
         const frame = requestAnimationFrame(() => setVisibleMonsterCount(30));
         return () => cancelAnimationFrame(frame);
-    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, skillEffectFilter, evolutionFilter, sortBy, statsById]);
+    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, exclusiveTraitFilter, skillEffectFilter, evolutionFilter, sortBy, statsById]);
 
     useEffect(() => {
         const target = loadMoreRef.current;
@@ -1132,6 +1166,7 @@ export function MonsterDatabase() {
         location !== "All",
         obtainability !== "all",
         passiveFilter !== "all",
+        exclusiveTraitFilter !== "all",
         skillEffectFilter !== "all",
         evolutionFilter !== "all",
         sortBy !== "index",
@@ -1245,7 +1280,7 @@ export function MonsterDatabase() {
                             ×
                         </button>
                     </div>
-                    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-[minmax(260px,1.6fr)_repeat(9,minmax(118px,0.7fr))]">
+                    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-[minmax(235px,1.5fr)_repeat(10,minmax(100px,0.7fr))]">
                         <label className={`${styles.filterField} hidden md:grid`}>
                             <span className={styles.filterLabel}><DatabaseUiIcon name="search" />Search Monsters</span>
                             <input
@@ -1291,6 +1326,15 @@ export function MonsterDatabase() {
                                 <option key={passive.id} value={passive.id}>
                                     {getPassiveUiName(passive)}
                                 </option>
+                            ))}
+                        </FilterSelect>
+
+                        <FilterSelect label="Exclusive Trait" value={exclusiveTraitFilter} onChange={setExclusiveTraitFilter}>
+                            <option value="all">All Traits</option>
+                            <option value="has">Has Exclusive</option>
+                            <option value="none">No Exclusive</option>
+                            {TRAITS.filter((trait) => (trait.exclusiveSourceIds?.length ?? 0) > 0).map((trait) => (
+                                <option key={trait.id} value={trait.id}>{trait.name}</option>
                             ))}
                         </FilterSelect>
 
@@ -1412,6 +1456,7 @@ export function MonsterDatabase() {
                                 setLocation("All");
                                 setObtainability("all");
                                 setPassiveFilter("all");
+                                setExclusiveTraitFilter("all");
                                 setSkillEffectFilter("all");
                                 setEvolutionFilter("all");
                                 setSortBy("index");
@@ -1476,6 +1521,7 @@ export function MonsterDatabase() {
                                             setLocation("All");
                                             setObtainability("all");
                                             setPassiveFilter("all");
+                                            setExclusiveTraitFilter("all");
                                             setSkillEffectFilter("all");
                                             setEvolutionFilter("all");
                                             setEvolutionPercent(MIN_EVOLUTION_PERCENT);
