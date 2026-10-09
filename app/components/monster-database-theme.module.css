@@ -1,0 +1,255 @@
+/* Monster Database visual theme. Matches the restrained navy surfaces used by
+   Monster Compare while retaining the Database's compact labels and controls.
+   This module is scoped to the Database and does not change calculation logic. */
+.pageSurface {
+    background:
+        radial-gradient(ellipse 68% 27rem at 50% 0%, rgba(42, 95, 139, .16), transparent 76%),
+        radial-gradient(ellipse 34rem 29rem at 100% 44%, rgba(31, 71, 102, .075), transparent 76%),
+        linear-gradient(180deg, #071a2a 0%, #071522 34rem, #08141f 100%);
+}
+
+.settingsPanel,
+.filterPanel {
+    border: 1px solid #254862;
+    border-radius: 10px;
+    background:
+        linear-gradient(115deg, rgba(12, 41, 65, .25), transparent 62%),
+        linear-gradient(110deg, #071b2b 0%, #061725 68%, #071826 100%);
+    box-shadow: inset 0 1px 0 rgba(160, 203, 235, .035), 0 4px 18px rgba(0, 7, 17, .13);
+}
+
+.settingsPanel { padding: 14px 16px 12px; }
+.settingsControls { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
+.settingControl {
+    display: inline-flex;
+    min-height: 43px;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid #284b65;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #0c2235, #091b2a);
+    padding: 5px 12px;
+    color: #e3edf8;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: border-color .16s ease, box-shadow .16s ease, background .16s ease;
+}
+button.settingControl:hover,
+.settingControl:focus-within {
+    border-color: #3e779c;
+    box-shadow: 0 0 0 2px rgba(57, 132, 175, .08);
+}
+.settingControl svg { width: 20px; height: 20px; flex-shrink: 0; }
+.medalIcon { color: #e5ba63; }
+.mutationIcon { color: #91b5db; }
+.accountIcon { color: #79c6a9; }
+.maxActive { border-color: #39699a; }
+.accountActive { border-color: #35745e; }
+
+.toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 7px;
+    min-width: 63px;
+    padding: 4px 5px 4px 11px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #304057, #26354a);
+    color: #c1cddc;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.25;
+}
+.toggleBlue {
+    background: linear-gradient(90deg, #214d88, #3369b0);
+    color: #f7fbff;
+    box-shadow: 0 0 0 1px rgba(78, 141, 205, .22);
+}
+.toggleGreen {
+    background: linear-gradient(90deg, #1a5b4d, #237d66);
+    color: #f5fffb;
+    box-shadow: 0 0 0 1px rgba(74, 163, 128, .16);
+}
+.toggleThumb {
+    display: block;
+    height: 19px;
+    width: 19px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #e8f0fa;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+}
+.mutationSelect {
+    min-width: 112px;
+    height: 32px;
+    border: 1px solid #315777;
+    border-radius: 6px;
+    padding: 0 10px;
+    background: #041320;
+    color: #edf4fd;
+    font-size: 12px;
+    font-weight: 600;
+    color-scheme: dark;
+    outline: none;
+}
+.mutationSelect:focus-visible { outline: 2px solid #69a9d5; outline-offset: 2px; }
+.presetDescription { margin-top: 9px; color: #91adc5; font-size: 10px; line-height: 1.6; }
+.accountDetails { margin-top: 7px; color: #b4d2ed; font-size: 12px; }
+.accountDetails summary { width: fit-content; cursor: pointer; padding: 4px 0; }
+.accountDetails summary:hover { color: #bcdfff; }
+
+.filterField { display: grid; min-width: 0; align-content: start; gap: 8px; }
+.filterLabel {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #b6d3ea;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .035em;
+    line-height: 1.2;
+    text-transform: none;
+    white-space: nowrap;
+}
+.filterLabel svg { width: 15px; height: 15px; flex-shrink: 0; color: #6daace; }
+.filterField:nth-child(3) .filterLabel svg { color: #7fc2a5; }
+.filterField:nth-child(4) .filterLabel svg { color: #8baed0; }
+.filterField:nth-child(7) .filterLabel svg { color: #8baed0; }
+.filterSelect {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 39px;
+    border: 1px solid #284b65;
+    border-radius: 7px;
+    padding: 0 11px;
+    background: #041320;
+    color: #eef3ff;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    color-scheme: dark;
+    outline: none;
+    transition: border-color .16s ease, box-shadow .16s ease;
+}
+.filterSelect::placeholder { color: #859eb5; }
+.filterField:last-child .filterSelect { border-color: #396b9e; }
+.filterSelect:hover { border-color: #3984af; }
+.filterSelect:focus {
+    border-color: #5b9aca;
+    box-shadow: 0 0 0 2px rgba(57, 132, 175, .12);
+}
+
+.comparisonGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px 18px;
+    margin-top: 15px;
+    border-top: 1px solid #25475f;
+    padding-top: 15px;
+}
+.passiveCompare,
+.evolutionColumn { min-width: 0; }
+.sectionHeading,
+.teamHeading { display: flex; align-items: flex-start; gap: 9px; }
+.sectionHeading > svg { margin-top: 2px; }
+.headingIcon { width: 20px; height: 20px; flex-shrink: 0; color: #7ab5dc; }
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: #a9c6df;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .09em;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+.sectionDescription { margin: 3px 0 0; color: #91adc5; font-size: 10px; line-height: 1.5; }
+.passiveButtons { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 11px; }
+.passiveButton {
+    min-height: 39px;
+    min-width: 0;
+    border: 1px solid #284b65;
+    border-radius: 7px;
+    background: linear-gradient(180deg, #0b2235, #081a29);
+    padding: 7px 5px;
+    color: #c5d8e9;
+    font-size: 11px;
+    font-weight: 650;
+    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.passiveButton:hover, .teamButton:hover { border-color: #478ab5; color: #f7fbff; }
+.passiveSelected {
+    border-color: #477eb5;
+    background: linear-gradient(180deg, #183f70, #102e54);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 0 0 1px rgba(57, 109, 164, .1);
+    color: #f7fbff;
+    font-weight: 800;
+}
+.evolutionHeader .sectionTitle { color: #a9c6df; }
+.evolutionRange { flex-shrink: 0; color: #91adc5; font-size: 10px; font-weight: 700; }
+.emLabel { color: #b6d3ea; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+.teamRow { min-width: 0; border-top: 1px solid #25475f; padding-top: 12px; }
+.teamButtonsSection { min-width: 0; }
+.teamHeading { align-items: center; }
+.teamButtons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 9px; }
+.teamButton {
+    display: flex;
+    min-height: 40px;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid #284b65;
+    border-radius: 7px;
+    background: linear-gradient(180deg, #0b2235, #081a29);
+    padding: 7px 9px;
+    color: #c5d8e9;
+    font-size: 11px;
+    font-weight: 650;
+    text-align: center;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+.teamSelected {
+    border-color: #477eb5;
+    background: linear-gradient(180deg, #14385f, #102b4b);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .065);
+    color: #f7fbff;
+}
+.teamHelp {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    min-width: 0;
+    margin-top: 10px;
+    color: #91adc5;
+    font-size: 10px;
+    line-height: 1.55;
+}
+.teamHelp p + p { margin-top: 4px; }
+.helpIcon { width: 18px; height: 18px; flex-shrink: 0; color: #77adcf; }
+
+@media (min-width: 1200px) {
+    .comparisonGrid { grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); }
+    .evolutionColumn { border-left: 1px solid #25475f; padding-left: 17px; }
+    .teamRow { display: grid; grid-column: 1 / -1; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); gap: 18px; align-items: center; }
+    .teamButtonsSection { display: flex; align-items: center; gap: 15px; }
+    .teamButtons { flex: 1; margin-top: 0; }
+    .teamHelp { margin-top: 0; border-left: 1px solid #25475f; padding-left: 17px; }
+}
+@media (max-width: 650px) {
+    .settingsPanel { padding: 12px; }
+    .settingControl { max-width: 100%; gap: 8px; font-size: 11px; }
+    .settingsControls { gap: 8px; }
+    .filterPanel { border-radius: 0; }
+    .passiveButton { font-size: 10px; }
+    .teamButtons { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .settingControl, .filterSelect, .passiveButton, .teamButton { transition: none; }
+}

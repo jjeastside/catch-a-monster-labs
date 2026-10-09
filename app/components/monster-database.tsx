@@ -3,6 +3,7 @@
 import { useCombatMode } from "../lib/combat-mode";
 import { EvolutionPvpNotice } from "./evolution-pvp-notice";
 import { PageHeading } from "./page-heading";
+import styles from "./monster-database-theme.module.css";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
@@ -228,24 +229,61 @@ function monsterHasSkillEffect(monster: GeneratedMonster, effect: DatabaseSkillE
     });
 }
 
+type DatabaseIconName =
+    | "medal" | "dna" | "bars" | "search" | "star" | "leaf" | "layers"
+    | "pin" | "flag" | "feather" | "sparkles" | "branch" | "sort"
+    | "swords" | "users" | "info" | "chevron";
+
+function DatabaseUiIcon({ name, className = "" }: { name: DatabaseIconName; className?: string }) {
+    const content: Record<DatabaseIconName, ReactNode> = {
+        medal: <><circle cx="12" cy="9" r="5" /><path d="m8.7 13-1.6 8 4.9-2.6 4.9 2.6-1.6-8" /><path d="m12 6.4.8 1.7 1.9.3-1.4 1.4.3 1.9-1.6-.9-1.6.9.3-1.9-1.4-1.4 1.9-.3z" /></>,
+        dna: <><path d="M3 3c0 10 18 8 18 18M21 3C21 13 3 11 3 21M5 7h14M4.5 12h15M5 17h14" /></>,
+        bars: <><rect x="3" y="12" width="4" height="9" rx="1" /><rect x="10" y="7" width="4" height="14" rx="1" /><rect x="17" y="3" width="4" height="18" rx="1" /></>,
+        search: <><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5" /></>,
+        star: <path d="m12 2 3 6.2 6.8 1-4.9 4.8 1.2 6.8-6.1-3.2-6.1 3.2 1.2-6.8-4.9-4.8 6.8-1z" />,
+        leaf: <><path d="M20 4c-9 0-15 3-15 11 0 3 2 5 5 5 8 0 11-6 10-16Z" /><path d="M4 21c2-7 6-10 12-13" /></>,
+        layers: <><path d="m12 3 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 16l9 5 9-5" /></>,
+        pin: <><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></>,
+        flag: <><path d="M5 22V3M5 4c3-3 6 3 9 0s5 0 5 0v10c-3-3-6 3-9 0s-5 0-5 0" /></>,
+        feather: <><path d="M20 3C11 2 4 7 4 15c0 2 2 4 4 4 8 0 13-7 12-16Z" /><path d="M3 21 17 7M8 16l-2-5M12 12l-1-5" /></>,
+        sparkles: <><path d="m12 2 1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9L12 2ZM20 17l.8 2.2L23 20l-2.2.8L20 23l-.8-2.2L17 20l2.2-.8L20 17Z" /></>,
+        branch: <><circle cx="7" cy="5" r="2" /><circle cx="17" cy="5" r="2" /><circle cx="12" cy="19" r="2" /><path d="M7 7v4c0 4 5 4 5 6M17 7v4c0 4-5 4-5 6" /></>,
+        sort: <><path d="M9 6h12M9 12h9M9 18h6M3 6h2M3 12h2M3 18h2" /></>,
+        swords: <><path d="m3 3 7 7M7 3 3 7l10 10M21 3l-7 7M17 3l4 4L11 17M4 20l4-4M20 20l-4-4" /></>,
+        users: <><circle cx="9" cy="8" r="3" /><path d="M2.5 20v-2a6.5 6.5 0 0 1 13 0v2H2.5ZM16 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3.5 5v1H18" /></>,
+        info: <><circle cx="12" cy="12" r="10" /><path d="M12 11v6M12 7h.01" /></>,
+        chevron: <path d="m6 9 6 6 6-6" />,
+    };
+    return <svg aria-hidden="true" className={className} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{content[name]}</svg>;
+}
+
+const filterIcons: Record<string, DatabaseIconName> = {
+    Rarity: "star", Element: "leaf", "Source Type": "layers", Island: "pin",
+    Obtainability: "flag", Passive: "feather", "Skill Effect": "sparkles",
+    Evolution: "branch", Sort: "sort",
+};
+
 function FilterSelect({
-                          label,
-                          value,
-                          onChange,
-                          children,
-                      }: {
+    label,
+    value,
+    onChange,
+    children,
+}: {
     label: string;
     value: string;
     onChange: (value: string) => void;
     children: ReactNode;
 }) {
     return (
-        <label className="grid gap-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#69768a]">
-            <span>{label}</span>
+        <label className={styles.filterField}>
+            <span className={styles.filterLabel}>
+                <DatabaseUiIcon name={filterIcons[label] ?? "layers"} />
+                {label}
+            </span>
             <select
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
-                className="h-10 rounded-lg border border-[#344050] bg-[#101722] px-3 text-xs font-semibold normal-case tracking-normal text-[#dbe2ee] outline-none transition focus:border-[#7182ff]"
+                className={styles.filterSelect}
             >
                 {children}
             </select>
@@ -665,16 +703,14 @@ function DatabaseEvolutionMultiplierEditor({
 
     return (
         <div>
-            <div className="mb-1.5 flex items-center justify-between gap-3">
+            <div className={`${styles.evolutionHeader} mb-2 flex items-center justify-between gap-3`}>
                 <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.12em] text-[#69768a]">
-                        Evolution Multiplier
-                    </p>
-                    <p className="mt-0.5 text-[9px] text-[#59677c]">
+                    <p className={styles.sectionTitle}><DatabaseUiIcon name="bars" className={styles.headingIcon} />Evolution Multiplier</p>
+                    <p className={styles.sectionDescription}>
                         Applies only to evolved monsters when comparing {sortBy.toUpperCase()}. Drag upward for 0.01% precision.
                     </p>
                 </div>
-                <span className="shrink-0 text-[9px] font-semibold text-[#718099]">
+                <span className={styles.evolutionRange}>
                     {MIN_EVOLUTION_PERCENT}%–{MAX_EVOLUTION_PERCENT}%
                 </span>
             </div>
@@ -854,7 +890,7 @@ function DatabaseEvolutionMultiplierEditor({
                 </div>
 
                 <label className="grid w-[104px] shrink-0 gap-1">
-                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#69768a]">EM %</span>
+                    <span className={styles.emLabel}>EM %</span>
                     <div className="relative">
                         <input
                             type="number"
@@ -1106,31 +1142,57 @@ export function MonsterDatabase() {
     ].filter(Boolean).length;
 
     return (
-        <main className="min-h-screen bg-[#0d131d] text-white">
+        <main className={`${styles.pageSurface} min-h-screen text-white`}>
             <div className="mx-auto w-full max-w-[1800px] px-4 py-6 sm:px-6 lg:px-8">
                 <div className="mb-4">
                     <PageHeading title="Monster Database" image="/icons/monster-database.png" aside={<span>{filteredMonsters.length} / {GENERATED_MONSTERS.length} monsters</span>}>Discover every monster and explore its <span className="text-[#69dfaa]">skills, stats, and locations.</span></PageHeading>
                 </div>
 
-                <section aria-label="Database stat settings" className="rounded-xl border border-[#293443] bg-[#111925] p-3">
-                    <div className="flex flex-wrap items-center gap-2">
-                        <button type="button" aria-pressed={maxStats} onClick={() => setMaxStats(value => !value)} className={`rounded-lg border px-4 py-2 text-xs font-bold ${maxStats ? "border-[#7182ff] bg-[#7182ff] text-white" : "border-[#46546a] text-[#cbd5e1]"}`}>
-                            Max stats: {maxStats ? "On" : "Off"}
+                <section aria-label="Database stat settings" className={styles.settingsPanel}>
+                    <div className={styles.settingsControls}>
+                        <button
+                            type="button"
+                            aria-pressed={maxStats}
+                            onClick={() => setMaxStats(value => !value)}
+                            className={`${styles.settingControl} ${maxStats ? styles.maxActive : ""}`}
+                        >
+                            <DatabaseUiIcon name="medal" className={styles.medalIcon} />
+                            <span>Max stats</span>
+                            <span className={`${styles.toggle} ${maxStats ? styles.toggleBlue : ""}`}>
+                                <span>{maxStats ? "On" : "Off"}</span>
+                                <span className={styles.toggleThumb} />
+                            </span>
                         </button>
-                        <label className="flex items-center gap-2 text-xs text-[#aeb9cb]">
-                            Mutations
-                            <select aria-label="Max stat mutations" value={mutationMode} onChange={event => setMutationMode(event.target.value as "normal" | "x")} className="rounded-lg border border-[#46546a] bg-[#141c28] px-3 py-2 text-white">
+                        <label className={styles.settingControl}>
+                            <DatabaseUiIcon name="dna" className={styles.mutationIcon} />
+                            <span>Mutations</span>
+                            <select
+                                aria-label="Max stat mutations"
+                                value={mutationMode}
+                                onChange={event => setMutationMode(event.target.value as "normal" | "x")}
+                                className={styles.mutationSelect}
+                            >
                                 <option value="normal">All normal</option>
                                 <option value="x">All X</option>
                             </select>
                         </label>
-                        <button type="button" aria-pressed={includeAccount} onClick={() => setIncludeAccount(value => !value)} className={`rounded-lg border px-4 py-2 text-xs font-bold ${includeAccount ? "border-[#69dfaa] bg-[#173a30] text-[#69dfaa]" : "border-[#46546a] text-[#cbd5e1]"}`}>
-                            Account multipliers: {includeAccount ? "On" : "Off"}
+                        <button
+                            type="button"
+                            aria-pressed={includeAccount}
+                            onClick={() => setIncludeAccount(value => !value)}
+                            className={`${styles.settingControl} ${includeAccount ? styles.accountActive : ""}`}
+                        >
+                            <DatabaseUiIcon name="bars" className={styles.accountIcon} />
+                            <span>Account multipliers</span>
+                            <span className={`${styles.toggle} ${includeAccount ? styles.toggleGreen : ""}`}>
+                                <span>{includeAccount ? "On" : "Off"}</span>
+                                <span className={styles.toggleThumb} />
+                            </span>
                         </button>
                     </div>
-                    <p className="mt-2 text-[11px] leading-5 text-[#8c9bb0]">{presetDescription}</p>
-                    {includeAccount && <details className="mt-2 text-xs text-[#aeb9cb]">
-                        <summary className="cursor-pointer py-1">Edit saved account multipliers ({accountBuild.accountMultipliers.completedAchievementIds.length} achievements)</summary>
+                    <p className={styles.presetDescription}>{presetDescription}</p>
+                    {includeAccount && <details className={styles.accountDetails}>
+                        <summary>Edit saved account multipliers ({accountBuild.accountMultipliers.completedAchievementIds.length} achievements)</summary>
                         <AccountMultipliers build={accountBuild} onBuildChangeAction={setAccountBuild} />
                     </details>}
                 </section>
@@ -1172,7 +1234,7 @@ export function MonsterDatabase() {
                     />
                 ) : null}
 
-                <section className={`${filtersOpen ? "fixed" : "hidden"} bottom-0 right-0 top-0 z-50 w-[min(360px,calc(100vw-24px))] overflow-y-auto border-l border-[#344050] bg-[#111925] p-4 shadow-[-18px_0_50px_rgba(0,0,0,0.5)] md:static md:mt-5 md:block md:w-auto md:overflow-visible md:rounded-xl md:border md:p-3 md:shadow-none`}>
+                <section className={`${filtersOpen ? "fixed" : "hidden"} ${styles.filterPanel} bottom-0 right-0 top-0 z-50 w-[min(360px,calc(100vw-24px))] overflow-y-auto border-l border-[#344050] bg-[#111925] p-4 shadow-[-18px_0_50px_rgba(0,0,0,0.5)] md:static md:mt-5 md:block md:w-auto md:overflow-visible md:rounded-xl md:p-4 md:shadow-none`}>
                     <div className="mb-4 flex items-center justify-between md:hidden">
                         <div>
                             <p className="text-base font-black text-white">Filters & Sorting</p>
@@ -1188,13 +1250,13 @@ export function MonsterDatabase() {
                         </button>
                     </div>
                     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-[minmax(260px,1.6fr)_repeat(9,minmax(118px,0.7fr))]">
-                        <label className="hidden gap-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#69768a] md:grid">
-                            <span>Search</span>
+                        <label className={`${styles.filterField} hidden md:grid`}>
+                            <span className={styles.filterLabel}><DatabaseUiIcon name="search" />Search Monsters</span>
                             <input
                                 value={search}
                                 onChange={(event) => setSearch(event.target.value)}
                                 placeholder="Search monsters..."
-                                className="h-10 rounded-lg border border-[#344050] bg-[#0d141e] px-3 text-sm normal-case tracking-normal text-white outline-none placeholder:text-[#566376] focus:border-[#7182ff]"
+                                className={styles.filterSelect}
                             />
                         </label>
 
@@ -1269,64 +1331,53 @@ export function MonsterDatabase() {
                     </div>
 
                     {sortBy !== "index" ? (
-                        <div className="mt-3 grid gap-3 border-t border-[#293443] pt-3 xl:grid-cols-[minmax(260px,0.75fr)_minmax(360px,1.25fr)]">
-                            <div>
-                                <div className="mb-1.5">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.12em] text-[#69768a]">
-                                        Passive Comparison
-                                    </p>
-                                    <p className="mt-0.5 text-[9px] text-[#59677c]">
-                                        Choose which self passives count toward {sortBy.toUpperCase()} ranking.
-                                    </p>
+                        <div className={styles.comparisonGrid}>
+                            <div className={styles.passiveCompare}>
+                                <div className={styles.sectionHeading}>
+                                    <DatabaseUiIcon name="swords" className={styles.headingIcon} />
+                                    <div>
+                                        <p className={styles.sectionTitle}>Passive Comparison</p>
+                                        <p className={styles.sectionDescription}>Choose which self passives count toward {sortBy.toUpperCase()} ranking.</p>
+                                    </div>
                                 </div>
-
-                                <div className="grid grid-cols-3 gap-1.5">
+                                <div className={styles.passiveButtons}>
                                     <button
                                         type="button"
                                         onClick={() => setPassiveCompareMode("none")}
                                         aria-pressed={passiveCompareMode === "none"}
-                                        className={`h-9 rounded-md border px-2 text-[9px] font-bold uppercase tracking-[0.04em] transition ${
-                                            passiveCompareMode === "none"
-                                                ? "border-[#7182ff] bg-[#202846] text-[#c7ccff]"
-                                                : "border-[#344050] bg-[#141c28] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-white"
-                                        }`}
+                                        className={`${styles.passiveButton} ${passiveCompareMode === "none" ? styles.passiveSelected : ""}`}
                                         title="Ignore self passives; selected team passives still apply"
-                                    >
-                                        No Passives
-                                    </button>
-
+                                    >No Passives</button>
                                     <button
                                         type="button"
                                         onClick={() => setPassiveCompareMode("always")}
                                         aria-pressed={passiveCompareMode === "always"}
-                                        className={`h-9 rounded-md border px-2 text-[9px] font-bold uppercase tracking-[0.04em] transition ${
-                                            passiveCompareMode === "always"
-                                                ? "border-[#7182ff] bg-[#202846] text-[#c7ccff]"
-                                                : "border-[#344050] bg-[#141c28] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-white"
-                                        }`}
+                                        className={`${styles.passiveButton} ${passiveCompareMode === "always" ? styles.passiveSelected : ""}`}
                                         title="Include non-conditional / always-active self passives"
-                                    >
-                                        Non-Conditional
-                                    </button>
-
+                                    >Non-Conditional</button>
                                     <button
                                         type="button"
                                         onClick={() => setPassiveCompareMode("conditional")}
                                         aria-pressed={passiveCompareMode === "conditional"}
-                                        className={`h-9 rounded-md border px-2 text-[9px] font-bold uppercase tracking-[0.04em] transition ${
-                                            passiveCompareMode === "conditional"
-                                                ? "border-[#7182ff] bg-[#202846] text-[#c7ccff]"
-                                                : "border-[#344050] bg-[#141c28] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-white"
-                                        }`}
+                                        className={`${styles.passiveButton} ${passiveCompareMode === "conditional" ? styles.passiveSelected : ""}`}
                                         title="Include always-active self passives plus supported conditional self passives such as Vital Surge"
-                                    >
-                                        Conditional
-                                    </button>
+                                    >Conditional</button>
                                 </div>
-
-                                <div className="mt-3 border-t border-[#293443] pt-2">
-                                    <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#8290a5]">Team Passives</p>
-                                    <div className="grid grid-cols-2 gap-1.5">
+                            </div>
+                            <div className={styles.evolutionColumn}>
+                                <DatabaseEvolutionMultiplierEditor
+                                    value={evolutionPercent}
+                                    onChange={setEvolutionPercent}
+                                    sortBy={sortBy}
+                                />
+                            </div>
+                            <div className={styles.teamRow}>
+                                <div className={styles.teamButtonsSection}>
+                                    <div className={styles.teamHeading}>
+                                        <DatabaseUiIcon name="users" className={styles.headingIcon} />
+                                        <p className={styles.sectionTitle}>Team Passives</p>
+                                    </div>
+                                    <div className={styles.teamButtons}>
                                         {DATABASE_TEAM_PASSIVES.map(passive => {
                                             const active = teamPassives.includes(passive.id);
                                             return <button
@@ -1335,26 +1386,22 @@ export function MonsterDatabase() {
                                                 aria-pressed={active}
                                                 onClick={() => setTeamPassives(current => active ? current.filter(id => id !== passive.id) : [...current, passive.id])}
                                                 title={`${passive.bonus} ${passive.name} from a teammate. Does not stack with the same self passive.`}
-                                                className={`flex min-h-10 items-center justify-center gap-2 rounded-md border px-2 py-2 text-[10px] font-bold transition ${active ? "border-[#7182ff] bg-[#202846] text-[#c7ccff]" : "border-[#344050] bg-[#141c28] text-[#9aa5b8] hover:border-[#5c6a80] hover:text-white"}`}
+                                                className={`${styles.teamButton} ${active ? styles.teamSelected : ""}`}
                                             >
                                                 <img src={assetPath(passive.icon)} alt="" className="size-5 shrink-0 object-contain" />
                                                 <span>{passive.name} <span className="whitespace-nowrap">{passive.bonus}</span></span>
                                             </button>;
                                         })}
                                     </div>
-                                    <p className="mt-1.5 text-[9px] leading-4 text-[#69768a]">Apply either or both to every monster. Duplicate self and team passives count once. Team passives remain active with No Passives selected.</p>
                                 </div>
-
-                                <p className="mt-1.5 text-[9px] leading-4 text-[#59677c]">
-                                    Conditional currently adds supported self conditions such as Vital Surge. Boss, Rift, Spire, and Dungeon context passives remain excluded.
-                                </p>
+                                <div className={styles.teamHelp}>
+                                    <DatabaseUiIcon name="info" className={styles.helpIcon} />
+                                    <div>
+                                        <p>Apply either or both to every monster. Duplicate self and team passives count once. Team passives remain active with No Passives selected.</p>
+                                        <p>Conditional includes supported self conditions such as Vital Surge. Boss, Rift, Spire, and Dungeon context passives remain excluded.</p>
+                                    </div>
+                                </div>
                             </div>
-
-                            <DatabaseEvolutionMultiplierEditor
-                                value={evolutionPercent}
-                                onChange={setEvolutionPercent}
-                                sortBy={sortBy}
-                            />
                         </div>
                     ) : null}
 
