@@ -6,6 +6,7 @@ import { LegacyHashRedirect } from "./components/legacy-hash-redirect";
 import { SiteFooter } from "./components/site-footer";
 import { TopNavigation } from "./components/top-navigation";
 import { releases } from "./data/changelog-releases";
+import { gamePatches } from "./data/game-patches";
 import { GENERATED_MONSTERS } from "./data/generated/monsters";
 import { GENERATED_SKILLS } from "./data/generated/skills";
 import { assetPath } from "./lib/asset-path";
@@ -70,7 +71,14 @@ const uniquePassiveCount = new Set(
     GENERATED_MONSTERS.flatMap((monster) => (monster.passives ?? []).map((passive) => passive.id)),
 ).size;
 const sourceRecordCount = GENERATED_MONSTERS.reduce((total, monster) => total + monster.sources.length, 0);
-const latestRelease = releases[0];
+const latestGamePatch = gamePatches[0];
+const patchPreviewHighlights = latestGamePatch.sections
+    .filter((section) => !/code/i.test(section.title))
+    .flatMap((section) => section.changes)
+    .slice(0, 4);
+const patchPreviewCode = latestGamePatch.sections
+    .find((section) => /code/i.test(section.title))
+    ?.changes[0]?.replace(/^New Code:\s*/i, "");
 
 const featureCards = [
     {
@@ -314,17 +322,30 @@ function TeamBuilderPreview() {
 
 function PatchPreview() {
     return (
-        <div className="mt-5 min-h-[174px] rounded-xl border border-[#214a79] bg-[#081322] p-4 shadow-inner shadow-black/40">
-            <div className="flex items-center justify-between gap-3">
-                <span className="rounded-md bg-[#5f4de8] px-2.5 py-1 text-[10px] font-black text-white">{latestRelease.version}</span>
-                <span className="text-[10px] text-[#7187a8]">{latestRelease.date}</span>
+        <div className="mt-5 flex h-[174px] flex-col overflow-hidden rounded-xl border border-[#214a79] bg-[#081322] p-3 shadow-inner shadow-black/40">
+            <div className="flex items-center justify-between gap-2">
+                <span className="rounded-md border border-[#3a559c] bg-[#1c3159] px-2 py-1 text-[10px] font-black text-[#b4d6ff]">
+                    {latestGamePatch.version}
+                </span>
+                <span className="text-[9px] text-[#8197b5]">{latestGamePatch.date}</span>
             </div>
-            <p className="mt-3 text-xs font-black text-[#e4f2ff]">{latestRelease.title ?? "Latest Cam Lab Improvements"}</p>
-            <ul className="mt-2 space-y-2 text-[10px] leading-4 text-[#a9b8ce]">
-                {latestRelease.changes.slice(0, 3).map((change) => (
-                    <li key={change} className="line-clamp-2"><span className="mr-1.5 font-black text-[#4ce778]">+</span>{change}</li>
+            <p className="mt-2 truncate text-[11px] font-black text-white">
+                {latestGamePatch.sections[0]?.title ?? "Latest Game Update"}
+            </p>
+            <ul className="mt-1.5 space-y-1 text-[9px] leading-3.5 text-[#b8c9dc]">
+                {patchPreviewHighlights.map((change) => (
+                    <li key={change} className="flex min-w-0 items-start gap-1.5">
+                        <span aria-hidden="true" className="shrink-0 font-black text-[#57a8ff]">•</span>
+                        <span className="min-w-0 truncate">{change}</span>
+                    </li>
                 ))}
             </ul>
+            {patchPreviewCode ? (
+                <div className="mt-auto flex items-center gap-2 border-t border-[#1d3859] pt-1.5 text-[9px]">
+                    <span className="font-bold text-[#a2b4cd]">New code</span>
+                    <span className="truncate rounded bg-[#172c3f] px-1.5 py-0.5 font-black text-[#ffd764]">{patchPreviewCode}</span>
+                </div>
+            ) : null}
         </div>
     );
 }
