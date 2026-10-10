@@ -1,7 +1,7 @@
 
 import { useCombatMode } from "../lib/combat-mode";
 import { buildForCombatMode } from "../lib/combat-mode-build";
-import { formatNumber, formatStatNumber } from "../lib/format-numbers";
+import { formatNumber, formatStatNumber as formatSharedStatNumber } from "../lib/format-numbers";
 import { calculateSkillDps, calculateSkillSummary } from "../lib/calculations/skill-summary";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -53,6 +53,32 @@ import type { Trait } from "../types/trait";
 import { MonsterOverviewCard } from "./monster-overview-card";
 import { Panel } from "./panel";
 import { TraitIcon } from "./trait-icon";
+
+// Match the game's five-digit display only for 100–999 K/M/B/T values.
+// Other magnitudes retain the original four-significant-digit display.
+const hasHundredsAbbreviation = (value: number) => {
+    const absoluteValue = Math.abs(value);
+    return (
+        (absoluteValue >= 100_000 && absoluteValue < 1_000_000) ||
+        (absoluteValue >= 100_000_000 && absoluteValue < 1_000_000_000) ||
+        (absoluteValue >= 100_000_000_000 && absoluteValue < 1_000_000_000_000) ||
+        (absoluteValue >= 100_000_000_000_000 && absoluteValue < 1_000_000_000_000_000)
+    );
+};
+
+const formatStatNumber = (value: number) =>
+    formatSharedStatNumber(value, hasHundredsAbbreviation(value) ? 5 : 4);
+// Hover reveals exactly one additional significant digit over the display.
+const formatHoverStatNumber = (value: number) =>
+    formatSharedStatNumber(value, hasHundredsAbbreviation(value) ? 6 : 5);
+
+function StatAmount({ value }: { value: number }) {
+    return (
+        <span className="cursor-help tabular-nums" title={formatHoverStatNumber(value)}>
+            {formatStatNumber(value)}
+        </span>
+    );
+}
 
 function DamageIncreaseEffect({ effect }: { effect: SkillStatusEffect }) {
     const targetLabel = effect.target === "Team" ? "Team" : "Self";
@@ -427,7 +453,7 @@ function HealingEffect({ effect, calculatedAmount, cooldown, description, single
                     <InfoTooltip label="Explain Healing" text={tooltip} />
                 </div>
                 <p className="mt-1.5 text-xl font-bold tracking-tight text-[#f6f8fc]">
-                    {calculatedAmount !== null ? formatStatNumber(calculatedAmount) : `${formatNumber(amount)}%`}
+                    {calculatedAmount !== null ? <StatAmount value={calculatedAmount} /> : `${formatNumber(amount)}%`}
                     <span className="ml-1.5 text-xs font-semibold text-[#9fd8b2]">{displayTarget}</span>
                 </p>
                 {effect.condition && (
@@ -445,7 +471,7 @@ function HealingEffect({ effect, calculatedAmount, cooldown, description, single
                     <InfoTooltip label="Explain healing per second" text={`${formatStatNumber(calculatedAmount)} Healing ÷ ${formatNumber(cooldown)}s cooldown. Healing cannot critically heal.${effect.condition ? ` Requires: ${effect.condition}.` : ""}`} />
                 </div>
                 <p className="mt-1.5 text-xl font-bold tracking-tight text-[#f6f8fc]">
-                    {formatStatNumber(calculatedAmount / cooldown)}
+                    <StatAmount value={calculatedAmount / cooldown} />
                     <span className="ml-1 text-xs font-semibold text-[#9fd8b2]">/s</span>
                 </p>
             </div>
@@ -721,12 +747,14 @@ type BuildStatProps = {
     iconSrc: string;
     label: string;
     value: string;
+    hoverValue?: string;
 };
 
 function BuildStat({
                        iconSrc,
                        label,
                        value,
+                       hoverValue,
                    }: BuildStatProps) {
     return (
         <div className="rounded-lg border border-[#25475f] bg-[#041320] p-4">
@@ -742,7 +770,7 @@ function BuildStat({
                 </p>
             </div>
 
-            <p className="mt-3 text-2xl font-semibold text-[#e3e8f1]">
+            <p className={`mt-3 text-2xl font-semibold text-[#e3e8f1] ${hoverValue ? "cursor-help tabular-nums" : ""}`} title={hoverValue}>
                 {value}
             </p>
         </div>
@@ -873,9 +901,9 @@ function SkillDamageValue({
             <div className="mt-1.5 min-w-0">
                 <p
                     className="min-w-0 whitespace-nowrap text-[clamp(1rem,2vw,1.25rem)] font-bold tracking-tight text-[#f6f8fc]"
-                    title={formatStatNumber(totalDamage)}
+                    title={formatHoverStatNumber(totalDamage)}
                 >
-                    {formatStatNumber(totalDamage)}
+                    <StatAmount value={totalDamage} />
                 </p>
                 {hasLifeSteal && (
                     <div className="mt-2 border-t border-[#305672] pt-2">
@@ -884,8 +912,8 @@ function SkillDamageValue({
                             <span className="text-[11px] font-bold uppercase tracking-[0.08em]">Life Steal</span>
                             <InfoTooltip label="Explain Life Steal" text={lifeStealTooltip} />
                         </div>
-                        <p className="mt-1 text-base font-bold text-[#82f0b7]" title={formatStatNumber(totalHealed)}>
-                            {formatStatNumber(totalHealed)}
+                        <p className="mt-1 text-base font-bold text-[#82f0b7]" title={formatHoverStatNumber(totalHealed)}>
+                            <StatAmount value={totalHealed} />
                         </p>
                     </div>
                 )}
@@ -926,14 +954,14 @@ function SkillDamageValue({
                 <div className="flex items-baseline gap-1.5">
                     <p
                         className="min-w-0 whitespace-nowrap text-[clamp(1rem,2vw,1.25rem)] font-bold tracking-tight text-[#f6f8fc]"
-                        title={`${formatStatNumber(damagePerHit)} per hit × ${totalHits} hits`}
+                        title={`${formatHoverStatNumber(damagePerHit)} per hit × ${totalHits} hits`}
                     >
-                        {formatStatNumber(damagePerHit)}
+                        <StatAmount value={damagePerHit} />
                     </p>
                     <span className="text-sm font-semibold text-[#9aa6b8]">× {totalHits}</span>
                 </div>
                 <p className="mt-1 text-[11px] font-semibold text-[#8e99ad]">
-                    Total <span className={accentClass}>{formatStatNumber(totalDamage)}</span>
+                    Total <span className={accentClass}><StatAmount value={totalDamage} /></span>
                 </p>
                 {hasLifeSteal && (
                     <div className="mt-2 border-t border-[#305672] pt-2">
@@ -942,11 +970,11 @@ function SkillDamageValue({
                             <span className="text-[11px] font-bold uppercase tracking-[0.08em]">Life Steal</span>
                             <InfoTooltip label="Explain Life Steal" text={lifeStealTooltip} />
                         </div>
-                        <p className="mt-1 text-base font-bold text-[#82f0b7]" title={`${formatStatNumber(healedPerHit)} × ${totalHits}`}>
-                            {formatStatNumber(healedPerHit)} <span className="text-sm font-semibold text-[#9bdcb9]">× {totalHits}</span>
+                        <p className="mt-1 text-base font-bold text-[#82f0b7]" title={`${formatHoverStatNumber(healedPerHit)} × ${totalHits}`}>
+                            <StatAmount value={healedPerHit} /> <span className="text-sm font-semibold text-[#9bdcb9]">× {totalHits}</span>
                         </p>
                         <p className="mt-0.5 text-[11px] font-semibold text-[#8e99ad]">
-                            Total <span className="text-[#82f0b7]">{formatStatNumber(totalHealed)}</span>
+                            Total <span className="text-[#82f0b7]"><StatAmount value={totalHealed} /></span>
                         </p>
                     </div>
                 )}
@@ -968,13 +996,13 @@ function SkillDamageValue({
                             className="grid grid-cols-[52px_minmax(0,1fr)] items-center gap-1.5"
                         >
                             <span className="whitespace-nowrap text-[#7f8b9e]">{hitLabel}</span>
-                            <span className="truncate text-[#f6f8fc]">{formatStatNumber(group.damagePerHit)}</span>
+                            <span className="truncate text-[#f6f8fc]"><StatAmount value={group.damagePerHit} /></span>
                         </div>
                     );
                 })}
             </div>
             <p className="mt-2 text-[11px] font-semibold text-[#8e99ad]">
-                Total <span className={accentClass}>{formatStatNumber(totalDamage)}</span>
+                Total <span className={accentClass}><StatAmount value={totalDamage} /></span>
             </p>
             {hasLifeSteal && (
                 <div className="mt-2 border-t border-[#305672] pt-2">
@@ -995,13 +1023,13 @@ function SkillDamageValue({
                                         : `Hit ${group.startHit}-${group.endHit}`}
                                 </span>
                                 <span className="truncate">
-                                    {formatStatNumber(group.healedPerHit)}
+                                    <StatAmount value={group.healedPerHit} />
                                 </span>
                             </div>
                         ))}
                     </div>
                     <p className="mt-1 text-[11px] font-semibold text-[#8e99ad]">
-                        Total <span className="text-[#82f0b7]">{formatStatNumber(totalHealed)}</span>
+                        Total <span className="text-[#82f0b7]"><StatAmount value={totalHealed} /></span>
                     </p>
                 </div>
             )}
@@ -1503,9 +1531,9 @@ function SkillDamagePanel({
 
                                 <p
                                     className="mt-1.5 min-w-0 whitespace-nowrap text-[clamp(1rem,2vw,1.25rem)] font-bold tracking-tight text-[#f6f8fc]"
-                                    title={`${formatStatNumber(skillDps)} DPS`}
+                                    title={`${formatHoverStatNumber(skillDps)} DPS`}
                                 >
-                                    {formatStatNumber(skillDps)}
+                                    <StatAmount value={skillDps} />
                                     <span className="ml-1 text-xs font-semibold text-[#7f8b9e]">
                                         /s
                                     </span>
@@ -1521,8 +1549,8 @@ function SkillDamagePanel({
                                                 text="Healing per second from Life Steal using the normal total Life Steal amount and this skill's adjusted cooldown."
                                             />
                                         </div>
-                                        <p className="mt-1 text-base font-bold text-[#82f0b7]" title={`${formatStatNumber(lifeStealHps)} HPS`}>
-                                            {formatStatNumber(lifeStealHps)}
+                                        <p className="mt-1 text-base font-bold text-[#82f0b7]" title={`${formatHoverStatNumber(lifeStealHps)} HPS`}>
+                                            <StatAmount value={lifeStealHps} />
                                             <span className="ml-1 text-xs font-semibold text-[#9bdcb9]">/s</span>
                                         </p>
                                     </div>
@@ -1589,8 +1617,8 @@ function SkillDamagePanel({
                                             />
                                         </div>
                                         <p className="mt-1.5 min-w-0 whitespace-nowrap text-[clamp(1rem,2vw,1.25rem)] font-bold tracking-tight text-[#f6f8fc]"
-                                           title={`${formatStatNumber(damageIncreaseDps)} DPS`}>
-                                            {formatStatNumber(damageIncreaseDps)}
+                                           title={`${formatHoverStatNumber(damageIncreaseDps)} DPS`}>
+                                            <StatAmount value={damageIncreaseDps} />
                                             <span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
                                         </p>
                                         {damageIncreaseLifeStealHps !== null && (
@@ -1603,8 +1631,8 @@ function SkillDamagePanel({
                                                         text={`Healing per second from Life Steal using the +${formatNumber(monsterDamageIncrease)}% Damage Increase result and this skill's adjusted cooldown.`}
                                                     />
                                                 </div>
-                                                <p className="mt-1 text-base font-bold text-[#82f0b7]" title={`${formatStatNumber(damageIncreaseLifeStealHps)} HPS`}>
-                                                    {formatStatNumber(damageIncreaseLifeStealHps)}
+                                                <p className="mt-1 text-base font-bold text-[#82f0b7]" title={`${formatHoverStatNumber(damageIncreaseLifeStealHps)} HPS`}>
+                                                    <StatAmount value={damageIncreaseLifeStealHps} />
                                                     <span className="ml-1 text-xs font-semibold text-[#9bdcb9]">/s</span>
                                                 </p>
                                             </div>
@@ -1653,8 +1681,8 @@ function SkillDamagePanel({
                                             <p className="text-[9px] font-bold uppercase tracking-[0.1em]">DPS</p>
                                             <InfoTooltip label="Explain vulnerable skill DPS" text={`Expected DPS for ${skillDisplayName} against an enemy with +${formatNumber(effectiveMonsterVulnerability)}% Vulnerability.`} />
                                         </div>
-                                        <p className="mt-1.5 min-w-0 whitespace-nowrap text-[clamp(1rem,2vw,1.25rem)] font-bold tracking-tight text-[#f6f8fc]" title={`${formatStatNumber(vulnerabilityDps)} DPS`}>
-                                            {formatStatNumber(vulnerabilityDps)}<span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
+                                        <p className="mt-1.5 min-w-0 whitespace-nowrap text-[clamp(1rem,2vw,1.25rem)] font-bold tracking-tight text-[#f6f8fc]" title={`${formatHoverStatNumber(vulnerabilityDps)} DPS`}>
+                                            <StatAmount value={vulnerabilityDps} /><span className="ml-1 text-xs font-semibold text-[#7f8b9e]">/s</span>
                                         </p>
                                         {vulnerabilityLifeStealHps !== null && (
                                             <div className="mt-2 border-t border-[#305672] pt-2">
@@ -1666,8 +1694,8 @@ function SkillDamagePanel({
                                                         text={`Healing per second from Life Steal using the +${formatNumber(effectiveMonsterVulnerability)}% Vulnerability damage result and this skill's adjusted cooldown.`}
                                                     />
                                                 </div>
-                                                <p className="mt-1 text-base font-bold text-[#82f0b7]" title={`${formatStatNumber(vulnerabilityLifeStealHps)} HPS`}>
-                                                    {formatStatNumber(vulnerabilityLifeStealHps)}
+                                                <p className="mt-1 text-base font-bold text-[#82f0b7]" title={`${formatHoverStatNumber(vulnerabilityLifeStealHps)} HPS`}>
+                                                    <StatAmount value={vulnerabilityLifeStealHps} />
                                                     <span className="ml-1 text-xs font-semibold text-[#9bdcb9]">/s</span>
                                                 </p>
                                             </div>
@@ -1902,22 +1930,22 @@ function SkillDamagePanel({
                                     <div className="mt-2 rounded-lg border border-[#7182ff]/25 bg-[#202846]/35 p-3 text-xs text-[#8e99ad]">
                                         <p>
                                             {damageHealingPercent !== null && (
-                                                <>{formatStatNumber(healingDamageBase)} Damage × {formatNumber(damageHealingPercent)}%</>
+                                                <><StatAmount value={healingDamageBase} /> Damage × {formatNumber(damageHealingPercent)}%</>
                                             )}
                                             {damageHealingPercent !== null && healthHealingPercent !== null ? " + " : ""}
                                             {healthHealingPercent !== null && (
-                                                <>{formatStatNumber(stats.health)} Health × {formatNumber(healthHealingPercent)}%</>
+                                                <><StatAmount value={stats.health} /> Health × {formatNumber(healthHealingPercent)}%</>
                                             )}
                                             {totalHealingEffectiveness > 0
                                                 ? ` × ${formatNumber(healingEffectivenessMultiplier)} healing effectiveness`
                                                 : ""}
                                             {" = "}
-                                            <strong className="text-[#aeb8ff]">{formatStatNumber(healingAmount)} healed</strong>
+                                            <strong className="text-[#aeb8ff]"><StatAmount value={healingAmount} /> healed</strong>
                                         </p>
                                         {healingPerSecond !== null && displayedCooldown !== null && expectedHealing !== null && (
                                             <p className="mt-1.5">
-                                                {formatStatNumber(healingAmount)} Healing ÷ {formatNumber(displayedCooldown)}s cooldown =
-                                                <strong className="text-[#aeb8ff]">{formatStatNumber(healingPerSecond)} HPS</strong>
+                                                <StatAmount value={healingAmount} /> Healing ÷ {formatNumber(displayedCooldown)}s cooldown =
+                                                <strong className="text-[#aeb8ff]"><StatAmount value={healingPerSecond} /> HPS</strong>
                                             </p>
                                         )}
                                     </div>
@@ -1951,7 +1979,7 @@ function SkillDamagePanel({
                                 <div className="mt-3 flex flex-wrap items-stretch gap-2 text-xs text-[#9ba8bc]">
                                     <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d131d]/85 px-3 py-2.5">
                                         <p className="text-[10px] uppercase tracking-[0.12em] text-[#7893bb]">Damage</p>
-                                        <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatStatNumber(stats.damage)}</p>
+                                        <p className="mt-1 text-base font-bold text-[#edf2fb]"><StatAmount value={stats.damage} /></p>
                                     </div>
                                     <span className="self-center px-1 text-lg font-bold text-[#6f9df0]">×</span>
                                     <div className="min-w-[8.5rem] flex-1 rounded-lg border border-[#3b5579] bg-[#0d131d]/85 px-3 py-2.5">
@@ -1997,7 +2025,7 @@ function SkillDamagePanel({
                                     <span className="self-center px-1 text-lg font-bold text-[#6f9df0]">=</span>
                                     <div className="min-w-[9rem] flex-1 rounded-lg border border-[#4d75ff]/70 bg-[#1c2f62]/60 px-3 py-2.5 shadow-[inset_0_0_20px_rgba(78,111,255,0.08)]">
                                         <p className="text-[10px] uppercase tracking-[0.12em] text-[#8aa5ff]">Total</p>
-                                        <p className="mt-1 text-base font-bold text-[#c8d3ff]">{formatStatNumber(combatDamage.normalDamage)}</p>
+                                        <p className="mt-1 text-base font-bold text-[#c8d3ff]"><StatAmount value={combatDamage.normalDamage} /></p>
                                     </div>
                                 </div>
                             </div>
@@ -2015,7 +2043,7 @@ function SkillDamagePanel({
                                     <div className="mt-3 grid gap-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] lg:items-center">
                                         <div className="rounded-lg border border-[#4d75ff]/60 bg-[#18264d]/55 p-2.5">
                                             <p className="text-[10px] uppercase tracking-wide text-[#8ca4ff]">Normal Damage</p>
-                                            <p className="mt-1 text-base font-bold text-[#edf2fb]">{formatStatNumber(combatDamage.normalDamage)}</p>
+                                            <p className="mt-1 text-base font-bold text-[#edf2fb]"><StatAmount value={combatDamage.normalDamage} /></p>
                                         </div>
                                         <span className="hidden text-center text-lg font-bold text-[#6f9df0] lg:block">×</span>
                                         <div className="rounded-lg border border-[#3b5579] bg-[#0d131d]/85 p-2.5">
@@ -2025,7 +2053,7 @@ function SkillDamagePanel({
                                         <span className="hidden text-center text-lg font-bold text-[#6f9df0] lg:block">+</span>
                                         <div className="rounded-lg border border-[#ff7448]/45 bg-[#3a201b]/40 p-2.5">
                                             <p className="text-[10px] uppercase tracking-wide text-[#ff936d]">Critical Damage</p>
-                                            <p className="mt-1 text-base font-bold text-[#ffb09a]">{formatStatNumber(combatDamage.criticalDamage)}</p>
+                                            <p className="mt-1 text-base font-bold text-[#ffb09a]"><StatAmount value={combatDamage.criticalDamage} /></p>
                                         </div>
                                         <span className="hidden text-center text-lg font-bold text-[#6f9df0] lg:block">×</span>
                                         <div className="rounded-lg border border-[#3b5579] bg-[#0d131d]/85 p-2.5">
@@ -2037,13 +2065,13 @@ function SkillDamagePanel({
                                     <div className="mt-3 flex justify-center">
                                         <div className="min-w-[12rem] rounded-lg border border-[#4d75ff]/70 bg-[#1c2f62]/55 px-4 py-2.5 text-center">
                                             <p className="text-[10px] uppercase tracking-wide text-[#8ca4ff]">Expected Damage</p>
-                                            <p className="mt-1 text-lg font-bold text-[#c8d3ff]">{formatStatNumber(expectedDamage)}</p>
+                                            <p className="mt-1 text-lg font-bold text-[#c8d3ff]"><StatAmount value={expectedDamage} /></p>
                                         </div>
                                     </div>
 
                                     <div className="mt-3 grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-2 border-t border-[#284d69] pt-3 text-center">
                                         <div className="rounded-lg border border-[#3b5579] bg-[#0d131d]/85 p-2.5">
-                                            <p className="text-sm font-bold text-[#c8d3ff]">{formatStatNumber(expectedDamage)}</p>
+                                            <p className="text-sm font-bold text-[#c8d3ff]"><StatAmount value={expectedDamage} /></p>
                                             <p className="mt-0.5 text-[10px] text-[#8293ac]">Expected Damage</p>
                                         </div>
                                         <span className="font-bold text-[#6f9df0]">÷</span>
@@ -2053,7 +2081,7 @@ function SkillDamagePanel({
                                         </div>
                                         <span className="font-bold text-[#6f9df0]">=</span>
                                         <div className="rounded-lg border border-[#4d75ff]/70 bg-[#1c2f62]/55 p-2.5">
-                                            <p className="text-sm font-bold text-[#c8d3ff]">{formatStatNumber(skillDps)}/s</p>
+                                            <p className="text-sm font-bold text-[#c8d3ff]"><StatAmount value={skillDps} />/s</p>
                                             <p className="mt-0.5 text-[10px] text-[#8ca4ff]">DPS</p>
                                         </div>
                                     </div>
@@ -2137,12 +2165,12 @@ function SkillDamagePanel({
                                                                 {formatNumber(instance.multiplier * 100)}% of Attack
                                                                 {instance.hits > 1 && <span className="ml-1 font-normal text-[#7f8fa6]">each</span>}
                                                             </td>
-                                                            <td className="px-3 py-2.5 font-bold text-[#8ca4ff]">{formatStatNumber(damagePerHit)}</td>
-                                                            <td className="px-3 py-2.5 font-bold text-[#ff936d]">{formatStatNumber(criticalDamagePerHit)}</td>
+                                                            <td className="px-3 py-2.5 font-bold text-[#8ca4ff]"><StatAmount value={damagePerHit} /></td>
+                                                            <td className="px-3 py-2.5 font-bold text-[#ff936d]"><StatAmount value={criticalDamagePerHit} /></td>
                                                             {effectiveLifeSteal > 0 && (
                                                                 <>
-                                                                    <td className="border-l border-[#285846] bg-[#10251f]/35 px-3 py-2.5 font-bold text-[#6ee7a8]">{formatStatNumber(normalLifeStealPerHit)}</td>
-                                                                    <td className="bg-[#10251f]/35 px-3 py-2.5 font-bold text-[#82f0b7]">{formatStatNumber(criticalLifeStealPerHit)}</td>
+                                                                    <td className="border-l border-[#285846] bg-[#10251f]/35 px-3 py-2.5 font-bold text-[#6ee7a8]"><StatAmount value={normalLifeStealPerHit} /></td>
+                                                                    <td className="bg-[#10251f]/35 px-3 py-2.5 font-bold text-[#82f0b7]"><StatAmount value={criticalLifeStealPerHit} /></td>
                                                                 </>
                                                             )}
                                                         </tr>
@@ -2158,11 +2186,11 @@ function SkillDamagePanel({
                                 <div className={`grid gap-2 rounded-xl border border-[#365486] bg-[linear-gradient(135deg,rgba(15,29,46,0.9),rgba(10,19,30,0.95))] p-3 sm:p-4 ${effectiveLifeSteal > 0 ? "md:grid-cols-3" : "sm:grid-cols-2"}`}>
                                     <div className="rounded-lg border border-[#4d75ff]/60 bg-[#18264d]/55 p-3">
                                         <p className="text-[10px] font-bold uppercase tracking-wide text-[#8ca4ff]">Total Normal Damage</p>
-                                        <p className="mt-1 text-lg font-bold text-[#edf2fb]">{formatStatNumber(combatDamage.normalDamage)}</p>
+                                        <p className="mt-1 text-lg font-bold text-[#edf2fb]"><StatAmount value={combatDamage.normalDamage} /></p>
                                     </div>
                                     <div className="rounded-lg border border-[#ff7448]/45 bg-[#3a201b]/40 p-3">
                                         <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff936d]">Total Critical Damage</p>
-                                        <p className="mt-1 text-lg font-bold text-[#ffd0c2]">{formatStatNumber(combatDamage.criticalDamage)}</p>
+                                        <p className="mt-1 text-lg font-bold text-[#ffd0c2]"><StatAmount value={combatDamage.criticalDamage} /></p>
                                     </div>
                                     {effectiveLifeSteal > 0 && (
                                         <div className="rounded-lg border border-[#43c982]/45 bg-[#102c22]/55 p-3">
@@ -2170,11 +2198,11 @@ function SkillDamagePanel({
                                             <div className="mt-1 grid grid-cols-2 gap-3">
                                                 <div>
                                                     <p className="text-[10px] text-[#78a993]">Normal Healed</p>
-                                                    <p className="text-base font-bold text-[#82f0b7]">{formatStatNumber(lifeStealAmount)}</p>
+                                                    <p className="text-base font-bold text-[#82f0b7]"><StatAmount value={lifeStealAmount} /></p>
                                                 </div>
                                                 <div className="border-l border-[#285846] pl-3">
                                                     <p className="text-[10px] text-[#78a993]">Critical Healed</p>
-                                                    <p className="text-base font-bold text-[#82f0b7]">{formatStatNumber(criticalLifeStealAmount)}</p>
+                                                    <p className="text-base font-bold text-[#82f0b7]"><StatAmount value={criticalLifeStealAmount} /></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -2214,7 +2242,7 @@ function SkillDamagePanel({
                                         {attributeEffects.skillResistance > 0 && <span className="rounded bg-[#17283a] px-2 py-1 text-[#70b7ff]">-{attributeEffects.skillResistance}% incoming {skill.element} skill damage</span>}
                                         {attributeEffects.damageRedirect > 0 && <span className="rounded bg-[#17283a] px-2 py-1 text-[#70b7ff]">{attributeEffects.damageRedirect}% damage redirect</span>}
                                         {attributeEffects.damageImmunitySeconds > 0 && <span className="rounded bg-[#342612] px-2 py-1 text-[#f4bd6a]">{attributeEffects.damageImmunitySeconds}s damage immunity</span>}
-                                        {attributeEffects.maxHpRegenPerSecond > 0 && <span className="rounded bg-[#202846] px-2 py-1 text-[#7182ff]">Healing Pulse: restore {attributeEffects.maxHpRegenPerSecond}% max HP every second ({formatStatNumber(stats.health * attributeEffects.maxHpRegenPerSecond / 100)} HP/s)</span>}
+                                        {attributeEffects.maxHpRegenPerSecond > 0 && <span className="rounded bg-[#202846] px-2 py-1 text-[#7182ff]">Healing Pulse: restore {attributeEffects.maxHpRegenPerSecond}% max HP every second (<StatAmount value={stats.health * attributeEffects.maxHpRegenPerSecond / 100} /> HP/s)</span>}
                                     </div>
                                 </div>
                             )}
@@ -2224,16 +2252,16 @@ function SkillDamagePanel({
                                     <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8ca4ff]">Healing Calculation</p>
                                     <p className="mt-2 text-xs text-[#8e99ad]">
                                         {damageHealingPercent !== null && (
-                                            <>{formatStatNumber(healingDamageBase)} Damage × {formatNumber(damageHealingPercent)}%</>
+                                            <><StatAmount value={healingDamageBase} /> Damage × {formatNumber(damageHealingPercent)}%</>
                                         )}
                                         {damageHealingPercent !== null && healthHealingPercent !== null ? " + " : ""}
                                         {healthHealingPercent !== null && (
-                                            <>{formatStatNumber(stats.health)} Health × {formatNumber(healthHealingPercent)}%</>
+                                            <><StatAmount value={stats.health} /> Health × {formatNumber(healthHealingPercent)}%</>
                                         )}
                                         {totalHealingEffectiveness > 0
                                             ? ` × ${formatNumber(healingEffectivenessMultiplier)} healing effectiveness`
                                             : ""}
-                                        {" = "}<strong className="text-[#aeb8ff]">{formatStatNumber(healingAmount)} healed</strong>
+                                        {" = "}<strong className="text-[#aeb8ff]"><StatAmount value={healingAmount} /> healed</strong>
                                     </p>
                                 </div>
                             )}
@@ -2539,14 +2567,14 @@ function FormulaBreakdown({ stats, build, activeStat }: FormulaBreakdownProps) {
                             {row.multiplier === null ? "—" : `${formatNumber(row.multiplier)}×`}
                         </span>
                         <strong className="whitespace-nowrap text-right tabular-nums leading-5 text-[#e3e8f1]">
-                            {formatStatNumber(row.value)}
+                            <StatAmount value={row.value} />
                         </strong>
                     </div>
                 ))}
                 <div className={`grid grid-cols-[minmax(0,1fr)_minmax(4.75rem,auto)] items-center gap-2 border-t border-[#35617d] bg-[#191f2b] px-2.5 py-3 sm:grid-cols-[minmax(0,1fr)_6.5rem] sm:gap-3 sm:px-3 ${accent}`}>
                     <strong className="min-w-0 break-words">= Final {isHealth ? "Health" : "Damage"}</strong>
                     <strong className="whitespace-nowrap text-right text-sm tabular-nums">
-                        {formatStatNumber(finalValue)}
+                        <StatAmount value={finalValue} />
                     </strong>
                 </div>
             </div>
@@ -2616,7 +2644,7 @@ function GrowthPreview({ build, statData, activeStat }: GrowthPreviewProps) {
                     <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">
                         Level {build.level}
                     </p>
-                    <p className="mt-1 text-sm font-semibold tabular-nums" style={{ color: accent }}>
+                    <p className="mt-1 cursor-help text-sm font-semibold tabular-nums" style={{ color: accent }} title={formatHoverStatNumber(currentValue)}>
                         {compactNumber(currentValue)}
                     </p>
                 </div>
@@ -2817,6 +2845,7 @@ function BuildResultsPanel({
                             ? formatStatNumber(stats.damage)
                             : "Data pending"
                     }
+                    hoverValue={stats ? formatHoverStatNumber(stats.damage) : undefined}
                 />
 
                 <BuildStat
@@ -2827,6 +2856,7 @@ function BuildResultsPanel({
                             ? formatStatNumber(stats.health)
                             : "Data pending"
                     }
+                    hoverValue={stats ? formatHoverStatNumber(stats.health) : undefined}
                 />
 
                 <BuildStat
@@ -3100,7 +3130,7 @@ export function CalculatorResults({
                                                     </div>
 
                                                     <p className="text-2xl font-bold tracking-tight text-[#f6f8fc]">
-                                                        {formatStatNumber(totalSkillDps)}
+                                                        <StatAmount value={totalSkillDps} />
                                                         <span className="ml-1 text-xs font-semibold text-[#7f8b9e]">
                                                             DPS
                                                         </span>

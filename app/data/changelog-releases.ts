@@ -8,10 +8,22 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.25",
+        date: "October 10, 2026",
+        title: "Calculator Precision & PvP Validation",
+        label: "Latest",
+        changes: [
+            "Improved Calculator Results stat formatting to show five significant digits for values in the hundreds of K, M, B, or T, such as 512.12M and 312.21K, while retaining the previous four-digit format at other magnitudes.",
+            "Added one additional significant digit on hover for calculator Damage, Health, skill damage, DPS, healing, shields, and applicable calculation details.",
+            "Verified the PvE-to-PvP base Damage/Health ratio against the updated 253-monster research dataset; all recorded monsters fall within 0.5% of the inferred 0.5 coefficient. This is data validation, not a new in-game effect.",
+            "Confirmed through gameplay tests that Huge, Shiny, Bloodlit, enhancements, and gear stat modifiers carry over to PvP; type advantages and rotating daily bonuses remain future work.",
+            "Kept underlying monster stat calculations unchanged by the calculator display-precision update.",
+        ],
+    },
+    {
         version: "v1.0.24",
         date: "October 9, 2026",
         title: "Exclusive Traits & Database Search",
-        label: "Latest",
         changes: [
             "Synced exclusive-trait source monsters with traits.csv, restoring missing sources across 10 exclusive traits and 14 monster-source associations, including all four Fortify IV sources, Avalanchewyrm, Venofrog, and Twirly Bird.",
             "Added exclusive-trait icons to Monster Database cards and displayed the trait names and effect descriptions in monster details and individual profile pages.",
