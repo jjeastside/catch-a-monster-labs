@@ -78,7 +78,7 @@ King Penguin,Legendary,Water,626,6700,346740,7420300,0,,Standard,Ex Water Jet,Wi
 Fanglo,Legendary,Fire,21441,330370,288970,8905200,0,,Standard,Dash,Fire Tornado,,Capturer's Boon | 5,"Rift | Strange Rift | Spire Shop | Current
 Chest | Rift Chest | Abyss Shop | Current",63
 Weasplash,Legendary,Water,113736,1216900,346740,7420300,0,,Standard,Tsunami,Water Shuriken,,,Island Spawn | Natural Spawn | Tideland | Current,64
-Walrusk,Legendary,Water,138693,1465400,346740,7420300,10,,Standard,Ice Road,Ex Water Shuriken,,,Island Special Spawn | Special Spawn | Tideland | Current,65
+Walrusk,Legendary,Water,136960,1465400,346740,7420300,10,,Standard,Ice Road,Ex Water Shuriken,,,Island Special Spawn | Special Spawn | Tideland | Current,65
 Deerleaf,Legendary,Grass,198590,2124900,346740,7420300,0,,Standard,Wind Disc (Purple),Leaf Surge,,,Island Spawn | Natural Spawn | Spirit Grove | Current,66
 Mintwolf,Legendary,Grass,287955,3081100,346740,7420300,10,,Standard,Root Spike,Grass Tornado,,,"Egg | Giant Tree Egg | Spirit Grove | Current
 Chest | Mythical Chest | Limited Events | Current",67
@@ -108,7 +108,7 @@ Bulbwarden,Legendary,Grass,13230000,141510000,346740,7420300,0,,Standard,Galecut
 Flaragon,Mythical,Fire,754,8068,417520,8935600,0,,Standard,Claw Attack,Ex Fireball,,,Egg | Flaragon's Egg | Volcano | Current,84
 Glazadon,Mythical,Ice,4013,42951,346750,7421340,0,,Standard,Frost Breath,Ice Surge,,,Egg | Glacier Egg | Frost Isle | Current,85
 Mountusk,Mythical,Grass,4027,62063,288990,8904500,0,,Standard,Ex Seed Grenade,Healing Pulse,,,Egg | Sprout Egg | Frost Isle | Current,86
-Frostbun,Mythical,Ice,333720,3970000,346740,7420300,0,,Standard,Ex Iceball,Ice Road,,,Island Special Spawn | Special Spawn | Frost Isle | Current,87
+Frostbun,Mythical,Ice,17745,189860,346740,7420300,0,,Standard,Ex Iceball,Ice Road,,,Island Special Spawn | Special Spawn | Frost Isle | Current,87
 Flarecrest,Mythical,Fire,4817,35792,416090,6184100,10,,Standard,Inferno Maelstrom,Ex Fireball,,,"Event | Turkey Egg | Thanksgiving Event 2025 | Legacy
 Event | Xmas Egg | Christmas Event 2025 | Current
 Chest | Memory Chest 2 | Abyss Shop | Current",88
@@ -200,7 +200,7 @@ Scareaper,Mythical,Dark,3615000,55702000,288990,8904400,0,,Standard,Reaper's Cre
 Chest | Mythical Chest | Limited Events | Current",135
 Magmorus,Mythical,Fire,3482300,83841000,268295,12917000,10,,Standard,Fire Tornado,Blaze Blast,,Spire Guard | 30,"Rift | Specter Shallows Rift 3 | Specter Shallows | Current
 Chest | Mythical Chest | Limited Events | Current",136
-Gravion,Mythical,Dark,2813200,12041000,173370,14843000,10,,Standard,Dark Singularity,Oblivion Beam,,Boss Resistance | 25,"Rift | Specter Shallows Rift 3 | Specter Shallows | Current
+Gravion,Mythical,Dark,2813200,120410000,173370,14843000,10,,Standard,Dark Singularity,Oblivion Beam,,Boss Resistance | 25,"Rift | Specter Shallows Rift 3 | Specter Shallows | Current
 Chest | Mythical Chest | Limited Events | Current",137
 Runegolem,Mythical,Ground,7007700,52071000,416100,6183400,15,,Standard,Ex Rock Toss,Earth Smash,,Critical Damage | 60,"Egg | Runegolem's Egg | Cinderclaw Castle | Current |  | Inferno Difficulty
 Chest | Mythical Chest | Limited Events | Current",138
@@ -225,8 +225,8 @@ Turretor,Mythical,Mechanical,18410000,136800000,416100,6183400,0,,Standard,Scorc
 Stellawulf,Mythical,Dark,8575100,367100000,173370,14843000,10,,Standard,Ghost Impact,Soul Reap Chain (Vulnerability),,Trial Power | 50,Rift | Coilwork City Rift 3 | Coilwork City | Current,151
 Nexil,Mythical,Common,20583500,152960000,416100,6183400,10,,Standard,Dark Singularity,Barrier,,Spire Guard | 35,Rift | Coilwork City Rift 3 | Coilwork City | Current,152
 Twirly Bird,Mythical,Common,17092800,127030000,416100,6183400,0,,Standard,Windmill Blast,Windmill Blast,,,Island Special Spawn | Special Spawn | Coilwork City | Current,153
-Berserkor,Mythical,Dark,6884000,663070000,433480,9272000,0,,Standard,Sunder Taunt,Thorn Shield,,,Island Special Spawn | Natural Spawn | Shroomvale | Current,154
-Thornewarden,Mythical,Ground,25812000,276224000,99619,19186000,0,,Standard,Gravel Whirlwind,Rock Road,,,"Egg | Thornewarden's Egg | Shroomvale | Current
+Berserkor,Mythical,Dark,6884000,663070000,99619,19186000,0,,Standard,Sunder Taunt,Thorn Shield,,,Island Special Spawn | Natural Spawn | Shroomvale | Current,154
+Thornewarden,Mythical,Ground,25812000,276224000,433480,9272000,0,,Standard,Gravel Whirlwind,Rock Road,,,"Egg | Thornewarden's Egg | Shroomvale | Current
 Egg | Spritesprout Egg | Store | Current",155
 Cernunnos,Mythical,Grass,29952000,320493000,346740,7420300,10,,Standard,Healing Pulse,Root Spike,,Rift Guard | 30,Rift | Shroomvale Rift 3 | Shroomvale | Current,156
 Anubael,Mythical,Dark,14976000,640990000,173370,14843000,10,,Standard,Lightning Storm (Purple),Dark Singularity,,Trial Power | 50,Rift | Shroomvale Rift 3 | Shroomvale | Current,157
@@ -308,7 +308,7 @@ Poseidine,Secret,Water,1418000,10537000,416100,6183400,15,Undine,Standard,Hydro 
 Armored Dracospike,Secret,Dragon,1060000,32700000,231170,14252000,15,Dracospike,Standard,Emergency Thorn Shield,Ion Blast,,Rift Guard | 30,Evolution | Dracospike Evolution |  | Current |  | Evolves from Dracospike.,229
 Soulguard,Secret,Fire,5040000,27531000,485420,5300300,15,,Standard,Soul Slash,Ghost Fireball,,Spire Dominance | 50,"Egg | Soulguard's Egg | Cinderclaw Castle | Current |  | Nightmare Difficulty
 Chest | Mythical Chest | Limited Events | Current",230
-Motovok,Secret,Electric,3827000,16010000,485420,5300300,15,Mechavolt,Standard,Overvolt Tempest,Electro Nova,,Critical Chance | 30,Evolution | Mechavolt Evolution |  | Current |  | Evolves from Mechavolt.,231
+Motovok,Secret,Electric,3830600,16010000,554790,4637600,15,Mechavolt,Standard,Overvolt Tempest,Electro Nova,,Critical Chance | 30,Evolution | Mechavolt Evolution |  | Current |  | Evolves from Mechavolt.,231
 Crystalwing,Secret,Ice,859500,82776000,115593,22261000,10,Cobaltwing,Standard,Glacial Wall,Healing Water Ball,,Dungeon Guard | 35,Evolution | Cobaltwing Evolution |  | Current |  | Evolves from Cobaltwing.,232
 Divineclaw,Secret,Light,5351300,22367000,554790,4637800,15,Thunderclaw,Standard,Divine Energy Blast,Rock Road,,Sacred Beetle | 35,Evolution | Thunderclaw Evolution |  | Current |  | Evolves from Thunderclaw.,233
 Djinn Lampyr,Secret,Electric,5016000,37271000,812170,12070000,15,Lampyr,Standard,Holy Aura (Djinn Lampyr),Thunder Stun,,Last Blessing | 80,Evolution | Lampyr Evolution |  | Current |  | Evolves from Lampyr.,234
@@ -338,4 +338,4 @@ Fortune Spirit | 35",Island Special Spawn | Special Spawn | Specter Shallows | C
 Void Nightveil,Void,Dark,3350000,18300000,485420,5300300,15,Void Shadecloak,Standard,The Ring,Soul Reap Chain,,Trial Power | 60,Evolution | Void Shadecloak Evolution |  | Current |  | Evolves from Void Shadecloak.,251
 Void Scareaper,Void,Dark,1741000,167690000,115583,22261000,0,,Standard,Fear Taunt,Reaper's Crescents,,Capturer's Boon | 25,"Egg | Scareaper's Egg | Specter Shallows | Current
 Chest | Memory Chest 1 | Abyss Shop | Current",252
-Icearia,Mythical,Ice,840000,13500000,288990,8904400,10,,Standard,Icicle Prison,Frosty Dart,,,Contest | Art Contest |  | Unavailable,253
+Icearia,Mythical,Ice,880854,13570492,288990,8904400,10,,Standard,Icicle Prison,Frosty Dart,,,Contest | Art Contest |  | Unavailable,253
