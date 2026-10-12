@@ -1,5 +1,5 @@
 export type DummeeStatData = {
-    monsterId: "dummee";
+    monsterId: string;
     growthType: "dummee";
 
     pvpBaseHealthELevel1?: number;
