@@ -6,7 +6,7 @@ import { PetHatch } from "../components/pet-hatch";
 const petHatchUrl =
     "https://jjeastside.github.io/catch-a-monster-labs/pet-hatch/";
 const petHatchPreviewUrl =
-    "https://jjeastside.github.io/catch-a-monster-labs/pet-hatch-preview.png";
+    "https://jjeastside.github.io/catch-a-monster-labs/pet-hatch-preview-v2.png";
 
 export const metadata: Metadata = {
     title: "Pet Hatch Transfer — Cam Lab",
@@ -23,8 +23,9 @@ export const metadata: Metadata = {
         images: [
             {
                 url: petHatchPreviewUrl,
-                width: 1567,
-                height: 851,
+                width: 1200,
+                height: 630,
+                type: "image/png",
                 alt: "Cam Lab Pet Hatch Transfer calculator",
             },
         ],
