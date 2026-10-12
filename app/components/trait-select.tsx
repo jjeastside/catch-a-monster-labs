@@ -9,6 +9,9 @@ import { TraitIcon } from "./trait-icon";
 type TraitSelectProps = {
     value: string | null;
     onChangeAction: (value: string | null) => void;
+    iconVariant?: "symbol" | "icon";
+    compact?: boolean;
+    allowedTraitIds?: readonly string[];
 };
 
 const rarityTextClasses: Record<Trait["rarity"], string> = {
@@ -22,14 +25,14 @@ function effectLabel(trait: Trait): string {
     return trait.effects.map(({ description }) => description).join(" · ");
 }
 
-export function TraitSelect({ value, onChangeAction }: TraitSelectProps) {
+export function TraitSelect({ value, onChangeAction, iconVariant = "symbol", compact = false, allowedTraitIds }: TraitSelectProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [opensUpward, setOpensUpward] = useState(false);
     const [menuMaxHeight, setMenuMaxHeight] = useState(300);
     const containerRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const selectedTrait = getTrait(value);
-    const traits = getAvailableTraits();
+    const traits = getAvailableTraits().filter(trait => !allowedTraitIds || allowedTraitIds.includes(trait.id));
 
     const updateMenuPosition = useCallback(() => {
         const button = buttonRef.current;
@@ -97,22 +100,24 @@ export function TraitSelect({ value, onChangeAction }: TraitSelectProps) {
                 }}
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
-                className="flex min-h-[58px] w-full items-center gap-2 rounded-lg border border-[#25475f] bg-[#041320] px-2 py-1.5 text-left outline-none transition hover:border-[#3984af] focus:border-[#7182ff]"
+                aria-label={compact ? selectedTrait?.name ?? "No Trait" : undefined}
+                title={compact && selectedTrait ? effectLabel(selectedTrait) : undefined}
+                className={`flex min-h-[58px] w-full gap-2 rounded-lg border border-[#25475f] bg-[#041320] px-2 py-1.5 text-left outline-none transition hover:border-[#3984af] focus:border-[#7182ff] ${iconVariant === "icon" ? "relative flex-col items-start pr-5" : "items-center"}`}
             >
                 {selectedTrait ? (
                     <>
-                        <TraitIcon trait={selectedTrait} size="combat" />
-                        <span className="min-w-0 flex-1">
+                        <TraitIcon trait={selectedTrait} size="combat" variant={iconVariant} />
+                        {!compact && <span className={`min-w-0 flex-1 ${iconVariant === "icon" ? "w-full" : ""}`}>
                             <span className="block truncate text-xs font-semibold text-[#e3e8f1]">{selectedTrait.name}</span>
                             <span className={`mt-0.5 block truncate text-[10px] ${rarityTextClasses[selectedTrait.rarity]}`}>
                                 <span className="capitalize">{selectedTrait.rarity}</span> · {effectLabel(selectedTrait)}
                             </span>
-                        </span>
+                        </span>}
                     </>
                 ) : (
                     <span className="flex-1 px-1 text-xs text-[#7f8b9e]">No Trait</span>
                 )}
-                <span aria-hidden="true" className="shrink-0 text-xs text-[#7f8b9e]">{isOpen ? "▲" : "▼"}</span>
+                <span aria-hidden="true" className={`shrink-0 text-xs text-[#7f8b9e] ${iconVariant === "icon" ? "absolute right-1.5 top-2" : ""}`}>{isOpen ? "▲" : "▼"}</span>
             </button>
 
             {isOpen && (
@@ -140,11 +145,13 @@ export function TraitSelect({ value, onChangeAction }: TraitSelectProps) {
                                 type="button"
                                 role="option"
                                 aria-selected={selected}
+                                aria-label={compact ? trait.name : undefined}
+                                title={compact ? effectLabel(trait) : undefined}
                                 onClick={() => selectTrait(trait.id)}
-                                className={`flex w-full items-center gap-2 rounded-md p-2 text-left ${selected ? "bg-[#102e48]" : "hover:bg-[#102b40]"}`}
+                                className={`flex w-full gap-2 rounded-md p-2 text-left ${iconVariant === "icon" ? "flex-col items-start" : "items-center"} ${selected ? "bg-[#102e48]" : "hover:bg-[#102b40]"}`}
                             >
-                                <TraitIcon trait={trait} size="combat" />
-                                <span className="min-w-0 flex-1">
+                                <TraitIcon trait={trait} size="combat" variant={iconVariant} />
+                                {!compact && <span className={`min-w-0 flex-1 ${iconVariant === "icon" ? "w-full" : ""}`}>
                                     <span className="block truncate text-xs font-semibold text-[#e3e8f1]">{trait.name}</span>
                                     <span className={`mt-0.5 block text-[10px] ${rarityTextClasses[trait.rarity]}`}>
                                         <span className="capitalize">{trait.rarity}</span> · {effectLabel(trait)}
@@ -154,8 +161,8 @@ export function TraitSelect({ value, onChangeAction }: TraitSelectProps) {
                                             Exclusive sources: {trait.naturalSource} · Breed to transfer
                                         </span>
                                     )}
-                                </span>
-                                {selected && <span className="text-[#7182ff]">✓</span>}
+                                </span>}
+                                {selected && !compact && <span className="text-[#7182ff]">✓</span>}
                             </button>
                         );
                     })}

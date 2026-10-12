@@ -15,6 +15,7 @@ const navItems = [
     { label: "Team Builder", href: "/team", icon: "/team-builder.png" },
     { label: "Monster Database", href: "/monster-database", icon: "/icons/monster-database.png" },
     { label: "Index Tracker", href: "/index-tracker", icon: "/icons/index.png" },
+    { label: "Pet Hatch", href: "/pet-hatch", icon: "/icons/breed-health.png" },
 ] as const;
 
 export function TopNavigation() {

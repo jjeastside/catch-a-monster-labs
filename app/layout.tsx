@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     metadataBase: new URL(homeUrl),
     title: "Cam Lab — Catch a Monster Companion",
     description:
-        "A community-driven Catch a Monster companion with a build calculator, Monster Database, Team Builder, Monster Compare, Index Tracker, and game updates.",
+        "A community-driven Catch a Monster companion with a build calculator, Pet Hatch transfer estimates, Monster Database, Team Builder, Monster Compare, Index Tracker, and game updates.",
     icons: {
         icon: [
             { url: assetPath("/favicon.ico") },
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Cam Lab — Catch a Monster Companion",
         description:
-            "Plan builds, compare monsters, build teams, browse game data, and track your Catch a Monster collection with Cam Lab.",
+            "Plan builds, estimate Pet Hatch transfers, compare monsters, build teams, browse game data, and track your Catch a Monster collection with Cam Lab.",
         siteName: "Cam Lab",
         type: "website",
         url: homeUrl,
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "Cam Lab — Catch a Monster Companion",
         description:
-            "Plan builds, compare monsters, build teams, browse game data, and track your Catch a Monster collection with Cam Lab.",
+            "Plan builds, estimate Pet Hatch transfers, compare monsters, build teams, browse game data, and track your Catch a Monster collection with Cam Lab.",
         images: [homePreviewUrl],
     },
 };

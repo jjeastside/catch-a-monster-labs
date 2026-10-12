@@ -14,7 +14,7 @@ import { assetPath } from "./lib/asset-path";
 export const metadata: Metadata = {
     title: "Cam Lab — Catch a Monster Companion",
     description:
-        "Plan builds, compare monsters, browse Catch a Monster data, build teams, and track your Index with Cam Lab.",
+        "Plan builds, estimate Pet Hatch transfers, compare monsters, browse Catch a Monster data, build teams, and track your Index with Cam Lab.",
     alternates: {
         canonical: "https://jjeastside.github.io/catch-a-monster-labs/",
     },
@@ -124,6 +124,15 @@ const featureCards = [
         navIcon: "/team-builder.png",
         preview: "team-builder",
         previewAlt: "Cam Lab Team Builder preview",
+        previewFit: "cover" as const,
+    },
+    {
+        title: "Pet Hatch Transfer",
+        description: "Estimate offspring trait, mutation, rank, and genetic outcomes for Normal and Super Breed pairings.",
+        href: "/pet-hatch",
+        navIcon: "/icons/breed-health.png",
+        preview: "pet-hatch",
+        previewAlt: "Cam Lab Pet Hatch Transfer preview",
         previewFit: "cover" as const,
     },
     {
@@ -273,7 +282,43 @@ function FeaturePreview({ preview }: { preview: string | null }) {
     if (preview === "index") return <IndexTrackerPreview />;
     if (preview === "compare") return <MonsterComparePreview />;
     if (preview === "team-builder") return <TeamBuilderPreview />;
+    if (preview === "pet-hatch") return <PetHatchPreview />;
     return <PatchPreview />;
+}
+
+function PetHatchPreview() {
+    return (
+        <div className="mt-5 h-[174px] overflow-hidden rounded-xl border border-[#214a79] bg-[#071526] p-3 shadow-inner shadow-black/40">
+            <div className="flex items-center justify-between gap-3 border-b border-[#173858] pb-2">
+                <div className="flex items-center gap-2">
+                    <Image src={assetPath("/icons/breed-health.png")} alt="" width={24} height={24} unoptimized aria-hidden="true" className="size-6 object-contain" />
+                    <div>
+                        <p className="text-[10px] font-black uppercase tracking-[0.12em] text-[#5bc5ff]">Pet Hatch Transfer</p>
+                        <p className="text-[8px] text-[#7188a7]">Normal Breed · S + S</p>
+                    </div>
+                </div>
+                <span className="rounded-md border border-[#315f83] bg-[#0b2137] px-2 py-1 text-[8px] font-bold text-[#9fcff0]">Offspring odds</span>
+            </div>
+            <div className="mt-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+                <MiniMonster name="Runegolem" image="/monster-artwork/runegolem.png" meta="S · Impair IV" />
+                <span className="text-sm font-black text-[#547b9f]">+</span>
+                <MiniMonster name="Violetaegis" image="/monster-artwork/violetaegis.png" meta="S · No trait" />
+            </div>
+            <div className="mt-2 grid grid-cols-[1.35fr_.65fr] gap-2">
+                <div className="rounded-lg border border-[#1d496c] bg-[#091c30] px-2.5 py-2">
+                    <p className="text-[7px] font-bold uppercase tracking-[0.1em] text-[#7898b6]">Trait inheritance</p>
+                    <div className="mt-1 flex items-end justify-between gap-2">
+                        <span className="truncate text-[9px] font-black text-white">Runegolem → Offspring</span>
+                        <strong className="text-[14px] leading-none text-[#54d0ff]">~46.62%</strong>
+                    </div>
+                </div>
+                <div className="rounded-lg border border-[#1d496c] bg-[#091c30] px-2.5 py-2 text-center">
+                    <p className="text-[7px] font-bold uppercase tracking-[0.1em] text-[#7898b6]">Average</p>
+                    <strong className="mt-1 block text-[11px] leading-none text-white">≈1 in 2.15</strong>
+                </div>
+            </div>
+        </div>
+    );
 }
 
 function TeamBuilderPreview() {
@@ -383,7 +428,7 @@ export default function HomePage() {
                                 Plan builds. Explore monsters. <span className="bg-gradient-to-r from-[#29e3f7] via-[#2ea8ff] to-[#5d8dff] bg-clip-text text-transparent">Track progress.</span>
                             </h1>
                             <p className="mt-6 max-w-[620px] text-base leading-7 text-[#d0d9e8] drop-shadow-[0_2px_8px_rgba(0,0,0,.8)] sm:text-lg">
-                                Cam Lab brings the build calculator, Monster Database, comparison tools, team planning, and Index tracking together in one place for Catch a Monster players.
+                                Cam Lab brings the build calculator, Monster Database, Pet Hatch transfer estimates, comparison tools, team planning, and Index tracking together in one place for Catch a Monster players.
                             </p>
                             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                                 <Link href="/calculator" className="inline-flex min-h-12 items-center justify-center gap-3 rounded-xl border border-[#54c6ff] bg-gradient-to-b from-[#23b9ff] to-[#1688f4] px-6 py-3 text-sm font-black text-[#03101f] shadow-[0_12px_30px_rgba(14,145,255,0.25)] transition hover:brightness-110">
@@ -443,7 +488,7 @@ export default function HomePage() {
                             <div className="max-w-[720px] drop-shadow-[0_3px_12px_rgba(0,0,0,.9)]">
                                 <h2 className="text-xl font-black tracking-tight text-white sm:text-2xl lg:text-3xl">Builds, comparisons, team planning, and collection tracking.</h2>
                                 <p className="mx-auto mt-2 max-w-[670px] text-xs leading-5 text-[#d6e0ed] sm:text-sm sm:leading-6">
-                                    Cam Lab combines the Build Calculator, Monster Database, Monster Compare, Team Builder, and Index Tracker in one place.
+                                    Cam Lab combines the Build Calculator, Monster Database, Pet Hatch Transfer, Monster Compare, Team Builder, and Index Tracker in one place.
                                 </p>
                             </div>
                         </div>

@@ -6,6 +6,7 @@ import { assetPath } from "../lib/asset-path";
 type TraitIconProps = {
     trait: Trait;
     size?: "combat" | "selected" | "option";
+    variant?: "symbol" | "icon";
 };
 
 const rarityVisuals: Record<Trait["rarity"], {
@@ -43,13 +44,20 @@ const sizes = {
     option: { frame: "size-14 rounded-lg p-px", inset: "rounded-[7px] border-0", symbolInset: 8 },
 };
 
-export function TraitIcon({ trait, size = "selected" }: TraitIconProps) {
+export function TraitIcon({ trait, size = "selected", variant = "symbol" }: TraitIconProps) {
     const [failedSymbol, setFailedSymbol] = useState<string | null>(null);
     // Impair IV is always the Mythical rainbow treatment, even if stale imported
     // data or an older saved build reports another rarity.
     const visualRarity = trait.id === "impair-4" ? "mythical" : trait.rarity;
     const visual = rarityVisuals[visualRarity];
     const dimensions = sizes[size];
+    if (variant === "icon") {
+        return (
+            <span className="relative grid aspect-[3.3/1] w-full min-w-0 shrink-0 place-items-center">
+                <img src={assetPath(trait.image)} alt="" className="size-full object-contain" />
+            </span>
+        );
+    }
     const useSymbol = Boolean(trait.symbolImage) && failedSymbol !== trait.symbolImage;
     const maskStyle = useSymbol ? ({
         WebkitMaskImage: `url(${assetPath(trait.symbolImage!)})`,

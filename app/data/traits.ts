@@ -5,7 +5,7 @@ const BASE_TRAITS: Trait[] = [
     { id: "impair-1", name: "Impair I", rarity: "rare", image: "/trait-icons/impair-1.png", symbolImage: "/trait-symbols/impair.png", effects: [{ type: "damage", percentage: 5, description: "+5% Skill Damage" }] },
     { id: "impair-2", name: "Impair II", rarity: "epic", image: "/trait-icons/impair-2.png", symbolImage: "/trait-symbols/impair.png", effects: [{ type: "damage", percentage: 10, description: "+10% Skill Damage" }] },
     { id: "impair-3", name: "Impair III", rarity: "legendary", image: "/trait-icons/impair-3.png", symbolImage: "/trait-symbols/impair.png", effects: [{ type: "damage", percentage: 15, description: "+15% Skill Damage" }] },
-    { id: "impair-4", name: "Impair IV", rarity: "mythical", image: "/trait-icons/impair-4.png", symbolImage: "/trait-symbols/impair.png", naturalSource: "Runegolem", effects: [{ type: "damage", percentage: 30, description: "+30% Skill Damage" }] },
+    { id: "impair-4", name: "Impair IV", rarity: "mythical", image: "/trait-icons/Impair-4.png", symbolImage: "/trait-symbols/impair.png", naturalSource: "Runegolem", effects: [{ type: "damage", percentage: 30, description: "+30% Skill Damage" }] },
     { id: "fortify-1", name: "Fortify I", rarity: "rare", image: "/trait-icons/fortify-1.png", symbolImage: "/trait-symbols/fortify.png", effects: [{ type: "damageReduction", percentage: 5, description: "+5% Damage Reduction" }] },
     { id: "fortify-2", name: "Fortify II", rarity: "epic", image: "/trait-icons/fortify-2.png", symbolImage: "/trait-symbols/fortify.png", effects: [{ type: "damageReduction", percentage: 10, description: "+10% Damage Reduction" }] },
     { id: "fortify-3", name: "Fortify III", rarity: "legendary", image: "/trait-icons/fortify-3.png", symbolImage: "/trait-symbols/fortify.png", effects: [{ type: "damageReduction", percentage: 15, description: "+15% Damage Reduction" }] },
@@ -21,13 +21,13 @@ const BASE_TRAITS: Trait[] = [
     { id: "gallop", name: "Gallop", rarity: "mythical", image: "/trait-icons/gallop.png", symbolImage: "/trait-symbols/gallop.png", effects: [{ type: "mountSpeed", percentage: 5, description: "+5 Mount Speed" }] },
     { id: "grace", name: "Grace", rarity: "mythical", image: "/trait-icons/grace.png", symbolImage: "/trait-symbols/grace.png", naturalSource: "Rainimp", effects: [{ type: "healingEffectiveness", percentage: 30, description: "+30% Healing Effectiveness" }] },
     { id: "vitiate", name: "Vitiate - Attack Reduction", rarity: "mythical", image: "/trait-icons/vitiate.png", symbolImage: "/trait-symbols/vitiate.png", effects: [{ type: "attackReductionEffectiveness", percentage: 50, description: "+50% Attack Reduction Effectiveness" }] },
-    { id: "fragility-vulnerable", name: "Fragility - Vulnerable", rarity: "mythical", image: "/trait-icons/fragility.png", symbolImage: "/trait-symbols/fragility.png", naturalSource: "Sylvaris", effects: [
+    { id: "fragility-vulnerable", name: "Fragility - Vulnerable", rarity: "mythical", image: "/trait-icons/fragility-vulnerability.png", symbolImage: "/trait-symbols/fragility-vulnerability.png", naturalSource: "Sylvaris", effects: [
             { type: "vulnerabilityEffectiveness", percentage: 50, description: "+50% Vulnerability Effectiveness" },
         ] },
-    { id: "fragility-status", name: "Fragility - Burn/Poison Damage", rarity: "mythical", image: "/trait-icons/fragility.png", symbolImage: "/trait-symbols/fragility.png", naturalSource: "Celestian & Veloros", effects: [
+    { id: "fragility-status", name: "Fragility - Burn/Poison Damage", rarity: "mythical", image: "/trait-icons/fragility-poison-burn.png", symbolImage: "/trait-symbols/fragility-poison-burn.png", naturalSource: "Celestian & Veloros", effects: [
             { type: "damage", percentage: 50, description: "+50% Damage to Burning or Poisoned targets", condition: "targetStatused" },
         ] },
-    { id: "vital-barrier", name: "Vital Barrier", rarity: "mythical", image: "/trait-icons/Vital Barrier.png", symbolImage: "/trait-symbols/vital-barrier.png", effects: [{ type: "postCastShield", percentage: 5, description: "After casting a skill, gain a shield equal to 5% of Max Health for 6 seconds. Does not stack." }] },
+    { id: "vital-barrier", name: "Vital Barrier", rarity: "mythical", image: "/trait-icons/vital-barrier.png", symbolImage: "/trait-symbols/vital-barrier.png", effects: [{ type: "postCastShield", percentage: 5, description: "After casting a skill, gain a shield equal to 5% of Max Health for 6 seconds. Does not stack." }] },
 ];
 
 // Keep the labels and all source monsters synchronized with traits.csv.

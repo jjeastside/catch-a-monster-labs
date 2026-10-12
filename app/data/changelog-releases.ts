@@ -8,10 +8,24 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.26",
+        date: "October 12, 2026",
+        title: "Pet Hatch Transfer",
+        label: "Latest",
+        changes: [
+            "Added Pet Hatch Transfer for estimating offspring trait inheritance, mutation transfer, rank outcomes, and genetic potential ranges for Normal and Super Breed pairings.",
+            "Added the research-based trait transfer formula with evolution and Dumplorer modifiers, displayed accuracy guidance, and an estimated average number of breeds per successful transfer.",
+            "Added the verified Normal and Super Breed rank rates, including S and SS parent combinations, and mutation transfer rates for Normal and X mutations.",
+            "Added parent selection with incremental loading, search, and exclusive-trait filters, while limiting exclusive traits to valid source monsters except for Vital Barrier.",
+            "Added clickable mutation states ordered Huge, Shiny, Bloodlit, and Fairy, with compact offspring results that only show outcomes above 0%.",
+            "Matched parent cards and rank styling to the Build Calculator, added focused help tooltips, and improved the offspring trait result hierarchy for clearer source-to-offspring estimates.",
+            "Added Pet Hatch Transfer to the top navigation, footer, and homepage with a matching icon and tool preview, plus a dedicated social link preview for Discord and other platforms.",
+        ],
+    },
+    {
         version: "v1.0.25",
         date: "October 10, 2026",
         title: "Calculator Precision & PvP Validation",
-        label: "Latest",
         changes: [
             "Improved Calculator Results stat formatting to show five significant digits for values in the hundreds of K, M, B, or T, such as 512.12M and 312.21K, while retaining the previous four-digit format at other magnitudes.",
             "Added one additional significant digit on hover for calculator Damage, Health, skill damage, DPS, healing, shields, and applicable calculation details.",

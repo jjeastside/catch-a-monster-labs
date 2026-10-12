@@ -13,6 +13,7 @@ const exploreLinks = [
     { label: "Team Builder", href: "/team" },
     { label: "Monster Database", href: "/monster-database" },
     { label: "Index Tracker", href: "/index-tracker" },
+    { label: "Pet Hatch", href: "/pet-hatch" },
     { label: "Patch Notes", href: "/updates" },
     { label: "Changelog", href: "/changelog" },
     { label: "About", href: "/about" },
