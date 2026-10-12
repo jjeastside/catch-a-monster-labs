@@ -233,15 +233,14 @@ function calculateDummeeStats(
 function calculateStandardStats(
     statData: Extract<
         MonsterStatData,
-        { growthType: "standard" }
+        { growthType: "standard" | "dragon-cannelloni" }
     >,
     level: number,
     multipliers: StatMultipliers,
 ): CalculatedStats {
-    // Dragon Cannelloni has its own fitted growth coefficients; every
-    // other standard monster retains the original common multiplier.
+    // Respect the imported growth type, not a hardcoded monster ID.
     const growth =
-        statData.monsterId === "dragon-cannelloni"
+        statData.growthType === "dragon-cannelloni"
             ? dragonCannelloniGrowth(level)
             : standardGrowth(level);
     const healthGrowth =

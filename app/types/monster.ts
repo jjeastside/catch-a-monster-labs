@@ -32,7 +32,7 @@ export type GeneratedMonster = Monster & {
   baseDamageELevel1: number;
   baseHealthELevel1: number;
   baseCritChance: number;
-  growthType: "dummee" | "standard";
+  growthType: "dummee" | "standard" | "dragon-cannelloni";
   indexPosition: number;
 };
 

@@ -5409,7 +5409,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseDamageELevel1": 97904,
     "pvpBaseHealthELevel1": 2447600,
     "baseCritChance": 0,
-    "growthType": "standard",
+    "growthType": "dragon-cannelloni",
     "indexPosition": 158
   },
   {

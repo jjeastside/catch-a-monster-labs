@@ -12,9 +12,13 @@ export const monsterStats: MonsterStatData[] = GENERATED_MONSTERS.map(
             baseCritChance: monster.baseCritChance,
         };
 
-        return monster.growthType === "dummee"
-            ? { ...shared, monsterId: "dummee", growthType: "dummee" }
-            : { ...shared, monsterId: monster.id, growthType: "standard" };
+        if (monster.growthType === "dummee") {
+            return { ...shared, monsterId: monster.id, growthType: "dummee" };
+        }
+        if (monster.growthType === "dragon-cannelloni") {
+            return { ...shared, monsterId: monster.id, growthType: "dragon-cannelloni" };
+        }
+        return { ...shared, monsterId: monster.id, growthType: "standard" };
     },
 );
 

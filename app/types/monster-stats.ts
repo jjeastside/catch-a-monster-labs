@@ -22,6 +22,11 @@ export type StandardMonsterStatData = {
     isEvolved?: boolean;
 };
 
+export type DragonCannelloniStatData = Omit<StandardMonsterStatData, "growthType"> & {
+    growthType: "dragon-cannelloni";
+};
+
 export type MonsterStatData =
     | DummeeStatData
-    | StandardMonsterStatData;
+    | StandardMonsterStatData
+    | DragonCannelloniStatData;

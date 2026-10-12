@@ -711,6 +711,9 @@ const monsters = monsterRows.map((monster, index) => {
     const growthType = monster["Growth Type"]
         .trim()
         .toLowerCase();
+    if (growthType === "dragon cannelloni" && name !== "Dragon Cannelloni") {
+        throw new Error(`Dragon Cannelloni is only valid for Dragon Cannelloni (row ${index + 2})`);
+    }
 
     return {
         monster_id: slug(name),
@@ -724,7 +727,9 @@ const monsters = monsterRows.map((monster, index) => {
             growthType === "dummee" ||
             growthType === "a"
                 ? "A"
-                : "B",
+                : growthType === "dragon cannelloni"
+                  ? "DRAGON_CANNELLONI"
+                  : "B",
         element: monster.Element,
         rarity: monster.Rarity,
         evolution_source: slug(
@@ -1076,7 +1081,9 @@ const generatedMonsters = monsters.map(
         growthType:
             monster.growth_type === "A"
                 ? "dummee"
-                : "standard",
+                : monster.growth_type === "DRAGON_CANNELLONI"
+                  ? "dragon-cannelloni"
+                  : "standard",
 
         indexPosition: number(
             monster.index_position,
