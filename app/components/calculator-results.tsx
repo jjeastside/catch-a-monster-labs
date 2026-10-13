@@ -1,7 +1,7 @@
 
 import { useCombatMode } from "../lib/combat-mode";
 import { buildForCombatMode } from "../lib/combat-mode-build";
-import { formatNumber, formatStatNumber as formatSharedStatNumber } from "../lib/format-numbers";
+import { formatNumber, formatStatNumber as formatSharedStatNumber, getStatDisplayFigures } from "../lib/format-numbers";
 import { calculateSkillDps, calculateSkillSummary } from "../lib/calculations/skill-summary";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -54,23 +54,12 @@ import { MonsterOverviewCard } from "./monster-overview-card";
 import { Panel } from "./panel";
 import { TraitIcon } from "./trait-icon";
 
-// Match the game's five-digit display only for 100–999 K/M/B/T values.
-// Other magnitudes retain the original four-significant-digit display.
-const hasHundredsAbbreviation = (value: number) => {
-    const absoluteValue = Math.abs(value);
-    return (
-        (absoluteValue >= 100_000 && absoluteValue < 1_000_000) ||
-        (absoluteValue >= 100_000_000 && absoluteValue < 1_000_000_000) ||
-        (absoluteValue >= 100_000_000_000 && absoluteValue < 1_000_000_000_000) ||
-        (absoluteValue >= 100_000_000_000_000 && absoluteValue < 1_000_000_000_000_000)
-    );
-};
-
-const formatStatNumber = (value: number) =>
-    formatSharedStatNumber(value, hasHundredsAbbreviation(value) ? 5 : 4);
+// Match the game's five-digit display whenever the shown value is in the
+// hundreds place (for example 213.21, 312.21K, or 512.12M).
+const formatStatNumber = (value: number) => formatSharedStatNumber(value);
 // Hover reveals exactly one additional significant digit over the display.
 const formatHoverStatNumber = (value: number) =>
-    formatSharedStatNumber(value, hasHundredsAbbreviation(value) ? 6 : 5);
+    formatSharedStatNumber(value, getStatDisplayFigures(value) + 1);
 
 function StatAmount({ value }: { value: number }) {
     return (

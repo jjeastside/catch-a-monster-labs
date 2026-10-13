@@ -8,6 +8,7 @@ import { mergeUniquePassives } from "../data/passives";
 import { getTrait } from "../data/traits";
 import { calculateStats } from "../lib/calculations/stats";
 import { assetPath } from "../lib/asset-path";
+import { formatStatNumber } from "../lib/format-numbers";
 import type { Build, Mutation } from "../types/build";
 import type { Monster } from "../types/monster";
 
@@ -91,47 +92,6 @@ function getPortraitStyle(monster: Monster | null) {
     }
 
     return undefined;
-}
-
-function roundToSignificantFigures(value: number, figures = 4): number {
-    if (value === 0 || !Number.isFinite(value)) return value;
-
-    const magnitude = Math.floor(Math.log10(Math.abs(value)));
-    const precision = figures - magnitude - 1;
-    const factor = 10 ** precision;
-
-    return Math.round((value + Number.EPSILON) * factor) / factor;
-}
-
-function formatStatNumber(value: number): string {
-    if (!Number.isFinite(value)) return "—";
-
-    const roundedValue = roundToSignificantFigures(value);
-    const absoluteValue = Math.abs(roundedValue);
-    const units = [
-        { threshold: 1_000_000_000_000_000, suffix: "Qd" },
-        { threshold: 1_000_000_000_000, suffix: "T" },
-        { threshold: 1_000_000_000, suffix: "B" },
-        { threshold: 1_000_000, suffix: "M" },
-        { threshold: 100_000, suffix: "K" },
-    ];
-    const unit = units.find(({ threshold }) => absoluteValue >= threshold);
-
-    if (!unit) {
-        return new Intl.NumberFormat("en-US", {
-            maximumFractionDigits: Math.max(
-                0,
-                4 - Math.floor(Math.log10(absoluteValue || 1)) - 1,
-            ),
-        }).format(roundedValue);
-    }
-
-    const scaledValue = roundedValue / unit.threshold;
-    const scaledMagnitude = Math.floor(Math.log10(Math.abs(scaledValue)));
-
-    return `${new Intl.NumberFormat("en-US", {
-        maximumFractionDigits: Math.max(0, 4 - scaledMagnitude - 1),
-    }).format(scaledValue)}${unit.suffix}`;
 }
 
 function formatSavedTime(savedAt: number): string {
