@@ -2980,3 +2980,36 @@ button.emptySlot .emptySlotContent small {
 .recommendDetails span:nth-of-type(2), .recommendDetails em { display: block; }
 .recommendDetails span { white-space: normal; overflow-wrap: anywhere; }
 .optimizerNotes { opacity: 1; }
+
+/* Compact element labels and PvP opponent preview. */
+.slotClassification { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.elementBadge { display: inline-flex; align-items: center; gap: 5px; width: fit-content; padding: 3px 7px; border: 1px solid #34516c; border-radius: 7px; background: #152b40; color: #bde6ff; font-size: 11px; line-height: 1.3; }
+.elementBadge img { width: 17px; height: 17px; object-fit: contain; }
+.pvpPanel { margin: 0 16px 16px; padding: 12px; border: 1px solid #2b4765; border-radius: 12px; background: #0c192b; }
+.pvpHeader { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px; }
+.modeToggle { display: flex; gap: 3px; padding: 3px; border: 1px solid #2b4765; border-radius: 9px; }
+.modeToggle button { padding: 5px 13px; border-radius: 6px; color: #97aec5; font-size: 12px; font-weight: 700; }
+.modeToggle button[aria-pressed="true"] { background: #204d73; color: #dcf4ff; box-shadow: inset 0 0 0 1px #438dc0; }
+.opponentControls { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
+.opponentControls label { display: flex; flex: 1 1 75px; flex-direction: column; gap: 5px; color: #97aec5; font-size: 11px; min-width: 0; }
+.opponentControls .opponentSelect { flex: 3 1 210px; }
+.opponentControls select, .opponentControls input { width: 100%; min-width: 0; padding: 7px; border: 1px solid #304863; border-radius: 7px; background: #132337; color: #e1eaf6; font-size: 12px; }
+.opponentPreview { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 12px 0 8px; }
+.opponentPortrait { width: 44px; height: 44px; flex-shrink: 0; overflow: hidden; border: 1px solid #34516c; border-radius: 9px; }
+.opponentPreview > div:nth-child(2) { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+.opponentStats { display: flex; flex-wrap: wrap; gap: 14px; margin-left: auto; }
+.opponentStats span { display: flex; flex-direction: column; gap: 3px; color: #97aec5; font-size: 11px; }
+.opponentStats b { color: #d7eefe; font-size: 13px; }
+.pvpPanel > p { margin-top: 9px; }
+.modeToggle button:focus-visible, .opponentControls select:focus-visible, .opponentControls input:focus-visible { outline: 2px solid #68c7ff; outline-offset: 2px; }
+@media (max-width: 600px) {
+  .pvpPanel { margin-right: 10px; margin-left: 10px; }
+  .opponentControls .opponentSelect { flex-basis: 100%; }
+  .opponentStats { margin-left: 0; width: 100%; }
+}
+
+/* Override the compact card rules that previously hid classification text. */
+.slotTitle > .slotClassification { display: flex; justify-content: center; position: static; width: auto; gap: 6px; margin-top: 6px; }
+.slotTitle .slotClassification > span { display: inline-flex; position: static; width: auto; margin-top: 0; text-align: center; }
+.slotTitle .slotClassification > .elementBadge { color: #bde6ff; }
+.opponentPortrait img { width: 100%; height: 100%; object-fit: contain; }

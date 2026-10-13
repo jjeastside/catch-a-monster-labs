@@ -262,7 +262,11 @@ const teamMutationFamilies = [
 ] as const;
 
 export function TeamComposition() {
-  const [combatMode] = useCombatMode();
+  const [combatMode, setCombatMode] = useCombatMode();
+  const [opponentId, setOpponentId] = useState("");
+  const [opponentLevel, setOpponentLevel] = useState(CURRENT_MAX_LEVEL);
+  const [opponentRank, setOpponentRank] = useState<Rank>("SS");
+  const [opponentEnhancement, setOpponentEnhancement] = useState(10);
   const calculateStats: typeof calculateStatsForBuild = (data, build, passives) => calculateStatsForBuild(data, { ...build, combatMode }, passives);
   const monsterDps: typeof monsterDpsForBuild = (monster, build) => monsterDpsForBuild(monster, { ...build, combatMode });
   const buildForGoal: typeof buildForGoalBase = (build, context) => buildForGoalBase({ ...build, combatMode }, context);
@@ -278,6 +282,21 @@ export function TeamComposition() {
   const [accountBuild, setAccountBuild] = useState<Build>(() => createDefaultBuild());
   const [goal, setGoal] = useState<TeamGoal>("balanced");
   const [combatContext, setCombatContext] = useState<TeamCombatContext>("standard");
+  // PvP is a standard encounter: restore pre-dungeon levels and remove PvE context bonuses.
+  useEffect(() => {
+    if (combatMode === "pvp" && combatContext !== "standard") {
+      setTeam((current) => teamForCombatContext(current, "standard"));
+      setCombatContext("standard");
+    }
+  }, [combatMode, combatContext]);
+  const opponent = monsterById.get(opponentId) ?? null;
+  const opponentBuild: Build = {
+    ...makeBuild(opponentId || null), combatMode: "pvp", level: opponentLevel,
+    rank: opponentRank, enhancement: opponentEnhancement,
+  };
+  const opponentStats = opponent
+    ? calculateStatsForBuild(getMonsterStatData(opponent.id), opponentBuild, opponent.passives ?? []) : null;
+  const opponentDps = opponent && opponentStats ? monsterDpsForBuild(opponent, opponentBuild) : null;
   const [inventoryFilter, setInventoryFilter] = useState<InventoryFilter>("all");
   const [inventorySort, setInventorySort] = useState<InventorySort>("name");
   const [inventoryFilterPanel, setInventoryFilterPanel] = useState<"sort" | "browse" | null>(null);
@@ -1490,6 +1509,36 @@ export function TeamComposition() {
                 </div>
               </div>
 
+              <div className={styles.pvpPanel}>
+                <div className={styles.pvpHeader}>
+                  <strong>Combat Mode</strong>
+                  <div className={styles.modeToggle} role="group" aria-label="Team combat mode">
+                    {(["pve", "pvp"] as const).map((mode) => <button key={mode} type="button" aria-pressed={combatMode === mode} onClick={() => setCombatMode(mode)}>{mode === "pvp" ? "PvP" : "PvE"}</button>)}
+                  </div>
+                </div>
+                {combatMode === "pvp" ? <>
+                  <div className={styles.opponentControls}>
+                    <label className={styles.opponentSelect}>Facing<select value={opponentId} onChange={(event) => setOpponentId(event.target.value)}>
+                      <option value="">Choose opponent monster</option>
+                      {[...availableMonsters].sort((a, b) => a.name.localeCompare(b.name)).map((monster) => <option key={monster.id} value={monster.id}>{monster.name} · {monster.element}</option>)}
+                    </select></label>
+                    <label>Level<input type="number" min={1} max={CURRENT_MAX_LEVEL} value={opponentLevel} onChange={(event) => setOpponentLevel(Math.max(1, Math.min(CURRENT_MAX_LEVEL, Math.round(Number(event.target.value) || 1))))} /></label>
+                    <label>Rank<select value={opponentRank} onChange={(event) => setOpponentRank(event.target.value as Rank)}>{ranks.map((rank) => <option key={rank} value={rank}>{rank}</option>)}</select></label>
+                    <label>Enhancement<select value={opponentEnhancement} onChange={(event) => setOpponentEnhancement(Number(event.target.value))}>{Array.from({ length: 11 }, (_, value) => <option key={value} value={value}>+{value}</option>)}</select></label>
+                  </div>
+                  {opponent ? <div className={styles.opponentPreview}>
+                    <TeamMonsterPortrait monster={opponent} className={styles.opponentPortrait} />
+                    <div><strong>{opponent.name}</strong><span className={styles.elementBadge}><img src={assetPath(`/element-icons/${opponent.element.toLowerCase()}.png`)} alt="" />{opponent.element}</span></div>
+                    {opponentStats ? <div className={styles.opponentStats}>
+                      <span>Damage <b>{formatStatNumber(opponentStats.damage)}</b></span>
+                      <span>Health <b>{formatStatNumber(opponentStats.health)}</b></span>
+                      <span>Skill DPS <b>{formatStatNumber(opponentDps ?? 0)}</b></span>
+                    </div> : <p className={styles.helper}>PvP base stats are unavailable for this monster.</p>}
+                  </div> : null}
+                  <p className={styles.helper}>Team stats and recommendations use PvP bases. Opponent preview: 6% breeding, no mutations, gear, traits or account bonuses; full EM 100% for evolutions. Select an opponent to inspect its stats; this preview does not predict a winner or apply elemental matchup bonuses.</p>
+                </> : null}
+              </div>
+
               {teamPresetMessage ? <div className={styles.teamPresetMessage}>{teamPresetMessage}</div> : null}
               <div className={styles.teamSlots}>
                 {resolvedTeam.map((item, index) =>
@@ -1508,10 +1557,14 @@ export function TeamComposition() {
                         <div className={styles.slotTitle}>
                     <span>Slot {index + 1} · {index === 0 ? "Main DPS" : index === 1 ? "Support" : "Utility"}</span>
                           <strong>{item.monster.name}</strong>
-                          <span>{item.monster.element} · {item.monster.rarity}</span>
+                          <span className={styles.slotClassification}>
+                            <span className={styles.elementBadge}><img src={assetPath(`/element-icons/${item.monster.element.toLowerCase()}.png`)} alt="" />{item.monster.element}</span>
+                            <span>{item.monster.rarity}</span>
+                          </span>
                         </div>
                       </button>
 
+                      {combatMode === "pvp" && !item.stats ? <p className={styles.helper}>PvP base stats unavailable; excluded from stat totals.</p> : null}
                       <div className={styles.compareQuickStats} aria-label="Current monster build; select any value to edit">
                         <button type="button" onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} level`}><span>Lv</span><b>{item.build.level}</b></button>
                         <button type="button" onClick={() => setEditingTeamSlot(index)} aria-label={`Edit ${item.monster.name} rank`}><span>Rank</span><b><TeamRankText rank={item.build.rank} /></b></button>
@@ -1716,7 +1769,7 @@ export function TeamComposition() {
                   <p className={styles.kicker}>Combined</p>
                   <h2>Team Overview</h2>
                 </div>
-                <span className="text-xs text-[#8da0b7]">{totals.monsters} / 3 · {combatContextLabel(combatContext)}</span>
+                <span className="text-xs text-[#8da0b7]">{totals.monsters} / 3 · {combatMode === "pvp" ? "PvP" : combatContextLabel(combatContext)}</span>
               </div>
               <div className={styles.overviewGrid}>
                 <div className={styles.overviewCard}><span className={styles.overviewLabel}><OverviewIcon kind="damage" />Total Damage</span><strong>{formatStatNumber(totals.damage)}</strong></div>
@@ -1932,7 +1985,7 @@ export function TeamComposition() {
                 </div>
                 <div className={styles.goalPicker}>
                   <label htmlFor="team-combat-context">Combat Context</label>
-                  <select id="team-combat-context" value={combatContext} onChange={(event) => changeCombatContext(event.target.value as TeamCombatContext)}>
+                  <select id="team-combat-context" disabled={combatMode === "pvp"} value={combatContext} onChange={(event) => changeCombatContext(event.target.value as TeamCombatContext)}>
                     <option value="standard">Standard</option>
                     <option value="boss">Boss</option>
                     <option value="rift">Rift</option>
@@ -2092,9 +2145,9 @@ export function TeamComposition() {
           </section> : null}
         </div>
         <section className={styles.useCases} aria-label="Team use cases">
-          <div><strong>Combat Context</strong><span>Apply content-specific modifiers independently of your team goal.</span></div>
+          <div><strong>Combat Context</strong><span>{combatMode === "pvp" ? "PvP uses a standard encounter without PvE content bonuses." : "Apply content-specific modifiers independently of your team goal."}</span></div>
           <nav aria-label="Choose team use case">
-            {(["standard", "boss", "dungeon", "rift", "spire"] as TeamCombatContext[]).map((value) => <button key={value} type="button" className={combatContext === value ? styles.useCaseActive : ""} onClick={() => changeCombatContext(value)}>{value === "standard" ? "General" : value === "boss" ? "Bosses" : value === "dungeon" ? "Dungeons" : value === "spire" ? "Tower" : "Rifts"}</button>)}
+            {(["standard", "boss", "dungeon", "rift", "spire"] as TeamCombatContext[]).map((value) => <button key={value} type="button" disabled={combatMode === "pvp"} className={combatContext === value ? styles.useCaseActive : ""} onClick={() => changeCombatContext(value)}>{value === "standard" ? "General" : value === "boss" ? "Bosses" : value === "dungeon" ? "Dungeons" : value === "spire" ? "Tower" : "Rifts"}</button>)}
           </nav>
         </section>
       </div>

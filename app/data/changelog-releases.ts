@@ -8,10 +8,23 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.28",
+        date: "October 13, 2026",
+        title: "Universal Quantized Stat Growth",
+        label: "Latest",
+        changes: [
+            "Introduced a research-based precision model for Standard monster growth after comparing recorded level-by-level Damage and Health from Treemo, Wattoad, Leafet, and Skedeer.",
+            "Quantized the Standard level-growth multiplier downward in 0.0002 increments and the level-gain coefficient downward in 0.05-stat increments, improving agreement with in-game values and reducing small accumulated calculation errors.",
+            "Updated both PvE and PvP to use the same monster-specific relative growth curve; PvP retains its independent Level 1 base stats while deriving its level scaling from the PvE reference stats.",
+            "Removed Treemo's separate growth type and returned it to Standard growth, since the shared precision model better explains the discrepancies originally found in its leveling data.",
+            "Preserved the Level 65 growth breakpoint and the separate Dummee and Dragon Cannelloni growth formulas.",
+            "These precision rules are inferred from recorded gameplay, not confirmed game source code; further samples may refine the model.",
+        ],
+    },
+    {
         version: "v1.0.27",
         date: "October 13, 2026",
         title: "Trait Transfer Formula Refinement",
-        label: "Latest",
         changes: [
             "Refined the trait-transfer evolution power modifier from 2.2× to 2.1984× using the expanded uncapped breeding dataset, improving agreement across evolved source and target tests.",
             "Updated the Genesis transfer curve to the clean research form 25 × exp[-0.7 × (log₁.₄₅(R) − 1)], while keeping full internal precision before displaying the in-game-style rate.",
