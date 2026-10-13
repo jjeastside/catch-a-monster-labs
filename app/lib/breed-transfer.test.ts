@@ -44,8 +44,8 @@ describe("breed transfer research model", () => {
     });
     it("applies evolution and Dumplorer corrections once", () => {
         const base = { ...monster, isEvolved: false };
-        expect(transferPower({ ...base, isEvolved: true })! / transferPower(base)!).toBeCloseTo(2.2);
-        expect(transferPower({ ...base, id: "dumplorer", isEvolved: true })! / transferPower(base)!).toBeCloseTo(2.75);
+        expect(transferPower({ ...base, isEvolved: true })! / transferPower(base)!).toBeCloseTo(2.1984);
+        expect(transferPower({ ...base, id: "dumplorer", isEvolved: true })! / transferPower(base)!).toBeCloseTo(2.748);
     });
     it("calculates Normal and Super mutation outcomes", () => {
         expect(mutationTransfer("none", "none", false)).toEqual({ normal: 0, x: 0 });
@@ -69,8 +69,10 @@ describe("breed transfer research model", () => {
         expect(rankTransfer("S", "SS", true)).toEqual(rankTransfer("SS", "S", true));
         expect(rankTransfer("SS", "SS", true)).toEqual([{ rank: "SS", chance: 50 }, { rank: "S", chance: 50 }]);
     });
-    it("never displays less than double the rounded Normal chance", () => {
-        expect(displayedTraitRates(1.516)).toEqual({ normal: 1.52, super: 3.04 });
+    it("truncates displayed trait rates to two decimals after full-precision calculation", () => {
+        expect(displayedTraitRates(1.52049)).toEqual({ normal: 1.52, super: 3.04 });
+        expect(displayedTraitRates(12.4127)).toEqual({ normal: 12.41, super: 24.82 });
+        expect(displayedTraitRates(18.6314)).toEqual({ normal: 18.63, super: 37.26 });
         expect(displayedTraitRates(25)).toEqual({ normal: 25, super: 50 });
         expect(displayedTraitRates(0)).toEqual({ normal: 0, super: 0 });
         for (const value of [0.004, 0.005, 0.034, 0.096, 1.514, 18.605, 24.995]) {

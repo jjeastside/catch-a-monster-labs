@@ -8,10 +8,21 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.27",
+        date: "October 13, 2026",
+        title: "Trait Transfer Formula Refinement",
+        label: "Latest",
+        changes: [
+            "Refined the trait-transfer evolution power modifier from 2.2× to 2.1984× using the expanded uncapped breeding dataset, improving agreement across evolved source and target tests.",
+            "Updated the Genesis transfer curve to the clean research form 25 × exp[-0.7 × (log₁.₄₅(R) − 1)], while keeping full internal precision before displaying the in-game-style rate.",
+            "Kept Dumplorer's additional 1.25× transfer-power modifier on top of the refined evolution modifier, for a combined 2.748× modifier.",
+            "Changed displayed Normal and Super trait-transfer percentages to truncate to two decimals and updated Pet Hatch and breeding formula help text and regression tests to match the refined model.",
+        ],
+    },
+    {
         version: "v1.0.26",
         date: "October 12, 2026",
         title: "Pet Hatch Transfer",
-        label: "Latest",
         changes: [
             "Added Pet Hatch Transfer for estimating offspring trait inheritance, mutation transfer, rank outcomes, and genetic potential ranges for Normal and Super Breed pairings.",
             "Added the research-based trait transfer formula with evolution and Dumplorer modifiers, displayed accuracy guidance, and an estimated average number of breeds per successful transfer.",

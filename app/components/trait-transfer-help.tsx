@@ -11,7 +11,7 @@ def power(pve_damage, pvp_damage, pve_hp, pvp_hp,
           evolution=False, dumplorer=False):
     p = sqrt((pve_damage / pvp_damage) * (pve_hp / pvp_hp))
     if evolution:
-        p *= 2.2
+        p *= 2.1984
     if dumplorer:
         p *= 1.25
     return p
@@ -32,7 +32,7 @@ export function TraitTransferHelp() {
         <dl>
             <dt>D</dt><dd>Base damage in PvE or PvP.</dd>
             <dt>H</dt><dd>Base health in PvE or PvP.</dd>
-            <dt>M</dt><dd>Start at 1. Multiply by 2.2 for an evolution, then by another 1.25 for Dumplorer. Dumplorer’s total modifier is 2.75.</dd>
+            <dt>M</dt><dd>Start at 1. Multiply by 2.1984 for an evolution, then by another 1.25 for Dumplorer. Dumplorer’s total modifier is 2.748.</dd>
             <dt>P</dt><dd>The normalized power score after those modifiers. It is not displayed damage or DPS. Calculate it separately for each parent.</dd>
         </dl>
         <div className={styles.formula} dangerouslySetInnerHTML={{ __html: ratioEquation }} />
@@ -40,7 +40,7 @@ export function TraitTransferHelp() {
         <div className={styles.formula} dangerouslySetInnerHTML={{ __html: normalEquation }} />
         <div className={styles.formula} dangerouslySetInnerHTML={{ __html: superEquation }} />
         <p>C is a percentage, so 25 means 25%. The base-1.45 logarithm can also be computed as ln(R) / ln(1.45). Inputs must be positive. Rank, level, enhancement, gear, mutations and account bonuses are excluded.</p>
-        <p>These are research estimates with about ±0.3 percentage-point variation. Super’s underlying estimate is exactly twice Normal; display rounding may raise the shown Super value by 0.01 percentage points so it stays at least twice the shown Normal value.</p>
+        <p>These are research estimates. The current evolution fit is 2.1984×; small last-hundredth differences can still come from hidden base-stat precision. The calculator keeps full precision internally, then truncates the displayed Normal and Super percentages to two decimals to match observed in-game trait-rate displays.</p>
         <details><summary>Python implementation</summary><pre><code>{implementation}</code></pre></details>
     </section>;
 }

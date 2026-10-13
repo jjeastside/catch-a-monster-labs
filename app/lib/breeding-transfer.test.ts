@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { GENERATED_MONSTERS } from "../data/generated/monsters";
-import { atLeastOneSuccess, calculateSkillTransfer } from "./breeding-transfer";
+import { atLeastOneSuccess, BREEDING_MODEL, calculateSkillTransfer, displayedTransferRates, transferPower } from "./breeding-transfer";
 
 const monster = (id: string) => {
     const found = GENERATED_MONSTERS.find((entry) => entry.id === id);
@@ -14,6 +14,18 @@ describe("breeding skill-transfer formula", () => {
         expect(result).not.toBeNull();
         expect(result!.genesisChance).toBeCloseTo(18.63, 1);
         expect(result!.superChance).toBeCloseTo(37.26, 1);
+    });
+    it("uses the refined evolution multiplier and clean 0.7 / 1.45 curve", () => {
+        expect(BREEDING_MODEL.evolutionMultiplier).toBe(2.1984);
+        const runegolem = monster("runegolem");
+        const base = { ...runegolem, isEvolved: false };
+        expect(transferPower({ ...base, isEvolved: true })! / transferPower(base)!).toBeCloseTo(2.1984, 8);
+        const result = calculateSkillTransfer(monster("runegolem"), monster("dumplorer"))!;
+        const expected = Math.min(25, 25 * Math.exp(-0.7 * (Math.log(result.ratio) / Math.log(1.45) - 1)));
+        expect(result.genesisChance).toBeCloseTo(expected, 10);
+    });
+    it("matches observed two-decimal display truncation", () => {
+        expect(displayedTransferRates(12.4127)).toEqual({ normal: 12.41, super: 24.82 });
     });
     it("caps Genesis at 25% and Super Breed at 50%", () => {
         const result = calculateSkillTransfer(monster("dumplorer"), monster("runegolem"));

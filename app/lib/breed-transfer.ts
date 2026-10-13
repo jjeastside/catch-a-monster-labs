@@ -1,6 +1,11 @@
 import type { GeneratedMonster } from "../types/monster";
 import { hasFixedBreeding } from "./breeding-limits";
 import { getAvailableTraits } from "../data/traits";
+import {
+    calculateSkillTransfer,
+    displayedTransferRates,
+    transferPower as researchTransferPower,
+} from "./breeding-transfer";
 
 export const MUTATIONS = ["Shiny", "Bloodlit", "Fairy", "Huge"] as const;
 export type Mutation = typeof MUTATIONS[number];
@@ -12,23 +17,13 @@ export function getBreedingTraits(monsterId: string) {
 }
 
 /** Research fit, using unmodified level-1 E-rank base stats only. */
-export function transferPower(monster: GeneratedMonster): number | null {
-    const { baseDamageELevel1: d, baseHealthELevel1: h, pvpBaseDamageELevel1: pd, pvpBaseHealthELevel1: ph } = monster;
-    if (![d, h, pd, ph].every(value => typeof value === "number" && Number.isFinite(value) && value > 0)) return null;
-    let power = Math.sqrt((d / pd!) * (h / ph!));
-    if (monster.isEvolved) power *= 2.2;
-    if (monster.id === "dumplorer") power *= 1.25;
-    return power;
-}
+export const transferPower = researchTransferPower;
 
 export function traitTransfer(source: GeneratedMonster, target: GeneratedMonster, hasTrait: boolean) {
     if (hasFixedBreeding(source.id) || hasFixedBreeding(target.id) || !hasTrait) return { normal: 0, super: 0 };
-    const a = transferPower(source), b = transferPower(target);
-    if (a === null || b === null) return null;
-    const ratio = b / a;
-    const logBase145 = Math.log(ratio) / Math.log(1.45);
-    const normal = Math.min(25, 25 * Math.exp(-0.7 * (logBase145 - 1)));
-    return { normal, super: normal * 2 };
+    const result = calculateSkillTransfer(source, target);
+    if (result === null) return null;
+    return { normal: result.genesisChance, super: result.superChance };
 }
 
 export function mutationTransfer(a: MutationState, b: MutationState, superBreed: boolean) {
@@ -41,10 +36,7 @@ export function mutationTransfer(a: MutationState, b: MutationState, superBreed:
 }
 
 export function displayedTraitRates(normalChance: number) {
-    const normal = Math.round(normalChance * 100) / 100;
-    const doubledDisplay = Math.round(normal * 200) / 100;
-    const superChance = Math.round(normalChance * 200) / 100;
-    return { normal, super: Math.min(50, Math.max(doubledDisplay, superChance)) };
+    return displayedTransferRates(normalChance);
 }
 
 export function averageBreeds(chancePercent: number): number | null {

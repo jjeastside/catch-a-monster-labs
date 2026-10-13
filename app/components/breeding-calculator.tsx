@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { GENERATED_MONSTERS } from "../data/generated/monsters";
 import { getSkill, getSkillDisplayName } from "../data/skills";
 import { assetPath } from "../lib/asset-path";
-import { calculateSkillTransfer, atLeastOneSuccess, transferPower } from "../lib/breeding-transfer";
+import { calculateSkillTransfer, atLeastOneSuccess, displayTransferChance, transferPower } from "../lib/breeding-transfer";
 import { hasFixedBreeding } from "../lib/breeding-limits";
 import { PageHeading } from "./page-heading";
 import { TOOL_PAGE_CONTAINER } from "./tool-page-layout";
@@ -83,6 +83,7 @@ export function BreedingCalculator() {
     const chosenSkill = skills.find((skill) => skill.id === selectedSkill) ?? skills[0];
     const chance = result ? (superBreed ? result.superChance : result.genesisChance) : null;
     const percent = (value: number) => `${value.toFixed(2)}%`;
+    const traitPercent = (value: number) => `${displayTransferChance(value).toFixed(2)}%`;
     return <main className={`${TOOL_PAGE_CONTAINER} min-h-[75vh] space-y-4 pb-12`}>
         <PageHeading title="Breeding Calculator" image="/icons/breed-attack.png" aside="Player-tested skill transfer model · October 2026">
             Choose the male skill donor and the female target to predict Genesis Fruit and Super Breed transfer chances.
@@ -95,7 +96,7 @@ export function BreedingCalculator() {
                 <p className="mt-1 text-xs text-[#a6bfd9]">The chance shown is for the selected donor skill.</p>
                 <div className="mt-4 rounded-xl border border-[#36668d] bg-[#08283f] p-4 text-center">
                     <p className="text-xs font-bold uppercase tracking-widest text-[#9bcee9]">{superBreed ? "Super Breed" : "Genesis Fruit"}</p>
-                    <p className="my-1 text-5xl font-black tabular-nums text-white">{chance !== null ? percent(chance) : "N/A"}</p>
+                    <p className="my-1 text-5xl font-black tabular-nums text-white">{chance !== null ? traitPercent(chance) : "N/A"}</p>
                     <p className="text-xs text-[#9fc0d8]">Per breeding attempt · {superBreed ? "50%" : "25%"} maximum</p>
                 </div>
                 <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-lg border border-[#33506c] bg-[#0a1b2e] p-3">
@@ -126,13 +127,13 @@ export function BreedingCalculator() {
                     <div className="flex justify-between gap-3 border-b border-[#294761] pb-2"><span className="text-[#afc6dd]">Male donor power</span><strong className="tabular-nums text-white">{result.sourcePower.toLocaleString(undefined, { maximumFractionDigits: 3 })}</strong></div>
                     <div className="flex justify-between gap-3 border-b border-[#294761] pb-2"><span className="text-[#afc6dd]">Female target power</span><strong className="tabular-nums text-white">{result.targetPower.toLocaleString(undefined, { maximumFractionDigits: 3 })}</strong></div>
                     <div className="flex justify-between gap-3 border-b border-[#294761] pb-2"><span className="text-[#afc6dd]">Target / donor ratio</span><strong className="tabular-nums text-white">{result.ratio.toFixed(4)}×</strong></div>
-                    <div className="flex justify-between gap-3 border-b border-[#294761] pb-2"><span className="text-[#afc6dd]">Genesis transfer</span><strong className="tabular-nums text-sky-300">{percent(result.genesisChance)}</strong></div>
-                    <div className="flex justify-between gap-3"><span className="text-[#afc6dd]">Super Breed transfer</span><strong className="tabular-nums text-rose-300">{percent(result.superChance)}</strong></div>
+                    <div className="flex justify-between gap-3 border-b border-[#294761] pb-2"><span className="text-[#afc6dd]">Genesis transfer</span><strong className="tabular-nums text-sky-300">{traitPercent(result.genesisChance)}</strong></div>
+                    <div className="flex justify-between gap-3"><span className="text-[#afc6dd]">Super Breed transfer</span><strong className="tabular-nums text-rose-300">{traitPercent(result.superChance)}</strong></div>
                 </div> : <p className="mt-3 text-sm text-amber-200">Missing valid PvE/PvP base-stat data. Transfer chance cannot be determined for this pair.</p>}
                 <div className="mt-4 rounded-lg border border-[#294761] bg-[#06182a] p-3 text-xs leading-relaxed text-[#a8c2dd]">
-                    <p>Power = √[(PvE Damage / PvP Damage) × (PvE Health / PvP Health)]. Evolved monsters receive a 2.2× power modifier.</p>
-                    <p className="mt-2">Dumplorer receives an additional approximate 1.25× modifier (2.75× total), based on the measured Runegolem → Dumplorer result. This exception remains an empirical fit.</p>
-                    <p className="mt-2">Genesis % = min(25, 50.3438 × ratio⁻¹·⁸⁸³⁹³). Super Breed doubles the Genesis percentage, up to 50%.</p>
+                    <p>Power = √[(PvE Damage / PvP Damage) × (PvE Health / PvP Health)]. Evolved monsters receive a 2.1984× power modifier.</p>
+                    <p className="mt-2">Dumplorer receives an additional approximate 1.25× modifier (2.748× total), based on the measured Runegolem → Dumplorer result. This exception remains an empirical fit.</p>
+                    <p className="mt-2">Genesis % = min(25, 25 × exp[-0.7 × (log₁.₄₅(ratio) − 1)]). Super Breed doubles the full-precision Genesis percentage, up to 50%; displayed trait rates are truncated to two decimals.</p>
                 </div>
             </section>
         </div>

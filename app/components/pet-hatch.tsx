@@ -146,10 +146,10 @@ export function PetHatch() {
                             <div className={styles.traitFlow}>
                                 <img src={assetPath(monsters[index].image ?? "/icon.png")} alt={`Trait source: ${monsters[index].name}`} />
                                 <div><span className={styles.flowEyebrow}>PARENT {index + 1} · TRAIT INHERITANCE</span><h3>{monsters[index].name} <span aria-hidden="true">→</span> Offspring</h3></div>
-                                <Help label={`Parent ${index + 1} inheritance details`} text={`Estimated chance for ${monsters[index].name} to pass ${trait?.name ?? "its trait"} to offspring of ${monsters[other].name}'s species. The receiving species is an input to the formula; this is not the chance of getting that species. Variation is about ±0.3 percentage points.`} />
+                                <Help label={`Parent ${index + 1} inheritance details`} text={`Estimated chance for ${monsters[index].name} to pass ${trait?.name ?? "its trait"} to offspring of ${monsters[other].name}'s species. The receiving species is an input to the formula; this is not the chance of getting that species. Small last-hundredth differences can remain because the game's hidden base-stat precision is not always visible.`} />
                             </div>
                             {trait && <img className={styles.offspringTraitBanner} src={assetPath(trait.image)} alt={trait.name} />}
-                            <div className={styles.offspringChance} title="Research estimate: about ±0.3 percentage points"><strong>{rate(activeTraitRate(rates[index]))}</strong><span>transfer rate</span></div>
+                            <div className={styles.offspringChance} title="Research estimate; hidden base-stat precision can shift the last hundredth"><strong>{rate(activeTraitRate(rates[index]))}</strong><span>transfer rate</span></div>
                             {average !== null && <div className={styles.averageBreeds}>≈1 in {average.toLocaleString("en-US", { maximumFractionDigits: 2 })} breeds <Help label={`Parent ${index + 1} average breeds explanation`} text="The estimated average number of independent breeds per successful trait transfer is 100 divided by the percent chance. This is a long-run average for the same pairing and breed type, not a guarantee by that attempt. It uses the unrounded estimate." /></div>}
                         </div>;
                     })}</div>

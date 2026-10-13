@@ -5335,8 +5335,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "hasEvolution": false,
-    "baseDamageELevel1": 29952000,
-    "baseHealthELevel1": 320493000,
+    "baseDamageELevel1": 29951000,
+    "baseHealthELevel1": 320487000,
     "pvpBaseDamageELevel1": 346740,
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
@@ -8379,8 +8379,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "evolutionSource": "rainimp",
     "baseDamageELevel1": 9497100,
     "baseHealthELevel1": 228643000,
-    "pvpBaseDamageELevel1": 288990,
-    "pvpBaseHealthELevel1": 13913000,
+    "pvpBaseDamageELevel1": 231170,
+    "pvpBaseHealthELevel1": 11131000,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 243
