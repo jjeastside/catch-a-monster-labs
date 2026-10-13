@@ -6,7 +6,7 @@ Wattoad,Uncommon,Water,10.511,63.071,346610,4159400,0,,Standard,Water Jet,,,,Isl
 Treemo,Rare,Grass,15.24,163.1,346690,7420600,0,,Standard,Seed Grenade,,,,Island Spawn | Natural Spawn | Starter Island | Current,4
 Flamix,Rare,Fire,22.1,236.5,346690,7419600,0,,Standard,Fireball,Air Bullet,,,Island Spawn | Natural Spawn | Starter Island | Current,5
 Puffu,Rare,Water,32.038,342.92,346600,7420400,0,,Standard,Water Jet,Wind Disc,,,Island Spawn | Natural Spawn | Starter Island | Current,6
-Candlechick,Rare,Fire,38.6,412.7,136960,2930600,0,,Standard,Air Bullet,Fireball,,,"Event | Turkey Egg | Thanksgiving Event 2025 | Legacy
+Candlechick,Rare,Fire,38.591,412.94,136960,2930600,0,,Standard,Air Bullet,Fireball,,,"Event | Turkey Egg | Thanksgiving Event 2025 | Legacy
 Chest | Memory Chest 2 | Abyss Shop | Current",7
 SantaDumi,Rare,Common,97.701,1045.4,346740,7420100,0,,Standard,Air Bullet,Candy Bomb,,,"Event | Christmas Event Summon | Christmas Event 2025 | Unavailable
 Chest | Memory Chest 1 | Abyss Shop | Current",8
@@ -102,7 +102,7 @@ Meowl,Legendary,Common,4338000,46418000,1057130,22622000,0,,Standard,Ex Air Bull
 Fortune Spirit | 25
 Capturer's Boon | 25",Chest | Rift Chest | Abyss Shop | Current,79
 Snoozepink,Legendary,Water,5033040,53856700,346740,7420300,0,,Standard,Vortex Nova,Water Shuriken,,,Island Spawn | Natural Spawn | Nova Coast | Current,80
-Froxy,Legendary,Ice,6286000,67305000,346740,7420300,0,,Standard,Glacial Wall,Ice Road,,,Island Spawn | Natural Spawn | Splash Isle | Current,81
+Froxy,Legendary,Ice,6290400,67308000,346740,7420300,0,,Standard,Glacial Wall,Ice Road,,,Island Spawn | Natural Spawn | Splash Isle | Current,81
 Lynxgear,Legendary,Common,9824000,105124000,346740,7420300,0,,Standard,Dark Singularity,Electro Nova,,,Island Spawn | Natural Spawn | Coilwork City | Current,82
 Bulbwarden,Legendary,Grass,13230000,141510000,346740,7420300,0,,Standard,Galecut,Ghost Impact,,,Island Spawn | Natural Spawn | Shroomvale | Current,83
 Flaragon,Mythical,Fire,754,8068,417520,8935600,0,,Standard,Claw Attack,Ex Fireball,,,Egg | Flaragon's Egg | Volcano | Current,84
@@ -226,7 +226,7 @@ Stellawulf,Mythical,Dark,8577200,367102000,173370,14843000,10,,Standard,Ghost Im
 Nexil,Mythical,Common,20583500,152960000,416100,6183400,10,,Standard,Dark Singularity,Barrier,,Spire Guard | 35,Rift | Coilwork City Rift 3 | Coilwork City | Current,152
 Twirly Bird,Mythical,Common,17092800,127030000,416100,6183400,0,,Standard,Windmill Blast,Windmill Blast,,,Island Special Spawn | Special Spawn | Coilwork City | Current,153
 Berserkor,Mythical,Dark,6884000,663070000,99619,19186000,0,,Standard,Sunder Taunt,Thorn Shield,,,Island Special Spawn | Natural Spawn | Shroomvale | Current,154
-Thornewarden,Mythical,Ground,25812000,276224000,433480,9272000,0,,Standard,Gravel Whirlwind,Rock Road,,,"Egg | Thornewarden's Egg | Shroomvale | Current
+Thornewarden,Mythical,Ground,25815500,276225000,433480,9272000,0,,Standard,Gravel Whirlwind,Rock Road,,,"Egg | Thornewarden's Egg | Shroomvale | Current
 Egg | Spritesprout Egg | Store | Current",155
 Cernunnos,Mythical,Grass,29951000,320487000,346740,7420300,10,,Standard,Healing Pulse,Root Spike,,Rift Guard | 30,Rift | Shroomvale Rift 3 | Shroomvale | Current,156
 Anubael,Mythical,Dark,14976000,640990000,173370,14843000,10,,Standard,Lightning Storm (Purple),Dark Singularity,,Trial Power | 50,Rift | Shroomvale Rift 3 | Shroomvale | Current,157
