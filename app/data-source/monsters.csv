@@ -8,7 +8,7 @@ Flamix,Rare,Fire,22.1,236.5,346690,7419600,0,,Standard,Fireball,Air Bullet,,,Isl
 Puffu,Rare,Water,32.038,342.92,346600,7420400,0,,Standard,Water Jet,Wind Disc,,,Island Spawn | Natural Spawn | Starter Island | Current,6
 Candlechick,Rare,Fire,38.6,412.7,136960,2930600,0,,Standard,Air Bullet,Fireball,,,"Event | Turkey Egg | Thanksgiving Event 2025 | Legacy
 Chest | Memory Chest 2 | Abyss Shop | Current",7
-SantaDumi,Rare,Common,97.701,1046.4,346740,7420100,0,,Standard,Air Bullet,Candy Bomb,,,"Event | Christmas Event Summon | Christmas Event 2025 | Unavailable
+SantaDumi,Rare,Common,97.701,1045.4,346740,7420100,0,,Standard,Air Bullet,Candy Bomb,,,"Event | Christmas Event Summon | Christmas Event 2025 | Unavailable
 Chest | Memory Chest 1 | Abyss Shop | Current",8
 Santacub,Rare,Common,205.39,2197.8,346740,7420100,0,,Standard,Fireball,Gift Delivery,,,"Event | Christmas Event Summon | Christmas Event 2025 | Unavailable
 Chest | Memory Chest 1 | Abyss Shop | Current",9
@@ -25,11 +25,11 @@ Flarecub,Epic,Fire,141.66,1515.85,346740,7419700,0,,Standard,Wind Disc,Fire Torn
 Blazelord,Epic,Fire,205.412,2198,346740,7420300,0,,Standard,Fireball,Fire Dash,,,Island Spawn | Natural Spawn | Volcano | Current,17
 Icevolf,Epic,Ice,431.9,4620,346740,7420300,0,,Standard,Iceball,Wind Disc,,,Island Spawn | Natural Spawn | Frost Isle | Current,18
 Frostoise,Epic,Water,626.25,6700,346740,7420300,0,,Standard,Ex Water Jet,Claw Attack,,,Island Spawn | Natural Spawn | Frost Isle | Current,19
-Fluffairy,Epic,Common,908.07,9710,346740,7420300,0,,Standard,Ex Air Bullet,Wind Disc,,,Island Spawn | Natural Spawn | Frost Isle | Current,20
+Fluffairy,Epic,Common,908.07,9716.4,346740,7420300,0,,Standard,Ex Air Bullet,Wind Disc,,,Island Spawn | Natural Spawn | Frost Isle | Current,20
 Santafairy,Epic,Common,663.82,7103,346740,7420300,0,,Standard,Candy Bomb,Gift Delivery,,,"Chest | Memory Chest 1 | Abyss Shop | Current
 Chest | Christmas Event Summon | Christmas Event 2025 | Unavailable",21
 Dreamtane,Epic,Common,2768,29620,346740,7420300,0,,Standard,Ex Air Bullet,Wind Disc,,,Island Spawn | Natural Spawn | Neverland | Current,22
-Dollfey,Epic,Common,4010,42950,346740,7420300,0,,Standard,Toxic Grenade,Wind Disc,,,Island Spawn | Natural Spawn | Neverland | Current,23
+Dollfey,Epic,Common,4014.17,42951,346740,7420300,0,,Standard,Toxic Grenade,Wind Disc,,,Island Spawn | Natural Spawn | Neverland | Current,23
 Stonebara,Epic,Ground,12230,130940,346740,7420300,0,,Standard,Rock Toss,Gravel Scatter Shot,,,Island Spawn | Natural Spawn | Duneveil Isle | Current,24
 Pangard,Epic,Fire,17736,189870,287960,6161800,0,,Standard,Ex Air Bullet,Fireball,,,Island Spawn | Natural Spawn | Duneveil Isle | Current,25
 Pandleaf,Epic,Grass,7032,108360,288970,8906700,10,,Standard,Grass Tornado,Galecut,,Mentor Spirit | 20,"Rift | Strange Rift | Spire Shop | Current
@@ -69,7 +69,7 @@ Hydribbit,Legendary,Water,10162,108740,346740,7420300,0,,Standard,Water Shuriken
 Knockroo,Legendary,Fire,25727,275300,417530,8938700,0,,Standard,Fire Dash,Fireball,,,Island Spawn | Natural Spawn | Duneveil Isle | Current,56
 Volcamel,Legendary,Fire,53904,400574,416100,6183400,0,,Standard,Fireball,Rallying War Cry (3 sec 50%),,,"Egg | Sand Egg | Duneveil Isle | Current
 Chest | Mythical Chest | Limited Events | Current",57
-Mistvolf,Legendary,Water,14777,227835,288970,8903000,0,Icevolf,Standard,Water Jet,Ripple Guard,,,Evolution | Icevolf Evolution |  | Current |  | Evolves from Icevolf.,58
+Mistvolf,Legendary,Water,14787,227855,288970,8903000,0,Icevolf,Standard,Water Jet,Ripple Guard,,,Evolution | Icevolf Evolution |  | Current |  | Evolves from Icevolf.,58
 Flamevolf,Legendary,Fire,21292,158220,416100,6185000,0,Icevolf,Standard,Fireball,Rallying War Cry (6 sec 50%),,,Evolution | Icevolf Evolution |  | Current |  | Evolves from Icevolf.,59
 Floravolf,Legendary,Grass,17743,189863,346740,7420300,0,Icevolf,Standard,Seed Grenade,Healing Pulse,,,Evolution | Icevolf Evolution |  | Current |  | Evolves from Icevolf.,60
 Aurobull,Legendary,Common,37306,399190,346740,7420300,0,,Standard,Dash,Ex Air Bullet,,,"Island Spawn | Natural Spawn | Duneveil Isle | Current
@@ -133,7 +133,7 @@ Rift | Strange Rift | Spire Shop | Current",98
 Mistwing,Mythical,Water,191350,2047400,346740,7420300,0,DustWing,Standard,Wind Blast,Water Shuriken,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,99
 Emberwing,Mythical,Fire,267887,1462400,485420,5300300,0,DustWing,Standard,Fireball,Fire Tornado,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,100
 Fernwing,Mythical,Grass,229600,1706200,416100,6183400,0,DustWing,Standard,Galecut,Healing Pulse,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,101
-Snowwing,Mythical,Ice,159450,2454200,288990,8904500,0,DustWing,Standard,Barrier,Frosty Dart,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,102
+Snowwing,Mythical,Ice,159464,2457000,288990,8904500,0,DustWing,Standard,Barrier,Frosty Dart,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,102
 Iceplate,Mythical,Ice,75835,1168500,288990,8904500,0,,Standard,Ice Road,Ex Iceball,,Rift Dominance | 50,"Rift | Strange Rift | Spire Shop | Current
 Chest | Rift Chest | Abyss Shop | Current",103
 Voltgator,Mythical,Common,91300,2200000,231150,11134000,10,,Standard,Electric Beam,Ex Air Bullet,,Spire Dominance | 50,"Rift | Duneveil Isle Rift 3 | Duneveil Isle | Current
@@ -173,7 +173,7 @@ Primothorn,Mythical,Common,418977,6455200,288990,8904400,10,,Standard,Galecut,Ro
 Chest | Mythical Chest | Limited Events | Current",120
 AbyssalDrake,Mythical,Common,1323800,7226900,485420,5300300,10,,Standard,Fire Dragon Flame Blast,Crimson Burst,,Capturer's Boon | 15,"Egg | Abyssal Drake's Egg | Cinderclaw Castle | Current |  | Normal Difficulty
 Chest | Mythical Chest | Limited Events | Current",121
-Berrybun,Mythical,Common,1140000,12188000,346740,7420300,10,,Standard,Egg Blast,,,"Mentor Spirit | 25
+Berrybun,Mythical,Common,1138700,12183600,346740,7420300,10,,Standard,Egg Blast,,,"Mentor Spirit | 25
 Capturer's Boon | 10","Chest | Memory Chest 1 | Abyss Shop | Current
 Egg | Berrybun's Egg | Easter Event 2026 | Unavailable |  | Was obtainable as a drop from Cinderclaw Castle Normal during the Easter 2026 event",122
 Bladetooth,Mythical,Ground,704700,16965000,288890,13911000,10,,Standard,Sunder Taunt,Thorn Shield,,,"Island Special Spawn | Special Spawn | Blossom Haven | Current
@@ -218,11 +218,11 @@ Venofrog,Mythical,Water,9824000,105120000,346740,7420300,0,,Standard,Tsunami,Poi
 Rainimp,Mythical,Water,12698000,94362000,416100,6183400,0,,Standard,Soul Reap Chain (Vulnerability),Healing Shuriken,,,Egg | Rainimp's Egg | Splash Isle | Current,146
 Vorturion,Mythical,Mechanical,11830000,126580000,387690,8295200,10,,Standard,Ghost Impact (Vulnerability),Inferno Blast,,Rift Guard | 30,"Rift | Splash Isle Rift 3 | Splash Isle | Current
 Egg | Conduit Egg | Store | Current",147
-Sylvaris,Mythical,Common,16562000,90416300,542690,5925300,10,,Standard,Root Spike,Urgent Aid,,Mutation Catalyst | 20,"Rift | Splash Isle Rift 3 | Splash Isle | Current
+Sylvaris,Mythical,Common,16563000,90419400,542690,5925300,10,,Standard,Root Spike,Urgent Aid,,Mutation Catalyst | 20,"Rift | Splash Isle Rift 3 | Splash Isle | Current
 Egg | Conduit Egg | Store | Current",148
 Plaguecannon,Mythical,Mechanical,4747000,457290000,115580,22261000,0,,Standard,Thorn Shield,Crimson Burst,,,Island Spawn | Natural Spawn | Coilwork City | Current,149
-Turretor,Mythical,Mechanical,18410000,136800000,416100,6183400,0,,Standard,Scorching Fireball,Flame Detonation,,,Egg | Turretor's Egg | Coilwork City | Current,150
-Stellawulf,Mythical,Dark,8575100,367100000,173370,14843000,10,,Standard,Ghost Impact,Soul Reap Chain (Vulnerability),,Trial Power | 50,Rift | Coilwork City Rift 3 | Coilwork City | Current,151
+Turretor,Mythical,Mechanical,18413900,136825000,416100,6183400,0,,Standard,Scorching Fireball,Flame Detonation,,,Egg | Turretor's Egg | Coilwork City | Current,150
+Stellawulf,Mythical,Dark,8577200,367102000,173370,14843000,10,,Standard,Ghost Impact,Soul Reap Chain (Vulnerability),,Trial Power | 50,Rift | Coilwork City Rift 3 | Coilwork City | Current,151
 Nexil,Mythical,Common,20583500,152960000,416100,6183400,10,,Standard,Dark Singularity,Barrier,,Spire Guard | 35,Rift | Coilwork City Rift 3 | Coilwork City | Current,152
 Twirly Bird,Mythical,Common,17092800,127030000,416100,6183400,0,,Standard,Windmill Blast,Windmill Blast,,,Island Special Spawn | Special Spawn | Coilwork City | Current,153
 Berserkor,Mythical,Dark,6884000,663070000,99619,19186000,0,,Standard,Sunder Taunt,Thorn Shield,,,Island Special Spawn | Natural Spawn | Shroomvale | Current,154
@@ -255,8 +255,8 @@ Mossron,Mythical,Grass,190680,1416900,416100,6183400,0,Gildron,Standard,Root Spi
 Glaciron,Mythical,Ice,222463,1214500,485474,5300300,0,Gildron,Standard,Glacial Smash,Ex Iceball,,,Evolution | Gildron Evolution |  | Current |  | Evolves from Gildron.,179
 BlazeVex,Mythical,Fire,309110,2296800,416100,6183400,0,TideVex,Standard,Fire Dash,Inferno Maelstrom,,,Evolution | TideVex Evolution |  | Current |  | Evolves from TideVex.,180
 Bramblevex,Mythical,Grass,214650,3307100,288990,8904400,0,TideVex,Standard,Root Spike,Healing Pulse,,,Evolution | TideVex Evolution |  | Current |  | Evolves from TideVex.,181
-Geogator,Mythical,Ground,418410,2284100,485474,5300300,0,voltgator,Standard,Earth Smash,Ex Rock Toss,,,Evolution | voltgator Evolution |  | Current |  | Evolves from voltgator.,182
-Glacigator,Mythical,Ice,298850,3200000,346750,7420300,0,voltgator,Standard,Frost Beam,Ex Iceball,,Spire Dominance | 50,Evolution | voltgator Evolution |  | Current |  | Evolves from voltgator.,183
+Geogator,Mythical,Ground,418410,2284100,485474,5300300,0,Voltgator,Standard,Earth Smash,Ex Rock Toss,,,Evolution | Voltgator Evolution |  | Current |  | Evolves from voltgator.,182
+Glacigator,Mythical,Ice,298850,3197700,346750,7420300,0,Voltgator,Standard,Frost Beam,Ex Iceball,,Spire Dominance | 50,Evolution | Voltgator Evolution |  | Current |  | Evolves from voltgator.,183
 Blazewyrm,Mythical,Fire,521800,5583000,346750,7420300,0,Frostwyrm,Standard,Inferno Maelstrom,Ex Fireball,,,Evolution | Frostwyrm Evolution |  | Current |  | Evolves from Frostwyrm.,184
 Spinewyrm,Mythical,Grass,730500,3987800,485474,5300300,0,Frostwyrm,Standard,Healing Pulse,Galecut,,,Evolution | Frostwyrm Evolution |  | Current |  | Evolves from Frostwyrm.,185
 Marigon,Mythical,Water,1373930,7500500,485474,5300300,15,Nivisgon,Standard,Mighty Water Shuriken,Healing Water Ball,,Marigon Fortune Spirit | 20 | 50,Evolution | Nivisgon Evolution |  | Current |  | Evolves from Nivisgon.,186
@@ -268,7 +268,7 @@ Nightveil,Mythical,Dark,2490000,13590000,485474,5300300,15,Shadecloak,Standard,T
 Diabvok,Mythical,Fire,2145900,11715000,485474,5300300,0,Mechavolt,Standard,Rallying War Cry (6 sec 50%),Fire Dragon Flame Blast,,,Evolution | Mechavolt Evolution |  | Current |  | Evolves from Mechavolt.,192
 Terravok,Mythical,Ground,1532800,16401000,346750,7420300,0,Mechavolt,Standard,Rock Road,Barrier,,,Evolution | Mechavolt Evolution |  | Current |  | Evolves from Mechavolt.,193
 Rubywing,Mythical,Fire,2667100,19817600,416100,6183400,0,Cobaltwing,Standard,Ex Fireball,Inferno Maelstrom,,,Evolution | Cobaltwing Evolution |  | Current |  | Evolves from Cobaltwing.,194
-Lazuliwing,Mythical,Water,1851000,28537000,288990,8904400,0,Cobaltwing,Standard,Tsunami,Ex Water Shuriken,,,Evolution | Cobaltwing Evolution |  | Current |  | Evolves from Cobaltwing.,195
+Lazuliwing,Mythical,Water,1852200,28537700,288990,8904400,0,Cobaltwing,Standard,Tsunami,Ex Water Shuriken,,,Evolution | Cobaltwing Evolution |  | Current |  | Evolves from Cobaltwing.,195
 Hornrexie,Mythical,Dragon,4511500,24630000,947580,10345700,0,Rexie,Standard,Mighty Rock Toss,Rallying War Cry (6 sec 40% self 70%),,Spire Dominance | 50,Evolution | Rexie Evolution |  | Current |  | Evolves from Rexie.,196
 Glacierclaw,Mythical,Ground,2676000,28635000,729020,15601300,0,Thunderclaw,Standard,Ice Road,Ex Iceball,,,Evolution | Thunderclaw Evolution |  | Current |  | Evolves from Thunderclaw.,197
 Mossclaw,Mythical,Ground,3211000,23860000,874840,13001300,0,Thunderclaw,Standard,Healing Pulse,Galecut,,,Evolution | Thunderclaw Evolution |  | Current |  | Evolves from Thunderclaw.,198
@@ -295,9 +295,9 @@ Eclipse Knight,Secret,Dark,142140,1520000,346750,7420300,15,ShadeKnight,Standard
 Lunavox,Secret,Common,85581,3662000,167050,14300000,0,Noctane,Standard,Wind Disc (Purple),Lunar Taunt,Lunar Heal,,Evolution | Noctane Evolution |  | Current |  | Evolves from Noctane.,218
 Hydrolope,Secret,Water,309110,2296800,416100,6183400,15,Hydribbit,Standard,Mighty Water Shuriken,Tsunami,,Rift Guard | 30,Evolution | Hydribbit Evolution |  | Current |  | Evolves from Hydribbit.,219
 Solron,Secret,Ground,239120,2558600,346750,7420300,15,Gildron,Standard,Titan Slam,Ex Rock Toss,,Rift Dominance | 50,Evolution | Gildron Evolution |  | Current |  | Evolves from Gildron.,220
-Scythewing,Secret,Ground,298820,3200000,346750,7420300,15,DustWing,Standard,GaleMoon Blade,Crimson Burst,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,221
+Scythewing,Secret,Ground,298880,3197800,346750,7420300,15,DustWing,Standard,GaleMoon Blade,Crimson Burst,,,Evolution | DustWing Evolution |  | Current |  | Evolves from DustWing.,221
 Celestide,Secret,Water,542600,2962000,485420,5300300,15,TideVex,Standard,Healing Water Ball,Icicle Prison,,Rift Dominance | 50,Evolution | TideVex Evolution |  | Current |  | Evolves from TideVex.,222
-Doomgator,Secret,Mechanical,629610,3437300,485420,5300300,15,voltgator,Standard,Inferno Blast,Bloodthirsty Aura,,Trial Power | 50,Evolution | voltgator Evolution |  | Current |  | Evolves from voltgator.,223
+Doomgator,Secret,Mechanical,629610,3437300,485420,5300300,15,Voltgator,Standard,Inferno Blast,Bloodthirsty Aura,,Trial Power | 50,Evolution | voltgator Evolution |  | Current |  | Evolves from voltgator.,223
 Frostiel,Secret,Light,660500,28270000,193823,16591000,20,,Standard,Void Collapse,Soul Reap Chain (Vulnerability),,Spire Guard | 30,"Egg | Frostiel's Egg | Cinderclaw Castle | Current |  | Normal and Hard Difficulty
 Chest | Mythical Chest | Limited Events | Current",224
 Steamforge,Secret,Fire,1915800,20497690,346750,7420300,10,,Standard,Blaze Blast,Ex Fireball,,Boss Resistance | 25,"Egg | Steamforge's Egg | Cinderclaw Castle | Current |  | Nightmare Difficulty
@@ -305,7 +305,7 @@ Chest | Mythical Chest | Limited Events | Current",225
 Mentawolf,Secret,Grass,403610,9716800,231170,11131000,15,Mintwolf,Standard,Leaf Blade,Root Spike,,Dungeon Guard | 30,Evolution | Mintwolf Evolution |  | Current |  | Evolves from Mintwolf.,226
 Avalanchewyrm,Secret,Ice,1256000,5251400,554790,4637800,15,Frostwyrm,Standard,Ex Ice Surge,Icicle Prison,,Boss Slayer | 40,Evolution | Frostwyrm Evolution |  | Current |  | Evolves from Frostwyrm.,227
 Poseidine,Secret,Water,1418000,10537000,416100,6183400,15,Undine,Standard,Hydro Cannon,Healing Water Ball,,Rift Dominance | 50,Evolution | Undine Evolution |  | Current |  | Evolves from Undine.,228
-Armored Dracospike,Secret,Dragon,1060000,32700000,231170,14252000,15,Dracospike,Standard,Emergency Thorn Shield,Ion Blast,,Rift Guard | 30,Evolution | Dracospike Evolution |  | Current |  | Evolves from Dracospike.,229
+Armored Dracospike,Secret,Dragon,1060640,32691400,231170,14252000,15,Dracospike,Standard,Emergency Thorn Shield,Ion Blast,,Rift Guard | 30,Evolution | Dracospike Evolution |  | Current |  | Evolves from Dracospike.,229
 Soulguard,Secret,Fire,5040000,27531000,485420,5300300,15,,Standard,Soul Slash,Ghost Fireball,,Spire Dominance | 50,"Egg | Soulguard's Egg | Cinderclaw Castle | Current |  | Nightmare Difficulty
 Chest | Mythical Chest | Limited Events | Current",230
 Motovok,Secret,Electric,3830600,16010000,554790,4637600,15,Mechavolt,Standard,Overvolt Tempest,Electro Nova,,Critical Chance | 30,Evolution | Mechavolt Evolution |  | Current |  | Evolves from Mechavolt.,231
