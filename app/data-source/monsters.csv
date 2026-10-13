@@ -2,8 +2,8 @@ Monster,Rarity,Element,Damage,Health,PvP Damage,PvP Health,Crit Chance,Evolution
 Dummee,Common,Common,8,53,554750,7349000,0,,Dummee,Air Bullet,,,,"First-Time Reward | First-Time Player Reward | Starter Island | Current
 Egg | Swamp Egg | Starter Island | Current",1
 Leafet,Common,Grass,7.25,43.5,346740,4161800,0,,Standard,Seed Grenade,,,,Island Spawn | Natural Spawn | Starter Island | Current,2
-Wattoad,Uncommon,Water,10.5,63.1,346690,4158700,0,,Standard,Water Jet,,,,Island Spawn | Natural Spawn | Starter Island | Current,3
-Treemo,Rare,Grass,15.206,163.096,346690,7420100,0,,Standard,Seed Grenade,,,,Island Spawn | Natural Spawn | Starter Island | Current,4
+Wattoad,Uncommon,Water,10.51,63.07,346690,4158700,0,,Standard,Water Jet,,,,Island Spawn | Natural Spawn | Starter Island | Current,3
+Treemo,Rare,Grass,15.24,163.1,346676,7420100,0,,Standard,Seed Grenade,,,,Island Spawn | Natural Spawn | Starter Island | Current,4
 Flamix,Rare,Fire,22.1,236.5,346690,7419600,0,,Standard,Fireball,Air Bullet,,,Island Spawn | Natural Spawn | Starter Island | Current,5
 Puffu,Rare,Water,32,342.9,346640,7420200,0,,Standard,Water Jet,Wind Disc,,,Island Spawn | Natural Spawn | Starter Island | Current,6
 Candlechick,Rare,Fire,38.6,412.7,136960,2930600,0,,Standard,Air Bullet,Fireball,,,"Event | Turkey Egg | Thanksgiving Event 2025 | Legacy
@@ -15,7 +15,7 @@ Chest | Memory Chest 1 | Abyss Shop | Current",9
 Pricko,Rare,Grass,1915,29518,288970,8903700,10,,Standard,Petal Dance,Root Spike,,Fortune Spirit | 20,"Rift | Strange Rift | Spire Shop | Current
 Chest | Rift Chest | Abyss Shop | Current",10
 Aquron,Epic,Water,46.5,497.2,346740,7419200,0,,Standard,Water Cannon,Water Jet,,,Island Spawn | Natural Spawn | Starter Island | Current,11
-Skedeer,Epic,Common,67.4,721,346740,7419700,0,,Standard,Air Bullet,Wind Disc,,,Island Spawn | Natural Spawn | Volcano | Current,12
+Skedeer,Epic,Common,67.38,720.99,346740,7419700,0,,Standard,Air Bullet,Wind Disc,,,Island Spawn | Natural Spawn | Volcano | Current,12
 Woodliz,Epic,Grass,97.695,1045.4,346740,7419200,0,,Standard,Grass Tornado,Leaf Surge,,,Island Spawn | Natural Spawn | Volcano | Current,13
 Candlehawk,Epic,Fire,170.59,1825,605540,12957000,0,,Standard,Fire Tornado,Fireball,,,"Event | Turkey Egg | Thanksgiving Event 2025 | Legacy
 Chest | Memory Chest | Abyss Shop | Current",14

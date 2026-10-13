@@ -1,14 +1,28 @@
+/**
+ * Empirical Standard growth precision model (PvE and PvP).
+ *
+ * Observed Standard monsters are consistent with a full level multiplier
+ * truncated in increments of 0.0002. The level-dependent stat coefficient
+ * is separately truncated down to increments of 0.05 of its PvE Lv1 base.
+ * These are experimentally inferred rules, not confirmed game source code.
+ */
 export function standardGrowth(level: number): number {
     const exponential =
         level <= 65
             ? 1.1 ** level
             : 1.1 ** 65 * 1.06 ** (level - 65);
+    const unquantized = 0.7 + 0.1 * level + (2 / 11) * exponential;
+    // Avoid floating-point noise just below exact 0.0002 boundaries.
+    return Math.floor(unquantized * 5000 + 1e-9) / 5000;
+}
 
-    return (
-        0.7 +
-        0.1 * level +
-        (2 / 11) * exponential
-    );
+/** The PvE Lv1 coefficient controls level gains in both PvE and PvP. */
+export function standardStatGrowth(level: number, pveLevel1Base: number): number {
+    if (!Number.isFinite(pveLevel1Base) || pveLevel1Base <= 0) {
+        throw new RangeError("Standard stat growth requires a positive PvE Level 1 base");
+    }
+    const coefficient = Math.floor(pveLevel1Base * 20 + 1e-9) / 20;
+    return 1 + (standardGrowth(level) - 1) * (coefficient / pveLevel1Base);
 }
 
 /**

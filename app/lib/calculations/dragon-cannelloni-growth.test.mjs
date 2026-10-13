@@ -46,10 +46,11 @@ test('PvE samples fit within 0.4% despite rounded on-screen values', () => {
     }
 });
 
-test('unrelated standard growth remains unchanged', () => {
+test('unrelated standard growth follows new shared quantization', () => {
     assert.equal(standardGrowth(1), 1);
     for (const level of [10, 65, 66, 115]) {
         const G = 1.1 ** Math.min(level - 1, 64) * 1.06 ** Math.max(level - 65, 0);
-        assert.ok(Math.abs(standardGrowth(level) - (1 + 0.1 * ((level - 1) + 2 * (G - 1)))) < 1e-9);
+        const raw = 1 + 0.1 * ((level - 1) + 2 * (G - 1));
+        assert.ok(Math.abs(standardGrowth(level) - Math.floor(raw * 5000 + 1e-9) / 5000) < 1e-8);
     }
 });

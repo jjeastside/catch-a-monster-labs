@@ -11,6 +11,7 @@ import {
     dummeeDamageAtLevel,
     dummeeHealthAtLevel,
     standardGrowth,
+    standardStatGrowth,
 } from "./growth";
 
 import {
@@ -237,29 +238,26 @@ function calculateStandardStats(
     >,
     level: number,
     multipliers: StatMultipliers,
+    pveLevel1Health: number,
+    pveLevel1Damage: number,
 ): CalculatedStats {
-    // Respect the imported growth type, not a hardcoded monster ID.
+    // Even in PvP, normalize the level coefficients against the original
+    // PvE Level 1 stats (NOT the independent PvP Level 1 stats).
     const growth =
         statData.growthType === "dragon-cannelloni"
             ? dragonCannelloniGrowth(level)
-            : standardGrowth(level);
-    const healthGrowth =
-        typeof growth === "number" ? growth : growth.health;
-    const damageGrowth =
-        typeof growth === "number" ? growth : growth.damage;
+            : {
+                health: standardStatGrowth(level, pveLevel1Health),
+                damage: standardStatGrowth(level, pveLevel1Damage),
+            };
 
-    const eRankHealth =
-        statData.baseHealthELevel1 *
-        healthGrowth;
-
-    const eRankDamage =
-        statData.baseDamageELevel1 *
-        damageGrowth;
+    const eRankHealth = statData.baseHealthELevel1 * growth.health;
+    const eRankDamage = statData.baseDamageELevel1 * growth.damage;
 
     return createCalculatedStats(
         eRankHealth,
         eRankDamage,
-        damageGrowth,
+        growth.damage,
         "multiplier",
         multipliers,
     );
@@ -277,6 +275,10 @@ export function calculateStats(
     }
 
     build = applyBreedingLimits(build, statData.monsterId);
+
+    // Preserve the PvE references before swapping to PvP Lv1 base stats.
+    const pveLevel1Health = statData.baseHealthELevel1;
+    const pveLevel1Damage = statData.baseDamageELevel1;
 
     if (build.combatMode === "pvp") {
         if (statData.pvpBaseHealthELevel1 == null || statData.pvpBaseDamageELevel1 == null) return null;
@@ -308,5 +310,7 @@ export function calculateStats(
         statData,
         build.level,
         multipliers,
+        pveLevel1Health,
+        pveLevel1Damage,
     );
 }
