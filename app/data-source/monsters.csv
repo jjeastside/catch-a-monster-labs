@@ -2,7 +2,7 @@ Monster,Rarity,Element,Damage,Health,PvP Damage,PvP Health,Crit Chance,Evolution
 Dummee,Common,Common,8,53,554750,7349000,0,,Dummee,Air Bullet,,,,"First-Time Reward | First-Time Player Reward | Starter Island | Current
 Egg | Swamp Egg | Starter Island | Current",1
 Leafet,Common,Grass,7.25,43.5,346740,4161800,0,,Standard,Seed Grenade,,,,Island Spawn | Natural Spawn | Starter Island | Current,2
-Wattoad,Uncommon,Water,10.51,63.07,346690,4158700,0,,Standard,Water Jet,,,,Island Spawn | Natural Spawn | Starter Island | Current,3
+Wattoad,Uncommon,Water,10.511,63.071,346610,4159400,0,,Standard,Water Jet,,,,Island Spawn | Natural Spawn | Starter Island | Current,3
 Treemo,Rare,Grass,15.24,163.1,346690,7420600,0,,Standard,Seed Grenade,,,,Island Spawn | Natural Spawn | Starter Island | Current,4
 Flamix,Rare,Fire,22.1,236.5,346690,7419600,0,,Standard,Fireball,Air Bullet,,,Island Spawn | Natural Spawn | Starter Island | Current,5
 Puffu,Rare,Water,32.038,342.92,346600,7420400,0,,Standard,Water Jet,Wind Disc,,,Island Spawn | Natural Spawn | Starter Island | Current,6
