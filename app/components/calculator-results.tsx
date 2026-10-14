@@ -613,6 +613,48 @@ function ShieldEffect({ effect, shieldAmount }: { effect: SkillStatusEffect; shi
     );
 }
 
+/** Reuse the calculator's effect cards in Compare, including its healing
+ * scaling rules, trait bonuses, conditional labels and non-stacking shields. */
+export function SkillEffectCards({ skill, stats, build, summary }: {
+    skill: NonNullable<ReturnType<typeof getSkill>>;
+    stats: CalculatedStats;
+    build: Build;
+    summary: ReturnType<typeof calculateSkillSummary>;
+}) {
+    const attributes = calculateSkillAttributeEffects(build, skill.element);
+    const trait = getTrait(build.traitId);
+    const healingMultiplier = 1 + (attributes.healEffectiveness + getTraitEffectValue(build.traitId, "healingEffectiveness")) / 100;
+    const healthScaling = getHealthHealingPercent(skill.notes) !== null;
+    const effects = [...(skill.statusEffects ?? []), ...(summary.postCastShieldEffect ? [summary.postCastShieldEffect] : [])];
+    const mixedHeal = skill.id === "holy-aura-djinn-lampyr";
+    let shownMixedHeal = false;
+    if (!effects.length) return skill.description || skill.notes ? <p className="mt-1 text-xs leading-5 text-[#8e99ad]">{skill.description ?? skill.notes}</p> : null;
+    return <div className="mt-1.5 grid grid-cols-[repeat(auto-fit,minmax(min(100%,12rem),1fr))] gap-1.5" aria-label={`${getSkillDisplayName(skill.name)} effects`}>
+        {effects.map((effect, index) => {
+            const key = `${effect.type}-${effect.target}-${index}`;
+            switch (effect.type) {
+                case "healing": {
+                    if (mixedHeal && shownMixedHeal) return null;
+                    shownMixedHeal = true;
+                    const amount = mixedHeal ? summary.healingAmount : effect.scaling === "Damage" ? stats.damage * (effect.amountPercent ?? 0) / 100 * healingMultiplier : effect.scaling === "MaxHealth" && healthScaling ? stats.health * (effect.amountPercent ?? 0) / 100 * healingMultiplier : null;
+                    return <HealingEffect key={key} effect={effect} calculatedAmount={amount} cooldown={summary.cooldown} singleAlly={/^Target:\s*Ally\s*\./i.test(skill.notes ?? "")} description={mixedHeal ? "One heal for all affected allies equal to 160% of the caster's Damage + 5% of the caster's Health, including healing effectiveness bonuses." : undefined} />;
+                }
+                case "shield": return <ShieldEffect key={key} effect={{ ...effect, amountPercent: effect === summary.postCastShieldEffect ? effect.amountPercent : effect.amountPercent == null ? undefined : effect.amountPercent * (1 + attributes.shieldEffectiveness / 100) }} shieldAmount={effect === summary.postCastShieldEffect ? summary.postCastShield : undefined} />;
+                case "damageIncrease": return <DamageIncreaseEffect key={key} effect={effect} />;
+                case "vulnerability": return <VulnerabilityEffect key={key} effect={effect} effectivenessBonus={getTraitEffectValue(build.traitId, "vulnerabilityEffectiveness")} />;
+                case "poison": return <PoisonEffect key={key} effect={effect} />;
+                case "burn": return <BurnEffect key={key} effect={effect} durationBonus={getTraitEffectValue(build.traitId, "burnDuration")} />;
+                case "damageDecrease": return <DamageDecreaseEffect key={key} effect={effect} effectivenessBonus={getTraitEffectValue(build.traitId, "attackReductionEffectiveness")} effectivenessTrait={trait} />;
+                case "damageReduction": return <DamageReductionEffect key={key} effect={effect} />;
+                case "damageReflection": return <DamageReflectionEffect key={key} effect={effect} />;
+                case "stun": return <StunEffect key={key} effect={effect} />;
+                case "taunt": return <TauntEffect key={key} effect={effect} />;
+                case "knockback": return <KnockbackEffect key={key} effect={effect} />;
+            }
+        })}
+    </div>;
+}
+
 const passiveEffectLabels: Record<PassiveEffectStat, string> = {
     damage: "Combat Damage",
     incomingDamage: "Incoming Damage",

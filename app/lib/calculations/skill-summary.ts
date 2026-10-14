@@ -98,6 +98,16 @@ export function calculateSkillSummary(
     combatDamage.criticalDamage * critChance;
 
   const damaging = skill.damageInstances.length > 0;
+  const healingMultiplier = 1 + (attributeEffects.healEffectiveness + getTraitEffectValue(build.traitId, "healingEffectiveness")) / 100;
+  // Damage/Health scaling is the caster's raw stat, without skill-damage or
+  // crit multipliers. Target Max-HP restoration stays percentage-based when
+  // the healed ally's HP is unknown, matching Calculator Results.
+  const casterHealthScaling = /\d+(?:\.\d+)?% of (?:base )?health/i.test(skill.notes ?? "");
+  const healingAmounts = (skill.statusEffects ?? []).filter(effect => effect.type === "healing" && !effect.condition).flatMap(effect => {
+    const base = effect.scaling === "Damage" ? stats.damage : effect.scaling === "MaxHealth" && casterHealthScaling ? stats.health : null;
+    return base == null || effect.amountPercent == null ? [] : [base * effect.amountPercent / 100 * healingMultiplier];
+  });
+  const healingAmount = healingAmounts.length ? healingAmounts.reduce((sum, value) => sum + value, 0) : null;
   return {
     combatDamage,
     postCastShieldEffect: getTraitPostCastShieldEffect(build.traitId),
@@ -105,6 +115,8 @@ export function calculateSkillSummary(
     normalDamage: damaging ? combatDamage.normalDamage : null,
     criticalDamage: damaging ? combatDamage.criticalDamage : null,
     cooldown: displayedCooldown,
+    healingAmount,
+    healingPerSecond: healingAmount != null && displayedCooldown != null && displayedCooldown > 0 ? healingAmount / displayedCooldown : null,
     dps:
       damaging && displayedCooldown !== null && displayedCooldown > 0
         ? expectedDamage * attributeEffects.expectedDamageMultiplier / displayedCooldown

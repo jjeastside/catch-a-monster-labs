@@ -1,24 +1,11 @@
-feat: add build and teammate recommendations, account profiles, and combat UI improvements
+feat(compare): display healing, HPS, shields, and skill effects
 
-- Add compact monster-specific weapon, armor, trait, single-mutation, overall-build, and alternative recommendations for General, DPS, Boss, Dungeon, Spire, Farming, PvP, Survivability, and Support/Healing
-- Compare current and recommended stats, expand recommendation reasons, and apply individual upgrades or complete builds
-- Maximize recommended level to 115, enhancement to +10, breeding to 60%, and evolved-monster EM to 220%; preserve selected rank, Dungeon level limits, and fixed-breeding/no-trait restrictions
-- Optimize both teammate slots for transferable passives, crit bonuses, encounter damage/protection, team buffs, vulnerability, and Burn/Poison support
-- Show recommended teammate names/icons and apply teammates with their supported combat condition toggles
-- Switch Dungeon, Spire, and Boss encounters immediately when their recommendation goal is selected; restore the previous level when leaving Dungeon
-- Only recommend Burn/Poison Fragility with a valid self or teammate status source; enable the status when applied and fall back to Impair IV when unsupported
-- Prefer unconditional All Resistances rolls for tied armor results and replace tiny trait banners with square TraitIcon artwork
-- Add multiple named account profiles, per-account bonus previews, automatic profile/current-setup saving, and direct bonus-icon editing
-- Add Change Account buttons, keep the profile picker open after selection, and make full account cards select with one click while preserving edit shortcuts
-- Add Index Mania select-all/clear-all controls and show only nonzero Index Mania, Path of Progress, and Pet Quest bonuses in Combat Stats
-- Preserve build mode, account bonuses, teammates, status toggles, gear attributes, traits, and mutations in shared builds and Cloudflare preview data
-- Render Combat Stats, account bonus icons, and Combat Conditions on shared preview cards
-- Add an optional Worker SITE_URL override and a two-terminal local testing guide for frontend/Worker sharing, redirects, assets, and isolated local KV
-- Add shared Skill Effect filtering across Calculator, Compare, Team inventory/pickers, Breeding, and Pet Hatch
-- Add consistent combat-condition and monster-type icons, remove extra Mutation X text badges, and fix Void portrait backgrounds and type-icon badge styling
-- Restore site-wide PvP stats and recommendation goals while keeping the opposing-team PvP simulator hidden
-- Fix Coilwork City achievement mapping, improve compact mobile account navigation, and move preview artwork into public/previews
-- Remove all 16 app test files and provide a project-side cleanup script
-- Update v1.0.29 release notes, homepage descriptions/latest updates, and the shared footer version
+- Reuse calculator effect cards in Monster Compare
+- Replace empty support-skill damage boxes with healing and other effects
+- Calculate caster-stat healing with Grace, gear bonuses, and cooldown modifiers
+- Combine mixed Damage/Health heals and preserve target Max-HP percentages
+- Compare Total Skill HPS separately from DPS without healing crits
+- Show trait-sensitive shields, buffs, debuffs, statuses, and effect tooltips
+- Add v1.0.30 release notes and refresh the shared homepage/footer release data
 
-Validation: production build, TypeScript, calculation checks, and desktop/mobile browser checks passed during implementation. Checked max settings/restrictions, teammate/status eligibility, immediate encounter switching, updated share preview fields, and 12 consecutive single-click account switches with preserved profile data. Actual local Wrangler/workerd KV save/load, localhost PNG rendering, and localhost short-link redirects passed. Live verification returned HTTP 403 (1010) from this environment.
+Validation: production build, TypeScript, calculation checks, and desktop/mobile checks passed for the feature. No new app test files.
