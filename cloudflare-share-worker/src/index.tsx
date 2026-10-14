@@ -1,12 +1,20 @@
 import { ImageResponse } from "cf-workers-og/html";
 
-const SITE_URL = "https://jjeastside.github.io/catch-a-monster-labs/";
+const DEFAULT_SITE_URL = "https://jjeastside.github.io/catch-a-monster-labs/";
 const PREVIEW_TTL_SECONDS = 60 * 60 * 24 * 30;
 const SHORT_ID_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 type Env = {
   PREVIEWS: KVNamespace;
+  SITE_URL?: string;
 };
+
+function getSiteUrl(env: Env): string {
+  const value = env.SITE_URL?.trim() || DEFAULT_SITE_URL;
+  return value.endsWith("/") ? value : `${value}/`;
+}
+
+type SummaryItem = { label: string; value: string; icon: string; secondaryIcon?: string };
 
 type PreviewData = {
   name: string;
@@ -17,6 +25,9 @@ type PreviewData = {
   critChance: string;
   critMultiplier: string;
   image: string;
+  combatStats: SummaryItem[];
+  accountMultipliers: SummaryItem[];
+  combatConditions: SummaryItem[];
 };
 
 function escapeHtml(value: unknown) {
@@ -51,8 +62,8 @@ function getRouteToken(url: URL) {
   return url.searchParams.get("b") ?? "";
 }
 
-function camLabBuildUrl(buildCode: string) {
-  return `${SITE_URL}#b=${encodeURIComponent(buildCode)}`;
+function camLabBuildUrl(buildCode: string, siteUrl = DEFAULT_SITE_URL) {
+  return `${siteUrl}#b=${encodeURIComponent(buildCode)}`;
 }
 
 function previewStorageKey(buildCode: string) {
@@ -68,26 +79,26 @@ function shortToBuildKey(shortId: string) {
 }
 
 function cacheKeyForPng(origin: string, buildCode: string) {
-  const url = new URL("/card-browserless-v2.png", origin);
+  const url = new URL("/card-combat-v3.png", origin);
   url.searchParams.set("b", buildCode);
   return new Request(url.toString(), { method: "GET" });
 }
 
-function absoluteAssetUrl(path: string | undefined) {
-  if (!path) return `${SITE_URL}preview.png`;
+function absoluteAssetUrl(path: string | undefined, siteUrl = DEFAULT_SITE_URL) {
+  if (!path) return `${siteUrl}previews/preview.png`;
 
   try {
     if (path.startsWith("/catch-a-monster-labs/")) {
-      return new URL(path, new URL(SITE_URL).origin).toString();
+      return new URL(path, new URL(siteUrl).origin).toString();
     }
 
     if (path.startsWith("/")) {
-      return new URL(`.${path}`, SITE_URL).toString();
+      return new URL(`.${path}`, siteUrl).toString();
     }
 
-    return new URL(path, SITE_URL).toString();
+    return new URL(path, siteUrl).toString();
   } catch {
-    return `${SITE_URL}preview.png`;
+    return `${siteUrl}previews/preview.png`;
   }
 }
 
@@ -101,7 +112,19 @@ function stringValue(value: unknown, fallback = "") {
   return typeof value === "string" && value.length > 0 ? value : fallback;
 }
 
-function normalizePreview(value: unknown): PreviewData {
+function normalizeSummary(value: unknown, siteUrl = DEFAULT_SITE_URL): SummaryItem[] {
+  if (!Array.isArray(value)) return [];
+  return value.slice(0, 32).flatMap((entry) => {
+    const item = asRecord(entry);
+    const label = stringValue(item.label).slice(0, 80);
+    const value = stringValue(item.value).slice(0, 180);
+    if (!label || !value) return [];
+    return [{ label, value, icon: absoluteAssetUrl(stringValue(item.icon), siteUrl),
+      secondaryIcon: item.secondaryIcon ? absoluteAssetUrl(stringValue(item.secondaryIcon), siteUrl) : undefined }];
+  });
+}
+
+function normalizePreview(value: unknown, siteUrl = DEFAULT_SITE_URL): PreviewData {
   const preview = asRecord(value);
 
   return {
@@ -112,7 +135,10 @@ function normalizePreview(value: unknown): PreviewData {
     health: stringValue(preview.health, "—"),
     critChance: stringValue(preview.critChance, "—"),
     critMultiplier: stringValue(preview.critMultiplier, "—"),
-    image: absoluteAssetUrl(stringValue(preview.imagePath, stringValue(preview.image))),
+    image: absoluteAssetUrl(stringValue(preview.imagePath, stringValue(preview.image)), siteUrl),
+    combatStats: normalizeSummary(preview.combatStats, siteUrl),
+    accountMultipliers: normalizeSummary(preview.accountMultipliers, siteUrl),
+    combatConditions: normalizeSummary(preview.combatConditions, siteUrl),
   };
 }
 
@@ -189,7 +215,7 @@ async function storePreview(env: Env, origin: string, buildCode: string, preview
 
 async function getPreviewData(env: Env, buildCode: string) {
   const stored = await env.PREVIEWS.get(previewStorageKey(buildCode), { type: "json" });
-  const preview = normalizePreview(stored);
+  const preview = normalizePreview(stored, getSiteUrl(env));
 
   if (!previewLooksValid(preview)) {
     throw new Error("This shared build has no primed preview data in KV.");
@@ -228,7 +254,7 @@ function buildCardMarkup(data: PreviewData) {
     <div style="
       display:flex;
       width:1200px;
-      height:630px;
+      height:${cardHeight(data)}px;
       padding:24px;
       background:#070d16;
       font-family:Arial, Helvetica, sans-serif;
@@ -256,7 +282,7 @@ function buildCardMarkup(data: PreviewData) {
           <div style="display:flex;color:#7f8cff;font-size:17px;font-weight:800;letter-spacing:4px;">SHARED BUILD</div>
         </div>
 
-        <div style="display:flex;flex:1;gap:36px;">
+        <div style="display:flex;gap:36px;">
           <div style="display:flex;flex-direction:column;width:320px;flex-shrink:0;">
             <div style="
               display:flex;
@@ -279,6 +305,7 @@ function buildCardMarkup(data: PreviewData) {
               ">
                 <img
                   src="${escapeHtml(data.image)}"
+                  width="280" height="280"
                   alt=""
                   style="width:280px;height:280px;object-fit:contain;"
                 />
@@ -310,11 +337,34 @@ function buildCardMarkup(data: PreviewData) {
             </div>
           </div>
         </div>
+        ${summaryMarkup("Combat Stats", data.combatStats)}
+        ${summaryMarkup("Account Multipliers", data.accountMultipliers)}
+        ${summaryMarkup("Combat Conditions", data.combatConditions)}
       </div>
     </div>
   `;
 }
 
+function cardHeight(data: PreviewData) {
+  return 630 + [data.combatStats, data.accountMultipliers, data.combatConditions]
+    .reduce((height, items) => height + (items.length ? 40 + Math.ceil(items.length / 2) * 46 : 0), 0);
+}
+
+function summaryMarkup(title: string, items: SummaryItem[]) {
+  if (!items.length) return "";
+  return `<div style="display:flex;flex-direction:column;margin-top:16px;border-top:1px solid #314258;padding-top:12px;">
+    <div style="display:flex;font-size:16px;color:#7f8cff;font-weight:800;margin-bottom:8px;">${escapeHtml(title)}</div>
+    <div style="display:flex;flex-wrap:wrap;">${items.map((item) => `
+      <div style="display:flex;align-items:center;width:50%;height:46px;gap:8px;padding-right:12px;box-sizing:border-box;">
+        <img src="${escapeHtml(item.icon)}" width="28" height="28" style="width:28px;height:28px;object-fit:contain;" />
+        ${item.secondaryIcon ? `<img src="${escapeHtml(item.secondaryIcon)}" width="24" height="24" style="width:24px;height:24px;object-fit:contain;" />` : ""}
+        <div style="display:flex;flex-direction:column;font-size:15px;">
+          <div style="display:flex;color:#8fa0ba;">${escapeHtml(item.label)}</div>
+          <div style="display:flex;color:#e3e8f1;">${escapeHtml(item.value)}</div>
+        </div>
+      </div>`).join("")}</div>
+  </div>`;
+}
 
 function statBox(label: string, value: string) {
   return `
@@ -374,7 +424,7 @@ const worker = {
         });
       }
 
-      const preview = normalizePreview(body.preview);
+      const preview = normalizePreview(body.preview, getSiteUrl(env));
       if (!previewLooksValid(preview)) {
         return new Response("Invalid preview payload.", {
           status: 400,
@@ -440,7 +490,7 @@ const worker = {
 
       const image = await ImageResponse.create(buildCardMarkup(data), {
         width: 1200,
-        height: 630,
+        height: cardHeight(data),
         headers: {
           "content-type": "image/png",
           "cache-control": "public, max-age=604800, immutable",
@@ -451,7 +501,7 @@ const worker = {
       return image;
     }
 
-    const targetUrl = camLabBuildUrl(buildCode);
+    const targetUrl = camLabBuildUrl(buildCode, getSiteUrl(env));
     const title = `${data.name} — CAM Lab Build`;
     const classification = [data.element, data.rarity].filter(Boolean).join(" · ");
     const description =
@@ -476,7 +526,7 @@ const worker = {
   <meta property="og:image" content="${escapeHtml(imageUrl)}">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:image:height" content="${cardHeight(data)}">
   <meta property="og:url" content="${escapeHtml(url.toString())}">
 
   <meta name="twitter:card" content="summary_large_image">

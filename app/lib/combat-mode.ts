@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 export type CombatMode = "pve" | "pvp";
 const STORAGE_KEY = "cam-lab-combat-mode";
@@ -30,13 +30,13 @@ function subscribe(callback: () => void) {
 /** Shared, persistent display mode for every page. PvP formulas are implemented separately. */
 export function useCombatMode(): [CombatMode, (mode: CombatMode) => void] {
     const mode = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-    function setMode(nextMode: CombatMode) {
+    const setMode = useCallback((nextMode: CombatMode) => {
         try {
             window.localStorage.setItem(STORAGE_KEY, nextMode);
         } catch {
             // Mode remains PvE if browser storage is unavailable.
         }
         window.dispatchEvent(new Event(EVENT_NAME));
-    }
+    }, []);
     return [mode, setMode];
 }

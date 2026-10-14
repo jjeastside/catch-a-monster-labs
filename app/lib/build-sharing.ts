@@ -1,3 +1,4 @@
+import type { CombatSummaryItem } from "./combat-summary";
 import { monsters } from "../data/monsters";
 import { EQUIPMENT } from "../data/equipments";
 import { TRAITS } from "../data/traits";
@@ -85,6 +86,7 @@ const ACHIEVEMENT_SHARE_IDS = [
     "rift-challenger",
     "strive-for-perfection",
     "splash-isle",
+    "coilwork-city",
 ] as const;
 
 const ACHIEVEMENT_MASK_ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_";
@@ -285,6 +287,7 @@ function decodeGeneticPotential(value: string): number {
 
 export function encodeBuildForShare(build: Build): string {
     const parts: string[] = [];
+    if (build.combatMode === "pvp") parts.push("M1");
 
     if (build.monsterId) parts.push(`m${encodeIndexedId(build.monsterId, MONSTER_SHARE_IDS)}`);
     if (build.level !== 1) parts.push(`l${encodeInt(build.level)}`);
@@ -350,7 +353,7 @@ export function encodeBuildForShare(build: Build): string {
 function decodeBuildCode(code: string): Partial<Build> | null {
     try {
         const encoded = code.slice(BUILD_SHARE_PREFIX.length);
-        const build: Partial<Build> = {};
+        const build: Partial<Build> = { combatMode: "pve" };
         const accountMultipliers: Build["accountMultipliers"] = {
             completedAchievementIds: [],
         };
@@ -365,6 +368,9 @@ function decodeBuildCode(code: string): Partial<Build> | null {
             const value = part.slice(1);
 
             switch (key) {
+                case "M":
+                    build.combatMode = value === "1" ? "pvp" : "pve";
+                    break;
                 case "m":
                     build.monsterId = decodeIndexedId(value, MONSTER_SHARE_IDS);
                     break;
@@ -496,6 +502,9 @@ export type BuildSharePreview = {
     critChance: string;
     critMultiplier: string;
     imagePath?: string;
+    combatStats?: CombatSummaryItem[];
+    accountMultipliers?: CombatSummaryItem[];
+    combatConditions?: CombatSummaryItem[];
 };
 
 const SHARE_PREVIEW_BASE_URL =

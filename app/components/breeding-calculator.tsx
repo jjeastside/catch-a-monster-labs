@@ -1,4 +1,6 @@
 "use client";
+import { SkillEffectSelect } from "./skill-effect-select";
+import { matchesMonsterSkillEffect, type SkillEffectFilter } from "../lib/skill-effect-filter";
 
 import { useEffect, useMemo, useState } from "react";
 import { GENERATED_MONSTERS } from "../data/generated/monsters";
@@ -21,8 +23,9 @@ function MonsterPicker({ id, onChange, title, gender, owned }: {
     id: string; onChange: (id: string) => void; title: string; gender: TrackerGender; owned: Record<string, TrackerEntry>;
 }) {
     const [query, setQuery] = useState("");
+    const [skillEffect, setSkillEffect] = useState<SkillEffectFilter>("all");
     const selected = eligible.find((monster) => monster.id === id);
-    const options = eligible.filter((monster) => !query || monster.name.toLowerCase().includes(query.toLowerCase()));
+    const options = eligible.filter((monster) => matchesMonsterSkillEffect(monster, skillEffect) && (!query || monster.name.toLowerCase().includes(query.toLowerCase())));
     return <section className={panel}>
         <div className="mb-3 flex items-center justify-between gap-2">
             <h2 className="text-base font-black text-white">{title}</h2>
@@ -40,6 +43,7 @@ function MonsterPicker({ id, onChange, title, gender, owned }: {
         </div>
         <label className="mb-1 block text-xs font-bold text-[#b8d3ef]">Find monster</label>
         <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Filter by name..." className={`${field} mb-2`} />
+        <SkillEffectSelect value={skillEffect} onChange={setSkillEffect} label={`${title} Skill Effect`} className="mb-2" />
         <select aria-label={`${title} monster`} value={options.some((monster) => monster.id === id) ? id : ""} onChange={(event) => { onChange(event.target.value); setQuery(""); }} className={field}>
             {!options.some((monster) => monster.id === id) && <option value="">Select a matching monster</option>}
             {options.map((monster) => <option key={monster.id} value={monster.id}>{monster.name}{owned[monster.id]?.gender === gender ? " ✓" : ""}</option>)}

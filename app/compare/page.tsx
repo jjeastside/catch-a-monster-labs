@@ -6,7 +6,7 @@ import { MonsterCompare } from "../components/monster-compare";
 const compareUrl =
   "https://jjeastside.github.io/catch-a-monster-labs/compare/";
 const comparePreviewUrl =
-  "https://jjeastside.github.io/catch-a-monster-labs/compare-preview.png";
+  "https://jjeastside.github.io/catch-a-monster-labs/previews/compare-preview.png";
 
 export const metadata: Metadata = {
   title: "Monster Compare — Cam Lab",

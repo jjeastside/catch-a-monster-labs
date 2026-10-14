@@ -6,7 +6,7 @@ import { PetHatch } from "../components/pet-hatch";
 const petHatchUrl =
     "https://jjeastside.github.io/catch-a-monster-labs/pet-hatch/";
 const petHatchPreviewUrl =
-    "https://jjeastside.github.io/catch-a-monster-labs/pet-hatch-preview-v2.png";
+    "https://jjeastside.github.io/catch-a-monster-labs/previews/pet-hatch-preview-v2.png";
 
 export const metadata: Metadata = {
     title: "Pet Hatch Transfer — Cam Lab",

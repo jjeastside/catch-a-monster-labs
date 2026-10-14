@@ -14,7 +14,7 @@ import { assetPath } from "./lib/asset-path";
 export const metadata: Metadata = {
     title: "Cam Lab — Catch a Monster Companion",
     description:
-        "Plan builds, estimate Pet Hatch transfers, compare monsters, browse Catch a Monster data, build teams, and track your Index with Cam Lab.",
+        "Find recommended builds, save account multipliers, estimate Pet Hatch transfers, compare monsters, build teams, and track your Index with Cam Lab.",
     alternates: {
         canonical: "https://jjeastside.github.io/catch-a-monster-labs/",
     },
@@ -83,7 +83,7 @@ const patchPreviewCode = latestGamePatch.sections
 const featureCards = [
     {
         title: "Build Calculator",
-        description: "Plan builds and calculate combat stats, skill damage, DPS, healing, equipment, traits, and more.",
+        description: "Find recommended gear, traits, and mutations for your monster, compare stat changes, and apply a max build for your combat goal.",
         href: "/calculator",
         navIcon: "/icons/monster-calculator.png",
         preview: "calculator",
@@ -110,7 +110,7 @@ const featureCards = [
     },
     {
         title: "Monster Compare",
-        description: "Compare two to four monsters side by side with shared settings, custom builds, and account multipliers.",
+        description: "Compare two to four monsters with custom builds, saved account bonuses, PvE/PvP stats, and Skill Effect filters.",
         href: "/compare",
         navIcon: "/icons/monster-compare.png",
         preview: "compare",
@@ -119,7 +119,7 @@ const featureCards = [
     },
     {
         title: "Team Builder",
-        description: "Build three-monster teams, manage equipment, review team stats, and plan around different combat goals.",
+        description: "Build three-monster teams, filter skills by their effects, manage gear, and compare team stats for your combat goal.",
         href: "/team",
         navIcon: "/team-builder.png",
         preview: "team-builder",
