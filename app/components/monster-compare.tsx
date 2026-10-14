@@ -76,6 +76,8 @@ type SavedCompareState = {
   mode: "shared" | "custom";
   build: Build;
   customBuilds: Build[];
+  showSkillEffects?: boolean;
+  showPassives?: boolean;
 };
 
 function normalizeSavedBuild(value: unknown): Build {
@@ -904,6 +906,9 @@ export function MonsterCompare() {
   );
   const [customInitialized, setCustomInitialized] = useState(false);
   const [storageReady, setStorageReady] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [showSkillEffects, setShowSkillEffects] = useState(true);
+  const [showPassives, setShowPassives] = useState(true);
   useCompareAccount(build.accountMultipliers, setBuild);
 
   useEffect(() => {
@@ -937,6 +942,8 @@ export function MonsterCompare() {
       setBuild(restoredBuild);
       setCustomBuilds(restoredCustomBuilds);
       setCustomInitialized(restoredMode === "custom");
+      setShowSkillEffects(saved.showSkillEffects !== false);
+      setShowPassives(saved.showPassives !== false);
     } catch {
       // Compare still works if local storage is unavailable or malformed.
     } finally {
@@ -950,6 +957,8 @@ export function MonsterCompare() {
     const saved: SavedCompareState = {
       ids,
       mode,
+      showSkillEffects,
+      showPassives,
       build: { ...build, monsterId: null },
       customBuilds: ids.map((_, index) => ({
         ...(customBuilds[index] ?? build),
@@ -962,7 +971,7 @@ export function MonsterCompare() {
     } catch {
       // Compare remains usable when browser storage is unavailable.
     }
-  }, [storageReady, ids, mode, build, customBuilds]);
+  }, [storageReady, ids, mode, build, customBuilds, showSkillEffects, showPassives]);
   const [picker, setPicker] = useState<number | null>(null);
   const [favorites, setFavorites] = useState<string[]>([]);
   const dialog = useRef<HTMLDialogElement>(null);
@@ -1036,7 +1045,7 @@ export function MonsterCompare() {
         : "xl:grid-cols-4";
 
   return (
-    <main className={`${styles.root} ${TOOL_PAGE_CONTAINER} space-y-2.5 text-[#f6f8fc]`}>
+    <main data-compare-columns={ids.length} className={`${styles.root} ${TOOL_PAGE_CONTAINER} space-y-2.5 text-[#f6f8fc]`}>
       <PageHeading id="compare-heading" title="Monster Compare" image="/icons/monster-compare.png" aside="Pick monsters to compare their stats, skills, DPS, and different builds with global account multipliers.">
         Compare up to 4 monsters side by side with {mode === "shared" ? "shared settings" : "their own builds"}.
       </PageHeading>
@@ -1076,6 +1085,9 @@ export function MonsterCompare() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <button type="button" aria-expanded={settingsOpen} aria-controls="compare-display-settings" className="rounded-md border border-[#536aba] px-3 py-2 text-xs text-[#a8b8ff]" onClick={() => setSettingsOpen((open) => !open)}>
+            <span aria-hidden="true">⚙ </span>Settings
+          </button>
           <span className="text-xs text-[#a9b7cd]">{ids.length} / 4</span>
           <button
             disabled={ids.length >= 4}
@@ -1097,6 +1109,16 @@ export function MonsterCompare() {
             ↻ Reset All
           </button>
         </div>
+        {settingsOpen && <div id="compare-display-settings" className="flex w-full flex-wrap gap-x-5 gap-y-2 border-t border-[#23465f] pt-2" role="group" aria-label="Display settings">
+          <label className="flex cursor-pointer items-center gap-2 text-xs text-[#a9b7cd]">
+            <input type="checkbox" checked={showSkillEffects} onChange={(event) => setShowSkillEffects(event.target.checked)} className="size-4 accent-[#399bff]" />
+            Skill effects
+          </label>
+          <label className="flex cursor-pointer items-center gap-2 text-xs text-[#a9b7cd]">
+            <input type="checkbox" checked={showPassives} onChange={(event) => setShowPassives(event.target.checked)} className="size-4 accent-[#399bff]" />
+            Passives
+          </label>
+        </div>}
       </section>
       {mode === "shared" && (
         <section aria-label="Shared build" className={`${styles.sharedBuild} ${card} p-2.5`}>
@@ -1208,6 +1230,9 @@ export function MonsterCompare() {
                       )
                     }
                   />
+                  {hasSharedEvolvedMonster && !column.monster.isEvolved && <div className={styles.evolutionPlaceholder} aria-hidden="true" inert>
+                    <SharedEvolutionMultiplier shared={false} value={100} onChange={() => {}} />
+                  </div>}
                   {column.monster.isEvolved && (
                     <SharedEvolutionMultiplier
                       shared={false}
@@ -1315,11 +1340,11 @@ export function MonsterCompare() {
                       />
                     ))}
                   </div>}
-                  {column.stats && <SkillEffectCards skill={result.skill} stats={column.stats} build={buildForCombatMode(column.build, combatMode)} summary={result} />}
+                  {showSkillEffects && column.stats && <SkillEffectCards skill={result.skill} stats={column.stats} build={buildForCombatMode(column.build, combatMode)} summary={result} />}
                 </div>
               ))}
-              {!!column.monster.passives?.length && (
-                <div className="flex flex-wrap gap-1 border-t border-[#344050] p-2">
+              {showPassives && !!column.monster.passives?.length && (
+                <div aria-label={`${column.monster.name} passives`} className="flex flex-wrap gap-1 border-t border-[#344050] p-2">
                   {column.monster.passives.map((passive) => (
                     <span
                       key={passive.id}
@@ -1341,7 +1366,7 @@ export function MonsterCompare() {
               )}
               {column.skills.length < maxSkills && <div className="flex-1" />}
               <div className="mt-auto border-t border-[#52618a]/55 bg-[#101724] p-2">
-                {column.totalHealing != null && <div className="mb-1.5"><Value inline label="Total Skill HPS" icon="/account-icons/health.png" peers={columns.map(item => item.totalHealing)} value={column.totalHealing} best={isBestValue(column.totalHealing, columns.map(item => item.totalHealing))} tone="green" /></div>}
+                {showSkillEffects && column.totalHealing != null && <div className="mb-1.5"><Value inline label="Total Skill HPS" icon="/account-icons/health.png" peers={columns.map(item => item.totalHealing)} value={column.totalHealing} best={isBestValue(column.totalHealing, columns.map(item => item.totalHealing))} tone="green" /></div>}
                 <Value
                   inline
                   label="Total Skill DPS"
