@@ -379,6 +379,79 @@
 .skills > div:has(h3) [data-best] > div:first-child { justify-content: center; }
 .skills > div:has(h3) [data-best] > div:nth-child(2) { justify-content: center; font-size: 17px; }
 .skills > div:has(h3) [data-best=false] { border-color: #2a4c85; background: linear-gradient(120deg, #06172b, #0a2038); }
+.root .skills [aria-label$=" effects"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.root .skills [aria-label$=" effects"] > div {
+  display: grid;
+  grid-template-columns: 14px minmax(0, max-content);
+  justify-content: center;
+  align-content: start;
+  align-items: center;
+  column-gap: 4px;
+  row-gap: 0;
+  padding: 6px;
+  border-radius: 5px;
+  border-color: #2a4c85;
+  background: linear-gradient(120deg, #06172b, #0a2038);
+}
+.root .skills [aria-label$=" effects"] > div > div {
+  display: contents;
+}
+.root .skills [aria-label$=" effects"] img {
+  width: 14px;
+  height: 14px;
+}
+.root .skills [aria-label$=" effects"] > div > img {
+  grid-column: 1;
+  grid-row: 1;
+}
+.root .skills [aria-label$=" effects"] > div > div > div {
+  justify-content: flex-start;
+  gap: 4px;
+  min-width: 0;
+}
+.root .skills [aria-label$=" effects"] > div:not(:has(> img)) > div > div {
+  grid-column: 1 / -1;
+  justify-content: center;
+}
+.root .skills [aria-label$=" effects"] p {
+  color: #a9b7cd;
+  letter-spacing: normal;
+}
+.root .skills [aria-label$=" effects"] > div > div > p,
+.root .skills [aria-label$=" effects"] > div > p {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+  text-align: center;
+  font-size: 17px;
+  line-height: 1.25;
+  color: #f6f8fc;
+  font-variant-numeric: tabular-nums;
+}
+.root .skills [aria-label$=" effects"] > div > div > p > span:not([title]),
+.root .skills [aria-label$=" effects"] > div > p > span:not([title]) {
+  margin-left: 4px;
+  font-size: 10px;
+  color: #a9b7cd;
+}
+.root .skills [aria-label$=" effects"] > div > div > p[title] {
+  font-size: 10px;
+  color: #8e99ad;
+}
+.root .skills [aria-label$=" effects"] > div > div:has(> img) {
+  display: flex;
+  grid-column: 1 / -1;
+  justify-content: center;
+  gap: 4px;
+}
+.root .skills [aria-label$=" effects"] > div > div:has(> img) > p {
+  margin: 0;
+  font-size: 9px;
+  line-height: 1.5;
+  color: #a9b7cd;
+}
 .skills > div:last-child { background: transparent; border-top: 0; padding: 5px 9px 9px; }
 .skills > div:last-child [data-best=false] { background: linear-gradient(120deg, #08172c, #0a1a31); border-color: #344d87; }
 .skills > div:last-child [data-best] > div:nth-child(2) { font-size: 23px; }
@@ -525,4 +598,19 @@
   .compareMutationButtons { width: 100%; }
   .compareMutationButton { justify-content: center; }
   .compareMutationButton span { display: none; }
+}
+
+/* Reserve the same intrinsic EM control height only in side-by-side layouts. */
+.evolutionPlaceholder { display: none; }
+.evolutionPlaceholder > .sharedEvolution {
+  margin-top: 7px;
+  padding-top: 7px;
+  border-top: 1px solid #21435a;
+}
+.evolutionPlaceholder .sharedEvolutionHint { font-size: 9px; }
+@media (min-width: 1024px) {
+  .root[data-compare-columns="2"] .evolutionPlaceholder { display: block; visibility: hidden; }
+}
+@media (min-width: 1280px) {
+  .root .evolutionPlaceholder { display: block; visibility: hidden; }
 }

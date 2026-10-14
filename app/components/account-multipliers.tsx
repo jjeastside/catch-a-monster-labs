@@ -761,7 +761,7 @@ export function AccountMultipliers({
                         </div>
 
                         <footer className="sticky bottom-0 z-20 flex justify-between gap-3 border-t border-[#294b64] bg-[#071b2b] px-5 py-4">
-                            {expandedCategory ? (
+                        np    {expandedCategory ? (
                                 <button type="button" onClick={() => setExpandedCategory(null)} className="rounded-md px-3 py-2 text-xs font-semibold text-[#79c9ff] hover:text-white">← Back</button>
                             ) : (
                                 <button type="button" onClick={reset} disabled={selectedIds.length === 0} className="rounded-md px-3 py-2 text-xs font-semibold text-[#8e99ad] hover:text-[#e3e8f1] disabled:cursor-not-allowed disabled:opacity-40">Reset All</button>
