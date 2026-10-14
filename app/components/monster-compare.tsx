@@ -34,7 +34,7 @@ import { TraitIcon } from "./trait-icon";
 import styles from "./monster-compare.module.css";
 import { PageHeading } from "./page-heading";
 import { TOOL_PAGE_CONTAINER } from "./tool-page-layout";
-import { CombatRank, rankColors } from "./calculator-results";
+import { CombatRank, rankColors, SkillEffectCards } from "./calculator-results";
 import {
   rarityBadgeClasses,
   rarityImageClasses,
@@ -1024,6 +1024,7 @@ export function MonsterCompare() {
       stats,
       skills,
       total: stats ? skills.reduce((sum, skill) => sum + (skill.dps ?? 0), 0) : null,
+      totalHealing: stats && skills.some(skill => skill.healingPerSecond != null) ? skills.reduce((sum, skill) => sum + (skill.healingPerSecond ?? 0), 0) : null,
     };
   });
   const maxSkills = Math.max(...columns.map((column) => column.skills.length));
@@ -1289,7 +1290,7 @@ export function MonsterCompare() {
                       )}
                     />
                   </div>
-                  <div className="grid grid-cols-3 gap-1.5">
+                  {result.skill.damageInstances.length > 0 && <div className="grid grid-cols-3 gap-1.5">
                     {(
                       [
                         ["normalDamage", "DMG"],
@@ -1313,7 +1314,8 @@ export function MonsterCompare() {
                         tone="gold"
                       />
                     ))}
-                  </div>
+                  </div>}
+                  {column.stats && <SkillEffectCards skill={result.skill} stats={column.stats} build={buildForCombatMode(column.build, combatMode)} summary={result} />}
                 </div>
               ))}
               {!!column.monster.passives?.length && (
@@ -1339,6 +1341,7 @@ export function MonsterCompare() {
               )}
               {column.skills.length < maxSkills && <div className="flex-1" />}
               <div className="mt-auto border-t border-[#52618a]/55 bg-[#101724] p-2">
+                {column.totalHealing != null && <div className="mb-1.5"><Value inline label="Total Skill HPS" icon="/account-icons/health.png" peers={columns.map(item => item.totalHealing)} value={column.totalHealing} best={isBestValue(column.totalHealing, columns.map(item => item.totalHealing))} tone="green" /></div>}
                 <Value
                   inline
                   label="Total Skill DPS"

@@ -8,10 +8,23 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.30",
+        date: "October 14, 2026",
+        title: "Compare Healing & Skill Effects",
+        label: "Latest",
+        changes: [
+            "Added healing, HPS, shields, buffs, debuffs, and status-effect cards to Monster Compare using the Build Calculator’s existing effect displays.",
+            "Replaced empty Damage, Crit, and DPS boxes on pure support skills with their actual effects. Damaging skills retain their damage metrics and now also display associated effects and tooltips.",
+            "Added calculated healing amounts and HPS for known caster Damage or Health scaling, including Grace, applicable healing gear attributes, and trait/mutation cooldown modifiers. Healing cannot critically heal and does not contribute to DPS.",
+            "Combined mixed Damage + caster Health healing into one output and kept target Max-HP restoration percentage-based when a numerical target HP amount is unavailable.",
+            "Added Total Skill HPS and best-value comparison for known unconditional caster-stat healing per affected target, separately from Total Skill DPS. Gear regeneration, Life Siphon, and unknown or conditional healing are excluded from this skill total.",
+            "Added shared effect cards for shields, vulnerability, attack reduction, Burn, Poison, stun, taunt, knockback, reflection, and damage buffs/reduction, including applicable trait bonuses and conditional explanations. Checked the updated comparison layout on desktop and mobile.",
+        ],
+    },
+    {
         version: "v1.0.29",
         date: "October 13, 2026",
         title: "Build Recommendations & Account Profiles",
-        label: "Latest",
         changes: [
             "Added compact build recommendations with optimized teammates, easier account switching, saved profiles, and Skill Effect filters across calculator tools.",
             "Compare recommended weapons, armor, traits, single mutations, complete builds, and alternatives for General, DPS, Boss, Dungeon, Spire, Farming, PvP, Survivability, and Support/Healing goals. View reasons and stat changes, then apply a recommendation directly.",
