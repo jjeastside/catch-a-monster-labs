@@ -8,10 +8,33 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.29",
+        date: "October 13, 2026",
+        title: "Build Recommendations & Account Profiles",
+        label: "Latest",
+        changes: [
+            "Added compact build recommendations with optimized teammates, easier account switching, saved profiles, and Skill Effect filters across calculator tools.",
+            "Compare recommended weapons, armor, traits, single mutations, complete builds, and alternatives for General, DPS, Boss, Dungeon, Spire, Farming, PvP, Survivability, and Support/Healing goals. View reasons and stat changes, then apply a recommendation directly.",
+            "Recommendations now maximize level to 115, enhancements to +10, Attack/Health breeding to 60%, and evolved-monster EM to 220% while preserving the selected rank. Dungeon remains capped at level 60, and Cannelloni dragons and Necro Hydra retain 6% breeding with no traits.",
+            "Recommendation rankings use monster skills, critical hits, cooldowns, self/team passives, account bonuses, and enabled combat conditions. Conditional effects are only counted when supported; shortlist results are labeled as the best builds found rather than guaranteed global optima.",
+            "Build recommendations now optimize both teammate slots for transferable passives, critical bonuses, encounter-specific damage and protection, team damage buffs, vulnerability, and Burn/Poison support. Recommended teammate names and icons appear with the build and are applied together with its supported combat conditions.",
+            "Selecting Dungeon, Spire, or Boss immediately switches the calculator to that encounter. Leaving Dungeon restores the previous level; applying a maximum Dungeon recommendation stores level 115 for the return to other encounters.",
+            "Burn/Poison Fragility is only considered when the selected monster or a teammate provides a known applicable enemy Burn or Poison effect. Applying that recommendation enables the status condition; without a valid source, unsupported Fragility falls back to Impair IV, or no trait on restricted monsters. Rankings assume supported skill conditions are active rather than guaranteeing their uptime.",
+            "Improved tied armor recommendations to favor unconditional All Resistances rolls over arbitrary element-specific rolls, and replaced tiny trait banners with the site’s square trait icons. Recommendation explanations and comparisons can expand without keeping every row open.",
+            "Added a compact Account Multipliers profile control with a clear label, multiple named accounts, per-account bonus previews, and direct editing from bonus icons. Named profile edits and the unnamed Current setup now save automatically.",
+            "Added Change Account buttons in recommendations and the account editor. Selecting an account keeps the profile panel open, and the full card now switches accounts with one click while bonus icons retain their edit shortcuts.",
+            "Added Select All and Clear All controls for Index Mania. Combat Stats now show Index Mania, Path of Progress, and Pet Quest bonuses with matching icons only when their bonuses are above zero.",
+            "Updated shared builds and Cloudflare preview data to preserve combat settings, account bonuses, gear, attributes, traits, mutations, and PvP mode. Shared preview cards include Combat Stats, account bonus icons, and Combat Conditions. Added a local Worker site-URL override and setup guide for testing share links, previews, and redirects before deployment.",
+            "Added consistent icons for Combat Conditions and shared Skill Effect filtering for Calculator, Compare, Team inventory and replacement selectors, Breeding parent selectors, and Pet Hatch parent selection.",
+            "Added bottom-right type icons to Team Composition portraits, removed the extra X text badge from Mutation X buttons, and matched Void portrait backgrounds to the calculator while keeping type icons free of background badges.",
+            "Re-enabled PvP stats across the site and in build recommendations. The Team Composition simulator for fighting another team remains hidden.",
+            "Fixed the Coilwork City account achievement mapping and improved compact account navigation on mobile. Moved shared and page preview artwork into public/previews.",
+        ],
+    },
+    {
         version: "v1.0.28",
         date: "October 13, 2026",
         title: "Universal Quantized Stat Growth",
-        label: "Latest",
         changes: [
             "Introduced a research-based precision model for Standard monster growth after comparing recorded level-by-level Damage and Health from Treemo, Wattoad, Leafet, and Skedeer.",
             "Quantized the Standard level-growth multiplier downward in 0.0002 increments and the level-gain coefficient downward in 0.05-stat increments, improving agreement with in-game values and reducing small accumulated calculation errors.",

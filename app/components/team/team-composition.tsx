@@ -1,4 +1,6 @@
 "use client";
+import { SkillEffectSelect } from "../skill-effect-select";
+import { matchesMonsterSkillEffect, type SkillEffectFilter } from "../../lib/skill-effect-filter";
 import { applyBreedingLimits, hasFixedBreeding, BREEDING_LOCK_MESSAGE } from "../../lib/breeding-limits";
 
 import { useCombatMode } from "../../lib/combat-mode";
@@ -54,10 +56,13 @@ const SKILL_ICON_ALIASES: Record<string, string> = {
 function TeamMonsterPortrait({ monster, className, alt = "" }: { monster: Monster; className: string; alt?: string }) {
   const { portraitStyle, portraitFrameStyle } = getMonsterPortraitStyles(monster);
   return (
-    <div className={className} data-rarity={monster.rarity} style={portraitFrameStyle}>
+    <div className={`${className} ${styles.monsterPortraitFrame}`} data-rarity={monster.rarity} style={portraitFrameStyle}>
       <div className={styles.portraitInner} style={portraitStyle}>
         <img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt={alt} />
       </div>
+      <span className={styles.portraitTypeBadge} title={monster.element}>
+        <img src={assetPath(`/element-icons/${monster.element.toLowerCase()}.png`)} alt={`${monster.element} type`} />
+      </span>
     </div>
   );
 }
@@ -262,11 +267,7 @@ const teamMutationFamilies = [
 ] as const;
 
 export function TeamComposition() {
-  const [combatMode, setCombatMode] = useCombatMode();
-  const [opponentId, setOpponentId] = useState("");
-  const [opponentLevel, setOpponentLevel] = useState(CURRENT_MAX_LEVEL);
-  const [opponentRank, setOpponentRank] = useState<Rank>("SS");
-  const [opponentEnhancement, setOpponentEnhancement] = useState(10);
+  const [combatMode] = useCombatMode();
   const calculateStats: typeof calculateStatsForBuild = (data, build, passives) => calculateStatsForBuild(data, { ...build, combatMode }, passives);
   const monsterDps: typeof monsterDpsForBuild = (monster, build) => monsterDpsForBuild(monster, { ...build, combatMode });
   const buildForGoal: typeof buildForGoalBase = (build, context) => buildForGoalBase({ ...build, combatMode }, context);
@@ -289,18 +290,12 @@ export function TeamComposition() {
       setCombatContext("standard");
     }
   }, [combatMode, combatContext]);
-  const opponent = monsterById.get(opponentId) ?? null;
-  const opponentBuild: Build = {
-    ...makeBuild(opponentId || null), combatMode: "pvp", level: opponentLevel,
-    rank: opponentRank, enhancement: opponentEnhancement,
-  };
-  const opponentStats = opponent
-    ? calculateStatsForBuild(getMonsterStatData(opponent.id), opponentBuild, opponent.passives ?? []) : null;
-  const opponentDps = opponent && opponentStats ? monsterDpsForBuild(opponent, opponentBuild) : null;
   const [inventoryFilter, setInventoryFilter] = useState<InventoryFilter>("all");
   const [inventorySort, setInventorySort] = useState<InventorySort>("name");
   const [inventoryFilterPanel, setInventoryFilterPanel] = useState<"sort" | "browse" | null>(null);
   const [inventoryElement, setInventoryElement] = useState("all");
+  const [inventorySkillEffect, setInventorySkillEffect] = useState<SkillEffectFilter>("all");
+  const [replacementSkillEffect, setReplacementSkillEffect] = useState<SkillEffectFilter>("all");
   const [inventoryRarity, setInventoryRarity] = useState("all");
   const [ownedEquipment, setOwnedEquipment] = useState<OwnedEquipmentCopy[]>([]);
   const [equipmentSearch, setEquipmentSearch] = useState("");
@@ -583,6 +578,7 @@ export function TeamComposition() {
         if (inventoryFilter === "team" && !teamIds.includes(monster.id)) return false;
         if (inventoryElement !== "all" && monster.element !== inventoryElement) return false;
         if (inventoryRarity !== "all" && monster.rarity !== inventoryRarity) return false;
+        if (!matchesMonsterSkillEffect(monster, inventorySkillEffect)) return false;
         if (favoritesOnly && !favoriteMonsterIds.includes(monster.id)) return false;
         return true;
       })
@@ -593,15 +589,16 @@ export function TeamComposition() {
         if (inventorySort === "health") return getSavedStats(b).health - getSavedStats(a).health || a.name.localeCompare(b.name);
         return a.name.localeCompare(b.name);
       });
-  }, [combatMode, search, inventoryFilter, inventorySort, inventoryElement, inventoryRarity, favoritesOnly, favoriteMonsterIds, inventoryBuilds, accountBuild.accountMultipliers, teamIds, hiddenMonsterIds, showHiddenMonsters, ownedIds]);
+  }, [combatMode, search, inventoryFilter, inventorySort, inventoryElement, inventoryRarity, inventorySkillEffect, favoritesOnly, favoriteMonsterIds, inventoryBuilds, accountBuild.accountMultipliers, teamIds, hiddenMonsterIds, showHiddenMonsters, ownedIds]);
 
   const activeInventoryFilters = Number(inventoryFilter !== "all") + Number(favoritesOnly)
-    + Number(inventoryElement !== "all") + Number(inventoryRarity !== "all");
+    + Number(inventoryElement !== "all") + Number(inventoryRarity !== "all") + Number(inventorySkillEffect !== "all");
   const clearInventoryFilters = () => {
     setInventoryFilter("all");
     setFavoritesOnly(false);
     setInventoryElement("all");
     setInventoryRarity("all");
+    setInventorySkillEffect("all");
   };
 
   // Compare individual gear copies with their real saved attributes, using the
@@ -1223,6 +1220,7 @@ export function TeamComposition() {
               <button type="button" onClick={() => setReplacingTeamSlot(null)} aria-label="Close monster selection">×</button>
             </div>
             <input autoFocus className={styles.search} type="search" placeholder="Search all monsters…" aria-label="Search selectable monsters" value={replacementSearch} onChange={(event) => setReplacementSearch(event.target.value)} />
+            <SkillEffectSelect value={replacementSkillEffect} onChange={setReplacementSkillEffect} label="Skill Effect" className="px-3 pb-2" />
             <div className={styles.pickerPreferences}>
               <span>{hiddenMonsterIds.length} hidden · Hidden monsters stay in your inventory and any existing teams.</span>
               <button type="button" className={styles.smallButton} onClick={() => setShowHiddenMonsters((current) => !current)}>
@@ -1230,11 +1228,11 @@ export function TeamComposition() {
               </button>
             </div>
             <div className={styles.monsterPickerList}>
-              {availableMonsters.filter((monster) => (showHiddenMonsters || !hiddenMonsterIds.includes(monster.id)) && [monster.name, monster.element, monster.rarity].some((value) => value.toLowerCase().includes(replacementSearch.trim().toLowerCase()))).map((monster) => {
+              {availableMonsters.filter((monster) => (showHiddenMonsters || !hiddenMonsterIds.includes(monster.id)) && matchesMonsterSkillEffect(monster, replacementSkillEffect) && [monster.name, monster.element, monster.rarity].some((value) => value.toLowerCase().includes(replacementSearch.trim().toLowerCase()))).map((monster) => {
                 const copies = Object.keys(inventoryBuilds).filter((id) => copyMonsterId(id) === monster.id).sort();
                 const options = copies.length ? copies : [monster.id];
                 return <div key={monster.id} className={styles.monsterPickerRow}>
-                  <img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt="" />
+                  <TeamMonsterPortrait monster={monster} className={styles.pickerPortrait} />
                   <div className={styles.monsterPickerName}><strong>{monster.name}</strong><span>{monster.element} · {monster.rarity}</span></div>
                   <div className={styles.monsterPickerCopies}>{options.map((copyId, copyIndex) => {
                     const assigned = team.some((build, slot) => slot !== replacingTeamSlot && build.inventoryCopyId === copyId);
@@ -1243,7 +1241,7 @@ export function TeamComposition() {
                   })}<button type="button" className={styles.hideMonsterButton} onClick={() => toggleHiddenMonster(monster.id)} aria-label={`${hiddenMonsterIds.includes(monster.id) ? "Unhide" : "Hide"} ${monster.name}`} title="Hide or unhide this monster from the picker and recommendations">{hiddenMonsterIds.includes(monster.id) ? "Unhide" : "Hide"}</button></div>
                 </div>;
               })}
-              {!availableMonsters.some((monster) => (showHiddenMonsters || !hiddenMonsterIds.includes(monster.id)) && [monster.name, monster.element, monster.rarity].some((value) => value.toLowerCase().includes(replacementSearch.trim().toLowerCase()))) ? <p className={styles.pickerEmpty}>No matching monsters. Try another search or show hidden monsters.</p> : null}
+              {!availableMonsters.some((monster) => (showHiddenMonsters || !hiddenMonsterIds.includes(monster.id)) && matchesMonsterSkillEffect(monster, replacementSkillEffect) && [monster.name, monster.element, monster.rarity].some((value) => value.toLowerCase().includes(replacementSearch.trim().toLowerCase()))) ? <p className={styles.pickerEmpty}>No matching monsters. Try another search or show hidden monsters.</p> : null}
             </div>
           </section>
         </div>
@@ -1265,14 +1263,12 @@ export function TeamComposition() {
             <img src={assetPath("/monster-artwork/wattoad.png")} alt="" />
           </div>
           <div className={styles.bannerAside}>
-            Create powerful teams for dungeons, bosses, PvP, and more.<br />
+            Create powerful teams for dungeons, bosses, and more.<br />
             Use your inventory or the full database, then compare the results with your account multipliers.
           </div>
         </header>
 
-        <section className={styles.panel}>
-          <AccountMultipliers build={accountBuild} onBuildChangeAction={setAccountBuild} />
-        </section>
+        <AccountMultipliers build={accountBuild} onBuildChangeAction={setAccountBuild} />
 
         <div className={`${styles.layout} ${showRecommendations ? "" : styles.layoutFocus}`}>
           <section className={styles.panel} aria-label="Monster inventory">
@@ -1332,6 +1328,7 @@ export function TeamComposition() {
                 <button type="button" className={`${styles.inventoryFavoriteFilter} ${favoritesOnly ? styles.filterChipActive : ""}`} aria-pressed={favoritesOnly} onClick={() => setFavoritesOnly((value) => !value)}>{favoritesOnly ? "★" : "☆"} Favorites only</button>
                 <div className={styles.inventoryFilterSelects}>
                   <label>Element<select value={inventoryElement} onChange={(event) => setInventoryElement(event.target.value)}><option value="all">All elements</option>{INVENTORY_ELEMENTS.map((element) => <option key={element} value={element}>{element}</option>)}</select></label>
+                  <SkillEffectSelect value={inventorySkillEffect} onChange={setInventorySkillEffect} />
                   <label>Rarity<select value={inventoryRarity} onChange={(event) => setInventoryRarity(event.target.value)}><option value="all">All rarities</option>{INVENTORY_RARITIES.map((rarity) => <option key={rarity} value={rarity}>{rarity}</option>)}</select></label>
                 </div>
               </div> : null}
@@ -1509,35 +1506,6 @@ export function TeamComposition() {
                 </div>
               </div>
 
-              <div className={styles.pvpPanel}>
-                <div className={styles.pvpHeader}>
-                  <strong>Combat Mode</strong>
-                  <div className={styles.modeToggle} role="group" aria-label="Team combat mode">
-                    {(["pve", "pvp"] as const).map((mode) => <button key={mode} type="button" aria-pressed={combatMode === mode} onClick={() => setCombatMode(mode)}>{mode === "pvp" ? "PvP" : "PvE"}</button>)}
-                  </div>
-                </div>
-                {combatMode === "pvp" ? <>
-                  <div className={styles.opponentControls}>
-                    <label className={styles.opponentSelect}>Facing<select value={opponentId} onChange={(event) => setOpponentId(event.target.value)}>
-                      <option value="">Choose opponent monster</option>
-                      {[...availableMonsters].sort((a, b) => a.name.localeCompare(b.name)).map((monster) => <option key={monster.id} value={monster.id}>{monster.name} · {monster.element}</option>)}
-                    </select></label>
-                    <label>Level<input type="number" min={1} max={CURRENT_MAX_LEVEL} value={opponentLevel} onChange={(event) => setOpponentLevel(Math.max(1, Math.min(CURRENT_MAX_LEVEL, Math.round(Number(event.target.value) || 1))))} /></label>
-                    <label>Rank<select value={opponentRank} onChange={(event) => setOpponentRank(event.target.value as Rank)}>{ranks.map((rank) => <option key={rank} value={rank}>{rank}</option>)}</select></label>
-                    <label>Enhancement<select value={opponentEnhancement} onChange={(event) => setOpponentEnhancement(Number(event.target.value))}>{Array.from({ length: 11 }, (_, value) => <option key={value} value={value}>+{value}</option>)}</select></label>
-                  </div>
-                  {opponent ? <div className={styles.opponentPreview}>
-                    <TeamMonsterPortrait monster={opponent} className={styles.opponentPortrait} />
-                    <div><strong>{opponent.name}</strong><span className={styles.elementBadge}><img src={assetPath(`/element-icons/${opponent.element.toLowerCase()}.png`)} alt="" />{opponent.element}</span></div>
-                    {opponentStats ? <div className={styles.opponentStats}>
-                      <span>Damage <b>{formatStatNumber(opponentStats.damage)}</b></span>
-                      <span>Health <b>{formatStatNumber(opponentStats.health)}</b></span>
-                      <span>Skill DPS <b>{formatStatNumber(opponentDps ?? 0)}</b></span>
-                    </div> : <p className={styles.helper}>PvP base stats are unavailable for this monster.</p>}
-                  </div> : null}
-                  <p className={styles.helper}>Team stats and recommendations use PvP bases. Opponent preview: 6% breeding, no mutations, gear, traits or account bonuses; full EM 100% for evolutions. Select an opponent to inspect its stats; this preview does not predict a winner or apply elemental matchup bonuses.</p>
-                </> : null}
-              </div>
 
               {teamPresetMessage ? <div className={styles.teamPresetMessage}>{teamPresetMessage}</div> : null}
               <div className={styles.teamSlots}>
@@ -1602,7 +1570,6 @@ export function TeamComposition() {
                             title={`${mutation.label}: ${isX ? "X" : active ? "Normal" : "Off"} · Click to cycle Off → Normal → X → Off`}
                           >
                             <img src={assetPath(isX ? mutation.xIcon : mutation.icon)} alt="" />
-                            {isX ? <span className={styles.mutationXBadge} aria-hidden="true">X</span> : null}
                           </button>;
                         })}
                       </div>
@@ -1931,7 +1898,7 @@ export function TeamComposition() {
                 <dialog ref={editorRef} className={styles.inventoryEditor} aria-label={`Edit ${monster.name} inventory build`} onCancel={() => setEditingInventoryId(null)} onClick={(event) => { if (event.target === event.currentTarget) { const rect = event.currentTarget.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) setEditingInventoryId(null); } }}>
                   <div className={styles.inventoryEditorHeader}>
                     <div className={styles.editorMonsterTitle}>
-                      <img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt="" />
+                      <TeamMonsterPortrait monster={monster} className={styles.editorPortrait} />
                       <div><span>Inventory Build</span><strong>{monster.name}</strong><small>{monster.element} · {monster.rarity}</small></div>
                     </div>
                     <button type="button" className={styles.removeButton} onClick={() => setEditingInventoryId(null)} aria-label="Close inventory editor">×</button>
@@ -2064,9 +2031,7 @@ export function TeamComposition() {
                         const explanation = recommendation.memberReasons.find((reason) => reason.monsterId === monster.id);
                         return (
                           <div className={styles.recommendRow} key={monster.id}>
-                            <div className={styles.recommendMonster} title={monster.name}>
-                              <img src={assetPath(monster.image ?? "/icons/monster-database.png")} alt={monster.name} />
-                            </div>
+                            <TeamMonsterPortrait monster={monster} className={styles.recommendMonster} alt={monster.name} />
                             <div className={styles.recommendDetails}>
                               <strong>{monster.name}</strong>
                               <span>{compactBuildLabel(build)}</span>
@@ -2126,7 +2091,7 @@ export function TeamComposition() {
                           </span>
                         </div>
                         <div className={styles.alternativeMembers}>
-                          {alternative.members.map((member) => <img key={member.monster.id} src={assetPath(member.monster.image ?? "/icons/monster-database.png")} alt={member.monster.name} title={member.monster.name} />)}
+                          {alternative.members.map((member) => <TeamMonsterPortrait key={member.monster.id} monster={member.monster} className={styles.alternativePortrait} alt={member.monster.name} />)}
                         </div>
                         {alternative.gainedUtility.length || alternative.lostUtility.length ? (
                           <div className={styles.tradeoffUtility}>

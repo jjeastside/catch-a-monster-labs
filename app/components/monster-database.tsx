@@ -1,4 +1,5 @@
 "use client";
+import { matchesMonsterSkillEffect as monsterHasSkillEffect } from "../lib/skill-effect-filter";
 
 import { useCombatMode } from "../lib/combat-mode";
 import { EvolutionPvpNotice } from "./evolution-pvp-notice";
@@ -226,12 +227,6 @@ function matchesEvolutionFilter(monster: GeneratedMonster, filter: EvolutionFilt
     }
 }
 
-function monsterHasSkillEffect(monster: GeneratedMonster, effect: DatabaseSkillEffect): boolean {
-    return monster.skillIds.some((skillId) => {
-        const skill = getSkill(skillId);
-        return getDatabaseSkillEffects(skill).includes(effect);
-    });
-}
 
 type DatabaseIconName =
     | "medal" | "dna" | "bars" | "search" | "star" | "leaf" | "layers"
@@ -1222,10 +1217,7 @@ export function MonsterDatabase() {
                         </button>
                     </div>
                     <p className={styles.presetDescription}>{presetDescription}</p>
-                    {includeAccount && <details className={styles.accountDetails}>
-                        <summary>Edit saved account multipliers ({accountBuild.accountMultipliers.completedAchievementIds.length} achievements)</summary>
-                        <AccountMultipliers build={accountBuild} onBuildChangeAction={setAccountBuild} />
-                    </details>}
+                    {includeAccount && <AccountMultipliers build={accountBuild} onBuildChangeAction={setAccountBuild} />}
                 </section>
 
                 <div className="sticky top-0 z-30 -mx-4 mt-4 border-y border-[#293443] bg-[#0d131d]/95 px-4 py-3 backdrop-blur md:hidden">

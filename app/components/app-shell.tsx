@@ -1,5 +1,7 @@
 "use client";
 
+import { useCombatMode } from "../lib/combat-mode";
+import { buildForCombatMode } from "../lib/combat-mode-build";
 import { useEffect, useRef, useState } from "react";
 
 import { monsters } from "../data/monsters";
@@ -85,6 +87,7 @@ function getMonsterShareHash(monster: Monster): string {
 }
 
 export function AppShell() {
+    const [combatMode, setCombatMode] = useCombatMode();
     const hasInitializedAccountStorage = useRef(false);
     const hasInitializedFavoriteStorage = useRef(false);
     const [hasLoadedActiveBuild, setHasLoadedActiveBuild] = useState(false);
@@ -218,6 +221,7 @@ export function AppShell() {
 
                 if (sharedBuild) {
                     const parsed = normalizeSavedBuild(sharedBuild);
+                    setCombatMode(parsed.combatMode ?? "pve");
                     const sharedMonster = monsters.find(({ id }) => id === parsed.monsterId);
 
                     if (sharedMonster) {
@@ -352,7 +356,7 @@ export function AppShell() {
         });
 
         return () => window.cancelAnimationFrame(frameId);
-    }, []);
+    }, [setCombatMode]);
 
     useEffect(() => {
         if (!hasLoadedActiveBuild) {
@@ -649,11 +653,12 @@ export function AppShell() {
     async function shareBuild() {
         if (!selectedMonster) return;
 
-        let shareUrl = createBuildShareUrl(build, sharePreview ?? undefined);
+        const sharedBuild = buildForCombatMode(build, combatMode);
+        let shareUrl = createBuildShareUrl(sharedBuild, sharePreview ?? undefined);
 
         if (sharePreview) {
             try {
-                shareUrl = await primeBuildSharePreview(build, sharePreview);
+                shareUrl = await primeBuildSharePreview(sharedBuild, sharePreview);
             } catch {
                 // Fall back to the full C1 link if the short-link service fails.
             }
@@ -707,11 +712,8 @@ export function AppShell() {
             <TopNavigation />
             <SiteHeading />
 
-            <div className="mx-auto w-full max-w-[1800px] space-y-3 px-3 pt-3 sm:px-5 xl:px-7 2xl:px-8">
-                <AccountMultipliers
-                    build={build}
-                    onBuildChangeAction={setBuild}
-                />
+            <AccountMultipliers build={build} onBuildChangeAction={setBuild} />
+            <div className={`mx-auto w-full max-w-[1800px] space-y-3 px-3 pt-3 sm:px-5 xl:px-7 2xl:px-8 ${shareBuildStatus === "idle" ? "hidden" : ""}`}>
                 {shareBuildStatus !== "idle" && (
                     <div
                         role="status"

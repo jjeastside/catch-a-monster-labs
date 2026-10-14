@@ -1044,9 +1044,7 @@ export function MonsterCompare() {
           PvP mode: using PvP base Damage and Health. Evolved monsters use only 50% of the selected EM value; PvE combat conditions are disabled.
         </p>
       )}
-      <div className={styles.account}>
-        <AccountMultipliers build={build} onBuildChangeAction={setBuild} />
-      </div>
+      <AccountMultipliers build={build} onBuildChangeAction={setBuild} />
       <section
         aria-label="Build mode"
         className={`${styles.mode} ${card} flex flex-wrap items-center justify-between gap-2 px-3 py-2`}

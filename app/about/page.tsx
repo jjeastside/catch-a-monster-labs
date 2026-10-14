@@ -23,7 +23,7 @@ export const metadata: Metadata = {
         url: "https://jjeastside.github.io/catch-a-monster-labs/about/",
         images: [
             {
-                url: "https://jjeastside.github.io/catch-a-monster-labs/about-preview.png",
+                url: "https://jjeastside.github.io/catch-a-monster-labs/previews/about-preview.png",
                 width: 1162,
                 height: 749,
                 alt: "Cam Lab About page featuring the build calculator, monster database, patch notes, and Index Tracker",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
         title: "About Cam Lab — Built for Catch a Monster Players",
         description:
             "Plan builds, explore monsters, track your Index, and keep up with Catch a Monster updates.",
-        images: ["https://jjeastside.github.io/catch-a-monster-labs/about-preview.png"],
+        images: ["https://jjeastside.github.io/catch-a-monster-labs/previews/about-preview.png"],
     },
 };
 

@@ -1,4 +1,6 @@
 "use client";
+import { SkillEffectSelect } from "./skill-effect-select";
+import { matchesMonsterSkillEffect, type SkillEffectFilter } from "../lib/skill-effect-filter";
 
 import { useCombatMode } from "../lib/combat-mode";
 import { EvolutionPvpNotice } from "./evolution-pvp-notice";
@@ -587,6 +589,7 @@ function MonsterBrowserContent({
     const [rarityFilter, setRarityFilter] = useState("all");
     const [elementFilter, setElementFilter] = useState("all");
     const [evolutionFilter, setEvolutionFilter] = useState<EvolutionFilter>("all");
+    const [skillEffectFilter, setSkillEffectFilter] = useState<SkillEffectFilter>("all");
     const [passiveFilter, setPassiveFilter] = useState<PassiveFilter>("all");
     const [favoritesOnly, setFavoritesOnly] = useState(false);
     const [advancedFilterOpen, setAdvancedFilterOpen] = useState(false);
@@ -644,7 +647,7 @@ function MonsterBrowserContent({
             const matchesFavorite = !favoritesOnly || favoriteMonsterIds.includes(monster.id);
 
             return matchesSearch && matchesSource && matchesIsland && matchesRarity &&
-                matchesElement && matchesEvolution && matchesPassive && matchesFavorite;
+                matchesElement && matchesEvolution && matchesPassive && matchesFavorite && matchesMonsterSkillEffect(monster, skillEffectFilter);
         });
 
         return matchingMonsters.sort((a, b) => {
@@ -658,14 +661,14 @@ function MonsterBrowserContent({
 
             return (aValue - bValue) * direction;
         });
-    }, [monsters, searchQuery, sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, favoritesOnly, favoriteMonsterIds, sortMode, sortDescending, browserEvolutionPercent, passiveCompareMode, combatMode]);
+    }, [monsters, searchQuery, sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, skillEffectFilter, favoritesOnly, favoriteMonsterIds, sortMode, sortDescending, browserEvolutionPercent, passiveCompareMode, combatMode]);
 
     useEffect(() => {
         setBrowserVisibleMonsterCount(32);
         setVisibleMonsterCount(36);
-    }, [searchQuery, sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, favoritesOnly, sortMode, sortDescending, browserEvolutionPercent, passiveCompareMode, combatMode]);
+    }, [searchQuery, sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, skillEffectFilter, favoritesOnly, sortMode, sortDescending, browserEvolutionPercent, passiveCompareMode, combatMode]);
 
-    const activeFilterCount = [sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter]
+    const activeFilterCount = [sourceFilter, islandFilter, rarityFilter, elementFilter, evolutionFilter, passiveFilter, skillEffectFilter]
         .filter((value) => value !== "all").length + (favoritesOnly ? 1 : 0);
 
     const clearFilters = () => {
@@ -675,6 +678,7 @@ function MonsterBrowserContent({
         setElementFilter("all");
         setEvolutionFilter("all");
         setPassiveFilter("all");
+        setSkillEffectFilter("all");
         setFavoritesOnly(false);
     };
 
@@ -722,7 +726,7 @@ function MonsterBrowserContent({
                         <HoverInfo text="Browse Filters — Narrow the monster list by island, source, rarity, element, evolution status, or passive. You can also show only monsters you have starred as Favorites.">
                             <button
                                 type="button"
-                                aria-label="Open browse filters for island, source, rarity, element, evolution, passive, and favorites"
+                                aria-label="Open browse filters for island, source, rarity, element, evolution, passive, skill effects, and favorites"
                                 aria-expanded={browseFilterOpen}
                                 onClick={() => setBrowseFilterOpen((open) => !open)}
                                 className={`relative grid w-11 shrink-0 place-items-center rounded-lg border transition ${browseFilterOpen || activeFilterCount > 0 ? "border-[#3984af] bg-[#102b40] text-[#aeb8ff]" : "border-[#23465f] bg-[#041320] text-[#8e99ad] hover:border-[#3984af] hover:text-white"}`}
@@ -886,6 +890,7 @@ function MonsterBrowserContent({
                                     <option value="standard">No evolution</option>
                                 </select>
 
+                                <SkillEffectSelect value={skillEffectFilter} onChange={setSkillEffectFilter} className="col-span-2" selectClassName={selectClassName} />
                                 <label className="sr-only" htmlFor="passive-filter">Passive</label>
                                 <select id="passive-filter" value={passiveFilter} onChange={(event) => setPassiveFilter(event.target.value)} className={selectClassName}>
                                     <option value="all">All Passive Types</option>

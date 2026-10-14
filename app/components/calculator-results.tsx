@@ -1,3 +1,5 @@
+import { getCategoryProgress } from "../lib/calculations/account-multipliers";
+import { getAttribute } from "../data/attributes";
 
 import { useCombatMode } from "../lib/combat-mode";
 import { buildForCombatMode } from "../lib/combat-mode-build";
@@ -53,6 +55,63 @@ import type { Trait } from "../types/trait";
 import { MonsterOverviewCard } from "./monster-overview-card";
 import { Panel } from "./panel";
 import { TraitIcon } from "./trait-icon";
+
+type CombatSummaryItem = { label: string; value: string; icon: string; secondaryIcon?: string };
+
+const COMBAT_CONTEXTS = [
+    { id: "standard", label: "Standard", icon: "/account-icons/damage.png" },
+    { id: "spire", label: "Spire", icon: "/passive-images/spire-dominance.png" },
+    { id: "rift", label: "Rift", icon: "/passive-images/rift-dominance.png" },
+    { id: "dungeon", label: "Dungeon", icon: "/passive-images/dungeon-guard.png" },
+] as const;
+
+function getAccountSummary(build: Build): CombatSummaryItem[] {
+    const index = getCategoryProgress(build.accountMultipliers, "index-mania");
+    const path = getCategoryProgress(build.accountMultipliers, "path-of-progress");
+    const quests = getCategoryProgress(build.accountMultipliers, "pet-quest");
+    const items: CombatSummaryItem[] = [];
+    if (index.damagePercent > 0) items.push({ label: "Index Mania", value: `${index.damagePercent}% DMG`, icon: "/account-icons/index-mania.png" });
+    if (path.healthPercent > 0) items.push({ label: "Path of Progress", value: `${path.healthPercent}% HP`, icon: "/account-icons/path-of-progress.png" });
+    if (quests.healthPercent > 0 || quests.damagePercent > 0) {
+        items.push({ label: "Pet Quests", value: [quests.healthPercent > 0 ? `${quests.healthPercent}% HP` : "", quests.damagePercent > 0 ? `${quests.damagePercent}% DMG` : ""].filter(Boolean).join(" / "),
+            icon: quests.healthPercent > 0 ? "/account-icons/health-up.png" : "/account-icons/damage-up.png",
+            secondaryIcon: quests.healthPercent > 0 && quests.damagePercent > 0 ? "/account-icons/damage-up.png" : undefined });
+    }
+    return items;
+}
+
+function getConditionSummary(build: Build): CombatSummaryItem[] {
+    const context = COMBAT_CONTEXTS.find(({ id }) => id === build.combatContext) ?? COMBAT_CONTEXTS[0];
+    const items: CombatSummaryItem[] = [{ label: "Encounter", value: context.label, icon: context.icon }];
+    if (build.targetIsBoss) items.push({ label: "Target is Boss", value: "Active", icon: "/passive-images/boss-slayer.png" });
+    if (build.targetStatused) items.push({ label: "Burning or Poisoned", value: "Active", icon: "/icons/burn-effect.png", secondaryIcon: "/icons/poison-effect.png" });
+    if (build.rallyingWarCryActive) items.push({ label: "Team Damage Increase", value: "Active", icon: "/icons/damage-increase.png" });
+    if (build.vulnerabilityActive) items.push({ label: "Vulnerability", value: "Active", icon: "/icons/vulnerability.png" });
+    if (build.rudeAwakeningActive) items.push({ label: "Rude Awakening", value: "2× Damage", icon: "/attributes/rude-awakening.png" });
+    items.push({ label: "Current HP", value: `${build.currentHpPercent}%`, icon: "/account-icons/health.png" });
+    return items;
+}
+
+function getBuildSummary(build: Build): CombatSummaryItem[] {
+    const weapon = getEquipment(build.weaponId);
+    const armor = getEquipment(build.armorId);
+    const trait = getTrait(build.traitId);
+    const mutationIcons: Record<string, string> = { huge: "/icons/Huge.png", shiny: "/icons/Shiny.png", bloodlit: "/icons/Bloodlit.png", fairy: "/icons/Fairy.png", "huge-x": "/icons/huge-x.png", "shiny-x": "/icons/shiny-x.png", "bloodlit-x": "/icons/bloodlit-x.png", "fairy-x": "/icons/fairy-x.png" };
+    const skill = getSkill(build.selectedSkillId);
+    return [
+        { label: "Build", value: `${(build.combatMode ?? "pve").toUpperCase()} · Lv ${build.level} · Rank ${build.rank ?? "E"} · +${build.enhancement}`, icon: "/account-icons/damage.png" },
+        { label: "Breed ATK / HP", value: `${build.damageGeneticPotential}% / ${build.healthGeneticPotential}% · EM ${build.evolutionPercent}%`, icon: "/icons/breed-attack.png", secondaryIcon: "/icons/breed-health.png" },
+        { label: "Weapon", value: weapon ? `${weapon.name} (${weapon.percentage}%)` : "None", icon: weapon ? `/gear/${weapon.id}.png` : "/account-icons/damage.png" },
+        { label: "Armor", value: armor ? `${armor.name} (${armor.percentage}%)` : "None", icon: armor ? `/gear/${armor.id}.png` : "/account-icons/health.png" },
+        ...(trait ? [{ label: "Trait", value: trait.name, icon: trait.image }] : []),
+        ...build.mutations.map((mutation) => ({ label: "Mutation", value: mutation.replace("-x", " X"), icon: mutationIcons[mutation] })),
+        ...build.weaponAttributeIds.flatMap((id) => { const attribute = getAttribute(id); return attribute ? [{ label: "Weapon Attribute", value: attribute.name, icon: `/attributes/${id}.png` }] : []; }),
+        ...build.armorAttributeIds.flatMap((id) => { const attribute = getAttribute(id); return attribute ? [{ label: "Armor Attribute", value: attribute.name, icon: `/attributes/${id}.png` }] : []; }),
+        ...(skill ? [{ label: "Skill", value: skill.name, icon: "/account-icons/damage.png" }] : []),
+        ...build.teammateMonsterIds.flatMap((id) => { const monster = monsters.find((entry) => entry.id === id); return monster ? [{ label: "Teammate", value: monster.name, icon: monster.image || "/account-icons/damage.png" }] : []; }),
+    ];
+}
+
 
 // Match the game's five-digit display whenever the shown value is in the
 // hundreds place (for example 213.21, 312.21K, or 512.12M).
@@ -110,9 +169,9 @@ function DamageIncreaseEffect({ effect }: { effect: SkillStatusEffect }) {
 }
 
 function VulnerabilityEffect({
-    effect,
-    effectivenessBonus = 0,
-}: {
+                                 effect,
+                                 effectivenessBonus = 0,
+                             }: {
     effect: SkillStatusEffect;
     effectivenessBonus?: number;
 }) {
@@ -256,9 +315,9 @@ function PoisonEffect({ effect }: { effect: SkillStatusEffect }) {
 }
 
 function BurnEffect({
-    effect,
-    durationBonus = 0,
-}: {
+                        effect,
+                        durationBonus = 0,
+                    }: {
     effect: SkillStatusEffect;
     durationBonus?: number;
 }) {
@@ -291,10 +350,10 @@ function BurnEffect({
 }
 
 function DamageDecreaseEffect({
-    effect,
-    effectivenessBonus = 0,
-    effectivenessTrait,
-}: {
+                                  effect,
+                                  effectivenessBonus = 0,
+                                  effectivenessTrait,
+                              }: {
     effect: SkillStatusEffect;
     effectivenessBonus?: number;
     effectivenessTrait?: Trait | null;
@@ -434,37 +493,37 @@ function HealingEffect({ effect, calculatedAmount, cooldown, description, single
 
     return (
         <>
-        <div className="min-w-0 rounded-lg border border-[#65d58a]/35 bg-[#173627]/45 p-3">
-            <div className="min-w-0">
-                <div className="flex items-center gap-1.5 text-[#7ee6a0]">
-                    <img src={assetPath("/account-icons/health.png")} alt="" className="size-4 shrink-0 object-contain" />
-                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#7ee6a0]">Healing</p>
-                    <InfoTooltip label="Explain Healing" text={tooltip} />
-                </div>
-                <p className="mt-1.5 text-xl font-bold tracking-tight text-[#f6f8fc]">
-                    {calculatedAmount !== null ? <StatAmount value={calculatedAmount} /> : `${formatNumber(amount)}%`}
-                    <span className="ml-1.5 text-xs font-semibold text-[#9fd8b2]">{displayTarget}</span>
-                </p>
-                {effect.condition && (
-                    <p className="mt-0.5 truncate text-[10px] text-[#9fc5dc]" title={effect.condition}>
-                        {effect.condition}
-                    </p>
-                )}
-            </div>
-        </div>
-        {calculatedAmount !== null && cooldown !== null && cooldown > 0 && (
             <div className="min-w-0 rounded-lg border border-[#65d58a]/35 bg-[#173627]/45 p-3">
-                <div className="flex items-center gap-1.5 text-[#7ee6a0]">
-                    <img src={assetPath("/account-icons/health.png")} alt="" className="size-4 shrink-0 object-contain" />
-                    <p className="text-[9px] font-bold uppercase tracking-[0.1em]">HPS</p>
-                    <InfoTooltip label="Explain healing per second" text={`${formatStatNumber(calculatedAmount)} Healing ÷ ${formatNumber(cooldown)}s cooldown. Healing cannot critically heal.${effect.condition ? ` Requires: ${effect.condition}.` : ""}`} />
+                <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 text-[#7ee6a0]">
+                        <img src={assetPath("/account-icons/health.png")} alt="" className="size-4 shrink-0 object-contain" />
+                        <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#7ee6a0]">Healing</p>
+                        <InfoTooltip label="Explain Healing" text={tooltip} />
+                    </div>
+                    <p className="mt-1.5 text-xl font-bold tracking-tight text-[#f6f8fc]">
+                        {calculatedAmount !== null ? <StatAmount value={calculatedAmount} /> : `${formatNumber(amount)}%`}
+                        <span className="ml-1.5 text-xs font-semibold text-[#9fd8b2]">{displayTarget}</span>
+                    </p>
+                    {effect.condition && (
+                        <p className="mt-0.5 truncate text-[10px] text-[#9fc5dc]" title={effect.condition}>
+                            {effect.condition}
+                        </p>
+                    )}
                 </div>
-                <p className="mt-1.5 text-xl font-bold tracking-tight text-[#f6f8fc]">
-                    <StatAmount value={calculatedAmount / cooldown} />
-                    <span className="ml-1 text-xs font-semibold text-[#9fd8b2]">/s</span>
-                </p>
             </div>
-        )}
+            {calculatedAmount !== null && cooldown !== null && cooldown > 0 && (
+                <div className="min-w-0 rounded-lg border border-[#65d58a]/35 bg-[#173627]/45 p-3">
+                    <div className="flex items-center gap-1.5 text-[#7ee6a0]">
+                        <img src={assetPath("/account-icons/health.png")} alt="" className="size-4 shrink-0 object-contain" />
+                        <p className="text-[9px] font-bold uppercase tracking-[0.1em]">HPS</p>
+                        <InfoTooltip label="Explain healing per second" text={`${formatStatNumber(calculatedAmount)} Healing ÷ ${formatNumber(cooldown)}s cooldown. Healing cannot critically heal.${effect.condition ? ` Requires: ${effect.condition}.` : ""}`} />
+                    </div>
+                    <p className="mt-1.5 text-xl font-bold tracking-tight text-[#f6f8fc]">
+                        <StatAmount value={calculatedAmount / cooldown} />
+                        <span className="ml-1 text-xs font-semibold text-[#9fd8b2]">/s</span>
+                    </p>
+                </div>
+            )}
         </>
     );
 }
@@ -868,12 +927,12 @@ type SkillDamageInstance = {
 };
 
 function SkillDamageValue({
-    totalDamage,
-    damageInstances,
-    totalMultiplier,
-    accentClass,
-    lifeStealPercent = 0,
-}: {
+                              totalDamage,
+                              damageInstances,
+                              totalMultiplier,
+                              accentClass,
+                              lifeStealPercent = 0,
+                          }: {
     totalDamage: number;
     damageInstances: SkillDamageInstance[];
     totalMultiplier: number;
@@ -1281,16 +1340,16 @@ function SkillDamagePanel({
         displayedCooldown !== null &&
         displayedCooldown > 0
             ? (
-                damageIncreaseCombatDamage.normalDamage * (1 - critChance) +
-                damageIncreaseCombatDamage.criticalDamage * critChance
-            ) * attributeEffects.expectedDamageMultiplier / displayedCooldown
+            damageIncreaseCombatDamage.normalDamage * (1 - critChance) +
+            damageIncreaseCombatDamage.criticalDamage * critChance
+        ) * attributeEffects.expectedDamageMultiplier / displayedCooldown
             : null;
     const vulnerabilityDps =
         vulnerabilityCombatDamage !== null && displayedCooldown !== null && displayedCooldown > 0
             ? (
-                vulnerabilityCombatDamage.normalDamage * (1 - critChance) +
-                vulnerabilityCombatDamage.criticalDamage * critChance
-            ) * attributeEffects.expectedDamageMultiplier / displayedCooldown
+            vulnerabilityCombatDamage.normalDamage * (1 - critChance) +
+            vulnerabilityCombatDamage.criticalDamage * critChance
+        ) * attributeEffects.expectedDamageMultiplier / displayedCooldown
             : null;
 
     // Any heal calculated from the caster's Damage or Health has a concrete HPS.
@@ -1857,10 +1916,10 @@ function SkillDamagePanel({
                             calculatedAmount={skill.id === "holy-aura-djinn-lampyr"
                                 ? healingAmount
                                 : effect.scaling === "Damage"
-                                ? stats.damage * (effect.amountPercent ?? 0) / 100 * healingEffectivenessMultiplier
-                                : effect.scaling === "MaxHealth" && healthHealingPercent !== null
-                                    ? stats.health * (effect.amountPercent ?? 0) / 100 * healingEffectivenessMultiplier
-                                    : null}
+                                    ? stats.damage * (effect.amountPercent ?? 0) / 100 * healingEffectivenessMultiplier
+                                    : effect.scaling === "MaxHealth" && healthHealingPercent !== null
+                                        ? stats.health * (effect.amountPercent ?? 0) / 100 * healingEffectivenessMultiplier
+                                        : null}
                             cooldown={displayedCooldown}
                         />
                     ))}
@@ -2096,75 +2155,75 @@ function SkillDamagePanel({
                                     <div className="mt-3 overflow-x-auto rounded-lg border border-[#284d69] bg-[#0b141f]">
                                         <table className={`w-full text-left text-xs ${effectiveLifeSteal > 0 ? "min-w-[780px]" : "min-w-[560px]"}`}>
                                             <thead className="bg-[#132236] text-[10px] uppercase tracking-[0.08em] text-[#8396b2]">
-                                                <tr>
-                                                    <th className="px-3 py-2.5 font-medium">Hit</th>
-                                                    <th className="px-3 py-2.5 font-medium">Attack Multiplier</th>
-                                                    <th className="px-3 py-2.5 font-medium text-[#8ca4ff]">Normal Damage</th>
-                                                    <th className="px-3 py-2.5 font-medium text-[#ff936d]">Critical Damage</th>
-                                                    {effectiveLifeSteal > 0 && (
-                                                        <>
-                                                            <th className="border-l border-[#285846] px-3 py-2.5 font-medium text-[#6ee7a8]">Life Steal</th>
-                                                            <th className="px-3 py-2.5 font-medium text-[#6ee7a8]">Critical Heal</th>
-                                                        </>
-                                                    )}
-                                                </tr>
+                                            <tr>
+                                                <th className="px-3 py-2.5 font-medium">Hit</th>
+                                                <th className="px-3 py-2.5 font-medium">Attack Multiplier</th>
+                                                <th className="px-3 py-2.5 font-medium text-[#8ca4ff]">Normal Damage</th>
+                                                <th className="px-3 py-2.5 font-medium text-[#ff936d]">Critical Damage</th>
+                                                {effectiveLifeSteal > 0 && (
+                                                    <>
+                                                        <th className="border-l border-[#285846] px-3 py-2.5 font-medium text-[#6ee7a8]">Life Steal</th>
+                                                        <th className="px-3 py-2.5 font-medium text-[#6ee7a8]">Critical Heal</th>
+                                                    </>
+                                                )}
+                                            </tr>
                                             </thead>
                                             <tbody>
-                                                {skill.damageInstances.map((instance, index) => {
-                                                    const baseDamagePerHit =
-                                                        stats.damage *
-                                                        instance.multiplier *
-                                                        traitDamageMultiplier *
-                                                        rallyingWarCryMultiplier *
-                                                        vulnerabilityMultiplier *
-                                                        attributeEffects.skillDamageMultiplier *
-                                                        accountRiftDamageMultiplier;
+                                            {skill.damageInstances.map((instance, index) => {
+                                                const baseDamagePerHit =
+                                                    stats.damage *
+                                                    instance.multiplier *
+                                                    traitDamageMultiplier *
+                                                    rallyingWarCryMultiplier *
+                                                    vulnerabilityMultiplier *
+                                                    attributeEffects.skillDamageMultiplier *
+                                                    accountRiftDamageMultiplier;
 
-                                                    const combatDamagePerHit =
-                                                        calculateCombatDamage({
-                                                            monster,
-                                                            baseDamage: baseDamagePerHit,
-                                                            critMultiplier: stats.critMultiplier,
-                                                            combatContext: build.combatContext,
-                                                            targetIsBoss: build.targetIsBoss,
-                                                            currentHpPercent: build.currentHpPercent,
-                                                            passives: effectivePassives,
-                                                        });
+                                                const combatDamagePerHit =
+                                                    calculateCombatDamage({
+                                                        monster,
+                                                        baseDamage: baseDamagePerHit,
+                                                        critMultiplier: stats.critMultiplier,
+                                                        combatContext: build.combatContext,
+                                                        targetIsBoss: build.targetIsBoss,
+                                                        currentHpPercent: build.currentHpPercent,
+                                                        passives: effectivePassives,
+                                                    });
 
-                                                    const damagePerHit = combatDamagePerHit.normalDamage;
-                                                    const criticalDamagePerHit = combatDamagePerHit.criticalDamage;
-                                                    const normalLifeStealPerHit = damagePerHit * (effectiveLifeSteal / 100);
-                                                    const criticalLifeStealPerHit = criticalDamagePerHit * (effectiveLifeSteal / 100);
-                                                    const firstHit = skill.damageInstances
-                                                        .slice(0, index)
-                                                        .reduce((sum, prior) => sum + prior.hits, 0) + 1;
-                                                    const lastHit = firstHit + instance.hits - 1;
-                                                    const hitLabel = instance.hits === 1
-                                                        ? `Hit ${firstHit}`
-                                                        : `Hits ${firstHit}–${lastHit}`;
+                                                const damagePerHit = combatDamagePerHit.normalDamage;
+                                                const criticalDamagePerHit = combatDamagePerHit.criticalDamage;
+                                                const normalLifeStealPerHit = damagePerHit * (effectiveLifeSteal / 100);
+                                                const criticalLifeStealPerHit = criticalDamagePerHit * (effectiveLifeSteal / 100);
+                                                const firstHit = skill.damageInstances
+                                                    .slice(0, index)
+                                                    .reduce((sum, prior) => sum + prior.hits, 0) + 1;
+                                                const lastHit = firstHit + instance.hits - 1;
+                                                const hitLabel = instance.hits === 1
+                                                    ? `Hit ${firstHit}`
+                                                    : `Hits ${firstHit}–${lastHit}`;
 
-                                                    return (
-                                                        <tr key={`${instance.multiplier}-${instance.hits}-${index}`} className="border-t border-[#28384c] first:border-t-0">
-                                                            <td className="px-3 py-2.5">
+                                                return (
+                                                    <tr key={`${instance.multiplier}-${instance.hits}-${index}`} className="border-t border-[#28384c] first:border-t-0">
+                                                        <td className="px-3 py-2.5">
                                                                 <span className="inline-flex rounded-full border border-[#355da2] bg-[#153464]/60 px-2.5 py-1 font-semibold text-[#a9c4ff]">
                                                                     {hitLabel}
                                                                 </span>
-                                                            </td>
-                                                            <td className="px-3 py-2.5 font-semibold text-[#dbe4f2]">
-                                                                {formatNumber(instance.multiplier * 100)}% of Attack
-                                                                {instance.hits > 1 && <span className="ml-1 font-normal text-[#7f8fa6]">each</span>}
-                                                            </td>
-                                                            <td className="px-3 py-2.5 font-bold text-[#8ca4ff]"><StatAmount value={damagePerHit} /></td>
-                                                            <td className="px-3 py-2.5 font-bold text-[#ff936d]"><StatAmount value={criticalDamagePerHit} /></td>
-                                                            {effectiveLifeSteal > 0 && (
-                                                                <>
-                                                                    <td className="border-l border-[#285846] bg-[#10251f]/35 px-3 py-2.5 font-bold text-[#6ee7a8]"><StatAmount value={normalLifeStealPerHit} /></td>
-                                                                    <td className="bg-[#10251f]/35 px-3 py-2.5 font-bold text-[#82f0b7]"><StatAmount value={criticalLifeStealPerHit} /></td>
-                                                                </>
-                                                            )}
-                                                        </tr>
-                                                    );
-                                                })}
+                                                        </td>
+                                                        <td className="px-3 py-2.5 font-semibold text-[#dbe4f2]">
+                                                            {formatNumber(instance.multiplier * 100)}% of Attack
+                                                            {instance.hits > 1 && <span className="ml-1 font-normal text-[#7f8fa6]">each</span>}
+                                                        </td>
+                                                        <td className="px-3 py-2.5 font-bold text-[#8ca4ff]"><StatAmount value={damagePerHit} /></td>
+                                                        <td className="px-3 py-2.5 font-bold text-[#ff936d]"><StatAmount value={criticalDamagePerHit} /></td>
+                                                        {effectiveLifeSteal > 0 && (
+                                                            <>
+                                                                <td className="border-l border-[#285846] bg-[#10251f]/35 px-3 py-2.5 font-bold text-[#6ee7a8]"><StatAmount value={normalLifeStealPerHit} /></td>
+                                                                <td className="bg-[#10251f]/35 px-3 py-2.5 font-bold text-[#82f0b7]"><StatAmount value={criticalLifeStealPerHit} /></td>
+                                                            </>
+                                                        )}
+                                                    </tr>
+                                                );
+                                            })}
                                             </tbody>
                                         </table>
                                     </div>
@@ -2723,6 +2782,9 @@ function BuildResultsPanel({
     const selectedWeapon = getEquipment(build.weaponId);
     const selectedArmor = getEquipment(build.armorId);
     const selectedTrait = getTrait(build.traitId);
+    const indexBonus = getCategoryProgress(build.accountMultipliers, "index-mania").damagePercent;
+    const pathBonus = getCategoryProgress(build.accountMultipliers, "path-of-progress").healthPercent;
+    const petQuestBonuses = getCategoryProgress(build.accountMultipliers, "pet-quest");
 
     return (
         <section className="overflow-hidden rounded-lg border border-[#25475f] bg-[#0b2032]">
@@ -2822,6 +2884,38 @@ function BuildResultsPanel({
                             <strong className="font-semibold text-[#e3e8f1]">None</strong>
                         )}
                     </span>
+
+                    {indexBonus > 0 && (
+                        <span className="flex min-w-0 items-center gap-1.5 whitespace-nowrap" title="Index Mania damage bonus">
+                            <span>Index Mania</span>
+                            <img src={assetPath("/account-icons/index-mania.png")} alt="" className="size-6 rounded object-contain" />
+                            <strong className="font-semibold text-[#e3e8f1]">{indexBonus}%</strong>
+                        </span>
+                    )}
+                    {pathBonus > 0 && (
+                        <span className="flex min-w-0 items-center gap-1.5 whitespace-nowrap" title="Path of Progress health bonus">
+                            <span>Path of Progress</span>
+                            <img src={assetPath("/account-icons/path-of-progress.png")} alt="" className="size-6 rounded object-contain" />
+                            <strong className="font-semibold text-[#e3e8f1]">{pathBonus}%</strong>
+                        </span>
+                    )}
+                    {(petQuestBonuses.healthPercent > 0 || petQuestBonuses.damagePercent > 0) && (
+                        <span className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
+                            <span>Pet Quests</span>
+                            {petQuestBonuses.healthPercent > 0 && (
+                                <span className="flex items-center gap-1.5" title="Pet Quest health bonus">
+                                    <img src={assetPath("/account-icons/health-up.png")} alt="Health" className="size-6 rounded object-contain" />
+                                    <strong className="font-semibold text-[#e3e8f1]">{petQuestBonuses.healthPercent}%</strong>
+                                </span>
+                            )}
+                            {petQuestBonuses.damagePercent > 0 && (
+                                <span className="flex items-center gap-1.5" title="Pet Quest damage bonus">
+                                    <img src={assetPath("/account-icons/damage-up.png")} alt="Damage" className="size-6 rounded object-contain" />
+                                    <strong className="font-semibold text-[#e3e8f1]">{petQuestBonuses.damagePercent}%</strong>
+                                </span>
+                            )}
+                        </span>
+                    )}
                 </div>
             </div>
 
@@ -2988,6 +3082,9 @@ export function CalculatorResults({
             critChance: `${formatNumber(stats.critChance)}%`,
             critMultiplier: `${formatNumber(stats.critMultiplier)}×`,
             imagePath: monster.image ? assetPath(monster.image) : undefined,
+            combatStats: getBuildSummary(build),
+            accountMultipliers: getAccountSummary(build),
+            combatConditions: getConditionSummary(build),
         };
 
         const signature = JSON.stringify(preview);
@@ -3003,6 +3100,7 @@ export function CalculatorResults({
     }, [
         monster,
         stats,
+        build,
         onSharePreviewChange,
     ]);
 

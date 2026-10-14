@@ -2778,7 +2778,6 @@ button.emptySlot .emptySlotContent small {
 .compareMutationLine button.compareMutationActive img { filter:none; opacity:1; }
 .compareMutationLine button.compareMutationX { border-color:#8c6adc; background:#221c3e; }
 .compareMutationLine button:hover, .compareMutationLine button:focus-visible { border-color:#70bafa; background:#183853; outline-offset:2px; }
-.compareMutationLine button .mutationXBadge { position:absolute; top:1px; right:3px; width:auto; height:auto; min-width:0; flex:none; border:0; padding:0; background:transparent; color:#e4cdff; font-size:9px; font-weight:900; line-height:1; }
 
 /* v9 — compact inventory: one filter row, one sort/favorites row, and
    secondary import/visibility tools behind a disclosure. Avoid another
@@ -3013,3 +3012,15 @@ button.emptySlot .emptySlotContent small {
 .slotTitle .slotClassification > span { display: inline-flex; position: static; width: auto; margin-top: 0; text-align: center; }
 .slotTitle .slotClassification > .elementBadge { color: #bde6ff; }
 .opponentPortrait img { width: 100%; height: 100%; object-fit: contain; }
+
+/* Type badges share placement across team and inventory portraits. */
+.root .monsterPortraitFrame { position: relative; flex-shrink: 0; }
+.root .portraitInner { display: grid; place-items: center; width: 100%; height: 100%; overflow: hidden; border-radius: inherit; }
+.root .monsterPortraitFrame[data-rarity="Void"] .portraitInner { background: rgba(16, 20, 29, 0.85); }
+.root .portraitInner > img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.root .monsterPortraitFrame[data-rarity="Void"] .portraitInner > img { background: transparent; }
+.root .portraitTypeBadge { position: absolute; right: 0; bottom: 0; z-index: 2; display: grid; place-items: center; width: clamp(14px, 32%, 28px); aspect-ratio: 1; box-sizing: border-box; padding: 0; border: 0; border-radius: 0; background: transparent; }
+.root .portraitTypeBadge > img { display: block; width: 100%; height: 100%; object-fit: contain; border: 0; border-radius: 0; background: transparent; }
+.pickerPortrait { width: 43px; height: 43px; overflow: hidden; border: 1px solid #34516c; border-radius: 8px; }
+.editorPortrait { width: 54px; height: 54px; overflow: hidden; border: 1px solid #496789; border-radius: 9px; }
+.alternativePortrait { width: 36px; height: 36px; overflow: hidden; border: 1px solid #3b6689; border-radius: 6px; }

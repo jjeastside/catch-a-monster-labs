@@ -5,7 +5,7 @@ import { DeferredFeedbackWidget } from "./components/deferred-feedback-widget";
 import { assetPath } from "./lib/asset-path";
 
 const homeUrl = "https://jjeastside.github.io/catch-a-monster-labs/";
-const homePreviewUrl = `${homeUrl}preview.png`;
+const homePreviewUrl = `${homeUrl}previews/preview.png`;
 
 export const viewport: Viewport = {
     width: "device-width",

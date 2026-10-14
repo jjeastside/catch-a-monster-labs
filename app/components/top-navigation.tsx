@@ -77,7 +77,7 @@ export function TopNavigation() {
                     onMouseEnter={() => router.prefetch("/")}
                     onFocus={() => router.prefetch("/")}
                     aria-label="Go to Cam Lab home"
-                    className="col-start-1 row-start-1 flex min-w-0 items-center justify-self-start"
+                    className="col-start-1 row-start-1 flex min-w-0 max-w-full items-center justify-self-start"
                 >
                     <span className="relative block h-[40px] w-[150px] max-w-full sm:h-[44px] sm:w-[164px] md:h-[50px] md:w-[186px] 2xl:h-[64px] 2xl:w-[244px]">
                         <Image
@@ -154,9 +154,10 @@ export function TopNavigation() {
                     <span aria-hidden="true">☰</span>
                     <span className="hidden sm:inline">Menu</span>
                 </button>
-                {/* Global combat mode is separate from the page links at every size. */}
-                <div className="col-start-3 row-start-1 flex shrink-0 items-center justify-end">
-                    <PvpModeToggle />
+                {/* Account controls stay beside the navigation links at every size. */}
+                <div className="col-start-3 row-start-1 flex shrink-0 items-center justify-end gap-2">
+                    <div className="hidden sm:block"><PvpModeToggle /></div>
+                    <div id="account-profile-control" className="flex shrink-0 items-center" />
                 </div>
             </nav>
 
@@ -166,6 +167,7 @@ export function TopNavigation() {
                     className="relative z-10 border-t border-[#16345e] bg-[#061023]/95 px-3 py-2 2xl:hidden"
                 >
                     <div className="mx-auto grid max-w-[900px] gap-1 px-3 sm:px-4 md:px-6">
+                        <div className="sm:hidden"><PvpModeToggle mobile /></div>
                         {navItems.map((item) => {
                             const isActive = isItemActive(item.href);
 

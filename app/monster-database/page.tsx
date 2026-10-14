@@ -7,7 +7,7 @@ import { TopNavigation } from "../components/top-navigation";
 const monsterDatabaseUrl =
     "https://jjeastside.github.io/catch-a-monster-labs/monster-database/";
 const monsterDatabasePreviewUrl =
-    "https://jjeastside.github.io/catch-a-monster-labs/monster-database-preview.png";
+    "https://jjeastside.github.io/catch-a-monster-labs/previews/monster-database-preview.png";
 
 export const metadata: Metadata = {
     title: "Monster Database — Cam Lab",

@@ -1,4 +1,6 @@
 "use client";
+
+import { COMBAT_CONTEXTS } from "../lib/combat-summary";
 import { hasFixedBreeding, BREEDING_LOCK_MESSAGE } from "../lib/breeding-limits";
 
 import { useCombatMode } from "../lib/combat-mode";
@@ -42,6 +44,7 @@ import { CollapsibleSection } from "./collapsible-section";
 import { EquipmentSelect } from "./equipment-select";
 import { AttributeSelect } from "./attribute-select";
 import { TraitSelect } from "./trait-select";
+import { BuildRecommendations } from "./build-recommendations";
 import { Panel } from "./panel";
 
 const mutations: {
@@ -108,12 +111,7 @@ const mutations: {
     },
 ];
 
-const combatContexts: Array<{ id: CombatContext; label: string }> = [
-    { id: "standard", label: "Standard" },
-    { id: "spire", label: "Spire" },
-    { id: "rift", label: "Rift" },
-    { id: "dungeon", label: "Dungeon" },
-];
+const combatContexts = COMBAT_CONTEXTS;
 
 function getAggregatedMutationEffects(selectedMutations: Mutation[]) {
     const totals = new Map<string, number>();
@@ -1372,6 +1370,8 @@ export function BuildEditor({
                     </div>
                 )}
 
+                {monster && <BuildRecommendations monster={monster} build={build} onBuildChangeAction={onBuildChangeAction} />}
+
                 <CollapsibleSection title="Pet">
                     <div className="space-y-4">
                         <div>
@@ -1898,7 +1898,7 @@ export function BuildEditor({
                                         : "border-[#25475f] bg-[#071b2b] text-[#8e99ad] hover:border-[#3984af] hover:text-[#e3e8f1]"
                                 }`}
                             >
-                                {context.label}
+                                <span className="flex items-center justify-center gap-2"><img src={assetPath(context.icon)} alt="" className="size-5 shrink-0 object-contain" />{context.label}</span>
                             </button>
                         ))}
                     </div>
@@ -1912,7 +1912,7 @@ export function BuildEditor({
                                 : "border-[#25475f] bg-[#071b2b] text-[#8e99ad] hover:border-[#3984af] hover:text-[#e3e8f1]"
                         }`}
                     >
-                        <span>Target is Boss</span>
+                        <span className="flex min-w-0 items-center gap-2"><img src={assetPath("/passive-images/boss-slayer.png")} alt="" className="size-5 shrink-0 object-contain" />Target is Boss</span>
                         <span>{build.targetIsBoss ? "Active" : "Inactive"}</span>
                     </button>
                     </fieldset>
@@ -1926,7 +1926,7 @@ export function BuildEditor({
                                 : "border-[#25475f] bg-[#071b2b] text-[#8e99ad] hover:border-[#3984af] hover:text-[#e3e8f1]"
                         }`}
                     >
-                        <span>Target is Burning or Poisoned</span>
+                        <span className="flex min-w-0 items-center gap-2"><img src={assetPath("/icons/burn-effect.png")} alt="" className="size-5 shrink-0 object-contain" /><img src={assetPath("/icons/poison-effect.png")} alt="" className="size-5 shrink-0 object-contain" />Target is Burning or Poisoned</span>
                         <span>{build.targetStatused ? "Active" : "Inactive"}</span>
                     </button>
                     {build.weaponId === "block-buster" && (
@@ -1941,7 +1941,7 @@ export function BuildEditor({
                                     : "border-[#25475f] bg-[#071b2b] text-[#8e99ad] hover:border-[#3984af] hover:text-[#e3e8f1]"
                             }`}
                         >
-                            <span>Rude Awakening (2× Damage)</span>
+                            <span className="flex min-w-0 items-center gap-2"><img src={assetPath("/attributes/rude-awakening.png")} alt="" className="size-5 shrink-0 object-contain" />Rude Awakening (2× Damage)</span>
                             <span>{build.rudeAwakeningActive ? "Active" : "Inactive"}</span>
                         </button>
                     )}
@@ -1983,7 +1983,7 @@ export function BuildEditor({
                     )}
                     {(hasHpConditionalAttribute || hasHpConditionalPassive) && (
                         <label className="mt-3 block">
-                            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]">Current HP for conditional effects</span>
+                            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#7f8b9e]"><span className="flex items-center gap-2"><img src={assetPath("/account-icons/health.png")} alt="" className="size-5 object-contain" />Current HP for conditional effects</span></span>
                             <div className="flex items-center gap-3">
                                 <input type="range" min="0" max="100" value={build.currentHpPercent} onChange={(event) => update("currentHpPercent", Number(event.target.value))} className="min-w-0 flex-1 accent-[#7182ff]" />
                                 <span className="w-12 text-right text-sm font-semibold text-[#e3e8f1]">{build.currentHpPercent}%</span>

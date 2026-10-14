@@ -1,4 +1,6 @@
 "use client";
+import { SkillEffectSelect } from "./skill-effect-select";
+import { matchesMonsterSkillEffect, type SkillEffectFilter } from "../lib/skill-effect-filter";
 /* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useId, useMemo, useState, type CSSProperties } from "react";
@@ -57,6 +59,7 @@ function rankTextStyle(rank: "A" | BreedRank): CSSProperties {
 export function PetHatch() {
     const [parents, setParents] = useState<[Parent, Parent]>([initial("runegolem"), initial("violetaegis")]);
     const [superBreed, setSuperBreed] = useState(false);
+    const [skillEffect, setSkillEffect] = useState<SkillEffectFilter>("all");
     const [monsterPicker, setMonsterPicker] = useState<0 | 1 | null>(null);
     const [rankPicker, setRankPicker] = useState<0 | 1 | null>(null);
     const [monsterSearch, setMonsterSearch] = useState("");
@@ -65,13 +68,14 @@ export function PetHatch() {
     const [showFormula, setShowFormula] = useState(false);
     const monsters = parents.map(parent => available.find(monster => monster.id === parent.monsterId)!);
     const filteredMonsters = useMemo(() => available.filter(monster => {
+        if (!matchesMonsterSkillEffect(monster, skillEffect)) return false;
         const exclusive = getMonsterExclusiveTraits(monster.id);
         const query = monsterSearch.trim().toLowerCase();
         if (!monster.name.toLowerCase().includes(query) && !exclusive.some(trait => trait.name.toLowerCase().includes(query))) return false;
         if (exclusiveTraitFilter === "has") return exclusive.length > 0;
         if (exclusiveTraitFilter === "none") return exclusive.length === 0;
         return exclusiveTraitFilter === "all" || exclusive.some(trait => trait.id === exclusiveTraitFilter);
-    }), [monsterSearch, exclusiveTraitFilter]);
+    }), [monsterSearch, exclusiveTraitFilter, skillEffect]);
     const update = (index: number, patch: Partial<Parent>) => setParents(current => current.map((parent, i) => {
         if (i !== index) return parent;
         const next = { ...parent, ...patch };
@@ -183,7 +187,8 @@ export function PetHatch() {
                 <label className={styles.modalSearch}><span>⌕</span><input type="search" value={monsterSearch} onChange={event => { setMonsterSearch(event.target.value); setVisibleMonsterCount(24); }} placeholder="Search monsters or traits" autoFocus /></label>
                 <label className={styles.exclusiveFilter}>Exclusive Trait<select aria-label="Exclusive Trait" value={exclusiveTraitFilter} onChange={event => { setExclusiveTraitFilter(event.target.value); setVisibleMonsterCount(24); }}><option value="all">All monsters</option><option value="has">Has exclusive trait</option><option value="none">No exclusive trait</option>{TRAITS.filter(trait => trait.exclusiveSourceIds?.length).map(trait => <option key={trait.id} value={trait.id}>{trait.name}</option>)}</select></label>
             </div>
-            <div key={`${monsterSearch}/${exclusiveTraitFilter}`} className={styles.monsterGrid} onScroll={event => { const element = event.currentTarget; if (element.scrollHeight - element.scrollTop - element.clientHeight < 160) setVisibleMonsterCount(count => Math.min(count + 24, filteredMonsters.length)); }}>
+            <SkillEffectSelect value={skillEffect} onChange={(value) => { setSkillEffect(value); setVisibleMonsterCount(24); }} className="mx-3 mb-3" />
+            <div key={`${monsterSearch}/${exclusiveTraitFilter}/${skillEffect}`} className={styles.monsterGrid} onScroll={event => { const element = event.currentTarget; if (element.scrollHeight - element.scrollTop - element.clientHeight < 160) setVisibleMonsterCount(count => Math.min(count + 24, filteredMonsters.length)); }}>
                 {filteredMonsters.slice(0, visibleMonsterCount).map(monster => <button type="button" key={monster.id} className={parents[monsterPicker].monsterId === monster.id ? styles.monsterSelected : ""} onClick={() => { update(monsterPicker, { monsterId: monster.id }); setMonsterPicker(null); }}><img loading="lazy" decoding="async" src={assetPath(monster.image ?? "/icon.png")} alt="" /><span><strong>{monster.name}</strong><small>{getMonsterExclusiveTraits(monster.id).map(trait => trait.name).join(" · ") || `${monster.rarity} · ${monster.element}`}</small></span>{parents[monsterPicker].monsterId === monster.id && <b>✓</b>}</button>)}
                 {visibleMonsterCount < filteredMonsters.length && <button type="button" className={styles.loadMoreMonsters} onClick={() => setVisibleMonsterCount(count => Math.min(count + 24, filteredMonsters.length))}>Load 24 more monsters</button>}
                 {filteredMonsters.length === 0 && <p className={styles.emptyState}>No monsters match these filters.</p>}

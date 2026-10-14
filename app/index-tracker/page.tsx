@@ -7,7 +7,7 @@ import { TopNavigation } from "../components/top-navigation";
 const indexTrackerUrl =
     "https://jjeastside.github.io/catch-a-monster-labs/index-tracker/";
 const indexTrackerPreviewUrl =
-    "https://jjeastside.github.io/catch-a-monster-labs/index-tracker-preview.png";
+    "https://jjeastside.github.io/catch-a-monster-labs/previews/index-tracker-preview.png";
 
 export const metadata: Metadata = {
     title: "Index Tracker — Cam Lab",

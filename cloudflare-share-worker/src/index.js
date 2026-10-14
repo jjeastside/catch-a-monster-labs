@@ -13,7 +13,7 @@ function escapeHtml(value) {
 }
 
 function absoluteAssetUrl(path) {
-  if (!path) return `${SITE_URL}preview.png`;
+  if (!path) return `${SITE_URL}previews/preview.png`;
 
   try {
     if (path.startsWith("/catch-a-monster-labs/")) {
@@ -26,7 +26,7 @@ function absoluteAssetUrl(path) {
 
     return new URL(path, SITE_URL).toString();
   } catch {
-    return `${SITE_URL}preview.png`;
+    return `${SITE_URL}previews/preview.png`;
   }
 }
 
