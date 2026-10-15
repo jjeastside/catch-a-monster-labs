@@ -1147,7 +1147,7 @@ export function MonsterCompare() {
               <button
                 aria-label={`Replace ${column.monster.name} image`}
                 onClick={() => setPicker(columnIndex)}
-                className={`h-[88px] w-[100px] shrink-0 rounded-xl border-2 p-1 ${rarityImageClasses[column.monster.rarity]}`}
+                className={`grid size-[112px] shrink-0 place-items-center overflow-hidden rounded-xl border-2 p-1 ${rarityImageClasses[column.monster.rarity]}`}
                 style={getMonsterPortraitStyles(column.monster).portraitFrameStyle}
               >
                 <span
@@ -1164,7 +1164,7 @@ export function MonsterCompare() {
                     if (!event.currentTarget.src.endsWith(fallback))
                       event.currentTarget.src = fallback;
                   }}
-                  className="h-full w-full object-contain"
+                  className="block h-full w-full object-contain object-center p-1.5"
                 />
                 </span>
               </button>

@@ -319,7 +319,7 @@
 .column { gap: 3px; }
 .column > header, .column > section { background: linear-gradient(115deg, #071b2b, #061725); border-color: #25475f; border-radius: 8px; }
 .column > header { min-height: 122px; gap: 18px; padding: 8px 14px; }
-.column > header > button:first-child { height: 106px; width: 124px; border-width: 2px; border-style: solid; border-radius: 10px; padding: 2px; }
+.column > header > button:first-child { width: 112px; height: 112px; flex: none; border-width: 2px; border-style: solid; border-radius: 10px; padding: 2px; }
 .column .monsterName { font-size: 23px; font-weight: 750; line-height: 1.15; letter-spacing: -.35px; }
 .column > header > div > div { font-size: 12px; gap: 6px; margin-top: 9px; }
 .column > header > div > div > span { padding: 5px 7px; }
