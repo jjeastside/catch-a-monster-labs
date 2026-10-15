@@ -69,7 +69,7 @@ export default function PrivacyPolicyPage() {
 
                 <article className="mt-5 rounded-2xl border border-[#1d426f] bg-[#061329]/90 px-5 sm:px-8">
                     <div className="border-b border-[#17355d] py-6 text-sm text-[#95a5bd]">
-                        <strong className="text-white">Effective date:</strong> September 2, 2026
+                        <strong className="text-white">Effective date:</strong> October 15, 2026
                     </div>
 
                     <PolicySection number="1" title="Information Cam Lab does not request">
@@ -136,7 +136,21 @@ export default function PrivacyPolicyPage() {
 
                     <PolicySection number="6" title="Cookies and analytics">
                         <p>
-                            Cam Lab does not currently operate its own advertising cookies or third-party behavioral analytics. Hosting and sharing providers may use cookies or similar technologies according to their own policies when necessary to provide, protect, or measure their services.
+                            Cam Lab uses Cloudflare Web Analytics to understand aggregate website traffic and performance, including page views, visits, popular pages, referring sites, approximate country-level location, browser/device information, and Core Web Vitals. Analytics is collected through a lightweight JavaScript beacon on the published website.
+                        </p>
+                        <p>
+                            Cloudflare Web Analytics does not use analytics cookies, local-storage tracking identifiers, or visitor fingerprinting. Cam Lab does not send saved builds, Index Tracker progress, account multipliers, or calculator inputs to this analytics service. Cam Lab does not use advertising trackers.
+                        </p>
+                        <p>
+                            For details, see{" "}
+                            <a
+                                href="https://developers.cloudflare.com/web-analytics/about/"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="font-semibold text-[#63afff] underline decoration-[#315f91] underline-offset-4 hover:text-[#9bd0ff]"
+                            >
+                                Cloudflare Web Analytics documentation
+                            </a>. Hosting and sharing providers may separately use cookies or similar technologies where needed to operate or protect their services.
                         </p>
                     </PolicySection>
 
