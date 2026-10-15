@@ -35,6 +35,16 @@ export const gamePatches: readonly Patch[] = [
                 title: "New Code",
                 changes: ["cernunnos"],
             },
+            {
+                title: "Update 0.52.1",
+                date: "October 13, 2026",
+                changes: [
+                    "Added a daily limit for valid PvP attempts. Score is only earned within valid attempts.",
+                    "Added PvP prime time. Score rewards are increased during prime time.",
+                    "New Code: newpvp",
+                    "Old Code: cernunnos",
+                ],
+            },
         ],
     },
     {
