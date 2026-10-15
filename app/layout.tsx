@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 
 import { DeferredFeedbackWidget } from "./components/deferred-feedback-widget";
+import { ContactWidget } from "./components/contact-widget";
 import { assetPath } from "./lib/asset-path";
 
 // Get this public site token from Cloudflare > Web Analytics > Manage site.
@@ -68,6 +69,7 @@ export default function RootLayout({
         <body>
         {children}
         <DeferredFeedbackWidget />
+        <ContactWidget />
         {process.env.NODE_ENV === "production" && cloudflareAnalyticsToken && (
             <Script
                 id="cloudflare-web-analytics"

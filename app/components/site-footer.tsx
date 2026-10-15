@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { assetPath } from "../lib/asset-path";
+import { ContactTrigger } from "./contact-trigger";
 import { latestVersion } from "../data/changelog-releases";
 
 const exploreLinks = [
@@ -24,6 +25,7 @@ const projectLinks = [
     { label: "Suggest a Feature", feedbackCategory: "feature" },
     { label: "Report an Issue", feedbackCategory: "bug" },
     { label: "Send Feedback", feedbackCategory: "general" },
+    { label: "Contact / Concerns", contact: true },
     { label: "View on GitHub", href: "https://github.com/jjeastside/catch-a-monster-labs" },
 ] as const;
 
@@ -31,9 +33,10 @@ type FooterLinkProps = {
     label: string;
     href?: string;
     feedbackCategory?: "feature" | "bug" | "general";
+    contact?: boolean;
 };
 
-function FooterLink({ label, href, feedbackCategory }: FooterLinkProps) {
+function FooterLink({ label, href, feedbackCategory, contact }: FooterLinkProps) {
     const content = (
         <>
             <span>{label}</span>
@@ -64,6 +67,8 @@ function FooterLink({ label, href, feedbackCategory }: FooterLinkProps) {
                 >
                     {content}
                 </button>
+            ) : contact ? (
+                <ContactTrigger className={className}>{content}</ContactTrigger>
             ) : (
                 <Link href={href ?? "/"} prefetch={false} className={className}>
                     {content}

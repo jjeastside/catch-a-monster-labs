@@ -1,6 +1,6 @@
 import { PageHeading } from "../components/page-heading";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { ContactTrigger } from "../components/contact-trigger";
 
 import { SiteFooter } from "../components/site-footer";
 import { TopNavigation } from "../components/top-navigation";
@@ -74,7 +74,7 @@ export default function PrivacyPolicyPage() {
 
                     <PolicySection number="1" title="Information Cam Lab does not request">
                         <p>
-                            Cam Lab does not provide user accounts or require your name, email address, payment information, Roblox credentials, or other direct personal identifiers. The feedback form includes an optional Discord username field only for visitors who want a reply.
+                            Cam Lab does not provide user accounts or require your name, email address, payment information, Roblox credentials, or other direct personal identifiers. The feedback form includes an optional Discord username field only for visitors who want a reply. Private contact requests can be drafted through the visitor&apos;s own email application.
                         </p>
                         <p>
                             Please never enter passwords, account credentials, or sensitive personal information into build names, notes, imported files, or any other Cam Lab field.
@@ -174,14 +174,13 @@ export default function PrivacyPolicyPage() {
 
                     <PolicySection number="10" title="Contact">
                         <p>
-                            For privacy questions or requests related to Cam Lab, use the site&apos;s feedback form and select General feedback. The resulting issue is public, so do not include passwords or other sensitive information.
+                            For privacy questions, personal information concerns, or other private requests related to Cam Lab, use the contact form to compose an email to jjeastside711@gmail.com. The form opens your email application and does not publish the message as a GitHub issue. You must send the draft in your email application.
                         </p>
-                        <Link
-                            href="#feedback"
+                        <ContactTrigger
                             className="mt-1 inline-flex rounded-lg border border-[#2b659f] bg-[#09294d] px-4 py-2 text-sm font-bold text-[#6db5ff] transition hover:border-[#4b8fd1] hover:bg-[#0b335e] hover:text-white"
                         >
                             Contact Cam Lab →
-                        </Link>
+                        </ContactTrigger>
                     </PolicySection>
                 </article>
             </main>
