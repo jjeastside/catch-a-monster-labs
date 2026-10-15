@@ -7810,10 +7810,10 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       }
     ],
     "hasEvolution": false,
-    "baseDamageELevel1": 5040000,
-    "baseHealthELevel1": 27531000,
-    "pvpBaseDamageELevel1": 485420,
-    "pvpBaseHealthELevel1": 5300300,
+    "baseDamageELevel1": 5044200,
+    "baseHealthELevel1": 27537000,
+    "pvpBaseDamageELevel1": 485440,
+    "pvpBaseHealthELevel1": 5300500,
     "baseCritChance": 15,
     "growthType": "standard",
     "indexPosition": 230
