@@ -615,11 +615,12 @@ function ShieldEffect({ effect, shieldAmount }: { effect: SkillStatusEffect; shi
 
 /** Reuse the calculator's effect cards in Compare, including its healing
  * scaling rules, trait bonuses, conditional labels and non-stacking shields. */
-export function SkillEffectCards({ skill, stats, build, summary }: {
+export function SkillEffectCards({ skill, stats, build, summary, hideFallbackDescription = false }: {
     skill: NonNullable<ReturnType<typeof getSkill>>;
     stats: CalculatedStats;
     build: Build;
     summary: ReturnType<typeof calculateSkillSummary>;
+    hideFallbackDescription?: boolean;
 }) {
     const attributes = calculateSkillAttributeEffects(build, skill.element);
     const trait = getTrait(build.traitId);
@@ -628,7 +629,10 @@ export function SkillEffectCards({ skill, stats, build, summary }: {
     const effects = [...(skill.statusEffects ?? []), ...(summary.postCastShieldEffect ? [summary.postCastShieldEffect] : [])];
     const mixedHeal = skill.id === "holy-aura-djinn-lampyr";
     let shownMixedHeal = false;
-    if (!effects.length) return skill.description || skill.notes ? <p className="mt-1 text-xs leading-5 text-[#8e99ad]">{skill.description ?? skill.notes}</p> : null;
+    if (!effects.length) {
+        if (hideFallbackDescription) return null;
+        return skill.description || skill.notes ? <p className="mt-1 text-xs leading-5 text-[#8e99ad]">{skill.description ?? skill.notes}</p> : null;
+    }
     return <div className="mt-1.5 grid grid-cols-[repeat(auto-fit,minmax(min(100%,12rem),1fr))] gap-1.5" aria-label={`${getSkillDisplayName(skill.name)} effects`}>
         {effects.map((effect, index) => {
             const key = `${effect.type}-${effect.target}-${index}`;
@@ -867,7 +871,7 @@ function BuildStat({
     );
 }
 
-function InfoTooltip({ label, text, triggerText }: { label: string; text: string; triggerText?: string }) {
+export function InfoTooltip({ label, text, triggerText }: { label: string; text: string; triggerText?: string }) {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const [open, setOpen] = useState(false);
     const [position, setPosition] = useState({ top: 0, left: 0 });

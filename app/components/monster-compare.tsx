@@ -34,7 +34,7 @@ import { TraitIcon } from "./trait-icon";
 import styles from "./monster-compare.module.css";
 import { PageHeading } from "./page-heading";
 import { TOOL_PAGE_CONTAINER } from "./tool-page-layout";
-import { CombatRank, rankColors, SkillEffectCards } from "./calculator-results";
+import { CombatRank, rankColors, SkillEffectCards, InfoTooltip } from "./calculator-results";
 import {
   rarityBadgeClasses,
   rarityImageClasses,
@@ -1304,9 +1304,17 @@ export function MonsterCompare() {
                       className="size-10 shrink-0 rounded-md border border-[#344050] object-contain"
                     />
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-[15px] font-bold leading-tight">
-                        {getSkillDisplayName(result.skill.name)}
-                      </h3>
+                      <div className="flex items-center gap-1.5">
+                        <h3 className="text-[15px] font-bold leading-tight">
+                          {getSkillDisplayName(result.skill.name)}
+                        </h3>
+                        {result.skill.id === "overvolt-tempest" && (
+                          <InfoTooltip
+                            label="Explain Overvolt Tempest Overload"
+                            text={`Overvolt Tempest has a 25% chance to trigger the Overload version instead of the normal cast. Normal: 11 hits at 0.2× Attack each (${formatNumber(2.2)}× total). Overload: 11 hits at 0.4× Attack each (${formatNumber(4.4)}× total), which is double the base skill damage. The Crit card still uses your current ${formatNumber(column.stats?.critMultiplier ?? 2)}× critical multiplier.`}
+                          />
+                        )}
+                      </div>
                     </div>
                     <Cooldown
                       value={result.cooldown}
@@ -1340,7 +1348,7 @@ export function MonsterCompare() {
                       />
                     ))}
                   </div>}
-                  {showSkillEffects && column.stats && <SkillEffectCards skill={result.skill} stats={column.stats} build={buildForCombatMode(column.build, combatMode)} summary={result} />}
+                  {showSkillEffects && column.stats && <SkillEffectCards skill={result.skill} stats={column.stats} build={buildForCombatMode(column.build, combatMode)} summary={result} hideFallbackDescription />}
                 </div>
               ))}
               {showPassives && !!column.monster.passives?.length && (
