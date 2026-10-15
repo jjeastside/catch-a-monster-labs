@@ -22,7 +22,8 @@ import {
     getPassiveDescription,
     getPassiveUiName,
 } from "../lib/passive-display";
-import { getSkill, getSkillDisplayName } from "../data/skills";
+import { getSkill, getSkillDisplayName, getSkillTotalHits, getSkillTotalMultiplier } from "../data/skills";
+import { formatNumber } from "../lib/format-numbers";
 import { assetPath } from "../lib/asset-path";
 import { type MonsterComparisonStats, type PassiveCompareMode } from "../lib/monster-comparison";
 import {
@@ -536,6 +537,13 @@ function DetailPanel({
                                                     <span className="text-xs font-semibold text-[#93a0b3]">{skill.cooldown}s</span>
                                                 ) : null}
                                             </div>
+                                            {skill.damageInstances.length > 0 && (
+                                                <div className="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[10px] text-[#93a0b3]" aria-label={`${getSkillDisplayName(skill.name)} damage scaling`} title={skill.damageInstances.map(instance => `${instance.hits} ${instance.hits === 1 ? "hit" : "hits"} × ${formatNumber(instance.multiplier)}× Damage`).join(" + ")}>
+                                                    <span><strong className="text-[#e3e8f1]">{formatNumber(getSkillTotalMultiplier(skill))}×</strong> multiplier</span>
+                                                    <span aria-hidden="true" className="text-[#5c6a80]">•</span>
+                                                    <span><strong className="text-[#e3e8f1]">{getSkillTotalHits(skill)}</strong> {getSkillTotalHits(skill) === 1 ? "hit" : "hits"}</span>
+                                                </div>
+                                            )}
                                             <p className="mt-1 text-xs leading-5 text-[#9ba7b9]">
                                                 {getDatabaseSkillDescription(skill)}
                                             </p>

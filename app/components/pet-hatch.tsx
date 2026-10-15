@@ -1,6 +1,4 @@
 "use client";
-import { SkillEffectSelect } from "./skill-effect-select";
-import { matchesMonsterSkillEffect, type SkillEffectFilter } from "../lib/skill-effect-filter";
 /* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useId, useMemo, useState, type CSSProperties } from "react";
@@ -24,7 +22,28 @@ const rankVisuals: Record<"A" | BreedRank, { color: string; background: string; 
 };
 
 type Parent = { monsterId: string; rank: BreedRank; traitId: string | null; mutations: Record<Mutation, MutationState> };
-const initial = (monsterId: string): Parent => ({ monsterId, rank: "S", traitId: getBreedingTraits(monsterId).some(trait => trait.id === "impair-4") ? "impair-4" : null, mutations: { Shiny: "normal", Bloodlit: "none", Fairy: "none", Huge: "none" } });
+const initial = (monsterId: string): Parent => ({ monsterId, rank: "S", traitId: monsterId && getBreedingTraits(monsterId).some(trait => trait.id === "impair-4") ? "impair-4" : null, mutations: { Shiny: monsterId ? "normal" : "none", Bloodlit: "none", Fairy: "none", Huge: "none" } });
+const hatchStorageKey = "cam-lab-pet-hatch-v1";
+
+function restoreParent(value: unknown): Parent {
+    const fallbackId = "";
+    const fallback = initial(fallbackId);
+    if (!value || typeof value !== "object") return fallback;
+    const saved = value as Partial<Parent>;
+    if (!available.some(monster => monster.id === saved.monsterId)) return fallback;
+    const monsterId = available.some(monster => monster.id === saved.monsterId) ? saved.monsterId! : fallbackId;
+    const mutations = { ...fallback.mutations };
+    for (const mutation of MUTATIONS) {
+        const state = saved.mutations?.[mutation];
+        if (state === "none" || state === "normal" || state === "x") mutations[mutation] = state;
+    }
+    return {
+        monsterId,
+        rank: saved.rank === "SS" ? "SS" : "S",
+        traitId: typeof saved.traitId === "string" && getBreedingTraits(monsterId).some(trait => trait.id === saved.traitId) ? saved.traitId : null,
+        mutations,
+    };
+}
 
 function DnaIcon() { return <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M8 2c0 14 16 14 16 28M24 2c0 14-16 14-16 28M9 5h14M12 10h8M12 22h8M9 27h14" /></svg>; }
 function EggIcon() { return <svg viewBox="0 0 32 40" aria-hidden="true"><path d="M16 2C9 2 2 19 2 27a14 12 0 0 0 28 0C30 19 23 2 16 2Z" fill="#9de5ff" stroke="#42bded" strokeWidth="2"/><path d="m5 18 8-5 6 6-8 6Zm11 10 8-5 4 6-6 7Z" fill="#a79aff"/><path d="m12 3 4 9 7-1M4 29l7 5" fill="none" stroke="#fff0a0" strokeWidth="4"/></svg>; }
@@ -57,9 +76,35 @@ function rankTextStyle(rank: "A" | BreedRank): CSSProperties {
 }
 
 export function PetHatch() {
-    const [parents, setParents] = useState<[Parent, Parent]>([initial("runegolem"), initial("violetaegis")]);
+    const [parents, setParents] = useState<[Parent, Parent]>([initial(""), initial("")]);
     const [superBreed, setSuperBreed] = useState(false);
-    const [skillEffect, setSkillEffect] = useState<SkillEffectFilter>("all");
+    const [storageReady, setStorageReady] = useState(false);
+
+    useEffect(() => {
+        try {
+            const raw = localStorage.getItem(hatchStorageKey);
+            if (raw) {
+                const saved = JSON.parse(raw);
+                if (saved && typeof saved === "object" && Array.isArray(saved.parents)) {
+                    setParents([restoreParent(saved.parents[0]), restoreParent(saved.parents[1])]);
+                    setSuperBreed(saved.superBreed === true);
+                }
+            }
+        } catch {
+            // Keep the calculator usable if storage is unavailable or invalid.
+        } finally {
+            setStorageReady(true);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!storageReady) return;
+        try {
+            localStorage.setItem(hatchStorageKey, JSON.stringify({ parents, superBreed }));
+        } catch {
+            // Changes still work when the browser cannot save preferences.
+        }
+    }, [parents, superBreed, storageReady]);
     const [monsterPicker, setMonsterPicker] = useState<0 | 1 | null>(null);
     const [rankPicker, setRankPicker] = useState<0 | 1 | null>(null);
     const [monsterSearch, setMonsterSearch] = useState("");
@@ -68,23 +113,23 @@ export function PetHatch() {
     const [showFormula, setShowFormula] = useState(false);
     const monsters = parents.map(parent => available.find(monster => monster.id === parent.monsterId)!);
     const filteredMonsters = useMemo(() => available.filter(monster => {
-        if (!matchesMonsterSkillEffect(monster, skillEffect)) return false;
         const exclusive = getMonsterExclusiveTraits(monster.id);
         const query = monsterSearch.trim().toLowerCase();
         if (!monster.name.toLowerCase().includes(query) && !exclusive.some(trait => trait.name.toLowerCase().includes(query))) return false;
         if (exclusiveTraitFilter === "has") return exclusive.length > 0;
         if (exclusiveTraitFilter === "none") return exclusive.length === 0;
         return exclusiveTraitFilter === "all" || exclusive.some(trait => trait.id === exclusiveTraitFilter);
-    }), [monsterSearch, exclusiveTraitFilter, skillEffect]);
+    }), [monsterSearch, exclusiveTraitFilter]);
     const update = (index: number, patch: Partial<Parent>) => setParents(current => current.map((parent, i) => {
         if (i !== index) return parent;
         const next = { ...parent, ...patch };
         if (next.traitId && !getBreedingTraits(next.monsterId).some(trait => trait.id === next.traitId)) next.traitId = null;
         return next;
     }) as [Parent, Parent]);
+    const hasBothParents = !!monsters[0] && !!monsters[1];
     const rates = [
-        traitTransfer(monsters[0], monsters[1], !!parents[0].traitId),
-        traitTransfer(monsters[1], monsters[0], !!parents[1].traitId),
+        hasBothParents ? traitTransfer(monsters[0], monsters[1], !!parents[0].traitId) : null,
+        hasBothParents ? traitTransfer(monsters[1], monsters[0], !!parents[1].traitId) : null,
     ];
     const rankOutcomes = rankTransfer(parents[0].rank, parents[1].rank, superBreed);
     const rate = (value: number | undefined) => value === undefined ? "Unknown" : `~${value.toFixed(2).replace(/\.00$/, "")}%`;
@@ -115,8 +160,9 @@ export function PetHatch() {
                         const monster = monsters[index];
                         return <article key={index} className={styles.parent}>
                             <h3>Parent {index + 1}</h3>
-                            <div className={styles.portrait} data-rarity={monster.rarity}>
-                                <button type="button" className={styles.portraitPicker} aria-label={`Change Parent ${index + 1} monster. Current monster: ${monster.name}`} onClick={() => { setMonsterSearch(""); setExclusiveTraitFilter("all"); setVisibleMonsterCount(24); setMonsterPicker(index as 0 | 1); setRankPicker(null); }} />
+                            <div className={styles.portrait} data-rarity={monster?.rarity}>
+                                <button type="button" className={styles.portraitPicker} aria-label={`Change Parent ${index + 1} monster. Current monster: ${monster?.name ?? "None"}`} onClick={() => { setMonsterSearch(""); setExclusiveTraitFilter("all"); setVisibleMonsterCount(24); setMonsterPicker(index as 0 | 1); setRankPicker(null); }} />
+                                {monster && <>
                                 <button type="button" className={styles.rank} aria-expanded={rankPicker === index} aria-label={`Change Parent ${index + 1} rank. Current rank: ${parent.rank}`} onClick={() => setRankPicker(current => current === index ? null : index as 0 | 1)}><span style={rankTextStyle(parent.rank)}>{parent.rank}</span></button>
                                 {rankPicker === index && <div className={styles.rankPicker} role="group" aria-label={`Parent ${index + 1} rank options`}>{(["S", "SS"] as BreedRank[]).map(rank => <button type="button" key={rank} aria-pressed={parent.rank === rank} style={{ color: rankVisuals[rank].color, background: parent.rank === rank ? rankVisuals[rank].background : undefined }} onClick={() => { update(index, { rank }); setRankPicker(null); }}><span style={rankTextStyle(rank)}>{rank}</span></button>)}</div>}
                                 <img className={styles.monsterImage} src={assetPath(monster.image ?? "/icon.png")} alt={monster.name} />
@@ -126,8 +172,10 @@ export function PetHatch() {
                                         return <button key={mutation} type="button" className={`${styles.mutationButton} ${state === "none" ? styles.mutationOff : styles.mutationOn}`} data-state={state} aria-label={`Parent ${index + 1} ${mutation}: ${state === "x" ? "X" : state === "normal" ? "Normal" : "None"}. Click to cycle.`} title={`${mutation}: ${state === "x" ? "X" : state === "normal" ? "Normal" : "None"}`} onClick={() => update(index, { mutations: { ...parent.mutations, [mutation]: nextMutation[state] } })}><MutationIcon mutation={mutation} x={state === "x"} /></button>;
                                     })}
                                 </div>
+                                </>}
+                                {!monster && <span style={{ inset: 0, display: "grid", placeContent: "center", gap: 8, background: "transparent", fontSize: 13, pointerEvents: "none" }}><b style={{ fontSize: 28 }}>+</b>Select a monster</span>}
                             </div>
-                            <div className={styles.label}>Trait <Help label={`Parent ${index + 1} trait availability`} text="Exclusive traits appear only for their source monsters. Other traits are available to every parent. Vital Barrier is the exception: it can be selected on any monster. Changing a parent clears a trait that is no longer available." /><TraitSelect compact iconVariant="icon" allowedTraitIds={getBreedingTraits(parent.monsterId).map(trait => trait.id)} value={parent.traitId} onChangeAction={traitId => update(index, { traitId })} /></div>
+                            {monster && <div className={styles.label}>Trait <Help label={`Parent ${index + 1} trait availability`} text="Exclusive traits appear only for their source monsters. Other traits are available to every parent. Vital Barrier is the exception: it can be selected on any monster. Changing a parent clears a trait that is no longer available." /><TraitSelect compact iconVariant="icon" allowedTraitIds={getBreedingTraits(parent.monsterId).map(trait => trait.id)} value={parent.traitId} onChangeAction={traitId => update(index, { traitId })} /></div>}
                         </article>;
                     })}
                     <span className={styles.plus} aria-hidden="true">+</span>
@@ -138,6 +186,7 @@ export function PetHatch() {
             </section>
 
             <div className={styles.results}>
+                {!hasBothParents ? <section className={styles.panel}><h2>Transfer Results</h2><p className={styles.emptyState}>Select both parent monsters to see transfer odds.</p></section> : <>
                 <section className={styles.panel} aria-labelledby="trait-heading">
                     <h2 id="trait-heading">Offspring Trait Chance <button type="button" className={styles.helpButton} aria-label="Trait transfer formula" aria-expanded={showFormula} aria-controls="trait-formula-help" onClick={() => setShowFormula(current => !current)}>?</button> <BreedBadge superBreed={superBreed} /></h2>
                     {showFormula && <TraitTransferHelp />}
@@ -178,6 +227,7 @@ export function PetHatch() {
                     {["HP (Health)", "ATK (Attack)"].map((stat, index) => <div className={styles.geneticsSingle} key={stat}><strong>{index === 0 ? "♥" : "⚔"} {stat}</strong><GeneticRange label={stat} superBreed={superBreed} /></div>)}
                     {superBreed && <span className={styles.distributionCaption}>Illustrative high-end bias</span>}
                 </section>
+                </>}
             </div>
         </div>
 
@@ -187,8 +237,7 @@ export function PetHatch() {
                 <label className={styles.modalSearch}><span>⌕</span><input type="search" value={monsterSearch} onChange={event => { setMonsterSearch(event.target.value); setVisibleMonsterCount(24); }} placeholder="Search monsters or traits" autoFocus /></label>
                 <label className={styles.exclusiveFilter}>Exclusive Trait<select aria-label="Exclusive Trait" value={exclusiveTraitFilter} onChange={event => { setExclusiveTraitFilter(event.target.value); setVisibleMonsterCount(24); }}><option value="all">All monsters</option><option value="has">Has exclusive trait</option><option value="none">No exclusive trait</option>{TRAITS.filter(trait => trait.exclusiveSourceIds?.length).map(trait => <option key={trait.id} value={trait.id}>{trait.name}</option>)}</select></label>
             </div>
-            <SkillEffectSelect value={skillEffect} onChange={(value) => { setSkillEffect(value); setVisibleMonsterCount(24); }} className="mx-3 mb-3" />
-            <div key={`${monsterSearch}/${exclusiveTraitFilter}/${skillEffect}`} className={styles.monsterGrid} onScroll={event => { const element = event.currentTarget; if (element.scrollHeight - element.scrollTop - element.clientHeight < 160) setVisibleMonsterCount(count => Math.min(count + 24, filteredMonsters.length)); }}>
+            <div key={`${monsterSearch}/${exclusiveTraitFilter}`} className={styles.monsterGrid} onScroll={event => { const element = event.currentTarget; if (element.scrollHeight - element.scrollTop - element.clientHeight < 160) setVisibleMonsterCount(count => Math.min(count + 24, filteredMonsters.length)); }}>
                 {filteredMonsters.slice(0, visibleMonsterCount).map(monster => <button type="button" key={monster.id} className={parents[monsterPicker].monsterId === monster.id ? styles.monsterSelected : ""} onClick={() => { update(monsterPicker, { monsterId: monster.id }); setMonsterPicker(null); }}><img loading="lazy" decoding="async" src={assetPath(monster.image ?? "/icon.png")} alt="" /><span><strong>{monster.name}</strong><small>{getMonsterExclusiveTraits(monster.id).map(trait => trait.name).join(" · ") || `${monster.rarity} · ${monster.element}`}</small></span>{parents[monsterPicker].monsterId === monster.id && <b>✓</b>}</button>)}
                 {visibleMonsterCount < filteredMonsters.length && <button type="button" className={styles.loadMoreMonsters} onClick={() => setVisibleMonsterCount(count => Math.min(count + 24, filteredMonsters.length))}>Load 24 more monsters</button>}
                 {filteredMonsters.length === 0 && <p className={styles.emptyState}>No monsters match these filters.</p>}
