@@ -4,6 +4,10 @@ export const GENERATED_TRAIT_EXCLUSIVE_SOURCES: Record<string, { id: string; nam
     {
       "id": "runegolem",
       "name": "Runegolem"
+    },
+    {
+      "id": "luminara",
+      "name": "Luminara"
     }
   ],
   "fortify-4": [

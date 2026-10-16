@@ -2,7 +2,7 @@ trait_id,image_id,rarity,name,type,percentage,description,condition,exclusive_so
 impair-1,impair-1.png,rare,Impair I,Damage,5,(+5%) Damage,,
 impair-2,impair-2.png,epic,Impair II,Damage,10,(+10%) Damage,,
 impair-3,impair-3.png,legendary,Impair III,Damage,15,(+15%) Damage,,
-impair-4,impair-4.png,mythical,Impair IV,Damage,30,(+30%) Damage,,runegolem
+impair-4,impair-4.png,mythical,Impair IV,Damage,30,(+30%) Damage,,runegolem | luminara
 fortify-1,fortify-1.png,rare,Fortify I,Damage Reduction,5,(+5%) Damage Reduction,,
 fortify-2,fortify-2.png,epic,Fortify II,Damage Reduction,10,(+10%) Damage Reduction,,
 fortify-3,fortify-3.png,legendary,Fortify III,Damage Reduction,15,(+15%) Damage Reduction,,
