@@ -54,3 +54,6 @@ Thumbs.db
 .dev.vars*
 !.dev.vars.example
 /next-env.d.ts
+
+# Cloudflare Analytics private configuration
+/workers/cam-lab-analytics-stats/wrangler.toml

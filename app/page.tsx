@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { LegacyHashRedirect } from "./components/legacy-hash-redirect";
 import { SiteFooter } from "./components/site-footer";
+import { HomePageViews } from "./components/home-page-views";
 import { TopNavigation } from "./components/top-navigation";
 import { releases } from "./data/changelog-releases";
 import { gamePatches } from "./data/game-patches";
@@ -509,6 +510,8 @@ export default function HomePage() {
                             </div>
                         ))}
                     </div>
+
+                    <HomePageViews />
 
                     <div className="mx-auto mt-5 grid w-full max-w-[1480px] gap-5 lg:grid-cols-[1.08fr_.92fr]">
                         <section className="rounded-2xl border border-[#1b4777] bg-[#071426] p-5 sm:p-6">

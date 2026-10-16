@@ -1,0 +1,25 @@
+# Safe, shareable template for the Cam Lab analytics Worker.
+# Copy this file to "wrangler.toml" and replace the placeholder IDs locally.
+# The real wrangler.toml should remain in .gitignore.
+# Never put the private CF_ANALYTICS_API_TOKEN here: set it with
+#   npx wrangler secret put CF_ANALYTICS_API_TOKEN
+
+name = "cam-lab-analytics-stats"
+main = "src/index.mjs"
+compatibility_date = "2026-10-15"
+workers_dev = true
+
+[triggers]
+crons = ["5,35 * * * *"]
+
+[vars]
+# Your Cloudflare account identifier (not an API token).
+CF_ACCOUNT_ID = "REPLACE_WITH_32_CHARACTER_ACCOUNT_ID"
+# Web Analytics site tag / ID used by the GraphQL API.
+# Verify this in Cloudflare; do not assume it equals the public beacon token.
+CF_SITE_TAG = "REPLACE_WITH_ACTUAL_WEB_ANALYTICS_SITE_TAG"
+
+[[kv_namespaces]]
+binding = "STATS_KV"
+# Namespace ID of CAM_LAB_ANALYTICS_DAILY, not the namespace's display name.
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
