@@ -7,7 +7,15 @@
 const GRAPHQL_URL = "https://api.cloudflare.com/client/v4/graphql";
 const KV_KEY = "cam-lab-daily-pageviews-v1";
 const TRACKING_START = "2026-10-15"; // Date Web Analytics was created for Cam Lab.
-const PUBLIC_ORIGIN = "https://jjeastside.github.io";
+// Allow the deployed GitHub Pages site and local Next.js development servers.
+// The endpoint is public and only returns aggregate counts; API credentials remain server-side.
+const ALLOWED_ORIGINS = new Set([
+  "https://jjeastside.github.io",
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3001",
+]);
 const MAX_LOOKBACK_DAYS = 29; // Inclusive today => at most 30 daily buckets.
 const QUERY = `
 query DailyCamLabViews($accountTag: String!, $siteTag: String!, $since: Time!, $until: Time!) {
@@ -30,19 +38,23 @@ const addDays = (date, n) => new Date(date.getTime() + n * 86400000);
 const validDay = (day) => /^\d{4}-\d{2}-\d{2}$/.test(day);
 const safeCount = (count) => Number.isSafeInteger(count) && count >= 0;
 
-function corsHeaders() {
-  return {
-    "Access-Control-Allow-Origin": PUBLIC_ORIGIN,
+function corsHeaders(origin) {
+  const headers = {
+    "Vary": "Origin",
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Cache-Control": "public, max-age=300",
     "Content-Type": "application/json; charset=utf-8",
     "X-Content-Type-Options": "nosniff",
   };
+  if (origin && ALLOWED_ORIGINS.has(origin)) {
+    headers["Access-Control-Allow-Origin"] = origin;
+  }
+  return headers;
 }
 
-function json(body, status = 200) {
-  return new Response(JSON.stringify(body), { status, headers: corsHeaders() });
+function json(body, status = 200, origin = null) {
+  return new Response(JSON.stringify(body), { status, headers: corsHeaders(origin) });
 }
 
 function requireConfig(env) {
@@ -129,17 +141,18 @@ export async function readStats(env, now = new Date()) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders() });
+    const origin = request.headers.get("Origin");
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(origin) });
     if (request.method !== "GET" || url.pathname !== "/stats") {
-      return json({ error: "Not found" }, 404);
+      return json({ error: "Not found" }, 404, origin);
     }
     try {
       const stats = await readStats(env);
-      if (!stats) return json({ error: "Analytics not initialized yet" }, 503);
-      return json(stats);
+      if (!stats) return json({ error: "Analytics not initialized yet" }, 503, origin);
+      return json(stats, 200, origin);
     } catch (error) {
       console.error("Unable to load public analytics stats:", error);
-      return json({ error: "Analytics temporarily unavailable" }, 503);
+      return json({ error: "Analytics temporarily unavailable" }, 503, origin);
     }
   },
   async scheduled(_event, env, ctx) {
