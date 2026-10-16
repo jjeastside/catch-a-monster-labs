@@ -73,6 +73,13 @@ const uniquePassiveCount = new Set(
 ).size;
 const sourceRecordCount = GENERATED_MONSTERS.reduce((total, monster) => total + monster.sources.length, 0);
 const latestGamePatch = gamePatches[0];
+const exampleTrackedMonsterCount = 95;
+const exampleIndexCompletion = Math.round((exampleTrackedMonsterCount / GENERATED_MONSTERS.length) * 100);
+const featuredUpdateMonsters = [
+    { name: "Luminara", image: "/monster-artwork/luminara.png", note: "Apocalypse Egg" },
+    { name: "Umbra Sentinel", image: "/monster-artwork/umbra-sentinel.png", note: "Umbra Reaver evolution" },
+    { name: "Lumen Sentinel", image: "/monster-artwork/lumen-sentinel.png", note: "Lumen Knight evolution" },
+] as const;
 const patchPreviewHighlights = latestGamePatch.sections
     .filter((section) => !/code/i.test(section.title))
     .flatMap((section) => section.changes)
@@ -206,7 +213,7 @@ function MonsterDatabasePreview() {
                     <p className="text-[9px] font-black uppercase tracking-[0.12em] text-[#63b8ff]">Cam Lab</p>
                     <p className="text-[15px] font-black text-white">Monster Database</p>
                 </div>
-                <span className="text-[8px] font-bold text-[#7f94b1]">251 monsters</span>
+                <span className="text-[8px] font-bold text-[#7f94b1]">{GENERATED_MONSTERS.length} monsters</span>
             </div>
             <div className="mt-2 flex gap-2">
                 <div className="flex-1 rounded-md border border-[#1e3f62] bg-[#08192a] px-2 py-1.5 text-[8px] text-[#617a99]">Search monsters...</div>
@@ -230,14 +237,14 @@ function IndexTrackerPreview() {
                     <p className="text-[10px] font-black uppercase tracking-[0.12em] text-[#ffbd2f]">Index Tracker</p>
                     <p className="text-[8px] text-[#7f94b1]">Collection progress and planning</p>
                 </div>
-                <span className="rounded-md border border-[#31532b] bg-[#102719] px-2 py-1 text-[8px] font-black text-[#67df77]">95 / 234</span>
+                <span className="rounded-md border border-[#31532b] bg-[#102719] px-2 py-1 text-[8px] font-black text-[#67df77]">{exampleTrackedMonsterCount} / {GENERATED_MONSTERS.length}</span>
             </div>
             <div className="mt-2 grid grid-cols-3 gap-2">
                 <div className="rounded-lg border border-[#1e3f62] bg-[#08192a] p-2 text-center"><p className="text-[7px] uppercase text-[#7087a5]">Current Score</p><p className="mt-1 text-[16px] font-black text-[#39bfff]">1,983</p></div>
-                <div className="rounded-lg border border-[#1e3f62] bg-[#08192a] p-2 text-center"><p className="text-[7px] uppercase text-[#7087a5]">Complete</p><p className="mt-1 text-[16px] font-black text-[#5ee273]">41%</p></div>
-                <div className="rounded-lg border border-[#1e3f62] bg-[#08192a] p-2 text-center"><p className="text-[7px] uppercase text-[#7087a5]">Remaining</p><p className="mt-1 text-[16px] font-black text-white">139</p></div>
+                <div className="rounded-lg border border-[#1e3f62] bg-[#08192a] p-2 text-center"><p className="text-[7px] uppercase text-[#7087a5]">Complete</p><p className="mt-1 text-[16px] font-black text-[#5ee273]">{exampleIndexCompletion}%</p></div>
+                <div className="rounded-lg border border-[#1e3f62] bg-[#08192a] p-2 text-center"><p className="text-[7px] uppercase text-[#7087a5]">Remaining</p><p className="mt-1 text-[16px] font-black text-white">{GENERATED_MONSTERS.length - exampleTrackedMonsterCount}</p></div>
             </div>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#10243a]"><div className="h-full w-[41%] rounded-full bg-gradient-to-r from-[#29a9ff] to-[#54df74]" /></div>
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#10243a]"><div className="h-full rounded-full bg-gradient-to-r from-[#29a9ff] to-[#54df74]" style={{ width: `${exampleIndexCompletion}%` }} /></div>
             <div className="mt-2 grid grid-cols-3 gap-2">
                 <MiniMonster name="Dummee" image="/monster-artwork/dummee.png" meta="SS · 21 / 21" />
                 <MiniMonster name="Leafet" image="/monster-artwork/leafet.png" meta="S · 17 / 21" />
@@ -425,6 +432,12 @@ export default function HomePage() {
                     <div className="relative mx-auto grid min-h-[520px] w-full max-w-[1480px] items-center gap-8 px-5 py-14 sm:px-8 lg:grid-cols-[minmax(0,.92fr)_minmax(500px,1.08fr)] lg:px-10 lg:py-16 xl:px-14">
                         <div className="relative z-20 max-w-[670px]">
                             <p className="text-xs font-black uppercase tracking-[0.16em] text-[#60baff] drop-shadow-[0_2px_8px_rgba(0,0,0,.8)]">Catch a Monster Labs</p>
+                            <Link href="/updates" className="mt-4 inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-full border border-[#367eb7]/70 bg-[#072344]/90 px-3 py-1.5 text-xs font-bold text-[#bfe5ff] shadow-lg shadow-black/30 transition hover:border-[#60c8ff] hover:bg-[#0b3157]">
+                                <span className="text-[#66d8ff]">Game Update 0.53</span>
+                                <span aria-hidden="true" className="text-[#5e83a4]">•</span>
+                                <span>Apocalypse Dungeon + new evolutions</span>
+                                <Icon name="arrow" className="size-3.5" />
+                            </Link>
                             <h1 className="mt-4 max-w-[650px] text-[clamp(2.8rem,4.2vw,4.65rem)] font-black leading-[1.01] tracking-[-0.04em] text-white drop-shadow-[0_4px_18px_rgba(0,0,0,.7)]">
                                 Plan builds. Explore monsters. <span className="bg-gradient-to-r from-[#29e3f7] via-[#2ea8ff] to-[#5d8dff] bg-clip-text text-transparent">Track progress.</span>
                             </h1>
@@ -447,6 +460,31 @@ export default function HomePage() {
                         </div>
 
                         <div className="relative hidden h-[430px] lg:block" aria-hidden="true" />
+                    </div>
+                </section>
+
+                <section aria-labelledby="update-053-title" className="border-b border-[#17345b] bg-[#050f20] px-4 py-6 sm:px-6 lg:px-8">
+                    <div className="mx-auto grid w-full max-w-[1480px] gap-5 rounded-2xl border border-[#225681] bg-[linear-gradient(120deg,#0b2441,#07152a_70%)] p-5 shadow-[0_14px_35px_rgba(0,0,0,.25)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-center lg:p-6">
+                        <div>
+                            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#66d3ff]">Latest game update · October 16, 2026</p>
+                            <h2 id="update-053-title" className="mt-2 text-2xl font-black tracking-tight text-white sm:text-3xl">Update 0.53: Apocalypse is here</h2>
+                            <p className="mt-3 max-w-[660px] text-sm leading-6 text-[#bcd0e5]">Explore the new Apocalypse Dungeon difficulty, Luminara, and two new evolutions. The Trader Event is live, EXP Dungeon is open daily, and EXP Fruits cost less in the Spire Shop.</p>
+                            <div className="mt-4 flex flex-wrap gap-3">
+                                <Link href="/updates" className="inline-flex items-center gap-2 rounded-lg bg-[#169cf5] px-4 py-2.5 text-xs font-black text-[#061424] transition hover:bg-[#54c4ff]">Read 0.53 Patch Notes <Icon name="arrow" className="size-4" /></Link>
+                                <Link href="/monster-database" className="inline-flex items-center gap-2 rounded-lg border border-[#4678aa] px-4 py-2.5 text-xs font-bold text-[#dcefff] transition hover:bg-[#153859]">Explore New Monsters <Icon name="arrow" className="size-4" /></Link>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                            {featuredUpdateMonsters.map((monster) => (
+                                <div key={monster.name} className="min-w-0 rounded-xl border border-[#295379] bg-[#07172d]/90 p-2 text-center sm:p-3">
+                                    <div className="mx-auto grid aspect-square max-w-28 place-items-center overflow-hidden rounded-lg bg-[#102b43]">
+                                        <Image src={assetPath(monster.image)} alt={monster.name} width={124} height={124} unoptimized className="h-full w-full object-contain" />
+                                    </div>
+                                    <p className="mt-2 text-xs font-black leading-4 text-white sm:text-sm">{monster.name}</p>
+                                    <p className="mt-1 text-[10px] leading-3.5 text-[#90afd2]">{monster.note}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </section>
 

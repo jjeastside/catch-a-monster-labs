@@ -1314,6 +1314,31 @@ export const GENERATED_SKILLS = {
     "id": "holy-aura-frostvolf",
     "name": "Holy Aura (Frostvolf)",
     "element": "Common",
+    "description": "Release Holy Aura, healing and strengthening all Pets. (No Stack)",
+    "damageInstances": [],
+    "cooldown": 8,
+    "statusEffects": [
+      {
+        "type": "damageIncrease",
+        "target": "Team",
+        "amountPercent": 25,
+        "durationSeconds": 6
+      },
+      {
+        "type": "shield",
+        "target": "Team",
+        "amountPercent": 15,
+        "scaling": "MaxHealth",
+        "durationSeconds": 6
+      }
+    ],
+    "notes": "Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs",
+    "validationStatus": "Ready"
+  },
+  "holy-aura-luminara": {
+    "id": "holy-aura-luminara",
+    "name": "Holy Aura (Luminara)",
+    "element": "Common",
     "description": "Release Holy aura, shielding and stregthening all Pets. (No Stack)",
     "damageInstances": [],
     "cooldown": 8,

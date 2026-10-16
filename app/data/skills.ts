@@ -127,6 +127,13 @@ export function getSkill(skillId: string | null | undefined): Skill | null {
     return SKILLS[skillId as SkillId] ?? null;
 }
 
+/** Expected extra damage from skill-specific random outcomes, not an extra cast. */
+export function getSkillExpectedProcMultiplier(skill: Skill): number {
+    // Overvolt Tempest: 75% at 2.2x and 25% at 4.4x = 2.75x on average.
+    // Its Overload entry is a preview, not an independent cooldown/skill.
+    return skill.id === "overvolt-tempest" ? 1.25 : 1;
+}
+
 export function getSkillTotalMultiplier(skill: Skill): number {
     return skill.damageInstances.reduce(
         (total, instance) => total + instance.multiplier * instance.hits,

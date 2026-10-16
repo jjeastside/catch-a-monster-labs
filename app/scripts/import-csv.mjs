@@ -739,6 +739,23 @@ const monsters = monsterRows.map((monster, index) => {
     };
 });
 
+// Index order is a public-facing identifier: missing or duplicated positions
+// otherwise appear as #0 or collide in the Database and Index Tracker.
+const indexPositions = new Map();
+for (const monster of monsters) {
+    const position = number(monster.index_position);
+    if (!Number.isSafeInteger(position) || position < 1) {
+        throw new Error(`Missing or invalid Index (Position) for ${monster.name}`);
+    }
+    if (indexPositions.has(position)) {
+        throw new Error(`Index position ${position} is shared by ${indexPositions.get(position)} and ${monster.name}`);
+    }
+    indexPositions.set(position, monster.name);
+}
+if (indexPositions.size !== Math.max(...indexPositions.keys())) {
+    throw new Error(`Monster Index positions must be contiguous from 1 to ${monsters.length}`);
+}
+
 const skillIdsByName = new Map(
     skills.map((skill) => [skill.name.trim().toLowerCase(), skill.id]),
 );
