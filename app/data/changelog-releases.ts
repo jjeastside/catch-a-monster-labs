@@ -8,10 +8,33 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.32",
+        date: "October 16, 2026",
+        label: "Latest",
+        title: "Update 0.53 Homepage & Skill Data",
+        changes: [
+            "Highlighted Catch a Monster Update 0.53 on the homepage, featuring Apocalypse Dungeon, Luminara, Umbra Sentinel, and Lumen Sentinel with direct access to Patch Notes and the Monster Database.",
+            "Updated the homepage monster total and Index Tracker sample to use the actual imported roster size rather than outdated hard-coded counts.",
+            "Imported the revised Skills CSV and set Luminara's Holy Aura cooldown to 8 seconds, consistent with the supplied game data; regenerated skill effects and cooldown calculations for the site.",
+            "Rechecked all 256 monster records and 136 skill records for unique references, valid stats, evolution parent links, and contiguous Index ordering.",
+        ],
+    },
+    {
+        version: "v1.0.31",
+        date: "October 16, 2026",
+        title: "Catch a Monster Update 0.53",
+        changes: [
+            "Updated Catch a Monster Patch Notes for 0.53: Dungeon Apocalypse difficulty, Trader Event, reduced EXP Fruit pricing in the Spire Shop, two new evolutions, daily EXP Dungeon, and two Admin Abuse sessions for different time zones.",
+            "Verified Luminara, Umbra Sentinel, and Lumen Sentinel in the monster CSV and generated game data, including their PvE/PvP stats, skills, passives, obtainment sources, and evolution links.",
+            "Corrected Index positions for the three new monsters and shifted later positions without changing monster IDs or saved Index progress, keeping database and Index Tracker ordering consistent.",
+            "Included Overvolt Tempest's 25% double-damage Overload chance in expected DPS across calculator and comparison views, while preserving separate normal and Overload hit breakdowns.",
+            "Checked artwork and skill icons for all three new monsters, along with CSV-import validation and regression coverage for this update.",
+        ],
+    },
+    {
         version: "v1.0.30",
         date: "October 14, 2026",
         title: "Compare Healing & Skill Effects",
-        label: "Latest",
         changes: [
             "Added healing, HPS, shields, buffs, debuffs, and status-effect cards to Monster Compare using the Build Calculator’s existing effect displays.",
             "Replaced empty Damage, Crit, and DPS boxes on pure support skills with their actual effects. Damaging skills retain their damage metrics and now also display associated effects and tooltips.",

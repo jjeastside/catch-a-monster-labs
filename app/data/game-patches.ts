@@ -13,9 +13,45 @@ export type Patch = {
 
 export const gamePatches: readonly Patch[] = [
     {
+        version: "Update 0.53",
+        date: "October 16, 2026",
+        label: "Latest",
+        sections: [
+            {
+                title: "Dungeon & Apocalypse Difficulty",
+                changes: [
+                    "Added Apocalypse difficulty to the Dungeon.",
+                    "Luminara is available from Luminara's Egg in Cinderclaw Castle on Apocalypse difficulty.",
+                ],
+            },
+            {
+                title: "Trader Event",
+                changes: ["The Trader Event is live!"],
+            },
+            {
+                title: "Spire Shop",
+                changes: ["Reduced the EXP Fruit price in the Spire Shop."],
+            },
+            {
+                title: "New Evolutions",
+                changes: [
+                    "Added Umbra Sentinel, the evolution of Umbra Reaver.",
+                    "Added Lumen Sentinel, the evolution of Lumen Knight.",
+                ],
+            },
+            {
+                title: "EXP Dungeon",
+                changes: ["The EXP Dungeon is now open daily!"],
+            },
+            {
+                title: "Admin Abuse",
+                changes: ["Admin Abuse will be held twice for different time zones."],
+            },
+        ],
+    },
+    {
         version: "Update 0.52",
         date: "October 9, 2026",
-        label: "Latest",
         sections: [
             {
                 title: "Shroomvale Rift & Rewards",

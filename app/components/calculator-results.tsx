@@ -25,6 +25,7 @@ import {
     getSkillDisplayName,
     getSkillTotalHits,
     getSkillTotalMultiplier,
+    getSkillExpectedProcMultiplier,
 } from "../data/skills";
 import { getEquipment } from "../data/equipments";
 import { getTrait } from "../data/traits";
@@ -1374,10 +1375,11 @@ function SkillDamagePanel({
             1,
         );
 
+    const procMultiplier = getSkillExpectedProcMultiplier(skill);
     const expectedDamage =
         isDamagingSkill
             ? (combatDamage.normalDamage * (1 - critChance) +
-            combatDamage.criticalDamage * critChance) * attributeEffects.expectedDamageMultiplier
+            combatDamage.criticalDamage * critChance) * attributeEffects.expectedDamageMultiplier * procMultiplier
             : null;
 
     const skillDps = skillSummary.dps;
@@ -1388,14 +1390,14 @@ function SkillDamagePanel({
             ? (
             damageIncreaseCombatDamage.normalDamage * (1 - critChance) +
             damageIncreaseCombatDamage.criticalDamage * critChance
-        ) * attributeEffects.expectedDamageMultiplier / displayedCooldown
+        ) * attributeEffects.expectedDamageMultiplier * procMultiplier / displayedCooldown
             : null;
     const vulnerabilityDps =
         vulnerabilityCombatDamage !== null && displayedCooldown !== null && displayedCooldown > 0
             ? (
             vulnerabilityCombatDamage.normalDamage * (1 - critChance) +
             vulnerabilityCombatDamage.criticalDamage * critChance
-        ) * attributeEffects.expectedDamageMultiplier / displayedCooldown
+        ) * attributeEffects.expectedDamageMultiplier * procMultiplier / displayedCooldown
             : null;
 
     // Any heal calculated from the caster's Damage or Health has a concrete HPS.
@@ -1619,7 +1621,9 @@ function SkillDamagePanel({
                                     </p>
                                     <InfoTooltip
                                         label="Explain skill DPS"
-                                        text="Expected damage per second using this skill's normal damage, critical damage, critical chance, and adjusted cooldown."
+                                        text={hasOvervoltTempestOverload
+                                            ? "Expected damage per second including critical chance and Overvolt Tempest's 25% chance to deal double damage (1.25× average damage), divided by adjusted cooldown."
+                                            : "Expected damage per second using this skill's normal damage, critical damage, critical chance, and adjusted cooldown."}
                                     />
                                 </div>
 
@@ -2130,7 +2134,7 @@ function SkillDamagePanel({
                                         <span className="grid h-7 w-7 place-items-center rounded-md border border-[#4f78bf]/50 bg-[#17305a]/70 text-sm text-[#8fb6ff]">▥</span>
                                         <div>
                                             <p className="text-sm font-bold text-[#e7edf8]">DPS Calculation</p>
-                                            <p className="text-[11px] text-[#8e9db4]">Expected damage based on critical chance, then adjusted by cooldown</p>
+                                            <p className="text-[11px] text-[#8e9db4]">Expected damage based on critical chance{hasOvervoltTempestOverload ? " and 25% Overload chance" : ""}, then adjusted by cooldown</p>
                                         </div>
                                     </div>
 
@@ -2156,6 +2160,11 @@ function SkillDamagePanel({
                                         </div>
                                     </div>
 
+                                    {hasOvervoltTempestOverload && (
+                                        <p className="mt-3 text-center text-xs text-[#aeb8ff]">
+                                            Overload: 75% normal + 25% double damage = 1.25× expected damage per cast
+                                        </p>
+                                    )}
                                     <div className="mt-3 flex justify-center">
                                         <div className="min-w-[12rem] rounded-lg border border-[#4d75ff]/70 bg-[#1c2f62]/55 px-4 py-2.5 text-center">
                                             <p className="text-[10px] uppercase tracking-wide text-[#8ca4ff]">Expected Damage</p>

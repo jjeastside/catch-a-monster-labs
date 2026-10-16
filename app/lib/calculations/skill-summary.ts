@@ -3,6 +3,7 @@ import { monsters } from "../../data/monsters";
 import {
   getSkill,
   getSkillTotalMultiplier,
+  getSkillExpectedProcMultiplier,
   getActiveRallyingWarCryDamageIncrease,
   getEnemyVulnerability,
   getActiveEnemyVulnerability,
@@ -93,9 +94,10 @@ export function calculateSkillSummary(
 
   const critChance = Math.min(Math.max(stats.critChance / 100, 0), 1);
 
-  const expectedDamage =
+  const expectedDamage = (
     combatDamage.normalDamage * (1 - critChance) +
-    combatDamage.criticalDamage * critChance;
+    combatDamage.criticalDamage * critChance
+  ) * getSkillExpectedProcMultiplier(skill);
 
   const damaging = skill.damageInstances.length > 0;
   const healingMultiplier = 1 + (attributeEffects.healEffectiveness + getTraitEffectValue(build.traitId, "healingEffectiveness")) / 100;

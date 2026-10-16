@@ -5,7 +5,7 @@ Leafet,Common,Grass,7.25,43.5,346740,4161800,0,,Standard,Seed Grenade,,,,Island 
 Wattoad,Uncommon,Water,10.511,63.071,346610,4159400,0,,Standard,Water Jet,,,,Island Spawn | Natural Spawn | Starter Island | Current,3
 Treemo,Rare,Grass,15.24,163.1,346690,7420600,0,,Standard,Seed Grenade,,,,Island Spawn | Natural Spawn | Starter Island | Current,4
 Flamix,Rare,Fire,22.1,236.5,346690,7419600,0,,Standard,Fireball,Air Bullet,,,Island Spawn | Natural Spawn | Starter Island | Current,5
-Puffu,Rare,Water,32.038,342.92,346600,7420400,0,,Standard,Water Jet,Wind Disc,,,Island Spawn | Natural Spawn | Starter Island | Current,6
+Puffu,Rare,Water,32.038,342.92,346680,7420300,0,,Standard,Water Jet,Wind Disc,,,Island Spawn | Natural Spawn | Starter Island | Current,6
 Candlechick,Rare,Fire,38.591,412.94,136950,2930900,0,,Standard,Air Bullet,Fireball,,,"Event | Turkey Egg | Thanksgiving Event 2025 | Legacy
 Chest | Memory Chest 2 | Abyss Shop | Current",7
 SantaDumi,Rare,Common,97.701,1045.4,346740,7420100,0,,Standard,Air Bullet,Candy Bomb,,,"Event | Christmas Event Summon | Christmas Event 2025 | Unavailable
@@ -322,20 +322,23 @@ Veloros,Secret,Dark,23883000,177470000,416100,6183400,15,,Standard,Crimson Burst
 Corsairopus,Secret,Water,4912000,210240000,173375,14840600,0,Beatopus,Standard,Tsunami,Hydro Cannon,,Critical Damage | 60,Evolution | Beatopus Evolution |  | Current |  | Evolves from Beatopus.,241
 Plasmapanther,Secret,Dark,5915300,253100000,173375,14840600,0,Aetherpanther,Standard,Siphon Breath,Thunder Stun,,Spire Dominance | 50,Evolution | Aetherpanther Evolution |  | Current |  | Evolves from Aetherpanther.,242
 Marimp,Secret,Water,9497100,228643000,231170,11131000,0,Rainimp,Standard,Tsunami,Soul Reap Chain (Vulnerability),,Spire Guard | 35,Evolution | Rainimp Evolution |  | Current |  | Evolves from Rainimp.,243
+Luminara,Secret,Light,24787000,184188000,416080,6183600,15,,Standard,Void Collapse,Holy Aura (Luminara),,Critical Damage | 60,Egg | Luminara's Egg | Cinderclaw Castle | Current |  | Apocalypse Difficulty,244
+Umbra Sentinel,Secret,Dark,17151000,183550000,346750,7420300,0,Umbra Reaver,Standard,Overvolt Tempest,Lightning Thrust,,Spire Dominance | 50,Evolution | Umbra Reaver Evolution |  | Current |  | Evolves from Umbra Reaver.,245
+Lumen Sentinel,Secret,Mechanical,14312000,220270000,288990,8904400,0,Lumen Knight,Standard,Overvolt Tempest,Lightning Thrust,,Critical Chance | 30,Evolution | Lumen Knight Evolution |  | Current |  | Evolves from Lumen Knight.,246
 Void Noctane,Void,Common,2227000,12158000,485420,5300300,0,,Standard,Air Bullet,Wind Disc,,Fortune Spirit | 35,"Event | Void Jars | Void Event 2025 | Legacy
-Chest | Memory Chest 2 | Abyss Shop | Current",244
-Void Dustwing,Void,Ground,1778100,19029000,346750,7420300,0,,Standard,Barrier,Gravel Scatter Shot,,Mentor Spirit | 35,"Event | Void Jars | Void Event 2025 | Legacy
-Chest | Memory Chest 2 | Abyss Shop | Current",245
-Void Lunavox,Void,Common,687740,66232000,115583,22261000,0,,Standard,Barrier,Lunar Taunt,Lunar Heal,,"Event | Void Jars | Void Event 2025 | Legacy
-Chest | Memory Chest 2 | Abyss Shop | Current",246
-Void Iceplate,Void,Ice,1482000,35672000,231170,11131000,0,,Standard,Ice Road,Ex Iceball,,Capturer's Boon | 25,"Event | Void Jars | Void Event 2025 | Legacy
 Chest | Memory Chest 2 | Abyss Shop | Current",247
-Void Scythewing,Void,Ground,2484000,26585000,346740,7420300,0,,Standard,GaleMoon Blade,Crimson Burst,Barrier,,"Event | Void Jars | Void Event 2025 | Legacy
+Void Dustwing,Void,Ground,1778100,19029000,346750,7420300,0,,Standard,Barrier,Gravel Scatter Shot,,Mentor Spirit | 35,"Event | Void Jars | Void Event 2025 | Legacy
 Chest | Memory Chest 2 | Abyss Shop | Current",248
-Void Shadecloak,Void,Common,1057070,11311000,346740,7420300,0,,Standard,Barrier,Soul Reap Chain,,,Egg | Void Purple Egg | Blossom Haven | Current,249
+Void Lunavox,Void,Common,687740,66232000,115583,22261000,0,,Standard,Barrier,Lunar Taunt,Lunar Heal,,"Event | Void Jars | Void Event 2025 | Legacy
+Chest | Memory Chest 2 | Abyss Shop | Current",249
+Void Iceplate,Void,Ice,1482000,35672000,231170,11131000,0,,Standard,Ice Road,Ex Iceball,,Capturer's Boon | 25,"Event | Void Jars | Void Event 2025 | Legacy
+Chest | Memory Chest 2 | Abyss Shop | Current",250
+Void Scythewing,Void,Ground,2484000,26585000,346740,7420300,0,,Standard,GaleMoon Blade,Crimson Burst,Barrier,,"Event | Void Jars | Void Event 2025 | Legacy
+Chest | Memory Chest 2 | Abyss Shop | Current",251
+Void Shadecloak,Void,Common,1057070,11311000,346740,7420300,0,,Standard,Barrier,Soul Reap Chain,,,Egg | Void Purple Egg | Blossom Haven | Current,252
 Void Strum Bones,Void,Common,2090000,89450000,173370,14843000,10,,Standard,Demonic Lullaby,Healing Pulse,,"Mentor Spirit | 35
-Fortune Spirit | 35",Island Special Spawn | Special Spawn | Specter Shallows | Current,250
-Void Nightveil,Void,Dark,3350000,18300000,485420,5300300,15,Void Shadecloak,Standard,The Ring,Soul Reap Chain,,Trial Power | 60,Evolution | Void Shadecloak Evolution |  | Current |  | Evolves from Void Shadecloak.,251
+Fortune Spirit | 35",Island Special Spawn | Special Spawn | Specter Shallows | Current,253
+Void Nightveil,Void,Dark,3350000,18300000,485420,5300300,15,Void Shadecloak,Standard,The Ring,Soul Reap Chain,,Trial Power | 60,Evolution | Void Shadecloak Evolution |  | Current |  | Evolves from Void Shadecloak.,254
 Void Scareaper,Void,Dark,1741000,167690000,115583,22261000,0,,Standard,Fear Taunt,Reaper's Crescents,,Capturer's Boon | 25,"Egg | Scareaper's Egg | Specter Shallows | Current
-Chest | Memory Chest 1 | Abyss Shop | Current",252
-Icearia,Mythical,Ice,880854,13570492,288990,8904400,10,,Standard,Icicle Prison,Frosty Dart,,,Contest | Art Contest |  | Unavailable,253
+Chest | Memory Chest 1 | Abyss Shop | Current",255
+Icearia,Mythical,Ice,880854,13570492,288990,8904400,10,,Standard,Icicle Prison,Frosty Dart,,,Contest | Art Contest |  | Unavailable,256

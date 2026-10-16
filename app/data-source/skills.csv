@@ -179,7 +179,8 @@ healing-water-ball,Healing Water Ball,Water,"[
   { multiplier: 1, hits: 1 },
 ]",6,"Use water energy to heal self, then attack the enemy with a water ball.",Target: Enemy | Self. Enemy effects: Stun 2 secs Ally effects: 50% of damage self heal (Instant),Ready
 holy-aura-djinn-lampyr,Holy Aura (Djinn Lampyr),Common,[],8,"Release Holy Aura, healing and strengthening all Pets. (No Stack)",Target: Allies. Ally effects: 25% Team Damage for 6 secs; 160% of damage + 5% of health team heal,Ready
-holy-aura-frostvolf,Holy Aura (Frostvolf),Common,[],8,"Release Holy aura, shielding and stregthening all Pets. (No Stack)",Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs,Ready
+holy-aura-frostvolf,Holy Aura (Frostvolf),Common,[],8,"Release Holy Aura, healing and strengthening all Pets. (No Stack)",Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs,Ready
+holy-aura-luminara,Holy Aura (Luminara),Common,[],8,"Release Holy aura, shielding and stregthening all Pets. (No Stack)",Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs,Ready
 holy-aura-titan-tusk,Holy Aura (Titan Tusk),Common,[],8,"Release Holy aura, shielding and stregthening all Pets. (No Stack)",Target: Allies. Ally effects: 15% of Max HP Team shield; 25% Team Damage for 6 secs,Ready
 hydro-cannon,Hydro Cannon,Water,"[
   { multiplier: 0.4, hits: 5 },

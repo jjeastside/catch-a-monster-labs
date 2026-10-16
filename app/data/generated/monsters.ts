@@ -166,8 +166,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "baseDamageELevel1": 32.038,
     "baseHealthELevel1": 342.92,
-    "pvpBaseDamageELevel1": 346600,
-    "pvpBaseHealthELevel1": 7420400,
+    "pvpBaseDamageELevel1": 346680,
+    "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
     "indexPosition": 6
@@ -4348,7 +4348,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         ]
       }
     ],
-    "hasEvolution": false,
+    "hasEvolution": true,
     "baseDamageELevel1": 3746000,
     "baseHealthELevel1": 20454000,
     "pvpBaseDamageELevel1": 912990,
@@ -4395,7 +4395,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         ]
       }
     ],
-    "hasEvolution": false,
+    "hasEvolution": true,
     "baseDamageELevel1": 1495800,
     "baseHealthELevel1": 64023300,
     "pvpBaseDamageELevel1": 173370,
@@ -8386,6 +8386,134 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "indexPosition": 243
   },
   {
+    "id": "luminara",
+    "name": "Luminara",
+    "image": "/monster-artwork/luminara.png",
+    "element": "Light",
+    "rarity": "Secret",
+    "sources": [
+      {
+        "type": "Egg",
+        "name": "Luminara's Egg",
+        "location": "Cinderclaw Castle",
+        "status": "Current",
+        "notes": "Apocalypse Difficulty"
+      }
+    ],
+    "skillIds": [
+      "void-collapse",
+      "holy-aura-luminara"
+    ],
+    "passives": [
+      {
+        "id": "criticalDamage",
+        "effects": [
+          {
+            "stat": "critDamage",
+            "value": 60
+          }
+        ],
+        "values": [
+          60
+        ]
+      }
+    ],
+    "hasEvolution": false,
+    "baseDamageELevel1": 24787000,
+    "baseHealthELevel1": 184188000,
+    "pvpBaseDamageELevel1": 416080,
+    "pvpBaseHealthELevel1": 6183600,
+    "baseCritChance": 15,
+    "growthType": "standard",
+    "indexPosition": 244
+  },
+  {
+    "id": "umbra-sentinel",
+    "name": "Umbra Sentinel",
+    "image": "/monster-artwork/umbra-sentinel.png",
+    "element": "Dark",
+    "rarity": "Secret",
+    "sources": [
+      {
+        "type": "Evolution",
+        "name": "Umbra Reaver Evolution",
+        "status": "Current",
+        "notes": "Evolves from Umbra Reaver."
+      }
+    ],
+    "skillIds": [
+      "overvolt-tempest",
+      "lightning-thrust"
+    ],
+    "passives": [
+      {
+        "id": "spireDominance",
+        "effects": [
+          {
+            "stat": "spireDamage",
+            "value": 50
+          }
+        ],
+        "values": [
+          50
+        ]
+      }
+    ],
+    "hasEvolution": false,
+    "isEvolved": true,
+    "evolutionSource": "umbra-reaver",
+    "baseDamageELevel1": 17151000,
+    "baseHealthELevel1": 183550000,
+    "pvpBaseDamageELevel1": 346750,
+    "pvpBaseHealthELevel1": 7420300,
+    "baseCritChance": 0,
+    "growthType": "standard",
+    "indexPosition": 245
+  },
+  {
+    "id": "lumen-sentinel",
+    "name": "Lumen Sentinel",
+    "image": "/monster-artwork/lumen-sentinel.png",
+    "element": "Mechanical",
+    "rarity": "Secret",
+    "sources": [
+      {
+        "type": "Evolution",
+        "name": "Lumen Knight Evolution",
+        "status": "Current",
+        "notes": "Evolves from Lumen Knight."
+      }
+    ],
+    "skillIds": [
+      "overvolt-tempest",
+      "lightning-thrust"
+    ],
+    "passives": [
+      {
+        "id": "criticalChance",
+        "effects": [
+          {
+            "stat": "critChance",
+            "value": 30
+          }
+        ],
+        "values": [
+          30
+        ]
+      }
+    ],
+    "hasEvolution": false,
+    "isEvolved": true,
+    "evolutionSource": "lumen-knight",
+    "baseDamageELevel1": 14312000,
+    "baseHealthELevel1": 220270000,
+    "pvpBaseDamageELevel1": 288990,
+    "pvpBaseHealthELevel1": 8904400,
+    "baseCritChance": 0,
+    "growthType": "standard",
+    "indexPosition": 246
+  },
+  {
     "id": "void-noctane",
     "name": "Void Noctane",
     "image": "/monster-artwork/void-noctane.png",
@@ -8430,7 +8558,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 244
+    "indexPosition": 247
   },
   {
     "id": "void-dustwing",
@@ -8477,7 +8605,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 245
+    "indexPosition": 248
   },
   {
     "id": "void-lunavox",
@@ -8512,7 +8640,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 22261000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 246
+    "indexPosition": 249
   },
   {
     "id": "void-iceplate",
@@ -8559,7 +8687,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 11131000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 247
+    "indexPosition": 250
   },
   {
     "id": "void-scythewing",
@@ -8594,7 +8722,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 248
+    "indexPosition": 251
   },
   {
     "id": "void-shadecloak",
@@ -8622,7 +8750,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 249
+    "indexPosition": 252
   },
   {
     "id": "void-strum-bones",
@@ -8675,7 +8803,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 14843000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 250
+    "indexPosition": 253
   },
   {
     "id": "void-nightveil",
@@ -8718,7 +8846,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 251
+    "indexPosition": 254
   },
   {
     "id": "void-scareaper",
@@ -8765,7 +8893,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 22261000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 252
+    "indexPosition": 255
   },
   {
     "id": "icearia",
@@ -8792,6 +8920,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 253
+    "indexPosition": 256
   }
 ];
