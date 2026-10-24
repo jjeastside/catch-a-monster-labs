@@ -13,6 +13,7 @@ export const releases: readonly ChangelogRelease[] = [
         label: "Latest",
         title: "Halloween Updates 0.54 & 0.54.1",
         changes: [
+            "Added Shroomvale as the 15th Path of Progress achievement, raising the maximum Health bonus from +28% to +30% across account multipliers and build calculations while preserving existing saved selections.",
             "Added a Nectar Heart HPS card to Combat Stats when equipped, showing Healing Pulse's continuous 1.5% max-HP regeneration separately from skill healing.",
             "Added Catch a Monster Update 0.54 patch notes for Halloween Event Part 1, the Halloween World Boss on Central Island, Gravion's new evolution, and two Admin Abuse sessions for different time zones.",
             "Added the 0.54.1 bug-fix notes and code eventb, with Halloween retained as the previous code.",

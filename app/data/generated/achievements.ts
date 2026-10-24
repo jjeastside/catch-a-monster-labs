@@ -924,5 +924,18 @@ export const GENERATED_ACHIEVEMENTS: Achievement[] = [
     "rewardPercent": 2,
     "requiresPrevious": false,
     "description": "Complete Coilwork City and claim its Path of Progress reward."
+  },
+  {
+    "id": "shroomvale",
+    "category": "path-of-progress",
+    "order": 15,
+    "name": "Shroomvale",
+    "island": "Shroomvale",
+    "goalType": "Reward Claimed",
+    "goalAmount": null,
+    "rewardStat": "health",
+    "rewardPercent": 2,
+    "requiresPrevious": false,
+    "description": "Complete Shroomvale and claim its Path of Progress reward."
   }
 ];

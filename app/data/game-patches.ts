@@ -29,6 +29,10 @@ export const gamePatches: readonly Patch[] = [
                 changes: ["Gravion's new evolution, Gravitas, is now available!"],
             },
             {
+                title: "Path of Progress",
+                changes: ["Added the Shroomvale Path of Progress quest and its +2% HP completion reward, bringing the total to 15 rewards (+30% HP)."],
+            },
+            {
                 title: "Admin Abuse",
                 changes: ["Admin Abuse will be held twice for different time zones."],
             },
