@@ -8,9 +8,22 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.33",
+        date: "October 24, 2026",
+        label: "Latest",
+        title: "Halloween Updates 0.54 & 0.54.1",
+        changes: [
+            "Added a Nectar Heart HPS card to Combat Stats when equipped, showing Healing Pulse's continuous 1.5% max-HP regeneration separately from skill healing.",
+            "Added Catch a Monster Update 0.54 patch notes for Halloween Event Part 1, the Halloween World Boss on Central Island, Gravion's new evolution, and two Admin Abuse sessions for different time zones.",
+            "Added the 0.54.1 bug-fix notes and code eventb, with Halloween retained as the previous code.",
+            "Refreshed the homepage update highlight with Lunaron and Gravitas artwork, Halloween event details, and both update codes.",
+            "Updated the monster and skill data for Lunaron and Gravitas, including their artwork and the EX Dark Singularity skill icon.",
+            "Updated project dependencies to address reported security vulnerabilities.",
+        ],
+    },
+    {
         version: "v1.0.32",
         date: "October 16, 2026",
-        label: "Latest",
         title: "Update 0.53 Homepage & Skill Data",
         changes: [
             "Highlighted Catch a Monster Update 0.53 on the homepage, featuring Apocalypse Dungeon, Luminara, Umbra Sentinel, and Lumen Sentinel with direct access to Patch Notes and the Monster Database.",

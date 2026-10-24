@@ -2836,6 +2836,10 @@ function BuildResultsPanel({
                            }: BuildResultsPanelProps) {
     const selectedWeapon = getEquipment(build.weaponId);
     const selectedArmor = getEquipment(build.armorId);
+    const regenerationPercent = calculateSkillAttributeEffects(build, "Common").maxHpRegenPerSecond;
+    const gearHealingPerSecond = stats && regenerationPercent > 0
+        ? stats.health * regenerationPercent / 100
+        : null;
     const selectedTrait = getTrait(build.traitId);
     const indexBonus = getCategoryProgress(build.accountMultipliers, "index-mania").damagePercent;
     const pathBonus = getCategoryProgress(build.accountMultipliers, "path-of-progress").healthPercent;
@@ -3018,6 +3022,24 @@ function BuildResultsPanel({
                 />
             </div>
 
+            {gearHealingPerSecond !== null && (
+                <div className="px-4 pb-4">
+                    <div className="rounded-lg border border-[#48c98a]/30 bg-[#12382a]/35 p-3">
+                        <div className="flex items-center gap-2 text-[#82f0b7]">
+                            <img src={assetPath(`/gear/${selectedArmor?.id}.png`)} alt="" className="size-6 shrink-0 object-contain" />
+                            <p className="text-[10px] font-bold uppercase tracking-[0.1em]">{selectedArmor?.name} HPS</p>
+                            <InfoTooltip
+                                label="Explain Healing Pulse HPS"
+                                text={`Healing Pulse restores ${formatNumber(regenerationPercent)}% of calculated max Health every second. This continuous gear regeneration is separate from skill healing and is unaffected by Grace, critical hits, or skill cooldowns.`}
+                            />
+                        </div>
+                        <p className="mt-2 text-base font-bold text-[#82f0b7]" title={`${formatHoverStatNumber(gearHealingPerSecond)} HPS`}>
+                            <StatAmount value={gearHealingPerSecond} /> HPS
+                        </p>
+                        <p className="mt-1 text-[11px] text-[#a3aec0]">Healing Pulse · {formatNumber(regenerationPercent)}% max HP per second</p>
+                    </div>
+                </div>
+            )}
         </section>
     );
 }

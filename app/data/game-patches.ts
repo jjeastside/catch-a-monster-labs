@@ -13,9 +13,43 @@ export type Patch = {
 
 export const gamePatches: readonly Patch[] = [
     {
+        version: "Update 0.54",
+        date: "October 24, 2026",
+        label: "Latest",
+        sections: [
+            {
+                title: "Halloween Event — Part 1",
+                changes: [
+                    "Halloween Event Part 1 is live!",
+                    "The Halloween World Boss now spawns on the Central Island.",
+                ],
+            },
+            {
+                title: "New Evolution",
+                changes: ["Gravion's new evolution, Gravitas, is now available!"],
+            },
+            {
+                title: "Admin Abuse",
+                changes: ["Admin Abuse will be held twice for different time zones."],
+            },
+            {
+                title: "New Code",
+                changes: ["Halloween"],
+            },
+            {
+                title: "Update 0.54.1",
+                date: "October 24, 2026",
+                changes: [
+                    "Fixed some bugs.",
+                    "New Code: eventb",
+                    "Old Code: Halloween",
+                ],
+            },
+        ],
+    },
+    {
         version: "Update 0.53",
         date: "October 16, 2026",
-        label: "Latest",
         sections: [
             {
                 title: "Dungeon & Apocalypse Difficulty",

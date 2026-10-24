@@ -76,17 +76,19 @@ const latestGamePatch = gamePatches[0];
 const exampleTrackedMonsterCount = 95;
 const exampleIndexCompletion = Math.round((exampleTrackedMonsterCount / GENERATED_MONSTERS.length) * 100);
 const featuredUpdateMonsters = [
-    { name: "Luminara", image: "/monster-artwork/luminara.png", note: "Apocalypse Egg" },
-    { name: "Umbra Sentinel", image: "/monster-artwork/umbra-sentinel.png", note: "Umbra Reaver evolution" },
-    { name: "Lumen Sentinel", image: "/monster-artwork/lumen-sentinel.png", note: "Lumen Knight evolution" },
+    { name: "Lunaron", image: "/monster-artwork/lunaron.png", note: "New monster" },
+    { name: "Gravitas", image: "/monster-artwork/gravitas.png", note: "Gravion evolution" },
 ] as const;
 const patchPreviewHighlights = latestGamePatch.sections
     .filter((section) => !/code/i.test(section.title))
     .flatMap((section) => section.changes)
     .slice(0, 4);
 const patchPreviewCode = latestGamePatch.sections
-    .find((section) => /code/i.test(section.title))
-    ?.changes[0]?.replace(/^New Code:\s*/i, "");
+    .flatMap((section) => section.changes)
+    .reverse()
+    .find((change) => /^New Code:/i.test(change))
+    ?.replace(/^New Code:\s*/i, "")
+    ?? latestGamePatch.sections.find((section) => /code/i.test(section.title))?.changes[0];
 
 const featureCards = [
     {
@@ -433,9 +435,9 @@ export default function HomePage() {
                         <div className="relative z-20 max-w-[670px]">
                             <p className="text-xs font-black uppercase tracking-[0.16em] text-[#60baff] drop-shadow-[0_2px_8px_rgba(0,0,0,.8)]">Catch a Monster Labs</p>
                             <Link href="/updates" className="mt-4 inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-full border border-[#367eb7]/70 bg-[#072344]/90 px-3 py-1.5 text-xs font-bold text-[#bfe5ff] shadow-lg shadow-black/30 transition hover:border-[#60c8ff] hover:bg-[#0b3157]">
-                                <span className="text-[#66d8ff]">Game Update 0.53</span>
+                                <span className="text-[#66d8ff]">Game Updates 0.54 & 0.54.1</span>
                                 <span aria-hidden="true" className="text-[#5e83a4]">•</span>
-                                <span>Apocalypse Dungeon + new evolutions</span>
+                                <span>Halloween Event + new evolution</span>
                                 <Icon name="arrow" className="size-3.5" />
                             </Link>
                             <h1 className="mt-4 max-w-[650px] text-[clamp(2.8rem,4.2vw,4.65rem)] font-black leading-[1.01] tracking-[-0.04em] text-white drop-shadow-[0_4px_18px_rgba(0,0,0,.7)]">
@@ -463,18 +465,19 @@ export default function HomePage() {
                     </div>
                 </section>
 
-                <section aria-labelledby="update-053-title" className="border-b border-[#17345b] bg-[#050f20] px-4 py-6 sm:px-6 lg:px-8">
+                <section aria-labelledby="update-054-title" className="border-b border-[#17345b] bg-[#050f20] px-4 py-6 sm:px-6 lg:px-8">
                     <div className="mx-auto grid w-full max-w-[1480px] gap-5 rounded-2xl border border-[#225681] bg-[linear-gradient(120deg,#0b2441,#07152a_70%)] p-5 shadow-[0_14px_35px_rgba(0,0,0,.25)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-center lg:p-6">
                         <div>
-                            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#66d3ff]">Latest game update · October 16, 2026</p>
-                            <h2 id="update-053-title" className="mt-2 text-2xl font-black tracking-tight text-white sm:text-3xl">Update 0.53: Apocalypse is here</h2>
-                            <p className="mt-3 max-w-[660px] text-sm leading-6 text-[#bcd0e5]">Explore the new Apocalypse Dungeon difficulty, Luminara, and two new evolutions. The Trader Event is live, EXP Dungeon is open daily, and EXP Fruits cost less in the Spire Shop.</p>
+                            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#66d3ff]">Latest game updates · October 24, 2026</p>
+                            <h2 id="update-054-title" className="mt-2 text-2xl font-black tracking-tight text-white sm:text-3xl">Updates 0.54 & 0.54.1: Halloween is here</h2>
+                            <p className="mt-3 max-w-[660px] text-sm leading-6 text-[#bcd0e5]">Halloween Event Part 1 is live, with a Halloween World Boss on Central Island and Gravion’s new evolution, Gravitas. Explore Lunaron and Gravitas in Cam Lab, plus the latest bug fixes in 0.54.1.</p>
+                            <p className="mt-3 text-xs leading-5 text-[#bcd0e5]">New code: <code className="font-bold text-[#66d3ff]">eventb</code><span className="mx-2 text-[#6485a8]">·</span>Previous code: <code className="font-bold text-white">Halloween</code></p>
                             <div className="mt-4 flex flex-wrap gap-3">
-                                <Link href="/updates" className="inline-flex items-center gap-2 rounded-lg bg-[#169cf5] px-4 py-2.5 text-xs font-black text-[#061424] transition hover:bg-[#54c4ff]">Read 0.53 Patch Notes <Icon name="arrow" className="size-4" /></Link>
+                                <Link href="/updates" className="inline-flex items-center gap-2 rounded-lg bg-[#169cf5] px-4 py-2.5 text-xs font-black text-[#061424] transition hover:bg-[#54c4ff]">Read 0.54 & 0.54.1 Patch Notes <Icon name="arrow" className="size-4" /></Link>
                                 <Link href="/monster-database" className="inline-flex items-center gap-2 rounded-lg border border-[#4678aa] px-4 py-2.5 text-xs font-bold text-[#dcefff] transition hover:bg-[#153859]">Explore New Monsters <Icon name="arrow" className="size-4" /></Link>
                             </div>
                         </div>
-                        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                        <div className="grid grid-cols-2 gap-2 sm:gap-3">
                             {featuredUpdateMonsters.map((monster) => (
                                 <div key={monster.name} className="min-w-0 rounded-xl border border-[#295379] bg-[#07172d]/90 p-2 text-center sm:p-3">
                                     <div className="mx-auto grid aspect-square max-w-28 place-items-center overflow-hidden rounded-lg bg-[#102b43]">

@@ -8,17 +8,17 @@ import { gamePatches } from "../data/game-patches";
 import { getMonsterStatData } from "../data/monster-stats";
 
 const updatedMonsters = [
-    { id: "luminara", position: 244, element: "Light", source: "", skills: ["void-collapse", "holy-aura-luminara"] },
-    { id: "umbra-sentinel", position: 245, element: "Dark", source: "umbra-reaver", skills: ["overvolt-tempest", "lightning-thrust"] },
-    { id: "lumen-sentinel", position: 246, element: "Mechanical", source: "lumen-knight", skills: ["overvolt-tempest", "lightning-thrust"] },
+    { id: "luminara", position: 245, element: "Light", source: "", skills: ["void-collapse", "holy-aura-luminara"] },
+    { id: "umbra-sentinel", position: 246, element: "Dark", source: "umbra-reaver", skills: ["overvolt-tempest", "lightning-thrust"] },
+    { id: "lumen-sentinel", position: 247, element: "Mechanical", source: "lumen-knight", skills: ["overvolt-tempest", "lightning-thrust"] },
 ] as const;
 
 describe("Catch a Monster Update 0.53", () => {
-    it("keeps the update first, without removing the prior 0.52.1 sub-update", () => {
-        expect(gamePatches[0].version).toBe("Update 0.53");
-        expect(gamePatches[0].label).toBe("Latest");
-        expect(gamePatches[0].sections.some(section => section.changes.some(c => c.includes("Apocalypse")))).toBe(true);
-        expect(gamePatches[1].sections.some(section => section.title === "Update 0.52.1")).toBe(true);
+    it("preserves 0.53 and its notes alongside later releases", () => {
+        const patch = gamePatches.find(candidate => candidate.version === "Update 0.53");
+        expect(patch).toBeDefined();
+        expect(patch?.sections.some(section => section.changes.some(c => c.includes("Apocalypse")))).toBe(true);
+        expect(gamePatches.find(candidate => candidate.version === "Update 0.52")?.sections.some(section => section.title === "Update 0.52.1")).toBe(true);
     });
 
     it("imports all three new monsters with complete stats and correct skills", () => {
@@ -64,7 +64,7 @@ describe("Catch a Monster Update 0.53", () => {
     it("has unique and contiguous index positions instead of showing Index #0", () => {
         const positions = GENERATED_MONSTERS.map(monster => monster.indexPosition).sort((a, b) => a - b);
         expect(positions).toEqual(Array.from({ length: GENERATED_MONSTERS.length }, (_, index) => index + 1));
-        expect(GENERATED_MONSTERS.find(monster => monster.id === "icearia")?.indexPosition).toBe(256);
+        expect(GENERATED_MONSTERS.find(monster => monster.id === "icearia")?.indexPosition).toBe(GENERATED_MONSTERS.length);
     });
 
     it("uses the supplied 8-second cooldown for Luminara's Holy Aura", () => {
