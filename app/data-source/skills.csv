@@ -68,6 +68,10 @@ ex-air-bullet,Ex Air Bullet,Common,"[
 ex-candy-bomb,Ex Candy Bomb,Common,"[
   { multiplier: 0.3, hits: 4 },
 ]",6,Cast several candies at the enemy.,Target: Enemy.,Ready
+ex-dark-singularity,EX Dark Singularity,Dark,"[
+  { multiplier: 1.5, hits: 1 },
+  { multiplier: 1.2, hits: 1 },
+]",6,Creates a black hole that damages nearby enemies and reduces their Attack(30%-40%) for a short duration.,,
 ex-fireball,Ex Fireball,Fire,"[
   { multiplier: 0.3, hits: 4 },
 ]",6,Casts four fireballs at the enemy and boosts self Attack.,Target: Enemy | Self. Ally effects: 25% self Damage for 6 secs,Ready

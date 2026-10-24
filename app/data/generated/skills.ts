@@ -551,6 +551,24 @@ export const GENERATED_SKILLS = {
     "notes": "Target: Enemy.",
     "validationStatus": "Ready"
   },
+  "ex-dark-singularity": {
+    "id": "ex-dark-singularity",
+    "name": "EX Dark Singularity",
+    "element": "Dark",
+    "description": "Creates a black hole that damages nearby enemies and reduces their Attack(30%-40%) for a short duration.",
+    "damageInstances": [
+      {
+        "multiplier": 1.5,
+        "hits": 1
+      },
+      {
+        "multiplier": 1.2,
+        "hits": 1
+      }
+    ],
+    "cooldown": 6,
+    "validationStatus": ""
+  },
   "ex-fireball": {
     "id": "ex-fireball",
     "name": "Ex Fireball",
