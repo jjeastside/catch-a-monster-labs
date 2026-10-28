@@ -115,6 +115,11 @@ export function sanitizeBuild(saved: Partial<Build>, monsterId: string): Build {
     evolutionPercent: monster.isEvolved ? clampEvolutionPercent(finite(saved.evolutionPercent, 100)) : 100,
     mutations,
     traitId: hasFixedBreeding(monsterId) ? null : getAvailableTraits().some(({ id }) => id === saved.traitId) ? saved.traitId! : null,
+    targetStatused: saved.targetStatused === true,
+    rallyingWarCryActive: saved.rallyingWarCryActive === true,
+    vulnerabilityActive: saved.vulnerabilityActive === true,
+    enemyVulnerabilityPercent: typeof saved.enemyVulnerabilityPercent === "number" && Number.isFinite(saved.enemyVulnerabilityPercent) && saved.enemyVulnerabilityPercent > 0
+      ? saved.enemyVulnerabilityPercent : undefined,
     rudeAwakeningActive: weapon?.id === "block-buster" && saved.rudeAwakeningActive === true,
     weaponId: weapon?.id ?? null,
     armorId: armor?.id ?? null,
@@ -125,10 +130,9 @@ export function sanitizeBuild(saved: Partial<Build>, monsterId: string): Build {
       saved.selectedSkillId && monster.skillIds.includes(saved.selectedSkillId)
         ? saved.selectedSkillId
         : monster.skillIds[0] ?? null,
-    // These values describe the current calculator context, not a saved monster.
-    // Rebuild them whenever the team is evaluated so recommendation contexts do
-    // not leak into the regular Team Overview or saved presets.
-    targetIsBoss: false,
+    // Boss status is a saved enemy condition, independent of the encounter.
+    targetIsBoss: saved.targetIsBoss === true,
+    // Rebuild encounter, account and teammate context when evaluating the team.
     combatContext: "standard",
     preDungeonLevel: saved.preDungeonLevel == null ? null
       : integer(saved.preDungeonLevel, MIN_LEVEL, CURRENT_MAX_LEVEL, base.level),
@@ -396,7 +400,7 @@ export function buildForGoal(build: Build, combatContext: TeamCombatContext): Bu
     // Recommendations, previews and the visible cards must evaluate Dungeon
     // at the same level even when an inventory copy is saved at another level.
     level: combatContext === "dungeon" ? DUNGEON_TEAM_LEVEL : build.level,
-    targetIsBoss: combatContext === "boss",
+    targetIsBoss: build.combatMode !== "pvp" && (build.targetIsBoss || combatContext === "boss"),
     combatContext: combatContext === "boss" ? "standard" : combatContext,
   };
 }

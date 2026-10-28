@@ -129,7 +129,7 @@ const featureCards = [
     },
     {
         title: "Team Builder",
-        description: "Build three-monster teams, filter skills by their effects, manage gear, and compare team stats for your combat goal.",
+        description: "Build three-monster teams, manage gear, toggle shared team and enemy conditions, and compare Skill Damage with Skill DPS.",
         href: "/team",
         navIcon: "/team-builder.png",
         preview: "team-builder",
@@ -345,7 +345,7 @@ function TeamBuilderPreview() {
                     <Image src={assetPath("/team-builder.png")} alt="" width={22} height={22} unoptimized aria-hidden="true" className="size-[22px] object-contain" />
                     <div>
                         <p className="text-[10px] font-black uppercase tracking-[0.12em] text-[#60baff]">Team Composition</p>
-                        <p className="text-[9px] text-[#7f94b1]">Build and compare a three-monster team</p>
+                        <p className="text-[9px] text-[#7f94b1]">Shared combat conditions · Skill Damage · DPS</p>
                     </div>
                 </div>
                 <span className="rounded-md border border-[#23476d] bg-[#0b2137] px-2 py-1 text-[9px] font-bold text-[#9fc8ec]">3 / 3</span>
@@ -366,10 +366,11 @@ function TeamBuilderPreview() {
             <div className="mt-2 rounded-lg border border-[#1e3f62] bg-[#08192a] px-3 py-2">
                 <div className="flex items-center justify-between gap-3">
                     <span className="text-[9px] font-black uppercase tracking-[0.1em] text-[#91b8dc]">Team Overview</span>
-                    <div className="flex gap-3 text-[8px] text-[#7f94b1]">
-                        <span>Damage</span><span>Health</span><span>Skill DPS</span>
+                    <div className="flex flex-wrap justify-end gap-x-3 gap-y-1 text-[8px] text-[#7f94b1]">
+                        <span>Damage</span><span>Health</span><span className="inline-flex items-center gap-1"><Image src={assetPath("/icons/skill-damage.png")} alt="" width={12} height={12} unoptimized aria-hidden="true" />Skill Damage</span><span>Skill DPS</span>
                     </div>
                 </div>
+                <p className="mt-1 text-[8px] leading-3 text-[#9fb0c7]">Team buffs · Enemy status · Vulnerability · Boss / Spire</p>
             </div>
         </div>
     );

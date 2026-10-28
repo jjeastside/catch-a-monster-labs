@@ -44,6 +44,8 @@ import {
   loadTeamStorage, mergeIndexProgress,
 } from "../../lib/team-model";
 
+import { applyTeamCombatConditions, getTeamCombatOptions } from "../../lib/team-combat-conditions";
+
 import styles from "./team-composition.module.css";
 
 // Use the same icon aliases as Calculator Results for alternate skill variants.
@@ -90,12 +92,13 @@ function TeamRankText({ rank }: { rank: Rank | null | undefined }) {
   );
 }
 
-type OverviewIconKind = "damage" | "health" | "dps" | "survivability" | "synergy";
+type OverviewIconKind = "damage" | "skillDamage" | "health" | "dps" | "survivability" | "synergy";
 
 function OverviewIcon({ kind }: { kind: OverviewIconKind }) {
   // Reuse the exact asset paths shown beside each monster in the Team Builder.
   const statIcons: Partial<Record<OverviewIconKind, string>> = {
     damage: "/account-icons/damage.png",
+    skillDamage: "/icons/skill-damage.png",
     health: "/account-icons/health.png",
     dps: "/icons/dps.png",
   };
@@ -103,6 +106,7 @@ function OverviewIcon({ kind }: { kind: OverviewIconKind }) {
   if (statIcon) return <img className={styles.overviewIcon} src={assetPath(statIcon)} alt="" aria-hidden="true" />;
   const paths: Record<OverviewIconKind, ReactNode> = {
     damage: <><path d="m13.5 2-8 11h6l-1 9 8-12h-6z" /></>,
+    skillDamage: <><path d="m13.5 2-8 11h6l-1 9 8-12h-6z" /></>,
     health: <><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" /></>,
     dps: <><path d="M12 2v3m0 14v3M2 12h3m14 0h3" /><circle cx="12" cy="12" r="7" /><circle cx="12" cy="12" r="3" /><path d="m15 9 6-6" /></>,
     survivability: <><path d="M12 2 4 5v6c0 5 3.3 8.4 8 11 4.7-2.6 8-6 8-11V5z" /><path d="m8.5 12 2.5 2.5 4.5-5" /></>,
@@ -110,6 +114,8 @@ function OverviewIcon({ kind }: { kind: OverviewIconKind }) {
   };
   return <svg className={`${styles.overviewIcon} ${styles[`overviewIcon_${kind}`]}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[kind]}</svg>;
 }
+
+const SKILL_DAMAGE_DESCRIPTION = "Damage × each skill's full damage multiplier, including active damage modifiers, before critical hits. Summed across damaging skills; not divided by cooldown. DPS also accounts for cooldowns, crit chance and expected procs.";
 
 const INVENTORY_ELEMENTS = [...new Set(availableMonsters.map((monster) => monster.element))].sort();
 const INVENTORY_RARITIES = [...new Set(availableMonsters.map((monster) => monster.rarity))].sort();
@@ -487,9 +493,14 @@ export function TeamComposition() {
     [team],
   );
 
-  const resolvedTeam = team.map((savedBuild, index) => {
+  const combatOptions = getTeamCombatOptions(team);
+  const combatTeam = applyTeamCombatConditions(team);
+  const sharedCombat = combatTeam.find(build => build.monsterId);
+  const updateSharedCombat = (changes: Partial<Build>) => setTeam(current => current.map(build => ({ ...build, ...changes })));
+
+  const resolvedTeam = combatTeam.map((savedBuild, index) => {
     const monster = savedBuild.monsterId ? monsterById.get(savedBuild.monsterId) ?? null : null;
-    if (!monster) return { monster: null, build: savedBuild, stats: null, dps: 0, skillPreviews: [], supportCount: 0 };
+    if (!monster) return { monster: null, build: savedBuild, stats: null, dps: 0, skillDamage: 0, skillPreviews: [], supportCount: 0 };
 
     const teammateIds = team
       .filter((_, teammateIndex) => teammateIndex !== index)
@@ -514,9 +525,12 @@ export function TeamComposition() {
           return [{ skill, summary, supportEffects }];
         })
       : [];
+    // Match the per-skill damage shown in Team Skills Preview. Utility skills
+    // contribute no damage; multi-hit skills already include their full multiplier.
+    const skillDamage = skillPreviews.reduce((sum, preview) => sum + (preview.summary.normalDamage ?? 0), 0);
     const dps = skillPreviews.reduce((sum, preview) => sum + (preview.summary.dps ?? 0), 0);
     const supportCount = skillPreviews.reduce((sum, preview) => sum + preview.supportEffects.length, 0);
-    return { monster, build, stats, dps, skillPreviews, supportCount };
+    return { monster, build, stats, dps, skillDamage, skillPreviews, supportCount };
   });
 
   const maxTeamDps = Math.max(0, ...resolvedTeam.map((item) => item.dps));
@@ -541,11 +555,12 @@ export function TeamComposition() {
     (result, item) => ({
       health: result.health + (item.stats?.health ?? 0),
       damage: result.damage + (item.stats?.damage ?? 0),
+      skillDamage: result.skillDamage + item.skillDamage,
       dps: result.dps + item.dps,
       effectiveHealth: result.effectiveHealth + (item.monster && item.stats ? effectiveTeamHealth(item.monster, item.build, item.stats.health) : 0),
       monsters: result.monsters + (item.monster ? 1 : 0),
     }),
-    { health: 0, damage: 0, dps: 0, effectiveHealth: 0, monsters: 0 },
+    { health: 0, damage: 0, skillDamage: 0, dps: 0, effectiveHealth: 0, monsters: 0 },
   );
 
   const filteredInventory = useMemo(() => {
@@ -1585,6 +1600,7 @@ export function TeamComposition() {
                       <div className={styles.monsterCoreStats} aria-label={`${item.monster.name} current stats`}>
                         <div><span><img src={assetPath("/account-icons/damage.png")} alt="" />Damage</span><strong>{formatStatNumber(item.stats?.damage ?? 0)}</strong></div>
                         <div><span><img src={assetPath("/account-icons/health.png")} alt="" />Health</span><strong>{formatStatNumber(item.stats?.health ?? 0)}</strong></div>
+                        <div title={SKILL_DAMAGE_DESCRIPTION}><span><img src={assetPath("/icons/skill-damage.png")} alt="" />Skill Damage</span><strong>{formatStatNumber(item.skillDamage)}</strong></div>
                         <div><span><img src={assetPath("/icons/dps.png")} alt="" />Skill DPS</span><strong>{formatStatNumber(item.dps)}</strong></div>
                       </div>
                       <details className={styles.compareEditor} open={editingTeamSlot === index} onToggle={(event) => { if (!event.currentTarget.open && editingTeamSlot === index) closeTeamEditor(); }}>
@@ -1695,6 +1711,7 @@ export function TeamComposition() {
                       <div className={styles.compactStats}>
                         <div className={styles.slotStat}><span><img src={assetPath("/account-icons/damage.png")} alt="" />Damage</span><strong>{formatStatNumber(item.stats?.damage ?? 0)}</strong></div>
                         <div className={styles.slotStat}><span><img src={assetPath("/account-icons/health.png")} alt="" />Health</span><strong>{formatStatNumber(item.stats?.health ?? 0)}</strong></div>
+                        <div className={styles.slotStat} title={SKILL_DAMAGE_DESCRIPTION}><span><img src={assetPath("/icons/skill-damage.png")} alt="" />Skill Damage</span><strong>{formatStatNumber(item.skillDamage)}</strong></div>
                         <div className={styles.slotStat}><span><img src={assetPath("/icons/dps.png")} alt="" />Total Skill DPS</span><strong>{formatStatNumber(item.dps)}</strong></div>
                         <div className={styles.slotStat}><span><img src={assetPath("/account-icons/critical-chance.png")} alt="" />Crit Chance</span><strong>{item.stats ? `${Number(item.stats.critChance.toFixed(2))}%` : "—"}</strong></div>
                         <div className={styles.slotStat}><span><img src={assetPath("/account-icons/critical-damage.png")} alt="" />Crit Multiplier</span><strong>{item.stats ? `${Number(item.stats.critMultiplier.toFixed(2))}×` : "—"}</strong></div>
@@ -1741,6 +1758,7 @@ export function TeamComposition() {
               <div className={styles.overviewGrid}>
                 <div className={styles.overviewCard}><span className={styles.overviewLabel}><OverviewIcon kind="damage" />Total Damage</span><strong>{formatStatNumber(totals.damage)}</strong></div>
                 <div className={styles.overviewCard}><span className={styles.overviewLabel}><OverviewIcon kind="health" />Total Health</span><strong>{formatStatNumber(totals.health)}</strong></div>
+                <div className={styles.overviewCard} title={SKILL_DAMAGE_DESCRIPTION}><span className={styles.overviewLabel}><OverviewIcon kind="skillDamage" />Team Skill Damage</span><strong>{formatStatNumber(totals.skillDamage)}</strong></div>
                 <div className={styles.overviewCard} title="Sum of calculated skill DPS; skill rotations, casting and buff uptime are not simulated"><span className={styles.overviewLabel}><OverviewIcon kind="dps" />Team Skill DPS</span><strong>{formatStatNumber(totals.dps)}</strong></div>
                 <div className={styles.overviewCard} title="Combined effective HP after modeled damage resistance and encounter guard passives; healing and shields are not included"><span className={styles.overviewLabel}><OverviewIcon kind="survivability" />Effective HP</span><strong className={styles.overviewAccent}>{totals.monsters ? formatStatNumber(totals.effectiveHealth) : "—"}</strong><small className={styles.overviewWeakest}>Weakest: {totals.monsters ? formatStatNumber(Math.min(...resolvedTeam.filter((item) => item.monster).map((item) => effectiveTeamHealth(item.monster!, item.build, item.stats?.health ?? 0)))) : "—"}</small></div>
                 <button
@@ -1760,6 +1778,63 @@ export function TeamComposition() {
                   </span>
                 </button>
               </div>
+
+              {totals.monsters > 0 && (
+                <div className={styles.combatConditionGrid}>
+                  <section className={styles.combatConditions} aria-label="Combat Conditions (Team)">
+                    <h3>Combat Conditions (Team)</h3>
+                    <p className={styles.helper}>Shared buffs apply once to every monster. Multiple sources do not stack. Buff uptime is not simulated.</p>
+                    {combatOptions.damageIncreasePercent > 0 && (
+                      <button type="button" className={styles.combatConditionToggle} aria-pressed={sharedCombat?.rallyingWarCryActive === true}
+                        onClick={() => updateSharedCombat({ rallyingWarCryActive: !sharedCombat?.rallyingWarCryActive })}>
+                        <span className={styles.combatConditionLabel}><span className={styles.combatConditionIcons}><img src={assetPath("/icons/damage-increase.png")} alt="" /></span>Team Damage Increase (+{combatOptions.damageIncreasePercent}% Damage)</span>
+                        <span className={styles.combatConditionState}>{sharedCombat?.rallyingWarCryActive ? "Active" : "Inactive"}</span>
+                      </button>
+                    )}
+                    <label className={styles.combatEncounter}>Encounter
+                      <select aria-label="Team combat encounter" disabled={combatMode === "pvp"} value={combatContext === "boss" ? "standard" : combatContext}
+                        onChange={event => changeCombatContext(event.target.value as TeamCombatContext)}>
+                        <option value="standard">Standard</option><option value="spire">Tower / Spire</option><option value="rift">Rift</option><option value="dungeon">Dungeon</option>
+                      </select>
+                    </label>
+                    {resolvedTeam.map(({ monster, build }, index) => monster && build.weaponId === "block-buster" ? (
+                      <button key={index} type="button" className={styles.combatConditionToggle} aria-pressed={build.rudeAwakeningActive}
+                        onClick={() => updateTeamBuild(index, { rudeAwakeningActive: !build.rudeAwakeningActive })}>
+                        <span>{monster.name} · Slot {index + 1}: Rude Awakening (2× Damage)</span>
+                        <span className={styles.combatConditionState}>{build.rudeAwakeningActive ? "Active" : "Inactive"}</span>
+                      </button>
+                    ) : null)}
+                  </section>
+                  <section className={styles.combatConditions} aria-label="Combat Conditions (Enemy)">
+                    <h3>Combat Conditions (Enemy)</h3>
+                    <p className={styles.helper}>These conditions describe the shared target. Choose one vulnerability strength; it applies to the whole team.</p>
+                    {(combatOptions.hasBossCondition || sharedCombat?.targetIsBoss || combatContext === "boss") && (
+                      <button type="button" className={styles.combatConditionToggle} disabled={combatMode === "pvp"}
+                        aria-pressed={combatMode !== "pvp" && (!!sharedCombat?.targetIsBoss || combatContext === "boss")}
+                        onClick={() => { updateSharedCombat({ targetIsBoss: !(sharedCombat?.targetIsBoss || combatContext === "boss") }); if (combatContext === "boss") setCombatContext("standard"); }}>
+                        <span className={styles.combatConditionLabel}><span className={styles.combatConditionIcons}><img src={assetPath("/passive-images/boss-slayer.png")} alt="" /></span>Target is Boss</span>
+                        <span className={styles.combatConditionState}>{combatMode !== "pvp" && (sharedCombat?.targetIsBoss || combatContext === "boss") ? "Active" : "Inactive"}</span>
+                      </button>
+                    )}
+                    {combatOptions.hasStatusCondition && (
+                      <button type="button" className={styles.combatConditionToggle} aria-pressed={sharedCombat?.targetStatused === true}
+                        onClick={() => updateSharedCombat({ targetStatused: !sharedCombat?.targetStatused })}>
+                        <span className={styles.combatConditionLabel}><span className={styles.combatConditionIcons}><img src={assetPath("/icons/burn-effect.png")} alt="" /><img src={assetPath("/icons/poison-effect.png")} alt="" /></span>Target is Burning or Poisoned</span>
+                        <span className={styles.combatConditionState}>{sharedCombat?.targetStatused ? "Active" : "Inactive"}</span>
+                      </button>
+                    )}
+                    {combatOptions.vulnerabilityPercentages.map(percent => {
+                      const active = sharedCombat?.vulnerabilityActive === true && sharedCombat.enemyVulnerabilityPercent === percent;
+                      return <button key={percent} type="button" className={styles.combatConditionToggle} aria-pressed={active}
+                        onClick={() => updateSharedCombat({ vulnerabilityActive: !active, enemyVulnerabilityPercent: percent })}>
+                        <span className={styles.combatConditionLabel}><span className={styles.combatConditionIcons}><img src={assetPath("/icons/vulnerability.png")} alt="" /></span>Vulnerability (+{percent}% Damage Taken)</span>
+                        <span className={styles.combatConditionState}>{active ? "Active" : "Inactive"}</span>
+                      </button>;
+                    })}
+                    {!combatOptions.hasBossCondition && !combatOptions.hasStatusCondition && !combatOptions.vulnerabilityPercentages.length && <p className={styles.helper}>No applicable enemy conditions for this team.</p>}
+                  </section>
+                </div>
+              )}
 
               <section
                 id="team-synergy-explanation"

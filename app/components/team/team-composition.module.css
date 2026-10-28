@@ -3024,3 +3024,33 @@ button.emptySlot .emptySlotContent small {
 .pickerPortrait { width: 43px; height: 43px; overflow: hidden; border: 1px solid #34516c; border-radius: 8px; }
 .editorPortrait { width: 54px; height: 54px; overflow: hidden; border: 1px solid #496789; border-radius: 9px; }
 .alternativePortrait { width: 36px; height: 36px; overflow: hidden; border: 1px solid #3b6689; border-radius: 6px; }
+
+
+.combatConditions { margin-top: 12px; padding: 14px; border: 1px solid #25475f; border-radius: 10px; background: #061824; }
+.combatConditions h3 { margin: 0 0 6px; font-size: 14px; color: #e3e8f1; }
+.combatConditionGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 12px; margin-top: 12px; }
+.combatConditionMember { min-width: 0; margin: 0; padding: 0; border: 0; }
+.combatConditionMember legend { margin-bottom: 8px; padding: 0; font-size: 12px; font-weight: 700; color: #aeb8ff; }
+.combatConditionToggle { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; padding: 10px; border: 1px solid #25475f; border-radius: 6px; background: #071b2b; color: #8e99ad; text-align: left; font-size: 12px; line-height: 1.5; cursor: pointer; }
+.combatConditionToggle:hover { border-color: #3984af; color: #e3e8f1; }
+.combatConditionToggle:focus-visible { outline: 2px solid #aeb8ff; outline-offset: 3px; }
+.combatConditionToggle[aria-pressed="true"] { border-color: #b26fff; background: #2b2040; color: #d6b3ff; }
+.combatConditionLabel { display: flex; min-width: 0; align-items: center; gap: 8px; }
+.combatConditionIcons { display: flex; flex-shrink: 0; gap: 4px; }
+.combatConditionIcons img { width: 18px; height: 18px; object-fit: contain; }
+.combatConditionState { flex-shrink: 0; font-size: 11px; font-weight: 700; }
+
+.combatEncounter { display: flex; align-items: center; gap: 12px; margin-top: 12px; color: #aeb8ff; font-size: 12px; }
+.combatEncounter select { min-width: 0; flex: 1; border: 1px solid #25475f; border-radius: 6px; padding: 8px; background: #071b2b; color: #e3e8f1; }
+.combatConditionToggle:disabled, .combatEncounter select:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Four monster values stay readable in narrow team columns. */
+.monsterCoreStats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.overviewGrid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+@media (max-width: 1200px) {
+  .overviewGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .overviewGrid .synergyMetric { grid-column: auto; }
+}
+@media (max-width: 600px) {
+  .overviewGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

@@ -51,7 +51,7 @@ export function calculateSkillSummary(
     teammateSkillIdGroups,
   );
   const rallyingWarCryMultiplier = build.rallyingWarCryActive
-    ? 1 + rallyingWarCryDamageIncrease / 100
+    ? 1 + (build.teamCombatEffects?.damageIncreasePercent ?? rallyingWarCryDamageIncrease) / 100
     : 1;
   const ownVulnerability = getEnemyVulnerability(monster.skillIds);
   const activeVulnerability = getActiveEnemyVulnerability(
@@ -65,7 +65,7 @@ export function calculateSkillSummary(
   const effectiveVulnerability =
     activeVulnerability * (1 + vulnerabilityEffectiveness / 100);
   const vulnerabilityMultiplier = build.vulnerabilityActive
-    ? 1 + effectiveVulnerability / 100
+    ? 1 + (build.teamCombatEffects?.vulnerabilityPercent ?? effectiveVulnerability) / 100
     : 1;
 
   const combatDamage = calculateCombatDamage({

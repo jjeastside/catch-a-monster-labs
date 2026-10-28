@@ -83,6 +83,10 @@ export type Build = {
   targetIsBoss: boolean;
   rallyingWarCryActive: boolean;
   vulnerabilityActive: boolean;
+  /** Selected enemy debuff strength for Team Builder; strengths never stack. */
+  enemyVulnerabilityPercent?: number;
+  /** Resolved team-wide effect sources, rebuilt whenever the team changes. */
+  teamCombatEffects?: { damageIncreasePercent: number; vulnerabilityPercent: number };
   rudeAwakeningActive: boolean;
 
 

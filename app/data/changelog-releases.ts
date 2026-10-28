@@ -8,9 +8,22 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.34",
+        date: "October 28, 2026",
+        label: "Latest",
+        title: "Team Combat Conditions & Skill Damage",
+        changes: [
+            "Added shared team and enemy combat conditions to Team Builder, plus Skill Damage values on monster cards and in Team Overview.",
+            "Team damage buffs and enemy vulnerability now apply to every monster. Multiple providers do not stack the same effect, and available 20% or trait-enhanced 30% vulnerability strengths are mutually exclusive.",
+            "Separated Combat Conditions (Team) from Combat Conditions (Enemy), with encounter selection, burning or poisoned targets, and a boss toggle when applicable. Boss status can be combined with Tower / Spire and other PvE encounters.",
+            "Added Skill Damage alongside Damage and Skill DPS: monster damage multiplied by each skill's full multiplier and active damage modifiers, summed across damaging skills before critical hits or cooldown division. Added a dedicated Skill Damage icon and tooltips explaining its relationship to DPS.",
+            "Saved teams retain combat-condition selections. Available buff and vulnerability strengths are recalculated when team members or traits change.",
+            "Updated the homepage Team Builder feature and preview to highlight shared combat conditions, Skill Damage, and Skill DPS.",
+        ],
+    },
+    {
         version: "v1.0.33",
         date: "October 24, 2026",
-        label: "Latest",
         title: "Halloween Updates 0.54 & 0.54.1",
         changes: [
             "Added Shroomvale as the 15th Path of Progress achievement, raising the maximum Health bonus from +28% to +30% across account multipliers and build calculations while preserving existing saved selections.",
