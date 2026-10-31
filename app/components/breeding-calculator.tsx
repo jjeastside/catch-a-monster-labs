@@ -128,16 +128,16 @@ export function BreedingCalculator() {
             <section className={panel}>
                 <h2 className="text-lg font-black text-white">Transfer power breakdown</h2>
                 {result ? <div className="mt-3 space-y-3 text-sm">
-                    <div className="flex justify-between gap-3 border-b border-[#294761] pb-2"><span className="text-[#afc6dd]">Male donor power</span><strong className="tabular-nums text-white">{result.sourcePower.toLocaleString(undefined, { maximumFractionDigits: 3 })}</strong></div>
-                    <div className="flex justify-between gap-3 border-b border-[#294761] pb-2"><span className="text-[#afc6dd]">Female target power</span><strong className="tabular-nums text-white">{result.targetPower.toLocaleString(undefined, { maximumFractionDigits: 3 })}</strong></div>
+                    <div className="flex justify-between gap-3 border-b border-[#294761] pb-2"><span className="text-[#afc6dd]">Male donor Transfer Power</span><strong className="tabular-nums text-white">{result.sourcePower.toLocaleString("en-US", { maximumSignificantDigits: 5, notation: result.sourcePower < 0.01 || result.sourcePower >= 1e7 ? "scientific" : "standard" })}</strong></div>
+                    <div className="flex justify-between gap-3 border-b border-[#294761] pb-2"><span className="text-[#afc6dd]">Female target Transfer Power</span><strong className="tabular-nums text-white">{result.targetPower.toLocaleString("en-US", { maximumSignificantDigits: 5, notation: result.targetPower < 0.01 || result.targetPower >= 1e7 ? "scientific" : "standard" })}</strong></div>
                     <div className="flex justify-between gap-3 border-b border-[#294761] pb-2"><span className="text-[#afc6dd]">Target / donor ratio</span><strong className="tabular-nums text-white">{result.ratio.toFixed(4)}×</strong></div>
                     <div className="flex justify-between gap-3 border-b border-[#294761] pb-2"><span className="text-[#afc6dd]">Genesis transfer</span><strong className="tabular-nums text-sky-300">{traitPercent(result.genesisChance)}</strong></div>
                     <div className="flex justify-between gap-3"><span className="text-[#afc6dd]">Super Breed transfer</span><strong className="tabular-nums text-rose-300">{traitPercent(result.superChance)}</strong></div>
                 </div> : <p className="mt-3 text-sm text-amber-200">Missing valid PvE/PvP base-stat data. Transfer chance cannot be determined for this pair.</p>}
                 <div className="mt-4 rounded-lg border border-[#294761] bg-[#06182a] p-3 text-xs leading-relaxed text-[#a8c2dd]">
-                    <p>Power = √[(PvE Damage / PvP Damage) × (PvE Health / PvP Health)]. Evolved monsters receive a 2.1984× power modifier.</p>
-                    <p className="mt-2">Dumplorer receives an additional approximate 1.25× modifier (2.748× total), based on the measured Runegolem → Dumplorer result. This exception remains an empirical fit.</p>
-                    <p className="mt-2">Genesis % = min(25, 25 × exp[-0.7 × (log₁.₄₅(ratio) − 1)]). Super Breed doubles the full-precision Genesis percentage, up to 50%; displayed trait rates are truncated to two decimals.</p>
+                    <p>Base factor = √[(PvE Damage / PvP Damage) × (PvE Health / PvP Health)]. Evolved monsters receive a 2.1984× modifier (2.2× for Gravitas). Transfer Power = effective factor ^ (0.7 / ln(1.45)).</p>
+                    <p className="mt-2">Dumplorer and Gravitas receive an additional 1.25× modifier (2.748× and 2.75× total, respectively). These modifiers are empirical fits.</p>
+                    <p className="mt-2">Genesis % = min(25, 25 × exp(0.7) × donor Transfer Power / target Transfer Power). Super Breed doubles the full-precision Genesis percentage, up to 50%; displayed trait rates are truncated to two decimals.</p>
                 </div>
             </section>
         </div>

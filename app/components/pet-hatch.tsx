@@ -7,8 +7,9 @@ import { GENERATED_MONSTERS } from "../data/generated/monsters";
 import { getMonsterExclusiveTraits, getTrait, TRAITS } from "../data/traits";
 import { assetPath } from "../lib/asset-path";
 import { hasFixedBreeding } from "../lib/breeding-limits";
-import { MUTATIONS, averageBreeds, displayedTraitRates, getBreedingTraits, mutationTransfer, rankTransfer, traitTransfer, type BreedRank, type Mutation, type MutationState } from "../lib/breed-transfer";
+import { MUTATIONS, averageBreeds, displayedTraitRates, getBreedingTraits, mutationTransfer, rankTransfer, traitTransfer, transferPower, type BreedRank, type Mutation, type MutationState } from "../lib/breed-transfer";
 import { TraitSelect } from "./trait-select";
+import { TransferPowerHelp } from "./transfer-power-help";
 import { TraitTransferHelp } from "./trait-transfer-help";
 import styles from "./pet-hatch.module.css";
 
@@ -158,6 +159,7 @@ export function PetHatch() {
                 <div className={styles.parents}>
                     {parents.map((parent, index) => {
                         const monster = monsters[index];
+                        const power = monster ? transferPower(monster) : null;
                         return <article key={index} className={styles.parent}>
                             <h3>Parent {index + 1}</h3>
                             <div className={styles.portrait} data-rarity={monster?.rarity}>
@@ -175,6 +177,7 @@ export function PetHatch() {
                                 </>}
                                 {!monster && <span style={{ inset: 0, display: "grid", placeContent: "center", gap: 8, background: "transparent", fontSize: 13, pointerEvents: "none" }}><b style={{ fontSize: 28 }}>+</b>Select a monster</span>}
                             </div>
+                            <div className={styles.transferPower}><div>Transfer Power <TransferPowerHelp parent={index + 1} /></div><strong title={power === null ? "Select a monster with valid PvE/PvP data" : power.toPrecision(12)}>{power === null ? "—" : power.toLocaleString("en-US", { maximumSignificantDigits: 5, notation: power < 0.01 || power >= 1e7 ? "scientific" : "standard" })}</strong></div>
                             {monster && <div className={styles.label}>Trait <Help label={`Parent ${index + 1} trait availability`} text="Exclusive traits appear only for their source monsters. Other traits are available to every parent. Vital Barrier is the exception: it can be selected on any monster. Changing a parent clears a trait that is no longer available." /><TraitSelect compact iconVariant="icon" allowedTraitIds={getBreedingTraits(parent.monsterId).map(trait => trait.id)} value={parent.traitId} onChangeAction={traitId => update(index, { traitId })} /></div>}
                         </article>;
                     })}

@@ -16,7 +16,7 @@ export function getBreedingTraits(monsterId: string) {
     return getAvailableTraits().filter(trait => trait.id === "vital-barrier" || !trait.exclusiveSourceIds?.length || trait.exclusiveSourceIds.includes(monsterId));
 }
 
-/** Research fit, using unmodified level-1 E-rank base stats only. */
+/** Relative Transfer Power: effective breeding factor raised to 0.7 / ln(1.45). */
 export const transferPower = researchTransferPower;
 
 export function traitTransfer(source: GeneratedMonster, target: GeneratedMonster, hasTrait: boolean) {

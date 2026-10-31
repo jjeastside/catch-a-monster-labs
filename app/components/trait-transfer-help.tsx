@@ -8,11 +8,11 @@ const superEquation = math(`<mrow><msub><mi>C</mi><mtext>Super</mtext></msub><mo
 const implementation = `from math import sqrt, log, exp
 
 def power(pve_damage, pvp_damage, pve_hp, pvp_hp,
-          evolution=False, dumplorer=False):
+          evolution=False, dumplorer=False, gravitas=False):
     p = sqrt((pve_damage / pvp_damage) * (pve_hp / pvp_hp))
     if evolution:
-        p *= 2.1984
-    if dumplorer:
+        p *= 2.2 if gravitas else 2.1984
+    if dumplorer or gravitas:
         p *= 1.25
     return p
 
@@ -32,15 +32,15 @@ export function TraitTransferHelp() {
         <dl>
             <dt>D</dt><dd>Base damage in PvE or PvP.</dd>
             <dt>H</dt><dd>Base health in PvE or PvP.</dd>
-            <dt>M</dt><dd>Start at 1. Multiply by 2.1984 for an evolution, then by another 1.25 for Dumplorer. Dumplorer’s total modifier is 2.748.</dd>
-            <dt>P</dt><dd>The normalized power score after those modifiers. It is not displayed damage or DPS. Calculate it separately for each parent.</dd>
+            <dt>M</dt><dd>Start at 1. Multiply by 2.1984 for an evolution (2.2 for Gravitas), then by another 1.25 for Dumplorer or Gravitas. Dumplorer’s total modifier is 2.748; Gravitas’s is 2.75.</dd>
+            <dt>P</dt><dd>The effective breeding factor after those modifiers. Transfer Power is P raised to 0.7 / ln(1.45). It is not displayed damage or DPS. Calculate it separately for each parent.</dd>
         </dl>
         <div className={styles.formula} dangerouslySetInnerHTML={{ __html: ratioEquation }} />
         <p>Divide target power by source power. Direction matters: swapping parents reverses this ratio.</p>
         <div className={styles.formula} dangerouslySetInnerHTML={{ __html: normalEquation }} />
         <div className={styles.formula} dangerouslySetInnerHTML={{ __html: superEquation }} />
         <p>C is a percentage, so 25 means 25%. The base-1.45 logarithm can also be computed as ln(R) / ln(1.45). Inputs must be positive. Rank, level, enhancement, gear, mutations and account bonuses are excluded.</p>
-        <p>These are research estimates. The current evolution fit is 2.1984×; small last-hundredth differences can still come from hidden base-stat precision. The calculator keeps full precision internally, then truncates the displayed Normal and Super percentages to two decimals to match observed in-game trait-rate displays.</p>
+        <p>These are research estimates. The evolution fit remains 2.1984×, except Gravitas uses its tested 2.2× modifier; small last-hundredth differences can still come from hidden base-stat precision. The calculator keeps full precision internally, then truncates the displayed Normal and Super percentages to two decimals to match observed in-game trait-rate displays.</p>
         <details><summary>Python implementation</summary><pre><code>{implementation}</code></pre></details>
     </section>;
 }

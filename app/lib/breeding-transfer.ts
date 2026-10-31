@@ -2,8 +2,8 @@ import type { GeneratedMonster } from "../types/monster";
 import { hasFixedBreeding } from "./breeding-limits";
 
 /** Empirical trait-transfer model from controlled in-game tests (October 2026).
- * Ratio is target power / source power.
- * Dumplorer's additional factor is an experimental lineage-specific fit.
+ * P is the effective breeding factor; Transfer Power = P^(decay / ln(ratioLogBase)).
+ * Dumplorer and Gravitas have additional empirically fitted modifiers.
  */
 export const BREEDING_MODEL = {
     genesisCap: 25,
@@ -11,16 +11,28 @@ export const BREEDING_MODEL = {
     ratioLogBase: 1.45,
     decay: 0.7,
     evolutionMultiplier: 2.1984,
+    gravitasEvolutionMultiplier: 2.2,
     dumplorerExtraMultiplier: 1.25,
+    gravitasExtraMultiplier: 1.25,
 } as const;
 
-export function transferPower(monster: GeneratedMonster): number | null {
+export function effectiveBreedingFactor(monster: GeneratedMonster): number | null {
     const { baseDamageELevel1: damage, baseHealthELevel1: health,
         pvpBaseDamageELevel1: pvpDamage, pvpBaseHealthELevel1: pvpHealth } = monster;
     if (![damage, health, pvpDamage, pvpHealth].every((value) => typeof value === "number" && Number.isFinite(value) && value > 0)) return null;
     const normalizedPower = Math.sqrt((damage / pvpDamage!) * (health / pvpHealth!));
-    const evolution = monster.isEvolved ? BREEDING_MODEL.evolutionMultiplier : 1;
-    return normalizedPower * evolution * (monster.id === "dumplorer" ? BREEDING_MODEL.dumplorerExtraMultiplier : 1);
+    const evolution = monster.isEvolved
+        ? monster.id === "gravitas" ? BREEDING_MODEL.gravitasEvolutionMultiplier : BREEDING_MODEL.evolutionMultiplier
+        : 1;
+    const special = monster.id === "dumplorer" ? BREEDING_MODEL.dumplorerExtraMultiplier
+        : monster.id === "gravitas" ? BREEDING_MODEL.gravitasExtraMultiplier : 1;
+    return normalizedPower * evolution * special;
+}
+
+/** A relative comparison score, not a percentage. Never round before calculating odds. */
+export function transferPower(monster: GeneratedMonster): number | null {
+    const factor = effectiveBreedingFactor(monster);
+    return factor === null ? null : Math.pow(factor, BREEDING_MODEL.decay / Math.log(BREEDING_MODEL.ratioLogBase));
 }
 
 export type TransferResult = {
@@ -37,10 +49,9 @@ export function calculateSkillTransfer(source: GeneratedMonster, target: Generat
     const targetPower = transferPower(target);
     if (sourcePower === null || targetPower === null) return null;
     const ratio = targetPower / sourcePower;
-    const logRatio = Math.log(ratio) / Math.log(BREEDING_MODEL.ratioLogBase);
     const genesisChance = Math.min(
         BREEDING_MODEL.genesisCap,
-        BREEDING_MODEL.genesisCap * Math.exp(-BREEDING_MODEL.decay * (logRatio - 1)),
+        BREEDING_MODEL.genesisCap * Math.exp(BREEDING_MODEL.decay) * sourcePower / targetPower,
     );
     return {
         sourcePower,

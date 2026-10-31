@@ -8,9 +8,21 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
-        version: "v1.0.35",
+        version: "v1.0.36",
         date: "October 31, 2026",
         label: "Latest",
+        title: "Transfer Power & Gravitas Breeding Correction",
+        changes: [
+            "Added a compact Transfer Power score to both Pet Hatch Transfer parents, with an information tooltip explaining direction, Normal/Super odds, and the reverse-engineered model. The relative score is not a percentage.",
+            "Expressed trait-transfer odds as a ratio of Transfer Power scores, mathematically equivalent to the exponential breeding formula; calculations retain full precision before the existing display truncation.",
+            "Corrected Gravitas breeding with the 2.2× evolution modifier and an additional 1.25× special modifier, each applied once, giving an effective breeding factor of approximately 86.03153 without changing PvE/PvP stats.",
+            "Preserved the existing 2.1984× evolution fit for other monsters and Dumplorer's additional 1.25× modifier. Rank, mutation, trait eligibility, and breeding restrictions are unchanged.",
+            "Added regression coverage for both transfer directions, Normal/Super caps, special modifiers, formula equivalence, and observed Gravitas rates. Recorded-stat predictions differ from the supplied observations by less than 0.02 percentage points; existing two-decimal truncation is preserved.",
+        ],
+    },
+    {
+        version: "v1.0.35",
+        date: "October 31, 2026",
         title: "Halloween Part II — Pumpkin Mirage & Capejack",
         changes: [
             "Added Update 0.55 coverage for Halloween Event Part II, Pumpkin Mirage, and five new monsters: Gloombat, Emberkit, Grimveil, Palejack, and Capejack.",
