@@ -34,7 +34,7 @@ import { TraitIcon } from "./trait-icon";
 import styles from "./monster-compare.module.css";
 import { PageHeading } from "./page-heading";
 import { TOOL_PAGE_CONTAINER } from "./tool-page-layout";
-import { CombatRank, rankColors, SkillEffectCards, InfoTooltip } from "./calculator-results";
+import { CombatRank, rankColors, SkillEffectCards, GearShieldEffectCards, InfoTooltip } from "./calculator-results";
 import {
   rarityBadgeClasses,
   rarityImageClasses,
@@ -1290,6 +1290,7 @@ export function MonsterCompare() {
                   {column.skills.length} skills
                 </span>
               </div>
+              {showSkillEffects && column.stats && <GearShieldEffectCards build={buildForCombatMode(column.build, combatMode)} maxHealth={column.stats.health} className="px-2 pb-2" />}
               {column.skills.map((result, skillIndex) => (
                 <div
                   key={result.skill.id}

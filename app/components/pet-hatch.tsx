@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { GENERATED_MONSTERS } from "../data/generated/monsters";
 import { getMonsterExclusiveTraits, getTrait, TRAITS } from "../data/traits";
 import { assetPath } from "../lib/asset-path";
+import { formatTransferPower, sortHatchMonsters, type HatchMonsterSort } from "../lib/pet-hatch-picker";
 import { hasFixedBreeding } from "../lib/breeding-limits";
 import { MUTATIONS, averageBreeds, displayedTraitRates, getBreedingTraits, mutationTransfer, rankTransfer, traitTransfer, transferPower, type BreedRank, type Mutation, type MutationState } from "../lib/breed-transfer";
 import { TraitSelect } from "./trait-select";
@@ -109,18 +110,19 @@ export function PetHatch() {
     const [monsterPicker, setMonsterPicker] = useState<0 | 1 | null>(null);
     const [rankPicker, setRankPicker] = useState<0 | 1 | null>(null);
     const [monsterSearch, setMonsterSearch] = useState("");
+    const [monsterSort, setMonsterSort] = useState<HatchMonsterSort>("name");
     const [exclusiveTraitFilter, setExclusiveTraitFilter] = useState("all");
     const [visibleMonsterCount, setVisibleMonsterCount] = useState(24);
     const [showFormula, setShowFormula] = useState(false);
     const monsters = parents.map(parent => available.find(monster => monster.id === parent.monsterId)!);
-    const filteredMonsters = useMemo(() => available.filter(monster => {
+    const filteredMonsters = useMemo(() => sortHatchMonsters(available.filter(monster => {
         const exclusive = getMonsterExclusiveTraits(monster.id);
         const query = monsterSearch.trim().toLowerCase();
         if (!monster.name.toLowerCase().includes(query) && !exclusive.some(trait => trait.name.toLowerCase().includes(query))) return false;
         if (exclusiveTraitFilter === "has") return exclusive.length > 0;
         if (exclusiveTraitFilter === "none") return exclusive.length === 0;
         return exclusiveTraitFilter === "all" || exclusive.some(trait => trait.id === exclusiveTraitFilter);
-    }), [monsterSearch, exclusiveTraitFilter]);
+    }), monsterSort), [monsterSearch, exclusiveTraitFilter, monsterSort]);
     const update = (index: number, patch: Partial<Parent>) => setParents(current => current.map((parent, i) => {
         if (i !== index) return parent;
         const next = { ...parent, ...patch };
@@ -177,7 +179,7 @@ export function PetHatch() {
                                 </>}
                                 {!monster && <span style={{ inset: 0, display: "grid", placeContent: "center", gap: 8, background: "transparent", fontSize: 13, pointerEvents: "none" }}><b style={{ fontSize: 28 }}>+</b>Select a monster</span>}
                             </div>
-                            <div className={styles.transferPower}><div>Transfer Power <TransferPowerHelp parent={index + 1} /></div><strong title={power === null ? "Select a monster with valid PvE/PvP data" : power.toPrecision(12)}>{power === null ? "—" : power.toLocaleString("en-US", { maximumSignificantDigits: 5, notation: power < 0.01 || power >= 1e7 ? "scientific" : "standard" })}</strong></div>
+                            <div className={styles.transferPower}><div>Transfer Power <TransferPowerHelp parent={index + 1} /></div><strong title={power === null ? "Select a monster with valid PvE/PvP data" : power.toPrecision(12)}>{power === null ? "—" : formatTransferPower(power)}</strong></div>
                             {monster && <div className={styles.label}>Trait <Help label={`Parent ${index + 1} trait availability`} text="Exclusive traits appear only for their source monsters. Other traits are available to every parent. Vital Barrier is the exception: it can be selected on any monster. Changing a parent clears a trait that is no longer available." /><TraitSelect compact iconVariant="icon" allowedTraitIds={getBreedingTraits(parent.monsterId).map(trait => trait.id)} value={parent.traitId} onChangeAction={traitId => update(index, { traitId })} /></div>}
                         </article>;
                     })}
@@ -239,9 +241,10 @@ export function PetHatch() {
             <div className={styles.pickerFilters}>
                 <label className={styles.modalSearch}><span>⌕</span><input type="search" value={monsterSearch} onChange={event => { setMonsterSearch(event.target.value); setVisibleMonsterCount(24); }} placeholder="Search monsters or traits" autoFocus /></label>
                 <label className={styles.exclusiveFilter}>Exclusive Trait<select aria-label="Exclusive Trait" value={exclusiveTraitFilter} onChange={event => { setExclusiveTraitFilter(event.target.value); setVisibleMonsterCount(24); }}><option value="all">All monsters</option><option value="has">Has exclusive trait</option><option value="none">No exclusive trait</option>{TRAITS.filter(trait => trait.exclusiveSourceIds?.length).map(trait => <option key={trait.id} value={trait.id}>{trait.name}</option>)}</select></label>
+                <label className={styles.exclusiveFilter}>Sort<select aria-label="Sort monsters" value={monsterSort} onChange={event => { setMonsterSort(event.target.value as HatchMonsterSort); setVisibleMonsterCount(24); }}><option value="name">Name (A–Z)</option><option value="power-asc">Transfer Power (low → high)</option><option value="power-desc">Transfer Power (high → low)</option></select></label>
             </div>
-            <div key={`${monsterSearch}/${exclusiveTraitFilter}`} className={styles.monsterGrid} onScroll={event => { const element = event.currentTarget; if (element.scrollHeight - element.scrollTop - element.clientHeight < 160) setVisibleMonsterCount(count => Math.min(count + 24, filteredMonsters.length)); }}>
-                {filteredMonsters.slice(0, visibleMonsterCount).map(monster => <button type="button" key={monster.id} className={parents[monsterPicker].monsterId === monster.id ? styles.monsterSelected : ""} onClick={() => { update(monsterPicker, { monsterId: monster.id }); setMonsterPicker(null); }}><img loading="lazy" decoding="async" src={assetPath(monster.image ?? "/icon.png")} alt="" /><span><strong>{monster.name}</strong><small>{getMonsterExclusiveTraits(monster.id).map(trait => trait.name).join(" · ") || `${monster.rarity} · ${monster.element}`}</small></span>{parents[monsterPicker].monsterId === monster.id && <b>✓</b>}</button>)}
+            <div key={`${monsterSearch}/${exclusiveTraitFilter}/${monsterSort}`} className={styles.monsterGrid} onScroll={event => { const element = event.currentTarget; if (element.scrollHeight - element.scrollTop - element.clientHeight < 160) setVisibleMonsterCount(count => Math.min(count + 24, filteredMonsters.length)); }}>
+                {filteredMonsters.slice(0, visibleMonsterCount).map(monster => <button type="button" key={monster.id} className={parents[monsterPicker].monsterId === monster.id ? styles.monsterSelected : ""} onClick={() => { update(monsterPicker, { monsterId: monster.id }); setMonsterPicker(null); }}><img loading="lazy" decoding="async" src={assetPath(monster.image ?? "/icon.png")} alt="" /><span><strong>{monster.name}</strong><small>{getMonsterExclusiveTraits(monster.id).map(trait => trait.name).join(" · ") || `${monster.rarity} · ${monster.element}`}</small><small className={styles.searchTransferPower} title={transferPower(monster)?.toPrecision(12)}>Transfer Power: {formatTransferPower(transferPower(monster))}</small></span>{parents[monsterPicker].monsterId === monster.id && <b>✓</b>}</button>)}
                 {visibleMonsterCount < filteredMonsters.length && <button type="button" className={styles.loadMoreMonsters} onClick={() => setVisibleMonsterCount(count => Math.min(count + 24, filteredMonsters.length))}>Load 24 more monsters</button>}
                 {filteredMonsters.length === 0 && <p className={styles.emptyState}>No monsters match these filters.</p>}
             </div>

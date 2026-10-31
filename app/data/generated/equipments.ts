@@ -216,5 +216,17 @@ export const GENERATED_EQUIPMENT: Equipment[] = [
       "random",
       "random"
     ]
+  },
+  {
+    "id": "fusion-core",
+    "name": "Fusion Core",
+    "rarity": "Secret",
+    "type": "armor",
+    "percentage": 32,
+    "attributes": [
+      "stun-aegis",
+      "random",
+      "random"
+    ]
   }
 ];

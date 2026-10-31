@@ -29,7 +29,7 @@ import {
 } from "../data/skills";
 import { getEquipment } from "../data/equipments";
 import { getTrait } from "../data/traits";
-import { calculateSkillAttributeEffects } from "../lib/calculations/attributes";
+import { calculateStunAegisShield, calculateSkillAttributeEffects } from "../lib/calculations/attributes";
 import { assetPath } from "../lib/asset-path";
 import type { BuildSharePreview } from "../lib/build-sharing";
 import { CURRENT_MAX_LEVEL, EXPERIMENTAL_MAX_LEVEL, MIN_LEVEL } from "../lib/level-config";
@@ -566,10 +566,10 @@ function DamageReflectionEffect({ effect }: { effect: SkillStatusEffect }) {
     );
 }
 
-function ShieldEffect({ effect, shieldAmount }: { effect: SkillStatusEffect; shieldAmount?: number }) {
+function ShieldEffect({ effect, shieldAmount, title = "Shield" }: { effect: SkillStatusEffect; shieldAmount?: number; title?: string }) {
     const amount = effect.amountPercent ?? 0;
     const displayTarget = effect.target === "Team" ? "Team" : effect.target === "Self" ? "Self" : "Enemy";
-    const durationLabel = `${formatNumber(effect.durationSeconds ?? 2)}s`;
+    const durationLabel = effect.durationSeconds === undefined ? null : `${formatNumber(effect.durationSeconds)}s`;
     const targetLabel = effect.target === "Self" ? "the caster" : "the team";
     const scalingText = effect.scaling === "MaxHealth"
         ? " of Max Health"
@@ -596,14 +596,15 @@ function ShieldEffect({ effect, shieldAmount }: { effect: SkillStatusEffect; shi
             />
             <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
-                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#82caf7]">Shield</p>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#82caf7]">{title}</p>
                     <InfoTooltip label="Explain Shield" text={tooltip} />
                 </div>
                 <p className="mt-0.5 text-sm font-bold text-[#f6f8fc]">
                     {formatNumber(amount)}%
                     <span className="ml-1.5 text-xs font-semibold text-[#9fc5dc]">{displayTarget}</span>
-                    <span className="ml-1.5 text-xs font-semibold text-[#8e99ad]">• {durationLabel}</span>
+                    {durationLabel && <span className="ml-1.5 text-xs font-semibold text-[#8e99ad]">• {durationLabel}</span>}
                 </p>
+                {shieldAmount !== undefined && <p className="mt-0.5 text-xs font-semibold text-[#82caf7]"><StatAmount value={shieldAmount} /> shield</p>}
                 {effect.condition && (
                     <p className="mt-0.5 truncate text-[10px] text-[#9fc5dc]" title={effect.condition}>
                         {effect.condition}
@@ -612,6 +613,16 @@ function ShieldEffect({ effect, shieldAmount }: { effect: SkillStatusEffect; shi
             </div>
         </div>
     );
+}
+
+/** Render gear-triggered shields once per build, separately from monster skills. */
+export function GearShieldEffectCards({ build, maxHealth, className = "" }: { build: Build; maxHealth: number; className?: string }) {
+    const shield = calculateStunAegisShield(build, maxHealth);
+    if (!shield) return null;
+    return <div className={`space-y-1 ${className}`}><ShieldEffect title="Stun Aegis" shieldAmount={shield.amount} effect={{
+        type: "shield", target: "Self", scaling: "MaxHealth", amountPercent: shield.percent,
+        condition: "When Stunned",
+    }} /><p className="text-[10px] leading-4 text-[#9fc5dc]">When Stunned, gain a shield equal to {formatNumber(shield.percent)}% of your max Health.</p></div>;
 }
 
 /** Reuse the calculator's effect cards in Compare, including its healing
@@ -3021,6 +3032,8 @@ function BuildResultsPanel({
                     }
                 />
             </div>
+
+            {stats && <GearShieldEffectCards build={build} maxHealth={stats.health} className="px-4 pb-3" />}
 
             {gearHealingPerSecond !== null && (
                 <div className="px-4 pb-4">

@@ -518,5 +518,17 @@ export const GENERATED_ATTRIBUTES: GearAttribute[] = [
     "value": 1.5,
     "skillElement": null,
     "hpCondition": null
+  },
+  {
+    "id": "stun-aegis",
+    "rarity": "Secret",
+    "name": "Stun Aegis",
+    "gearType": "armor",
+    "tier": null,
+    "effectType": "stun_shield",
+    "value": 10,
+    "skillElement": null,
+    "hpCondition": null,
+    "description": "When Stunned, gain a shield equal to 10% of your max Health."
   }
 ];

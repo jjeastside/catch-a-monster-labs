@@ -8,6 +8,7 @@ import { HomePageViews } from "./components/home-page-views";
 import { TopNavigation } from "./components/top-navigation";
 import { releases } from "./data/changelog-releases";
 import { gamePatches } from "./data/game-patches";
+import { NEW_MONSTERS_DATABASE_HREF } from "./data/new-monsters";
 import { GENERATED_MONSTERS } from "./data/generated/monsters";
 import { GENERATED_SKILLS } from "./data/generated/skills";
 import { assetPath } from "./lib/asset-path";
@@ -478,7 +479,7 @@ export default function HomePage() {
                             <p className="mt-3 text-xs leading-5 text-[#bcd0e5]">Halloween limited-time discounts are live, with new items to reduce breeding time and directly upgrade mutations.</p>
                             <div className="mt-4 flex flex-wrap gap-3">
                                 <Link href="/updates" className="inline-flex items-center gap-2 rounded-lg bg-[#169cf5] px-4 py-2.5 text-xs font-black text-[#061424] transition hover:bg-[#54c4ff]">Read 0.55 Patch Notes <Icon name="arrow" className="size-4" /></Link>
-                                <Link href="/monster-database" className="inline-flex items-center gap-2 rounded-lg border border-[#4678aa] px-4 py-2.5 text-xs font-bold text-[#dcefff] transition hover:bg-[#153859]">Explore New Monsters <Icon name="arrow" className="size-4" /></Link>
+                                <a href={assetPath(NEW_MONSTERS_DATABASE_HREF)} className="inline-flex items-center gap-2 rounded-lg border border-[#4678aa] px-4 py-2.5 text-xs font-bold text-[#dcefff] transition hover:bg-[#153859]">Explore New Monsters <Icon name="arrow" className="size-4" /></a>
                             </div>
                         </div>
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3">

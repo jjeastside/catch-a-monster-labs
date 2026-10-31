@@ -8,9 +8,31 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
-        version: "v1.0.36",
+        version: "v1.0.38",
         date: "October 31, 2026",
         label: "Latest",
+        title: "New Monster Discovery & Transfer Power Sorting",
+        changes: [
+            "Added low-to-high and high-to-low Transfer Power sorting to the Pet Hatch monster selector, with a score on every search result. Sorting uses full precision and works with search and exclusive-trait filters.",
+            "Fixed the Explore New Monsters shortcut for static hosting: preserve the GitHub Pages base path, use a direct database URL, and initialize the New filter from the browser URL after hydration.",
+            "The homepage Explore New Monsters link now opens the Monster Database with the temporary New source filter selected, showing all five Update 0.55 monsters, including Capejack on Skyheart Isle.",
+            "Added New to the Source Type dropdown. This discovery group preserves actual monster sources, supports existing sorting and filters, and can be cleared by selecting All.",
+        ],
+    },
+    {
+        version: "v1.0.37",
+        date: "October 31, 2026",
+        title: "Fusion Core & Stun Aegis",
+        changes: [
+            "Added Fusion Core Secret armor with +32% Health, its artwork, the fixed Stun Aegis attribute, and two random attribute slots.",
+            "Stun Aegis: When Stunned, gain a shield equal to 10% of your max Health.",
+            "Added a shared shield effect card to Build Calculator and Monster Compare, showing the 10% self-shield, its calculated amount, and the stun trigger. The conditional shield is separate from Health, healing, HPS, and DPS.",
+            "Added CSV import support and regression checks for the new gear, attribute, artwork paths, and max-Health shield calculation in PvE and PvP.",
+        ],
+    },
+    {
+        version: "v1.0.36",
+        date: "October 31, 2026",
         title: "Transfer Power & Gravitas Breeding Correction",
         changes: [
             "Added a compact Transfer Power score to both Pet Hatch Transfer parents, with an information tooltip explaining direction, Normal/Super odds, and the reverse-engineered model. The relative score is not a percentage.",

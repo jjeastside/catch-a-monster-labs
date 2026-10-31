@@ -1814,7 +1814,7 @@ export function BuildEditor({
                                         {fixedIds.map((id) => {
                                             const attribute = getAttribute(id);
                                             return attribute ? (
-                                                <div key={id}
+                                                <div key={id} title={attribute.description ?? attribute.name}
                                                      className="relative grid aspect-[2.85/1] min-h-[54px] w-full place-items-center overflow-hidden rounded-md border border-[#ff9f43]/50 bg-[#0d131d] p-0.5">
                                                     <img src={assetPath(`/attributes/${id}.png`)} alt={attribute.name}
                                                          className="block h-auto w-full"/>

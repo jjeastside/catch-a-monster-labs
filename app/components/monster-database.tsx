@@ -11,6 +11,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import { NEW_MONSTER_IDS, isNewMonster, getDatabaseSourceFilter } from "../data/new-monsters";
 import { EvolutionTree } from "./evolution-tree";
 
 import { GENERATED_MONSTERS } from "../data/generated/monsters";
@@ -1058,6 +1059,27 @@ export function MonsterDatabase() {
         };
     }, [selectedId, sortBy]);
 
+    useEffect(() => {
+        const applyUrlFilter = () => {
+            const requestedSource = getDatabaseSourceFilter(window.location.search);
+            setSourceType(requestedSource);
+            if (requestedSource !== "New") return;
+            setSearch("");
+            setRarity("All");
+            setElement("All");
+            setLocation("All");
+            setObtainability("all");
+            setPassiveFilter("all");
+            setExclusiveTraitFilter("all");
+            setSkillEffectFilter("all");
+            setEvolutionFilter("all");
+            setSortBy("index");
+        };
+        applyUrlFilter();
+        window.addEventListener("popstate", applyUrlFilter);
+        return () => window.removeEventListener("popstate", applyUrlFilter);
+    }, []);
+
     const sourceTypes = useMemo(
         () =>
             Array.from(
@@ -1106,7 +1128,7 @@ export function MonsterDatabase() {
                     !(normalizedSearch === "exclusive" && exclusiveTraits.length > 0)) return false;
                 if (rarity !== "All" && monster.rarity !== rarity) return false;
                 if (element !== "All" && monster.element !== element) return false;
-                if (sourceType !== "All" && !monster.sources.some((source) => source.type === sourceType)) return false;
+                if (sourceType === "New" ? !isNewMonster(monster.id) : sourceType !== "All" && !monster.sources.some((source) => source.type === sourceType)) return false;
                 if (location !== "All" && !monster.sources.some((source) => source.location === location)) return false;
                 if (obtainability === "obtainable" && !isObtainable(monster)) return false;
                 if (obtainability === "unobtainable" && isObtainable(monster)) return false;
@@ -1301,6 +1323,7 @@ export function MonsterDatabase() {
 
                         <FilterSelect label="Source Type" value={sourceType} onChange={setSourceType}>
                             <option value="All">All</option>
+                            {NEW_MONSTER_IDS.length > 0 && <option value="New">New</option>}
                             {sourceTypes.map((value) => (
                                 <option key={value} value={value}>{value}</option>
                             ))}

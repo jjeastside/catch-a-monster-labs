@@ -101,5 +101,13 @@ export function calculateSkillAttributeEffects(
         damageRedirect: total("damage_redirect"),
         damageImmunitySeconds: total("damage_immunity"),
         maxHpRegenPerSecond: total("max_hp_regen"),
+        stunShieldPercent: total("stun_shield"),
     };
+}
+/** Conditional shield per stun, not sustained healing or an addition to max HP. */
+export function calculateStunAegisShield(build: AttributeBuild, maxHealth: number) {
+    const percent = calculateSkillAttributeEffects(build, "Common").stunShieldPercent;
+    return percent > 0 && Number.isFinite(maxHealth) && maxHealth > 0
+        ? { percent, amount: maxHealth * percent / 100 }
+        : null;
 }

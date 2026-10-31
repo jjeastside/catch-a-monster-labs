@@ -639,7 +639,7 @@ const passiveEffects = {
 const gearRows = parseCsv("gear.csv");
 const attributeRows = parseCsv("attributes.csv");
 const rarities = new Set(["Rare", "Epic", "Legendary", "Mythical", "Secret"]);
-const effectTypes = new Set(["skill_damage", "skill_resistance", "shield_damage", "heal_effectiveness", "shield_effectiveness", "life_steal", "cooldown_skip", "damage_redirect", "damage_immunity", "max_hp_regen", "damage_double"]);
+const effectTypes = new Set(["skill_damage", "skill_resistance", "shield_damage", "heal_effectiveness", "shield_effectiveness", "life_steal", "cooldown_skip", "damage_redirect", "damage_immunity", "max_hp_regen", "damage_double", "stun_shield"]);
 function validateCatalog(rows, file, idColumn, columns) {
     assertCsvColumns(file, rows, columns);
     const ids = new Set();
@@ -652,7 +652,7 @@ function validateCatalog(rows, file, idColumn, columns) {
 }
 validateCatalog(attributeRows, "attributes.csv", "attribute_id", ["attribute_id", "rarity", "name", "gear_type", "Tier", "effect_type", "value", "skill_element", "hp_condition"]);
 const generatedAttributes = attributeRows.map((row) => {
-    const effectType = row.effect_type === "healing_pulse" ? "max_hp_regen" : row.effect_type;
+    const effectType = row.effect_type === "healing_pulse" ? "max_hp_regen" : row.effect_type === "stun-aegis" ? "stun_shield" : row.effect_type;
     if (!effectTypes.has(effectType) || !["weapon", "armor"].includes(row.gear_type)) throw new Error(`attributes.csv: invalid type for ${row.attribute_id}`);
     const value = number(row.value);
     if (value === null || value < 0 || (effectType === "damage_double" && value > 100)) throw new Error(`attributes.csv: invalid value for ${row.attribute_id}`);
@@ -661,7 +661,7 @@ const generatedAttributes = attributeRows.map((row) => {
     if (row.hp_condition && !/^[<>]\d+(?:\.\d+)?$/.test(row.hp_condition)) throw new Error(`attributes.csv: invalid HP condition for ${row.attribute_id}`);
     const skillElement = row.skill_element.toLowerCase();
     if (skillElement && !["earth", "ground", "ice", "grass", "water", "fire", "dragon", "mechanical", "dark", "light", "electric"].includes(skillElement)) throw new Error(`attributes.csv: invalid element for ${row.attribute_id}`);
-    return { id: row.attribute_id, rarity: row.rarity, name: row.name, gearType: row.gear_type, tier, effectType, value, skillElement: skillElement || null, hpCondition: row.hp_condition || null };
+    return { id: row.attribute_id, rarity: row.rarity, name: row.name, gearType: row.gear_type, tier, effectType, value, skillElement: skillElement || null, hpCondition: row.hp_condition || null, ...(effectType === "stun_shield" ? { description: `When Stunned, gain a shield equal to ${value}% of your max Health.` } : {}) };
 });
 validateCatalog(gearRows, "gear.csv", "equipment_id", ["equipment_id", "rarity", "name", "type", "percentage", "attributes"]);
 const attributesById = new Map(generatedAttributes.map((attribute) => [attribute.id, attribute]));
