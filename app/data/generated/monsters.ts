@@ -1367,6 +1367,62 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "indexPosition": 46
   },
   {
+    "id": "gloombat",
+    "name": "Gloombat",
+    "image": "/monster-artwork/gloombat.png",
+    "element": "Dark",
+    "rarity": "Epic",
+    "sources": [
+      {
+        "type": "Island Spawn",
+        "name": "Natural Spawn",
+        "location": "Pumpkin Mirage",
+        "status": "Current"
+      }
+    ],
+    "skillIds": [
+      "wind-disc-purple",
+      "wind-blast"
+    ],
+    "passives": [],
+    "hasEvolution": false,
+    "baseDamageELevel1": 14247000,
+    "baseHealthELevel1": 152440000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
+    "baseCritChance": 0,
+    "growthType": "standard",
+    "indexPosition": 47
+  },
+  {
+    "id": "emberkit",
+    "name": "Emberkit",
+    "image": "/monster-artwork/emberkit.png",
+    "element": "Fire",
+    "rarity": "Epic",
+    "sources": [
+      {
+        "type": "Island Spawn",
+        "name": "Natural Spawn",
+        "location": "Pumpkin Mirage",
+        "status": "Current"
+      }
+    ],
+    "skillIds": [
+      "nether-fireball",
+      "ghost-impact"
+    ],
+    "passives": [],
+    "hasEvolution": false,
+    "baseDamageELevel1": 16530000,
+    "baseHealthELevel1": 176857700,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
+    "baseCritChance": 0,
+    "growthType": "standard",
+    "indexPosition": 48
+  },
+  {
     "id": "santavolf",
     "name": "Santavolf",
     "image": "/monster-artwork/santavolf.png",
@@ -1398,7 +1454,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 47
+    "indexPosition": 49
   },
   {
     "id": "pyrowulf",
@@ -1426,7 +1482,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 48
+    "indexPosition": 50
   },
   {
     "id": "noctane",
@@ -1460,7 +1516,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 49
+    "indexPosition": 51
   },
   {
     "id": "ywendihoofs",
@@ -1488,7 +1544,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 50
+    "indexPosition": 52
   },
   {
     "id": "starshade",
@@ -1516,7 +1572,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 51
+    "indexPosition": 53
   },
   {
     "id": "sproutusk",
@@ -1544,7 +1600,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 52
+    "indexPosition": 54
   },
   {
     "id": "nightclaw",
@@ -1572,7 +1628,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 53
+    "indexPosition": 55
   },
   {
     "id": "floradelle",
@@ -1606,7 +1662,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7445900,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 54
+    "indexPosition": 56
   },
   {
     "id": "hydribbit",
@@ -1617,7 +1673,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "sources": [
       {
         "type": "Island Spawn",
-        "name": "Special Spawn",
+        "name": "Natural Spawn",
         "location": "Neverland",
         "status": "Current"
       }
@@ -1634,7 +1690,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 55
+    "indexPosition": 57
   },
   {
     "id": "knockroo",
@@ -1662,7 +1718,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8938700,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 56
+    "indexPosition": 58
   },
   {
     "id": "volcamel",
@@ -1696,7 +1752,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 57
+    "indexPosition": 59
   },
   {
     "id": "mistvolf",
@@ -1726,7 +1782,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8903000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 58
+    "indexPosition": 60
   },
   {
     "id": "flamevolf",
@@ -1756,7 +1812,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6185000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 59
+    "indexPosition": 61
   },
   {
     "id": "floravolf",
@@ -1786,7 +1842,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 60
+    "indexPosition": 62
   },
   {
     "id": "aurobull",
@@ -1820,7 +1876,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 61
+    "indexPosition": 63
   },
   {
     "id": "king-penguin",
@@ -1848,7 +1904,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 62
+    "indexPosition": 64
   },
   {
     "id": "fanglo",
@@ -1895,7 +1951,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8905200,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 63
+    "indexPosition": 65
   },
   {
     "id": "weasplash",
@@ -1923,7 +1979,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 64
+    "indexPosition": 66
   },
   {
     "id": "walrusk",
@@ -1951,7 +2007,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 65
+    "indexPosition": 67
   },
   {
     "id": "deerleaf",
@@ -1979,7 +2035,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 66
+    "indexPosition": 68
   },
   {
     "id": "mintwolf",
@@ -2013,7 +2069,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 67
+    "indexPosition": 69
   },
   {
     "id": "nivisgon",
@@ -2041,7 +2097,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 68
+    "indexPosition": 70
   },
   {
     "id": "tricerasteel",
@@ -2081,7 +2137,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 11134000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 69
+    "indexPosition": 71
   },
   {
     "id": "cloveria",
@@ -2109,7 +2165,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 70
+    "indexPosition": 72
   },
   {
     "id": "shadecloak",
@@ -2143,7 +2199,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6659300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 71
+    "indexPosition": 73
   },
   {
     "id": "emberwolf",
@@ -2173,7 +2229,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8639800,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 72
+    "indexPosition": 74
   },
   {
     "id": "jackpotron",
@@ -2201,7 +2257,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 73
+    "indexPosition": 75
   },
   {
     "id": "sleetwolf",
@@ -2231,7 +2287,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 12441000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 74
+    "indexPosition": 76
   },
   {
     "id": "rexie",
@@ -2265,7 +2321,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 75
+    "indexPosition": 77
   },
   {
     "id": "stumpfox",
@@ -2312,7 +2368,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 76
+    "indexPosition": 78
   },
   {
     "id": "strum-bones",
@@ -2340,7 +2396,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 77
+    "indexPosition": 79
   },
   {
     "id": "bone-guard",
@@ -2368,7 +2424,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 78
+    "indexPosition": 80
   },
   {
     "id": "meowl",
@@ -2432,7 +2488,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 22622000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 79
+    "indexPosition": 81
   },
   {
     "id": "snoozepink",
@@ -2460,7 +2516,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 80
+    "indexPosition": 82
   },
   {
     "id": "froxy",
@@ -2488,7 +2544,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 81
+    "indexPosition": 83
   },
   {
     "id": "lynxgear",
@@ -2516,7 +2572,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 82
+    "indexPosition": 84
   },
   {
     "id": "bulbwarden",
@@ -2544,7 +2600,35 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 83
+    "indexPosition": 85
+  },
+  {
+    "id": "grimveil",
+    "name": "Grimveil",
+    "image": "/monster-artwork/grimveil.png",
+    "element": "Dark",
+    "rarity": "Legendary",
+    "sources": [
+      {
+        "type": "Island Spawn",
+        "name": "Natural Spawn",
+        "location": "Pumpkin Mirage",
+        "status": "Current"
+      }
+    ],
+    "skillIds": [
+      "void-orb",
+      "dark-singularity"
+    ],
+    "passives": [],
+    "hasEvolution": false,
+    "baseDamageELevel1": 19178000,
+    "baseHealthELevel1": 205197000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
+    "baseCritChance": 0,
+    "growthType": "standard",
+    "indexPosition": 86
   },
   {
     "id": "flaragon",
@@ -2572,7 +2656,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8935600,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 84
+    "indexPosition": 87
   },
   {
     "id": "glazadon",
@@ -2600,7 +2684,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7421340,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 85
+    "indexPosition": 88
   },
   {
     "id": "mountusk",
@@ -2628,7 +2712,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904500,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 86
+    "indexPosition": 89
   },
   {
     "id": "frostbun",
@@ -2656,7 +2740,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 87
+    "indexPosition": 90
   },
   {
     "id": "flarecrest",
@@ -2696,7 +2780,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6184100,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 88
+    "indexPosition": 91
   },
   {
     "id": "aquilune",
@@ -2730,7 +2814,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 4920700,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 89
+    "indexPosition": 92
   },
   {
     "id": "frost-floradelle",
@@ -2765,7 +2849,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6184060,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 90
+    "indexPosition": 93
   },
   {
     "id": "puffmora",
@@ -2800,7 +2884,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904700,
     "baseCritChance": 20,
     "growthType": "standard",
-    "indexPosition": 91
+    "indexPosition": 94
   },
   {
     "id": "pinecarol",
@@ -2836,7 +2920,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 92
+    "indexPosition": 95
   },
   {
     "id": "gingerjoy",
@@ -2870,7 +2954,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6184100,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 93
+    "indexPosition": 96
   },
   {
     "id": "rudolphin",
@@ -2905,7 +2989,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 11130400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 94
+    "indexPosition": 97
   },
   {
     "id": "shadeknight",
@@ -2933,7 +3017,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 95
+    "indexPosition": 98
   },
   {
     "id": "gildron",
@@ -2961,7 +3045,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 96
+    "indexPosition": 99
   },
   {
     "id": "flamespike",
@@ -2989,7 +3073,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 97
+    "indexPosition": 100
   },
   {
     "id": "dustwing",
@@ -3029,7 +3113,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 98
+    "indexPosition": 101
   },
   {
     "id": "mistwing",
@@ -3059,7 +3143,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 99
+    "indexPosition": 102
   },
   {
     "id": "emberwing",
@@ -3089,7 +3173,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 100
+    "indexPosition": 103
   },
   {
     "id": "fernwing",
@@ -3119,7 +3203,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 101
+    "indexPosition": 104
   },
   {
     "id": "snowwing",
@@ -3149,7 +3233,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904500,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 102
+    "indexPosition": 105
   },
   {
     "id": "iceplate",
@@ -3196,7 +3280,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904500,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 103
+    "indexPosition": 106
   },
   {
     "id": "voltgator",
@@ -3249,7 +3333,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 11134000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 104
+    "indexPosition": 107
   },
   {
     "id": "undine",
@@ -3289,7 +3373,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 105
+    "indexPosition": 108
   },
   {
     "id": "tidevex",
@@ -3317,7 +3401,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8295400,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 106
+    "indexPosition": 109
   },
   {
     "id": "woolhorn",
@@ -3364,7 +3448,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904500,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 107
+    "indexPosition": 110
   },
   {
     "id": "mechavolt",
@@ -3411,7 +3495,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 108
+    "indexPosition": 111
   },
   {
     "id": "cobaltwing",
@@ -3451,7 +3535,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5106800,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 109
+    "indexPosition": 112
   },
   {
     "id": "frostwyrm",
@@ -3479,7 +3563,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 110
+    "indexPosition": 113
   },
   {
     "id": "liodan",
@@ -3519,7 +3603,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6417700,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 111
+    "indexPosition": 114
   },
   {
     "id": "kitsunine",
@@ -3572,7 +3656,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8579800,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 112
+    "indexPosition": 115
   },
   {
     "id": "thunderjet",
@@ -3619,7 +3703,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 113
+    "indexPosition": 116
   },
   {
     "id": "psyber",
@@ -3666,7 +3750,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 114
+    "indexPosition": 117
   },
   {
     "id": "dracospike",
@@ -3694,7 +3778,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 14300000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 115
+    "indexPosition": 118
   },
   {
     "id": "ignisraptor",
@@ -3723,7 +3807,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6625100,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 116
+    "indexPosition": 119
   },
   {
     "id": "mintgloom",
@@ -3770,7 +3854,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6888900,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 117
+    "indexPosition": 120
   },
   {
     "id": "netherdemon",
@@ -3817,7 +3901,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 14983400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 118
+    "indexPosition": 121
   },
   {
     "id": "toucan-birdman",
@@ -3864,7 +3948,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 119
+    "indexPosition": 122
   },
   {
     "id": "primothorn",
@@ -3899,7 +3983,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 120
+    "indexPosition": 123
   },
   {
     "id": "abyssaldrake",
@@ -3947,7 +4031,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 121
+    "indexPosition": 124
   },
   {
     "id": "berrybun",
@@ -4006,7 +4090,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 122
+    "indexPosition": 125
   },
   {
     "id": "bladetooth",
@@ -4040,7 +4124,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 13911000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 123
+    "indexPosition": 126
   },
   {
     "id": "thunderclaw",
@@ -4068,7 +4152,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 124
+    "indexPosition": 127
   },
   {
     "id": "burrowbun",
@@ -4109,7 +4193,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 125
+    "indexPosition": 128
   },
   {
     "id": "aetherpanther",
@@ -4156,7 +4240,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 4995500,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 126
+    "indexPosition": 129
   },
   {
     "id": "crystalfae",
@@ -4198,7 +4282,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 127
+    "indexPosition": 130
   },
   {
     "id": "magma-tortoise",
@@ -4246,7 +4330,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 11131000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 128
+    "indexPosition": 131
   },
   {
     "id": "stellar-sentinel",
@@ -4280,7 +4364,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 129
+    "indexPosition": 132
   },
   {
     "id": "lampyr",
@@ -4308,7 +4392,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 12443600,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 130
+    "indexPosition": 133
   },
   {
     "id": "umbra-reaver",
@@ -4355,7 +4439,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 9968400,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 131
+    "indexPosition": 134
   },
   {
     "id": "lumen-knight",
@@ -4402,7 +4486,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 14841000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 132
+    "indexPosition": 135
   },
   {
     "id": "jokaire",
@@ -4449,7 +4533,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 10759000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 133
+    "indexPosition": 136
   },
   {
     "id": "bull-lord",
@@ -4483,7 +4567,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 134
+    "indexPosition": 137
   },
   {
     "id": "scareaper",
@@ -4517,7 +4601,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 135
+    "indexPosition": 138
   },
   {
     "id": "magmorus",
@@ -4564,7 +4648,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 12917000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 136
+    "indexPosition": 139
   },
   {
     "id": "gravion",
@@ -4611,7 +4695,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 14843000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 137
+    "indexPosition": 140
   },
   {
     "id": "runegolem",
@@ -4659,7 +4743,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 138
+    "indexPosition": 141
   },
   {
     "id": "crabblaze",
@@ -4711,7 +4795,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 139
+    "indexPosition": 142
   },
   {
     "id": "capshark",
@@ -4758,7 +4842,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 140
+    "indexPosition": 143
   },
   {
     "id": "beatopus",
@@ -4786,7 +4870,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 4920700,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 141
+    "indexPosition": 144
   },
   {
     "id": "stormhorn",
@@ -4833,7 +4917,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 22261000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 142
+    "indexPosition": 145
   },
   {
     "id": "solgryph",
@@ -4880,7 +4964,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 143
+    "indexPosition": 146
   },
   {
     "id": "violetaegis",
@@ -4922,7 +5006,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 4637800,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 144
+    "indexPosition": 147
   },
   {
     "id": "venofrog",
@@ -4950,7 +5034,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 145
+    "indexPosition": 148
   },
   {
     "id": "rainimp",
@@ -4978,7 +5062,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 146
+    "indexPosition": 149
   },
   {
     "id": "vorturion",
@@ -5025,7 +5109,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8295200,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 147
+    "indexPosition": 150
   },
   {
     "id": "sylvaris",
@@ -5072,7 +5156,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5925300,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 148
+    "indexPosition": 151
   },
   {
     "id": "plaguecannon",
@@ -5100,7 +5184,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 22261000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 149
+    "indexPosition": 152
   },
   {
     "id": "turretor",
@@ -5128,7 +5212,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 150
+    "indexPosition": 153
   },
   {
     "id": "stellawulf",
@@ -5169,7 +5253,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 14843000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 151
+    "indexPosition": 154
   },
   {
     "id": "nexil",
@@ -5210,7 +5294,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 152
+    "indexPosition": 155
   },
   {
     "id": "twirly-bird",
@@ -5238,7 +5322,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 153
+    "indexPosition": 156
   },
   {
     "id": "berserkor",
@@ -5249,7 +5333,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "sources": [
       {
         "type": "Island Special Spawn",
-        "name": "Natural Spawn",
+        "name": "Special Spawn",
         "location": "Shroomvale",
         "status": "Current"
       }
@@ -5266,7 +5350,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 19186000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 154
+    "indexPosition": 157
   },
   {
     "id": "thornewarden",
@@ -5300,7 +5384,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 9272000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 155
+    "indexPosition": 158
   },
   {
     "id": "cernunnos",
@@ -5341,7 +5425,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 156
+    "indexPosition": 159
   },
   {
     "id": "anubael",
@@ -5382,7 +5466,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 14843000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 157
+    "indexPosition": 160
   },
   {
     "id": "lunaron",
@@ -5395,7 +5479,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Island Special Spawn",
         "name": "Special Spawn",
         "location": "Skyheart Isle",
-        "status": "Current"
+        "status": "Unavailable"
       }
     ],
     "skillIds": [
@@ -5430,7 +5514,83 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 158
+    "indexPosition": 161
+  },
+  {
+    "id": "palejack",
+    "name": "Palejack",
+    "image": "/monster-artwork/palejack.png",
+    "element": "Dark",
+    "rarity": "Mythical",
+    "sources": [
+      {
+        "type": "Island Special Spawn",
+        "name": "Special Spawn",
+        "location": "Pumpkin Mirage",
+        "status": "Current"
+      }
+    ],
+    "skillIds": [
+      "soul-reap-chain-scareharvest",
+      "ghost-impact-vulnerability"
+    ],
+    "passives": [],
+    "hasEvolution": false,
+    "baseDamageELevel1": 48653000,
+    "baseHealthELevel1": 265602000,
+    "pvpBaseDamageELevel1": 606810,
+    "pvpBaseHealthELevel1": 6629000,
+    "baseCritChance": 0,
+    "growthType": "standard",
+    "indexPosition": 162
+  },
+  {
+    "id": "capejack",
+    "name": "Capejack",
+    "image": "/monster-artwork/capejack.png",
+    "element": "Dark",
+    "rarity": "Mythical",
+    "sources": [
+      {
+        "type": "Island Special Spawn",
+        "name": "Global Boss",
+        "location": "Skyheart Isle",
+        "condition": "Every hour",
+        "status": "Current",
+        "notes": "Appears for 10 minutes each hour."
+      }
+    ],
+    "skillIds": [
+      "bloodthirsty-aura",
+      "soul-reap-chain-vulnerability"
+    ],
+    "passives": [
+      {
+        "id": "marigonFortuneSpirit",
+        "effects": [
+          {
+            "stat": "critChance",
+            "value": 20
+          },
+          {
+            "stat": "critDamage",
+            "value": 50
+          }
+        ],
+        "values": [
+          20,
+          50
+        ]
+      }
+    ],
+    "hasEvolution": false,
+    "baseDamageELevel1": 34752400,
+    "baseHealthELevel1": 371840000,
+    "pvpBaseDamageELevel1": 346740,
+    "pvpBaseHealthELevel1": 7420300,
+    "baseCritChance": 0,
+    "growthType": "standard",
+    "indexPosition": 163
   },
   {
     "id": "dragon-cannelloni",
@@ -5458,7 +5618,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 2447600,
     "baseCritChance": 0,
     "growthType": "dragon-cannelloni",
-    "indexPosition": 159
+    "indexPosition": 164
   },
   {
     "id": "flaragflora",
@@ -5488,7 +5648,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 160
+    "indexPosition": 165
   },
   {
     "id": "flaragfrost",
@@ -5518,7 +5678,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 161
+    "indexPosition": 166
   },
   {
     "id": "flaragaqua",
@@ -5548,7 +5708,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 162
+    "indexPosition": 167
   },
   {
     "id": "glazadonbloom",
@@ -5578,7 +5738,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6637900,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 163
+    "indexPosition": 168
   },
   {
     "id": "glazadonwave",
@@ -5608,7 +5768,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 164
+    "indexPosition": 169
   },
   {
     "id": "glazadonflare",
@@ -5638,7 +5798,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5531400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 165
+    "indexPosition": 170
   },
   {
     "id": "frostvolf",
@@ -5674,7 +5834,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 166
+    "indexPosition": 171
   },
   {
     "id": "frostusk",
@@ -5704,7 +5864,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 167
+    "indexPosition": 172
   },
   {
     "id": "volctusk",
@@ -5734,7 +5894,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 168
+    "indexPosition": 173
   },
   {
     "id": "terratops",
@@ -5764,7 +5924,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 169
+    "indexPosition": 174
   },
   {
     "id": "frostbound-knight",
@@ -5794,7 +5954,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 170
+    "indexPosition": 175
   },
   {
     "id": "flame-knight",
@@ -5824,7 +5984,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 171
+    "indexPosition": 176
   },
   {
     "id": "verdant-knight",
@@ -5854,7 +6014,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 172
+    "indexPosition": 177
   },
   {
     "id": "stoneward-knight",
@@ -5884,7 +6044,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 173
+    "indexPosition": 178
   },
   {
     "id": "leafane",
@@ -5914,7 +6074,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 174
+    "indexPosition": 179
   },
   {
     "id": "glacane",
@@ -5944,7 +6104,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 175
+    "indexPosition": 180
   },
   {
     "id": "folirabbit",
@@ -5974,7 +6134,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 176
+    "indexPosition": 181
   },
   {
     "id": "mudbit",
@@ -6004,7 +6164,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 177
+    "indexPosition": 182
   },
   {
     "id": "inferron",
@@ -6034,7 +6194,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 178
+    "indexPosition": 183
   },
   {
     "id": "mossron",
@@ -6064,7 +6224,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 179
+    "indexPosition": 184
   },
   {
     "id": "glaciron",
@@ -6094,7 +6254,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 180
+    "indexPosition": 185
   },
   {
     "id": "blazevex",
@@ -6124,7 +6284,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 181
+    "indexPosition": 186
   },
   {
     "id": "bramblevex",
@@ -6154,7 +6314,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 182
+    "indexPosition": 187
   },
   {
     "id": "geogator",
@@ -6184,7 +6344,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 183
+    "indexPosition": 188
   },
   {
     "id": "glacigator",
@@ -6227,7 +6387,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 184
+    "indexPosition": 189
   },
   {
     "id": "blazewyrm",
@@ -6257,7 +6417,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 185
+    "indexPosition": 190
   },
   {
     "id": "spinewyrm",
@@ -6287,7 +6447,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 186
+    "indexPosition": 191
   },
   {
     "id": "marigon",
@@ -6335,7 +6495,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 187
+    "indexPosition": 192
   },
   {
     "id": "cinderine",
@@ -6365,7 +6525,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 3575600,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 188
+    "indexPosition": 193
   },
   {
     "id": "tellurine",
@@ -6395,7 +6555,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 11442500,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 189
+    "indexPosition": 194
   },
   {
     "id": "dracovine",
@@ -6425,7 +6585,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8113600,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 190
+    "indexPosition": 195
   },
   {
     "id": "dracosleet",
@@ -6455,7 +6615,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6291100,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 191
+    "indexPosition": 196
   },
   {
     "id": "nightveil",
@@ -6498,7 +6658,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 192
+    "indexPosition": 197
   },
   {
     "id": "diabvok",
@@ -6528,7 +6688,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 193
+    "indexPosition": 198
   },
   {
     "id": "terravok",
@@ -6558,7 +6718,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 194
+    "indexPosition": 199
   },
   {
     "id": "rubywing",
@@ -6588,7 +6748,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 195
+    "indexPosition": 200
   },
   {
     "id": "lazuliwing",
@@ -6618,7 +6778,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 196
+    "indexPosition": 201
   },
   {
     "id": "hornrexie",
@@ -6661,7 +6821,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 10345700,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 197
+    "indexPosition": 202
   },
   {
     "id": "glacierclaw",
@@ -6691,7 +6851,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 15601300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 198
+    "indexPosition": 203
   },
   {
     "id": "mossclaw",
@@ -6721,7 +6881,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 13001300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 199
+    "indexPosition": 204
   },
   {
     "id": "ignilampyr",
@@ -6751,7 +6911,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 9657700,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 200
+    "indexPosition": 205
   },
   {
     "id": "terrampyr",
@@ -6781,7 +6941,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 11584000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 201
+    "indexPosition": 206
   },
   {
     "id": "dumplorer",
@@ -6831,7 +6991,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 9275200,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 202
+    "indexPosition": 207
   },
   {
     "id": "psyflora",
@@ -6861,7 +7021,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 203
+    "indexPosition": 208
   },
   {
     "id": "glaciber",
@@ -6891,7 +7051,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 204
+    "indexPosition": 209
   },
   {
     "id": "scarevine",
@@ -6921,7 +7081,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 11131000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 205
+    "indexPosition": 210
   },
   {
     "id": "scarewraith",
@@ -6951,7 +7111,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 206
+    "indexPosition": 211
   },
   {
     "id": "vivisdrake",
@@ -6981,7 +7141,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 207
+    "indexPosition": 212
   },
   {
     "id": "terraldrake",
@@ -7011,7 +7171,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 208
+    "indexPosition": 213
   },
   {
     "id": "viroopus",
@@ -7041,7 +7201,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 209
+    "indexPosition": 214
   },
   {
     "id": "gelopus",
@@ -7071,7 +7231,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 210
+    "indexPosition": 215
   },
   {
     "id": "thaunimp",
@@ -7101,7 +7261,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 211
+    "indexPosition": 216
   },
   {
     "id": "ignimp",
@@ -7131,7 +7291,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 212
+    "indexPosition": 217
   },
   {
     "id": "flaragblaze",
@@ -7162,7 +7322,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 213
+    "indexPosition": 218
   },
   {
     "id": "glazadonfroz",
@@ -7193,7 +7353,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 214
+    "indexPosition": 219
   },
   {
     "id": "fire-dragon-cannelloni",
@@ -7223,7 +7383,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 215
+    "indexPosition": 220
   },
   {
     "id": "necro-dragon-cannelloni",
@@ -7253,7 +7413,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 216
+    "indexPosition": 221
   },
   {
     "id": "titanusk",
@@ -7284,7 +7444,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 217
+    "indexPosition": 222
   },
   {
     "id": "eclipse-knight",
@@ -7315,7 +7475,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 218
+    "indexPosition": 223
   },
   {
     "id": "lunavox",
@@ -7346,7 +7506,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 14300000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 219
+    "indexPosition": 224
   },
   {
     "id": "hydrolope",
@@ -7389,7 +7549,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 220
+    "indexPosition": 225
   },
   {
     "id": "solron",
@@ -7432,7 +7592,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 221
+    "indexPosition": 226
   },
   {
     "id": "scythewing",
@@ -7462,7 +7622,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 222
+    "indexPosition": 227
   },
   {
     "id": "celestide",
@@ -7505,7 +7665,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 223
+    "indexPosition": 228
   },
   {
     "id": "doomgator",
@@ -7548,7 +7708,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 224
+    "indexPosition": 229
   },
   {
     "id": "frostiel",
@@ -7596,7 +7756,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 16591000,
     "baseCritChance": 20,
     "growthType": "standard",
-    "indexPosition": 225
+    "indexPosition": 230
   },
   {
     "id": "steamforge",
@@ -7644,7 +7804,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 226
+    "indexPosition": 231
   },
   {
     "id": "mentawolf",
@@ -7687,7 +7847,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 11131000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 227
+    "indexPosition": 232
   },
   {
     "id": "avalanchewyrm",
@@ -7730,7 +7890,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 4637800,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 228
+    "indexPosition": 233
   },
   {
     "id": "poseidine",
@@ -7773,7 +7933,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 229
+    "indexPosition": 234
   },
   {
     "id": "armored-dracospike",
@@ -7816,7 +7976,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 14252000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 230
+    "indexPosition": 235
   },
   {
     "id": "soulguard",
@@ -7864,7 +8024,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300500,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 231
+    "indexPosition": 236
   },
   {
     "id": "motovok",
@@ -7907,7 +8067,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 4637600,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 232
+    "indexPosition": 237
   },
   {
     "id": "crystalwing",
@@ -7950,7 +8110,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 22261000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 233
+    "indexPosition": 238
   },
   {
     "id": "divineclaw",
@@ -7997,7 +8157,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 4637800,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 234
+    "indexPosition": 239
   },
   {
     "id": "djinn-lampyr",
@@ -8040,7 +8200,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 12070000,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 235
+    "indexPosition": 240
   },
   {
     "id": "necro-hydra-tortelloni",
@@ -8089,7 +8249,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 4637700,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 236
+    "indexPosition": 241
   },
   {
     "id": "psyberion-x",
@@ -8132,7 +8292,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 22261000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 237
+    "indexPosition": 242
   },
   {
     "id": "celestian",
@@ -8174,7 +8334,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 238
+    "indexPosition": 243
   },
   {
     "id": "scareharvest",
@@ -8217,7 +8377,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 239
+    "indexPosition": 244
   },
   {
     "id": "obliviondrake",
@@ -8260,7 +8420,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 240
+    "indexPosition": 245
   },
   {
     "id": "veloros",
@@ -8302,7 +8462,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183400,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 241
+    "indexPosition": 246
   },
   {
     "id": "corsairopus",
@@ -8345,7 +8505,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 14840600,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 242
+    "indexPosition": 247
   },
   {
     "id": "plasmapanther",
@@ -8388,7 +8548,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 14840600,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 243
+    "indexPosition": 248
   },
   {
     "id": "marimp",
@@ -8431,7 +8591,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 11131000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 244
+    "indexPosition": 249
   },
   {
     "id": "luminara",
@@ -8473,7 +8633,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 6183600,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 245
+    "indexPosition": 250
   },
   {
     "id": "umbra-sentinel",
@@ -8516,7 +8676,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 246
+    "indexPosition": 251
   },
   {
     "id": "lumen-sentinel",
@@ -8553,13 +8713,13 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "hasEvolution": false,
     "isEvolved": true,
     "evolutionSource": "lumen-knight",
-    "baseDamageELevel1": 14312000,
-    "baseHealthELevel1": 220270000,
+    "baseDamageELevel1": 14300000,
+    "baseHealthELevel1": 220260000,
     "pvpBaseDamageELevel1": 288990,
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 247
+    "indexPosition": 252
   },
   {
     "id": "gravitas",
@@ -8602,7 +8762,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 27829000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 248
+    "indexPosition": 253
   },
   {
     "id": "void-noctane",
@@ -8649,7 +8809,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 249
+    "indexPosition": 254
   },
   {
     "id": "void-dustwing",
@@ -8696,7 +8856,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 250
+    "indexPosition": 255
   },
   {
     "id": "void-lunavox",
@@ -8731,7 +8891,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 22261000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 251
+    "indexPosition": 256
   },
   {
     "id": "void-iceplate",
@@ -8778,7 +8938,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 11131000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 252
+    "indexPosition": 257
   },
   {
     "id": "void-scythewing",
@@ -8813,7 +8973,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 253
+    "indexPosition": 258
   },
   {
     "id": "void-shadecloak",
@@ -8841,7 +9001,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 7420300,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 254
+    "indexPosition": 259
   },
   {
     "id": "void-strum-bones",
@@ -8894,7 +9054,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 14843000,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 255
+    "indexPosition": 260
   },
   {
     "id": "void-nightveil",
@@ -8937,7 +9097,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 5300300,
     "baseCritChance": 15,
     "growthType": "standard",
-    "indexPosition": 256
+    "indexPosition": 261
   },
   {
     "id": "void-scareaper",
@@ -8984,7 +9144,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 22261000,
     "baseCritChance": 0,
     "growthType": "standard",
-    "indexPosition": 257
+    "indexPosition": 262
   },
   {
     "id": "icearia",
@@ -9011,6 +9171,6 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "pvpBaseHealthELevel1": 8904400,
     "baseCritChance": 10,
     "growthType": "standard",
-    "indexPosition": 258
+    "indexPosition": 263
   }
 ];

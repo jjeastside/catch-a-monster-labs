@@ -8,9 +8,9 @@ import { gamePatches } from "../data/game-patches";
 import { getMonsterStatData } from "../data/monster-stats";
 
 const updatedMonsters = [
-    { id: "luminara", position: 245, element: "Light", source: "", skills: ["void-collapse", "holy-aura-luminara"] },
-    { id: "umbra-sentinel", position: 246, element: "Dark", source: "umbra-reaver", skills: ["overvolt-tempest", "lightning-thrust"] },
-    { id: "lumen-sentinel", position: 247, element: "Mechanical", source: "lumen-knight", skills: ["overvolt-tempest", "lightning-thrust"] },
+    { id: "luminara", position: 250, element: "Light", source: "", skills: ["void-collapse", "holy-aura-luminara"] },
+    { id: "umbra-sentinel", position: 251, element: "Dark", source: "umbra-reaver", skills: ["overvolt-tempest", "lightning-thrust"] },
+    { id: "lumen-sentinel", position: 252, element: "Mechanical", source: "lumen-knight", skills: ["overvolt-tempest", "lightning-thrust"] },
 ] as const;
 
 describe("Catch a Monster Update 0.53", () => {

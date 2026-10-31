@@ -75,6 +75,8 @@ export const ISLANDS = [
   "Splash Isle",
   "Coilwork City",
   "Shroomvale",
+  "Skyheart Isle",
+  "Pumpkin Mirage",
 ] as const;
 
 export type Island = (typeof ISLANDS)[number];

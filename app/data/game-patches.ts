@@ -13,9 +13,41 @@ export type Patch = {
 
 export const gamePatches: readonly Patch[] = [
     {
+        version: "Update 0.55",
+        date: "October 31, 2026",
+        label: "Latest",
+        sections: [
+            {
+                title: "Halloween Event — Part II & Pumpkin Mirage",
+                changes: [
+                    "Halloween Event Part II is now live!",
+                    "Added a new island: Pumpkin Mirage.",
+                    "Added Gloombat (Epic Dark), Emberkit (Epic Fire), Grimveil (Legendary Dark), and Palejack (Mythical Dark) on Pumpkin Mirage.",
+                ],
+            },
+            {
+                title: "New Global Boss — Capejack",
+                changes: [
+                    "Capejack, a Mythical Dark monster, has arrived as the new global boss on Skyheart Isle.",
+                    "Capejack spawns every hour and remains available for 10 minutes.",
+                ],
+            },
+            {
+                title: "Halloween Discounts & New Items",
+                changes: [
+                    "The Halloween limited-time discount is now live!",
+                    "Added items that reduce breeding time and directly upgrade mutations.",
+                ],
+            },
+            {
+                title: "Endless Spire",
+                changes: ["Updated the Endless Spire monster lineup for the next week."],
+            },
+        ],
+    },
+    {
         version: "Update 0.54",
         date: "October 24, 2026",
-        label: "Latest",
         sections: [
             {
                 title: "Halloween Event — Part 1",

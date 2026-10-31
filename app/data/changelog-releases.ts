@@ -8,9 +8,21 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.35",
+        date: "October 31, 2026",
+        label: "Latest",
+        title: "Halloween Part II — Pumpkin Mirage & Capejack",
+        changes: [
+            "Added Update 0.55 coverage for Halloween Event Part II, Pumpkin Mirage, and five new monsters: Gloombat, Emberkit, Grimveil, Palejack, and Capejack.",
+            "Updated monster data and added Pumpkin Mirage and Skyheart Isle to the island filters used by the Monster Database and Index Tracker. Corrected the Pumpkin Mirage source spelling.",
+            "Added Capejack's global boss source on Skyheart Isle, including its hourly spawn schedule and 10-minute appearance window.",
+            "Refreshed the homepage with artwork for all five new monsters, the new island, and the Capejack schedule.",
+            "Added game patch notes for the Halloween limited-time discount, breeding-time reduction and direct mutation-upgrade items, and the next week's Endless Spire lineup update.",
+        ],
+    },
+    {
         version: "v1.0.34",
         date: "October 28, 2026",
-        label: "Latest",
         title: "Team Combat Conditions & Skill Damage",
         changes: [
             "Added shared team and enemy combat conditions to Team Builder, plus Skill Damage values on monster cards and in Team Overview.",
