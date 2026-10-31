@@ -8,9 +8,19 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
-        version: "v1.0.38",
+        version: "v1.0.39",
         date: "October 31, 2026",
         label: "Latest",
+        title: "Team Builder Gear Unequip Controls",
+        changes: [
+            "Added an Unequip gear panel to Team Builder's Equipment inventory. Select individual monsters, select all, or unequip every monster's weapons and armor at once.",
+            "Added an Unequip button beside each assigned gear copy, separate from removing the item from inventory.",
+            "Unequipped copies immediately become available for reassignment while keeping their attributes. Team and inventory builds update together, and changes use existing automatic saving.",
+        ],
+    },
+    {
+        version: "v1.0.38",
+        date: "October 31, 2026",
         title: "New Monster Discovery & Transfer Power Sorting",
         changes: [
             "Added low-to-high and high-to-low Transfer Power sorting to the Pet Hatch monster selector, with a score on every search result. Sorting uses full precision and works with search and exclusive-trait filters.",

@@ -1,4 +1,5 @@
 "use client";
+import { unequipMonsterGear, type OwnedEquipmentCopy } from "../../lib/team-unequip";
 import { SkillEffectSelect } from "../skill-effect-select";
 import { matchesMonsterSkillEffect, type SkillEffectFilter } from "../../lib/skill-effect-filter";
 import { applyBreedingLimits, hasFixedBreeding, BREEDING_LOCK_MESSAGE } from "../../lib/breeding-limits";
@@ -129,7 +130,6 @@ const OWNED_EQUIPMENT_KEY = "cam-lab-team-owned-equipment-v1";
 // A one-time migration marker prevents deliberately unequipped gear from returning
 // when an old build still has stale equipment IDs.
 const EQUIPMENT_MIGRATION_KEY = "cam-lab-team-equipment-migrated-v2";
-type OwnedEquipmentCopy = { id: string; equipmentId: string; attributeIds: string[]; equippedTo?: string };
 const equipmentRarityColors: Record<string, string> = { Rare: "#69c7ff", Epic: "#de7cff", Legendary: "#ffb15f", Mythical: "#78dfac", Secret: "#ff725c" };
 function validOwnedEquipment(value: unknown): OwnedEquipmentCopy[] {
   if (!Array.isArray(value)) return [];
@@ -304,6 +304,7 @@ export function TeamComposition() {
   const [replacementSkillEffect, setReplacementSkillEffect] = useState<SkillEffectFilter>("all");
   const [inventoryRarity, setInventoryRarity] = useState("all");
   const [ownedEquipment, setOwnedEquipment] = useState<OwnedEquipmentCopy[]>([]);
+  const [unequipOwners, setUnequipOwners] = useState<string[]>([]);
   const [equipmentSearch, setEquipmentSearch] = useState("");
   const [equipmentFilter, setEquipmentFilter] = useState<"all" | "weapon" | "armor">("all");
   const [equipmentToAdd, setEquipmentToAdd] = useState("");
@@ -870,6 +871,33 @@ export function TeamComposition() {
       : { armorId: gear?.id ?? null, armorAttributeIds: candidate ? [...candidate.attributeIds] : [] });
   };
 
+  const equippedOwners = [...new Set(ownedEquipment.flatMap(copy => copy.equippedTo ? [copy.equippedTo] : []))];
+  const equipmentOwnerLabel = (owner: string) => {
+    const slot = team.findIndex((build, index) => teamOwner(build, index) === owner);
+    if (owner.startsWith("inventory:")) {
+      const id = owner.slice("inventory:".length);
+      const monsterId = inventoryBuilds[id]?.monsterId ?? copyMonsterId(id);
+      const siblings = Object.keys(inventoryBuilds).filter(key => copyMonsterId(key) === monsterId).sort();
+      const ordinal = siblings.indexOf(id);
+      return `${monsterById.get(monsterId)?.name ?? monsterId}${siblings.length > 1 ? ` · Build ${ordinal + 1}` : ""}${slot >= 0 ? ` · Team ${slot + 1}` : ""}`;
+    }
+    const index = Number(owner.slice("team:".length));
+    const name = monsterById.get(team[index]?.monsterId ?? "")?.name;
+    return name ? `${name} · Team ${index + 1}` : `Team ${index + 1}`;
+  };
+  const unequipGear = (owners: string[]) => {
+    if (blockedStorageKeys.current.has(OWNED_EQUIPMENT_KEY)) {
+      setInventoryMessage("Equipment storage could not be read; assignments are locked to protect your saved copies.");
+      return;
+    }
+    const result = unequipMonsterGear(ownedEquipment, team, inventoryBuilds, new Set(owners));
+    setOwnedEquipment(result.copies);
+    setTeam(result.team);
+    setInventoryBuilds(result.inventory);
+    setUnequipOwners([]);
+    setInventoryMessage(`${result.releasedCount} gear item${result.releasedCount === 1 ? "" : "s"} unequipped and available to assign.`);
+  };
+
   const removeOwnedEquipmentCopy = (copy: OwnedEquipmentCopy) => {
     const gear = EQUIPMENT.find((item) => item.id === copy.equipmentId);
     if (gear && copy.equippedTo) {
@@ -1406,6 +1434,26 @@ export function TeamComposition() {
                 {filteredInventory.length === 0 ? <p className={styles.pickerEmpty}>No monsters match. Try clearing filters or changing your search.</p> : null}
               </div>
             </div> : inventoryTab === "equipment" ? <div className={styles.inventoryBody} role="tabpanel">
+              <details className={styles.unequipPanel}>
+                <summary>Unequip gear <span>{equippedOwners.length} equipped monster{equippedOwners.length === 1 ? "" : "s"}</span></summary>
+                <p>Return weapons and armor to the available pool. Item copies and attributes are kept.</p>
+                {equippedOwners.length > 0 ? <>
+                  <div className={styles.unequipActions}>
+                    <button type="button" className={styles.smallButton} onClick={() => setUnequipOwners(equippedOwners)}>Select all</button>
+                    <button type="button" className={styles.smallButton} onClick={() => setUnequipOwners([])}>Clear selection</button>
+                  </div>
+                  <div className={styles.unequipList}>
+                    {[...equippedOwners].sort((a, b) => equipmentOwnerLabel(a).localeCompare(equipmentOwnerLabel(b))).map(owner => <label key={owner}>
+                      <input type="checkbox" checked={unequipOwners.includes(owner)} onChange={event => setUnequipOwners(current => event.target.checked ? [...current, owner] : current.filter(id => id !== owner))} />
+                      <span>{equipmentOwnerLabel(owner)}<small>{ownedEquipment.filter(copy => copy.equippedTo === owner).map(copy => EQUIPMENT.find(gear => gear.id === copy.equipmentId)?.name ?? copy.equipmentId).join(" · ")}</small></span>
+                    </label>)}
+                  </div>
+                  <div className={styles.unequipActions}>
+                    <button type="button" className={styles.smallButton} disabled={!unequipOwners.some(owner => equippedOwners.includes(owner))} onClick={() => unequipGear(unequipOwners)}>Unequip selected</button>
+                    <button type="button" className={styles.smallButton} onClick={() => unequipGear(equippedOwners)}>Unequip all monsters</button>
+                  </div>
+                </> : <p>No monsters currently have gear equipped.</p>}
+              </details>
               <div className={styles.equipmentAddControl} onKeyDown={(event) => {
                 if (event.key === "Escape") setAddGearMenuOpen(false);
               }}>
@@ -1470,6 +1518,14 @@ export function TeamComposition() {
                     {copies.map((copy, index) => <div key={copy.id} className={styles.equipmentCopyRow}>
                       <span>{copies.length > 1 ? `Item ${index + 1} · ` : ""}{copy.equippedTo ? `Equipped to ${copy.equippedTo.startsWith("inventory:") ? monsterById.get(copyMonsterId(copy.equippedTo.slice(10)))?.name ?? copy.equippedTo.slice(10) : `team slot ${Number(copy.equippedTo.slice(5)) + 1}`}` : "Unequipped"}{getAttributeSlotCount(gear.rarity, gear.id) ? ` · ${copy.attributeIds.some(Boolean) ? copy.attributeIds.filter(Boolean).map((id) => getAttribute(id)?.name ?? id).join(", ") : "Attributes not selected"}` : ""}</span>
                       {getAttributeSlotCount(gear.rarity, gear.id) > 0 ? <button type="button" className={styles.smallButton} aria-expanded={editingEquipmentId === copy.id} onClick={() => setEditingEquipmentId((id) => id === copy.id ? null : copy.id)}>{editingEquipmentId === copy.id ? "Close" : "Attributes"}</button> : null}
+                      {copy.equippedTo && <button type="button" className={styles.smallButton} onClick={() => assignOwnedGear(copy.equippedTo!, gear.type, null, changes => {
+                        const owner = copy.equippedTo!;
+                        setTeam(current => current.map((build, slot) => teamOwner(build, slot) === owner ? { ...build, ...changes } : build));
+                        if (owner.startsWith("inventory:")) setInventoryBuilds(current => {
+                          const id = owner.slice("inventory:".length);
+                          return current[id] ? { ...current, [id]: { ...current[id], ...changes } } : current;
+                        });
+                      })}>Unequip</button>}
                       <button type="button" className={styles.smallButton} aria-label={`Remove ${gear.name}${copies.length > 1 ? ` item ${index + 1}` : ""}`} onClick={() => removeOwnedEquipmentCopy(copy)}>×</button>
                       {getAttributeSlotCount(gear.rarity, gear.id) > 0 && editingEquipmentId === copy.id ? <div className={styles.equipmentCopyEditor}>
                         <div className={styles.equipmentAttributeHeading}><strong>{gear.type === "weapon" ? "Weapon" : "Armor"} Attributes</strong><small>Saved individually{copies.length > 1 ? ` · Item ${index + 1}` : ""}</small></div>
