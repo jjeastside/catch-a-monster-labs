@@ -4,14 +4,16 @@ import Link from "next/link";
 
 import { LegacyHashRedirect } from "./components/legacy-hash-redirect";
 import { SiteFooter } from "./components/site-footer";
+import { NewMonsterBadge } from "./components/new-monster-badge";
 import { HomePageViews } from "./components/home-page-views";
 import { TopNavigation } from "./components/top-navigation";
 import { releases } from "./data/changelog-releases";
 import { gamePatches } from "./data/game-patches";
-import { NEW_MONSTERS_DATABASE_HREF } from "./data/new-monsters";
+import { isNewMonster, NEW_MONSTERS_DATABASE_HREF } from "./data/new-monsters";
 import { GENERATED_MONSTERS } from "./data/generated/monsters";
 import { GENERATED_SKILLS } from "./data/generated/skills";
 import { assetPath } from "./lib/asset-path";
+import { CURRENT_MAX_LEVEL } from "./lib/level-config";
 
 export const metadata: Metadata = {
     title: "Cam Lab — Catch a Monster Companion",
@@ -76,13 +78,7 @@ const sourceRecordCount = GENERATED_MONSTERS.reduce((total, monster) => total + 
 const latestGamePatch = gamePatches[0];
 const exampleTrackedMonsterCount = 95;
 const exampleIndexCompletion = Math.round((exampleTrackedMonsterCount / GENERATED_MONSTERS.length) * 100);
-const featuredUpdateMonsters = [
-    { name: "Gloombat", image: "/monster-artwork/gloombat.png", note: "Epic · Pumpkin Mirage" },
-    { name: "Emberkit", image: "/monster-artwork/emberkit.png", note: "Epic · Pumpkin Mirage" },
-    { name: "Grimveil", image: "/monster-artwork/grimveil.png", note: "Legendary · Pumpkin Mirage" },
-    { name: "Palejack", image: "/monster-artwork/palejack.png", note: "Mythical · Pumpkin Mirage" },
-    { name: "Capejack", image: "/monster-artwork/capejack.png", note: "Global boss · Skyheart Isle" },
-] as const;
+const featuredUpdateMonsters = GENERATED_MONSTERS.filter(({ id }) => isNewMonster(id));
 const patchPreviewHighlights = latestGamePatch.sections
     .filter((section) => !/code/i.test(section.title))
     .flatMap((section) => section.changes)
@@ -182,7 +178,7 @@ function BuildCalculatorPreview() {
                     <p className="text-[10px] font-black uppercase tracking-[0.12em] text-[#46c8ff]">Build Calculator</p>
                     <p className="text-[8px] text-[#7188a7]">Monster · Results · Build</p>
                 </div>
-                <span className="rounded-md border border-[#225176] bg-[#0a2033] px-2 py-1 text-[8px] font-bold text-[#8fc8ed]">Lv 115 · SS</span>
+                <span className="rounded-md border border-[#225176] bg-[#0a2033] px-2 py-1 text-[8px] font-bold text-[#8fc8ed]">Lv {CURRENT_MAX_LEVEL} · SS</span>
             </div>
             <div className="mt-2 grid grid-cols-[1.05fr_1.2fr_.95fr] gap-2">
                 <div className="space-y-1.5">
@@ -275,7 +271,7 @@ function MonsterComparePreview() {
                     <div key={monster.name} className="rounded-lg border border-[#1e3f62] bg-[#08192a] p-2">
                         <div className="flex items-center gap-2">
                             <div className="grid size-8 place-items-center rounded-md bg-[#10273a]"><Image src={assetPath(monster.image)} alt="" width={32} height={32} unoptimized aria-hidden="true" className="size-8 object-contain" /></div>
-                            <div><p className="text-[10px] font-black text-white">{monster.name}</p><p className="text-[7px] text-[#7188a7]">Lv 115 · SS · +10</p></div>
+                            <div><p className="text-[10px] font-black text-white">{monster.name}</p><p className="text-[7px] text-[#7188a7]">Lv {CURRENT_MAX_LEVEL} · SS · +10</p></div>
                         </div>
                         <div className="mt-2 grid grid-cols-3 gap-1 text-center">
                             <div className="rounded bg-[#0c2237] px-1 py-1.5"><p className="text-[6px] uppercase text-[#6f86a4]">Damage</p><p className="text-[9px] font-black text-white">{monster.damage}</p></div>
@@ -362,7 +358,7 @@ function TeamBuilderPreview() {
                         </div>
                         <div className="min-w-0">
                             <p className="truncate text-[10px] font-black text-white">{member.name}</p>
-                            <p className="text-[8px] text-[#7f94b1]">Lv 115 · SS</p>
+                            <p className="text-[8px] text-[#7f94b1]">Lv {CURRENT_MAX_LEVEL} · SS</p>
                         </div>
                     </div>
                 ))}
@@ -440,9 +436,9 @@ export default function HomePage() {
                         <div className="relative z-20 max-w-[670px]">
                             <p className="text-xs font-black uppercase tracking-[0.16em] text-[#60baff] drop-shadow-[0_2px_8px_rgba(0,0,0,.8)]">Catch a Monster Labs</p>
                             <Link href="/updates" className="mt-4 inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-full border border-[#367eb7]/70 bg-[#072344]/90 px-3 py-1.5 text-xs font-bold text-[#bfe5ff] shadow-lg shadow-black/30 transition hover:border-[#60c8ff] hover:bg-[#0b3157]">
-                                <span className="text-[#66d8ff]">Game Update 0.55</span>
+                                <span className="text-[#66d8ff]">Game {latestGamePatch.version}</span>
                                 <span aria-hidden="true" className="text-[#5e83a4]">•</span>
-                                <span>Halloween Part II · Pumpkin Mirage</span>
+                                <span>Bonewraith · SoulPaladin</span>
                                 <Icon name="arrow" className="size-3.5" />
                             </Link>
                             <h1 className="mt-4 max-w-[650px] text-[clamp(2.8rem,4.2vw,4.65rem)] font-black leading-[1.01] tracking-[-0.04em] text-white drop-shadow-[0_4px_18px_rgba(0,0,0,.7)]">
@@ -470,27 +466,30 @@ export default function HomePage() {
                     </div>
                 </section>
 
-                <section aria-labelledby="update-055-title" className="border-b border-[#17345b] bg-[#050f20] px-4 py-6 sm:px-6 lg:px-8">
+                <section aria-labelledby="latest-update-title" className="border-b border-[#17345b] bg-[#050f20] px-4 py-6 sm:px-6 lg:px-8">
                     <div className="mx-auto grid w-full max-w-[1480px] gap-5 rounded-2xl border border-[#225681] bg-[linear-gradient(120deg,#0b2441,#07152a_70%)] p-5 shadow-[0_14px_35px_rgba(0,0,0,.25)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-center lg:p-6">
                         <div>
-                            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#66d3ff]">Latest game update · October 31, 2026</p>
-                            <h2 id="update-055-title" className="mt-2 text-2xl font-black tracking-tight text-white sm:text-3xl">Update 0.55: Halloween Part II</h2>
-                            <p className="mt-3 max-w-[660px] text-sm leading-6 text-[#bcd0e5]">Explore Pumpkin Mirage and five new monsters: Gloombat, Emberkit, Grimveil, Palejack, and Capejack. The new global boss, Capejack, appears on Skyheart Isle every hour for 10 minutes.</p>
-                            <p className="mt-3 text-xs leading-5 text-[#bcd0e5]">Halloween limited-time discounts are live, with new items to reduce breeding time and directly upgrade mutations.</p>
+                            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#66d3ff]">Latest game update · {latestGamePatch.date}</p>
+                            <h2 id="latest-update-title" className="mt-2 text-2xl font-black tracking-tight text-white sm:text-3xl">{latestGamePatch.version} · Bonewraith and SoulPaladin</h2>
+                            <p className="mt-3 max-w-[660px] text-sm leading-6 text-[#bcd0e5]">Battle Bonewraith on Pumpkin Mirage, evolve Soulguard into SoulPaladin, and build your monsters up to level {CURRENT_MAX_LEVEL}.</p>
+                            <p className="mt-3 text-xs leading-5 text-[#bcd0e5]">The Treasure Hunt is live. Redeem the new code <strong>Bonewraith</strong>.</p>
                             <div className="mt-4 flex flex-wrap gap-3">
-                                <Link href="/updates" className="inline-flex items-center gap-2 rounded-lg bg-[#169cf5] px-4 py-2.5 text-xs font-black text-[#061424] transition hover:bg-[#54c4ff]">Read 0.55 Patch Notes <Icon name="arrow" className="size-4" /></Link>
+                                <Link href="/updates" className="inline-flex items-center gap-2 rounded-lg bg-[#169cf5] px-4 py-2.5 text-xs font-black text-[#061424] transition hover:bg-[#54c4ff]">Read Patch Notes <Icon name="arrow" className="size-4" /></Link>
                                 <a href={assetPath(NEW_MONSTERS_DATABASE_HREF)} className="inline-flex items-center gap-2 rounded-lg border border-[#4678aa] px-4 py-2.5 text-xs font-bold text-[#dcefff] transition hover:bg-[#153859]">Explore New Monsters <Icon name="arrow" className="size-4" /></a>
                             </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3">
+                        <div className="grid grid-cols-2 gap-2 sm:gap-3">
                             {featuredUpdateMonsters.map((monster) => (
-                                <div key={monster.name} className="min-w-0 rounded-xl border border-[#295379] bg-[#07172d]/90 p-2 text-center sm:p-3">
+                                <Link key={monster.id} href={`/monster-database/${monster.id}`} className="min-w-0 rounded-xl border border-[#295379] bg-[#07172d]/90 p-2 text-center transition hover:border-[#60c8ff] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#60c8ff] sm:p-3">
                                     <div className="mx-auto grid aspect-square max-w-28 place-items-center overflow-hidden rounded-lg bg-[#102b43]">
-                                        <Image src={assetPath(monster.image)} alt={monster.name} width={124} height={124} unoptimized className="h-full w-full object-contain" />
+                                        {monster.image && <Image src={assetPath(monster.image)} alt="" width={124} height={124} unoptimized className="h-full w-full object-contain" />}
                                     </div>
-                                    <p className="mt-2 text-xs font-black leading-4 text-white sm:text-sm">{monster.name}</p>
-                                    <p className="mt-1 text-[10px] leading-3.5 text-[#90afd2]">{monster.note}</p>
-                                </div>
+                                    <p className="mt-2 flex flex-wrap items-center justify-center gap-1.5 text-xs font-black leading-4 text-white sm:text-sm">
+                                        {monster.name}
+                                        <NewMonsterBadge monsterId={monster.id} />
+                                    </p>
+                                    <p className="mt-1 text-xs text-[#90afd2]">{monster.rarity} · {monster.element} · Index {monster.indexPosition}</p>
+                                </Link>
                             ))}
                         </div>
                     </div>

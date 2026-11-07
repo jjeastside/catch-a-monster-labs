@@ -13,9 +13,37 @@ export type Patch = {
 
 export const gamePatches: readonly Patch[] = [
     {
+        version: "Update 0.56",
+        date: "November 7, 2026",
+        label: "Latest",
+        sections: [
+            {
+                title: "New Boss and Evolution",
+                changes: [
+                    "Bonewraith, a Mythical Dark boss, has arrived on Pumpkin Mirage.",
+                    "Soulguard can now evolve into SoulPaladin, a Secret Fire monster.",
+                ],
+            },
+            {
+                title: "Treasure Hunt and Admin Abuse",
+                changes: [
+                    "The Treasure Hunt event is live.",
+                    "Admin Abuse will be held twice to accommodate different time zones.",
+                ],
+            },
+            {
+                title: "Level Cap",
+                changes: ["The maximum monster level is now 120."],
+            },
+            {
+                title: "New Code",
+                changes: ["Bonewraith"],
+            },
+        ],
+    },
+    {
         version: "Update 0.55",
         date: "October 31, 2026",
-        label: "Latest",
         sections: [
             {
                 title: "Halloween Event — Part II & Pumpkin Mirage",

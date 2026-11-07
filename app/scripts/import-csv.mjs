@@ -756,9 +756,14 @@ if (indexPositions.size !== Math.max(...indexPositions.keys())) {
     throw new Error(`Monster Index positions must be contiguous from 1 to ${monsters.length}`);
 }
 
-const skillIdsByName = new Map(
-    skills.map((skill) => [skill.name.trim().toLowerCase(), skill.id]),
-);
+// When variants share a display name, prefer the canonical ID for name references.
+const skillIdsByName = new Map();
+for (const skill of skills) {
+    const name = skill.name.trim().toLowerCase();
+    if (!skillIdsByName.has(name) || skill.id === slug(name)) {
+        skillIdsByName.set(name, skill.id);
+    }
+}
 
 const monsterSkills = monsterRows.flatMap(
     (monster) =>

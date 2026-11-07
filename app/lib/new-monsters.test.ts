@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { getSkill } from "../data/skills";
 import { GENERATED_MONSTERS } from "../data/generated/monsters";
 import { NEW_MONSTERS_DATABASE_HREF, getDatabaseSourceFilter, isNewMonster } from "../data/new-monsters";
 
@@ -13,9 +14,19 @@ describe("Explore New Monsters URL", () => {
         expect(getDatabaseSourceFilter("?source=Egg")).toBe("All");
         expect(getDatabaseSourceFilter("?source=New")).toBe("New");
     });
-    it("includes all five monsters across both islands, including Capejack", () => {
+    it("includes both Update 0.56 monsters", () => {
         const result = GENERATED_MONSTERS.filter(m => isNewMonster(m.id));
-        expect(result.map(m => m.id)).toEqual(["gloombat", "emberkit", "grimveil", "palejack", "capejack"]);
-        expect(new Set(result.flatMap(m => m.sources.map(s => s.location)))).toEqual(new Set(["Pumpkin Mirage", "Skyheart Isle"]));
+        expect(result.map(m => m.id)).toEqual(["bonewraith", "soulpaladin"]);
+        expect(result[0].sources).toEqual(expect.arrayContaining([expect.objectContaining({ location: "Pumpkin Mirage" })]));
+        expect(result.map(m => m.indexPosition)).toEqual([164, 255]);
+        expect(result[1]).toMatchObject({ evolutionSource: "soulguard" });
     });
 });
+
+it.each([["blazelord", 1.2], ["obliviondrake", 2], ["soulpaladin", 2]])(
+    "shows Fire Dash with the correct damage multiplier for %s", (monsterId, multiplier) => {
+        const monster = GENERATED_MONSTERS.find(m => m.id === monsterId);
+        const fireDash = monster?.skillIds.map(getSkill).find(skill => skill?.name === "Fire Dash");
+        expect(fireDash?.damageInstances).toEqual([{ multiplier, hits: 1 }]);
+    },
+);

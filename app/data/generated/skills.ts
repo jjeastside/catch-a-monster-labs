@@ -762,7 +762,7 @@ export const GENERATED_SKILLS = {
   },
   "fire-dash-oblivion-drake": {
     "id": "fire-dash-oblivion-drake",
-    "name": "Fire Dash (Oblivion Drake)",
+    "name": "Fire Dash",
     "element": "Fire",
     "description": "Gains 95% damage reduction, dashes forward rapidly, damaging and knocking back enemies in the way.",
     "damageInstances": [

@@ -3,6 +3,7 @@ import { matchesMonsterSkillEffect as monsterHasSkillEffect } from "../lib/skill
 
 import { useCombatMode } from "../lib/combat-mode";
 import { EvolutionPvpNotice } from "./evolution-pvp-notice";
+import { NewMonsterBadge } from "./new-monster-badge";
 import { PageHeading } from "./page-heading";
 import { TOOL_PAGE_CONTAINER } from "./tool-page-layout";
 import styles from "./monster-database-theme.module.css";
@@ -354,6 +355,9 @@ function MonsterCard({
                     <span>{sortBy === "index" ? `#${monster.indexPosition}` : Number.isFinite(comparisonStats[sortBy]) ? `#${rank}` : "—"}</span>
                     <span className={styles.rankCaption}>{sortBy === "index" ? "Index" : sortBy === "dps" ? "DPS" : sortBy === "damage" ? "Damage" : "Health"}</span>
                 </span>
+                <div className="absolute right-2 top-2 z-10">
+                    <NewMonsterBadge monsterId={monster.id} />
+                </div>
                 {!isObtainable(monster) ? (
                     <span className={`${styles.unobtainable} absolute bottom-2 left-2 z-10 rounded-full border border-[#7a4550] bg-[#2d1419]/90 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.08em] text-[#ff8f9c]`}>
                         Unobtainable
@@ -464,7 +468,10 @@ function DetailPanel({
                     <div className={desktopInspector ? "flex items-center p-4" : "p-5 pb-0"}>
                         <div className="flex w-full items-start justify-between gap-3">
                             <div className="min-w-0">
-                                <h2 className="text-2xl font-black tracking-tight text-white">{monster.name}</h2>
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <h2 className="text-2xl font-black tracking-tight text-white">{monster.name}</h2>
+                                    <NewMonsterBadge monsterId={monster.id} />
+                                </div>
                                 <p className="mt-1 text-sm font-semibold text-[#aab5c6]">
                                     {monster.rarity} · {monster.element} · Index {monster.indexPosition}
                                 </p>

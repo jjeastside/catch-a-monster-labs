@@ -1,6 +1,6 @@
 // Temporary discovery group for the latest monster update. Replace this list
 // with the next update's roster; it does not change actual obtainment sources.
-export const NEW_MONSTER_IDS = ["gloombat", "emberkit", "grimveil", "palejack", "capejack"] as const;
+export const NEW_MONSTER_IDS = ["bonewraith", "soulpaladin"] as const;
 export const NEW_MONSTERS_DATABASE_HREF = "/monster-database/?source=new";
 
 export function isNewMonster(id: string): boolean {

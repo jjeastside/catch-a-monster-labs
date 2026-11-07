@@ -8,9 +8,9 @@ import { gamePatches } from "../data/game-patches";
 import { getMonsterStatData } from "../data/monster-stats";
 
 const updatedMonsters = [
-    { id: "luminara", position: 250, element: "Light", source: "", skills: ["void-collapse", "holy-aura-luminara"] },
-    { id: "umbra-sentinel", position: 251, element: "Dark", source: "umbra-reaver", skills: ["overvolt-tempest", "lightning-thrust"] },
-    { id: "lumen-sentinel", position: 252, element: "Mechanical", source: "lumen-knight", skills: ["overvolt-tempest", "lightning-thrust"] },
+    { id: "luminara", position: 251, element: "Light", source: "", skills: ["void-collapse", "holy-aura-luminara"] },
+    { id: "umbra-sentinel", position: 252, element: "Dark", source: "umbra-reaver", skills: ["overvolt-tempest", "lightning-thrust"] },
+    { id: "lumen-sentinel", position: 253, element: "Mechanical", source: "lumen-knight", skills: ["overvolt-tempest", "lightning-thrust"] },
 ] as const;
 
 describe("Catch a Monster Update 0.53", () => {
@@ -64,7 +64,7 @@ describe("Catch a Monster Update 0.53", () => {
     it("has unique and contiguous index positions instead of showing Index #0", () => {
         const positions = GENERATED_MONSTERS.map(monster => monster.indexPosition).sort((a, b) => a - b);
         expect(positions).toEqual(Array.from({ length: GENERATED_MONSTERS.length }, (_, index) => index + 1));
-        expect(GENERATED_MONSTERS.find(monster => monster.id === "icearia")?.indexPosition).toBe(GENERATED_MONSTERS.length);
+        expect(GENERATED_MONSTERS.find(monster => monster.id === "icearia")?.indexPosition).toBe(265);
     });
 
     it("uses the supplied 8-second cooldown for Luminara's Holy Aura", () => {

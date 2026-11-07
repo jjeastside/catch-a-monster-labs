@@ -8,9 +8,19 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.40",
+        date: "November 7, 2026",
+        label: "Latest",
+        title: "Update 0.56 and Level 120",
+        changes: [
+            "Added Bonewraith and SoulPaladin to the monster roster and refreshed the homepage and New filter for Update 0.56.",
+            "Raised the standard level cap to 120. Experimental Mode now previews levels 121–125.",
+            "Published patch notes for the Pumpkin Mirage boss, Soulguard evolution, Treasure Hunt event, Admin Abuse sessions, and Bonewraith code.",
+        ],
+    },
+    {
         version: "v1.0.39",
         date: "October 31, 2026",
-        label: "Latest",
         title: "Team Builder Gear Unequip Controls",
         changes: [
             "Added an Unequip gear panel to Team Builder's Equipment inventory. Select individual monsters, select all, or unequip every monster's weapons and armor at once.",

@@ -102,7 +102,7 @@ fear-taunt,Fear Taunt,Common,"[
 fire-dash,Fire Dash,Fire,"[
   { multiplier: 1.2, hits: 1 },
 ]",8,"Gains 95% damage reduction, dashes forward rapidly, damaging and knocking back enemies in the way.",Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback,Ready
-fire-dash-oblivion-drake,Fire Dash (Oblivion Drake),Fire,"[
+fire-dash-oblivion-drake,Fire Dash,Fire,"[
   { multiplier: 2, hits: 1 },
 ]",8,"Gains 95% damage reduction, dashes forward rapidly, damaging and knocking back enemies in the way.",Target: Enemy | Self. Enemy effects: 95% damage reduction 2 secs + knockback,
 fire-dragon-flame-blast,Fire Dragon Flame Blast,Fire,"[

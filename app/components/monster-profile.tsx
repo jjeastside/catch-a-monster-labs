@@ -1,5 +1,5 @@
 "use client";
-import { PageHeading } from "./page-heading";
+import { NewMonsterBadge } from "./new-monster-badge";
 
 import Link from "next/link";
 import { EvolutionTree } from "./evolution-tree";
@@ -222,21 +222,31 @@ export function MonsterProfile({ monsterId }: { monsterId: string }) {
                     </div>
                 </div>
 
-                <section className="overflow-hidden rounded-2xl border border-[#344050] bg-[#111925]">
-                    <div className="grid lg:grid-cols-[420px_minmax(0,1fr)]">
-                        <div className="relative min-h-[340px] border-b border-[#344050] bg-[radial-gradient(circle_at_50%_40%,rgba(113,130,255,0.18),transparent_62%)] lg:border-b-0 lg:border-r">
+                <section className="overflow-hidden rounded-2xl border border-[#2b3d55] bg-gradient-to-br from-[#152133] to-[#101824] shadow-lg shadow-black/20">
+                    <div className="grid lg:grid-cols-[minmax(300px,34%)_minmax(0,1fr)]">
+                        <div className="relative min-h-[260px] border-b border-[#2b3d55] bg-[radial-gradient(ellipse_at_center,#253451_0%,#101827_72%)] sm:min-h-[320px] lg:border-b-0 lg:border-r">
                             {monster.image ? (
                                 <img
                                     src={assetPath(monster.image)}
                                     alt={monster.name}
-                                    className="absolute inset-0 h-full w-full object-contain p-8"
+                                    className="absolute inset-0 h-full w-full object-contain p-8 drop-shadow-[0_16px_24px_rgba(0,0,0,.5)]"
                                 />
                             ) : null}
                         </div>
 
                         <div className="p-5 sm:p-7">
                             <div className="flex flex-wrap items-start justify-between gap-4">
-                                <PageHeading title={monster.name} image={monster.image || "/icons/genetic-potential.png"}><span className="text-[#69dfaa]">{monster.rarity} · {monster.element}</span> · Index {monster.indexPosition}</PageHeading>
+                                <div className="min-w-0">
+                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                                        <h1 className="break-words text-3xl font-black tracking-tight sm:text-4xl">{monster.name}</h1>
+                                        <NewMonsterBadge monsterId={monster.id} />
+                                    </div>
+                                    <p className="mt-2 text-sm font-medium text-[#aab9ce]">
+                                        <span className="font-bold text-[#91d6ff]">{monster.rarity} · {monster.element}</span>
+                                        <span aria-hidden="true" className="mx-2 text-[#58708c]">·</span>
+                                        Index #{monster.indexPosition}
+                                    </p>
+                                </div>
 
                                 <span
                                     className={`rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.08em] ${
@@ -264,9 +274,9 @@ export function MonsterProfile({ monsterId }: { monsterId: string }) {
                                 ].map(([label, value]) => (
                                     <div
                                         key={label}
-                                        className="rounded-xl border border-[#293443] bg-[#0d141e] p-3"
+                                        className="rounded-xl border border-[#2b3d55] bg-[#0d1522]/80 p-3"
                                     >
-                                        <p className="text-[9px] font-black uppercase tracking-[0.09em] text-[#667489]">
+                                        <p className="text-[9px] font-black uppercase tracking-[0.09em] text-[#91a2b9]">
                                             {label}
                                         </p>
                                         <p className="mt-1 text-lg font-black text-[#edf1f7]">
@@ -276,9 +286,9 @@ export function MonsterProfile({ monsterId }: { monsterId: string }) {
                                 ))}
                             </div>
 
-                            <div className="mt-5 grid gap-4 border-t border-[#293443] pt-5 xl:grid-cols-[minmax(280px,0.8fr)_minmax(360px,1.2fr)]">
+                            <div className="mt-5 grid gap-5 border-t border-[#2b3d55] pt-5">
                                 <div>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.12em] text-[#69768a]">
+                                    <p className="text-[10px] font-black uppercase tracking-[0.12em] text-[#9bacbf]">
                                         Passive Comparison
                                     </p>
                                     <div className="mt-2 grid grid-cols-3 gap-1.5">
@@ -290,6 +300,7 @@ export function MonsterProfile({ monsterId }: { monsterId: string }) {
                                             <button
                                                 key={value}
                                                 type="button"
+                                                aria-pressed={passiveCompareMode === value}
                                                 onClick={() => setPassiveCompareMode(value)}
                                                 className={`min-h-9 rounded-md border px-2 py-1 text-[9px] font-bold uppercase tracking-[0.03em] transition ${
                                                     passiveCompareMode === value
@@ -305,38 +316,32 @@ export function MonsterProfile({ monsterId }: { monsterId: string }) {
 
                                 {monster.isEvolved ? (
                                     <div>
-                                        <div className="flex items-center justify-between gap-3">
-                                            <p className="text-[10px] font-black uppercase tracking-[0.12em] text-[#69768a]">
-                                                Evolution Multiplier
-                                            </p>
-                                            <span className="text-[9px] font-semibold text-[#718099]">
-                                                {evolutionPercent.toFixed(2)}%
-                                            </span>
-                                        </div>
-
-                                        <div className="mt-2 flex items-end gap-2">
-                                            <div className="relative h-9 min-w-0 flex-1 overflow-hidden rounded-md border border-[#f4d4b3]/70 bg-[#343434]">
-                                                <div
-                                                    className="pointer-events-none absolute inset-y-0 left-0 bg-gradient-to-r from-[#ffd2a3] via-[#ffb160] to-[#ff8a24]"
-                                                    style={{ width: `${evolutionBarFill}%` }}
-                                                />
-                                                <span className="pointer-events-none absolute inset-0 z-10 grid place-items-center text-[9px] font-bold text-white [text-shadow:0_1px_0_#111,1px_0_0_#111,-1px_0_0_#111,0_-1px_0_#111]">
-                                                    EM: {evolutionPercent.toFixed(2)}%
-                                                </span>
-                                                <input
-                                                    type="range"
-                                                    min={MIN_EVOLUTION_PERCENT}
-                                                    max={MAX_EVOLUTION_PERCENT}
-                                                    step={EVOLUTION_STEP}
-                                                    value={evolutionPercent}
-                                                    onChange={(event) =>
-                                                        setEvolutionPercent(
-                                                            clampEvolutionPercent(Number(event.target.value)),
-                                                        )
-                                                    }
-                                                    className="absolute inset-0 z-20 h-full w-full cursor-pointer opacity-0"
-                                                    aria-label="Evolution Multiplier"
-                                                />
+                                        <p className="text-[10px] font-black uppercase tracking-[0.12em] text-[#9bacbf]">
+                                            Evolution Multiplier
+                                        </p>
+                                        <div className="mt-2 flex items-start gap-3">
+                                            <div className="min-w-0 flex-1">
+                                                <div className="relative h-9 rounded-lg focus-within:ring-2 focus-within:ring-[#ffc180]">
+                                                    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-1/2 h-2 -translate-y-1/2 rounded-full bg-[#303b4d]" />
+                                                    <div aria-hidden="true" className="pointer-events-none absolute left-0 top-1/2 h-2 w-1/2 -translate-y-1/2 rounded-full bg-[#b67c50]" />
+                                                    <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 h-2 -translate-y-1/2 rounded-r-full bg-[#ffae63]" style={{ width: `${evolutionBarFill - 50}%` }} />
+                                                    <div aria-hidden="true" className="pointer-events-none absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#ffe5c9] bg-[#f4a059]" style={{ left: `${evolutionBarFill}%` }} />
+                                                    <input
+                                                        type="range"
+                                                        min={MIN_EVOLUTION_PERCENT}
+                                                        max={MAX_EVOLUTION_PERCENT}
+                                                        step={EVOLUTION_STEP}
+                                                        value={evolutionPercent}
+                                                        onChange={(event) => setEvolutionPercent(clampEvolutionPercent(event.currentTarget.valueAsNumber))}
+                                                        className="absolute inset-y-0 left-1/2 m-0 h-full w-1/2 cursor-pointer appearance-none opacity-0 [&::-moz-range-thumb]:w-0 [&::-moz-range-thumb]:border-0 [&::-webkit-slider-thumb]:w-0 [&::-webkit-slider-thumb]:appearance-none"
+                                                        aria-label="Evolution Multiplier"
+                                                        aria-valuetext={`${evolutionPercent.toFixed(2)}%`}
+                                                    />
+                                                </div>
+                                                <div aria-hidden="true" className="relative flex justify-end text-[10px] font-semibold text-[#9bacbf]">
+                                                    <span className="absolute left-1/2 -translate-x-1/2">{MIN_EVOLUTION_PERCENT}%</span>
+                                                    <span>{MAX_EVOLUTION_PERCENT}%</span>
+                                                </div>
                                             </div>
 
                                             <input
