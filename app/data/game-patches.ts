@@ -36,6 +36,13 @@ export const gamePatches: readonly Patch[] = [
                 changes: ["The maximum monster level is now 120."],
             },
             {
+                title: "Shroomvale Pet Quest",
+                changes: [
+                    "Complete the Shroomvale Pet Quest after the first four Pet Quests to earn +8% Health.",
+                    "Completing all five Pet Quests grants a total of +24% Health and +16% Damage.",
+                ],
+            },
+            {
                 title: "New Code",
                 changes: ["Bonewraith"],
             },

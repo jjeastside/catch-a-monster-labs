@@ -1877,56 +1877,56 @@
   border-bottom-color: #31516b;
   color: #e8f2ff;
 }
-.compareEditor[open] .compareEditorBody {
+:is(.compareEditor[open], .inventoryEditor) .compareEditorBody {
   background: #0b1e30;
 }
-.compareEditor[open] .buildGroup {
+:is(.compareEditor[open], .inventoryEditor) .buildGroup {
   background: #10283c;
   border-color: #31516b;
 }
-.compareEditor[open] .buildGroupTitle {
+:is(.compareEditor[open], .inventoryEditor) .buildGroupTitle {
   background: #142b40;
   border-bottom-color: #31516b;
   color: #f1f6ff;
 }
-.compareEditor[open] .buildGroupTitle b,
-.compareEditor[open] .compactDisclosure {
+:is(.compareEditor[open], .inventoryEditor) .buildGroupTitle b,
+:is(.compareEditor[open], .inventoryEditor) .compactDisclosure {
   background: #10283c;
   border-color: #31516b;
 }
-.compareEditor[open] .compactDisclosure summary:hover {
+:is(.compareEditor[open], .inventoryEditor) .compactDisclosure summary:hover {
   background: #19354c;
 }
-.compareEditor[open] .gpControls {
+:is(.compareEditor[open], .inventoryEditor) .gpControls {
   border-top-color: #31516b;
   background: #10283c;
 }
-.compareEditor[open] .control input,
-.compareEditor[open] .control select,
-.compareEditor[open] .gpControls select,
-.compareEditor[open] .traitControl select,
-.compareEditor[open] .equipmentGrid select {
+:is(.compareEditor[open], .inventoryEditor) .control input,
+:is(.compareEditor[open], .inventoryEditor) .control select,
+:is(.compareEditor[open], .inventoryEditor) .gpControls select,
+:is(.compareEditor[open], .inventoryEditor) .traitControl select,
+:is(.compareEditor[open], .inventoryEditor) .equipmentGrid select {
   background: #041320;
   border-color: #31516b;
 }
-.compareEditor[open] .rankStrip,
-.compareEditor[open] .enhancementStepper {
+:is(.compareEditor[open], .inventoryEditor) .rankStrip,
+:is(.compareEditor[open], .inventoryEditor) .enhancementStepper {
   background: #041320;
   border-color: #31516b;
 }
-.compareEditor[open] .enhancementStepper strong {
+:is(.compareEditor[open], .inventoryEditor) .enhancementStepper strong {
   background: #14283b;
 }
-.compareEditor[open] .mutationTile,
-.compareEditor[open] .attributeGroup {
+:is(.compareEditor[open], .inventoryEditor) .mutationTile,
+:is(.compareEditor[open], .inventoryEditor) .attributeGroup {
   background: #0b2032;
   border-color: #31516b;
 }
-.compareEditor[open] .mutationTile:hover {
+:is(.compareEditor[open], .inventoryEditor) .mutationTile:hover {
   background: #19354c;
   border-color: #5584a9;
 }
-.compareEditor[open] .mutationTile img {
+:is(.compareEditor[open], .inventoryEditor) .mutationTile img {
   background: #041320;
   border-color: #31516b;
 }
@@ -1955,8 +1955,9 @@
 .compactStats .slotStat:first-child, .compactStats .slotStat:nth-child(2) { min-width:0; }
 .changeMonsterButton { position:absolute; top:10px; right:35px; z-index:2; border:1px solid #355574; border-radius:6px; padding:4px 7px; background:#10283e; color:#a6cff5; cursor:pointer; }
 .changeMonsterButton:hover, .changeMonsterButton:focus-visible { background:#1a3954; border-color:#6a9ed1; }
-.monsterPickerOverlay { position:fixed; inset:0; z-index:120; display:grid; place-items:center; padding:12px; background:rgba(3,9,17,.78); }
-.monsterPicker { width:min(610px,100%); max-height:min(760px,90dvh); display:flex; flex-direction:column; gap:12px; padding:17px; border:1px solid #416282; border-radius:14px; background:#0b1c2d; box-shadow:0 24px 90px #000b; }
+.monsterPicker { width:min(610px,calc(100% - 24px)); max-height:min(760px,90dvh); margin:auto; color:#f6f8fc; gap:12px; padding:17px; border:1px solid #416282; border-radius:14px; background:#0b1c2d; box-shadow:0 24px 90px #000b; }
+.monsterPicker[open] { display:flex; flex-direction:column; }
+.monsterPicker::backdrop { background:rgba(3,9,17,.78); }
 .monsterPickerHeader { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; color:#e9f3ff; }
 .monsterPickerHeader strong { font-size:16px; }
 .monsterPickerHeader p { margin-top:4px; font-size:12px; color:#91a8c0; }
@@ -2819,13 +2820,13 @@ button.emptySlot .emptySlotContent small {
    dedicated explanatory line under every monster in a 200+ entry list. */
 .copyList { grid-column: 1 / -1; width: 100%; margin: 0; border: 0; }
 .copyList > summary {
-  position: absolute; top: 50%; right: 4px; transform: translateY(-50%);
+  position: absolute; top: 10px; right: 4px;
   display: grid; place-items: center; width: 20px; height: 24px;
   padding: 0; margin: 0; border: 1px solid transparent; border-radius: 5px;
   color: #93b9d7; font-size: 17px; line-height: 1;
 }
 .copyList > summary::before { content: none; }
-.copyList[open] > summary { top: 18px; transform: none; border-color: #366b91; background: #123450; }
+.copyList[open] > summary { border-color: #366b91; background: #123450; }
 .copyList > summary:hover, .copyList > summary:focus-visible { border-color: #559ad0; color: white; }
 .copyList .copyRow { margin-top: 6px; border-top: 1px solid #224565; }
 @media (hover: none) {
@@ -3056,3 +3057,120 @@ button.emptySlot .emptySlotContent small {
 }
 
 .unequipPanel{margin:8px 0;padding:10px;border:1px solid #2b4d6b;border-radius:8px;background:#071b2b}.unequipPanel summary{display:flex;justify-content:space-between;gap:8px;cursor:pointer;color:#c8e6fa;font-size:12px;font-weight:700}.unequipPanel summary span{font-size:10px;color:#87abc3;font-weight:400}.unequipPanel p{margin:8px 0;font-size:11px;line-height:1.5;color:#91aec3}.unequipActions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.unequipList{display:grid;gap:6px;max-height:240px;overflow-y:auto;margin-top:8px}.unequipList label{display:flex;align-items:center;gap:8px;padding:6px;border:1px solid #25475f;border-radius:5px;color:#c9deed;font-size:11px;cursor:pointer}.unequipList input{width:15px;height:15px;flex:none;accent-color:#45bbec}.unequipList span{min-width:0}.unequipList small{display:block;margin-top:2px;color:#87abc3;font-size:10px;overflow-wrap:anywhere}
+
+.sustainEffect { grid-column: 1 / -1; color: #b1ddf2; font-size: 12px; }
+
+.swapList { display: grid; gap: 8px; margin-top: 10px; }
+
+.recommendGearList {
+  display: grid;
+  gap: 4px;
+  margin: 5px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recommendGearItem {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 4px;
+  border: 1px solid #2b4662;
+  border-radius: 6px;
+  background: #102237;
+}
+
+.recommendGearItem img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  border: 1px solid #36516a;
+  border-radius: 4px;
+  background: #081626;
+}
+
+.recommendGearItem .recommendGearName {
+  display: block;
+  color: #dbeaff;
+  font-size: 10px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.recommendGearMove {
+  padding: 2px 4px;
+  border: 1px solid #8a622e;
+  border-radius: 4px;
+  background: #392913;
+  color: #ffdb96;
+  font-size: 8px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+
+.inventoryRow:hover .inventoryBadges,
+.inventoryRow:focus-within .inventoryBadges,
+.inventoryRow .inventoryBadges {
+  display: flex;
+}
+
+.inventoryBuildBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 4px;
+  border: 1px solid #315270;
+  border-radius: 4px;
+  background: #0c2236;
+  font-size: 9px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.inventoryBadges .inventoryBuildBadge span {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+}
+
+.inventoryBuildBadge:hover,
+.inventoryBuildBadge:focus-visible {
+  border-color: #60b8fa;
+}
+
+.inventoryEditor .compareEditorBody {
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+@media (max-width: 540px) {
+  .inventoryEditor .compareEditorBody { padding: 10px; }
+}
+
+.inventoryMenuActions { display: flex; flex-wrap: wrap; gap: 5px; padding: 5px 0 2px; }
+
+
+.ownedGearCreate {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 5px;
+}
+
+.ownedGearCreate select {
+  flex: 1 1 120px;
+  min-width: 0;
+  border: 1px solid #31516b;
+  border-radius: 6px;
+  padding: 5px;
+  color: #eaf5ff;
+}
+
+.ownedGearCreate button:disabled {
+  opacity: .52;
+}

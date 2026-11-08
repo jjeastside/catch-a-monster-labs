@@ -102,7 +102,7 @@ const featureCards = [
     },
     {
         title: "Monster Database",
-        description: "Explore every monster, skill, passive, source, evolution, and location in one searchable reference.",
+        description: "Explore monsters, skills, passives, and sources. Search and filter while keeping each monster’s full-roster DPS rank.",
         href: "/monster-database",
         navIcon: "/icons/monster-database.png",
         preview: "database",
@@ -129,7 +129,7 @@ const featureCards = [
     },
     {
         title: "Team Builder",
-        description: "Build three-monster teams, manage gear, toggle shared team and enemy conditions, and compare Skill Damage with Skill DPS.",
+        description: "Build PvE or PvP teams, compare one-pet swaps, preview max-level lineups, and add gear directly from the monster editor.",
         href: "/team",
         navIcon: "/team-builder.png",
         preview: "team-builder",
@@ -345,7 +345,7 @@ function TeamBuilderPreview() {
                     <Image src={assetPath("/team-builder.png")} alt="" width={22} height={22} unoptimized aria-hidden="true" className="size-[22px] object-contain" />
                     <div>
                         <p className="text-[10px] font-black uppercase tracking-[0.12em] text-[#60baff]">Team Composition</p>
-                        <p className="text-[9px] text-[#7f94b1]">Shared combat conditions · Skill Damage · DPS</p>
+                        <p className="text-[9px] text-[#7f94b1]">PvE / PvP · One-pet swaps · Max-Level Roster</p>
                     </div>
                 </div>
                 <span className="rounded-md border border-[#23476d] bg-[#0b2137] px-2 py-1 text-[9px] font-bold text-[#9fc8ec]">3 / 3</span>
@@ -370,7 +370,7 @@ function TeamBuilderPreview() {
                         <span>Damage</span><span>Health</span><span className="inline-flex items-center gap-1"><Image src={assetPath("/icons/skill-damage.png")} alt="" width={12} height={12} unoptimized aria-hidden="true" />Skill Damage</span><span>Skill DPS</span>
                     </div>
                 </div>
-                <p className="mt-1 text-[8px] leading-3 text-[#9fb0c7]">Team buffs · Enemy status · Vulnerability · Boss / Spire</p>
+                <p className="mt-1 text-[8px] leading-3 text-[#9fb0c7]">Compare Skill DPS, weakest effective HP, and Synergy before swapping.</p>
             </div>
         </div>
     );
@@ -473,6 +473,7 @@ export default function HomePage() {
                             <h2 id="latest-update-title" className="mt-2 text-2xl font-black tracking-tight text-white sm:text-3xl">{latestGamePatch.version} · Bonewraith and SoulPaladin</h2>
                             <p className="mt-3 max-w-[660px] text-sm leading-6 text-[#bcd0e5]">Battle Bonewraith on Pumpkin Mirage, evolve Soulguard into SoulPaladin, and build your monsters up to level {CURRENT_MAX_LEVEL}.</p>
                             <p className="mt-3 text-xs leading-5 text-[#bcd0e5]">The Treasure Hunt is live. Redeem the new code <strong>Bonewraith</strong>.</p>
+                            <p className="mt-2 text-xs leading-5 text-[#bcd0e5]">The fifth Pet Quest in Shroomvale grants <strong>+8% Health</strong>, bringing the combined Pet Quest bonuses to <strong>+24% Health and +16% Damage</strong>.</p>
                             <div className="mt-4 flex flex-wrap gap-3">
                                 <Link href="/updates" className="inline-flex items-center gap-2 rounded-lg bg-[#169cf5] px-4 py-2.5 text-xs font-black text-[#061424] transition hover:bg-[#54c4ff]">Read Patch Notes <Icon name="arrow" className="size-4" /></Link>
                                 <a href={assetPath(NEW_MONSTERS_DATABASE_HREF)} className="inline-flex items-center gap-2 rounded-lg border border-[#4678aa] px-4 py-2.5 text-xs font-bold text-[#dcefff] transition hover:bg-[#153859]">Explore New Monsters <Icon name="arrow" className="size-4" /></a>
@@ -491,6 +492,20 @@ export default function HomePage() {
                                     <p className="mt-1 text-xs text-[#90afd2]">{monster.rarity} · {monster.element} · Index {monster.indexPosition}</p>
                                 </Link>
                             ))}
+                        </div>
+                    </div>
+                </section>
+
+                <section aria-labelledby="latest-cam-lab-title" className="border-b border-[#17345b] bg-[#071426] px-4 py-5 sm:px-6 lg:px-8">
+                    <div className="mx-auto flex w-full max-w-[1480px] flex-wrap items-center justify-between gap-4 rounded-xl border border-[#214a79] bg-[#0b1e34] px-4 py-4 sm:px-5">
+                        <div>
+                            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#66d3ff]">Cam Lab {releases[0].version}</p>
+                            <h2 id="latest-cam-lab-title" className="mt-1 text-lg font-black text-white">{releases[0].title}</h2>
+                            <p className="mt-1 max-w-2xl text-sm leading-5 text-[#bcd0e5]">Try one-pet swaps or max-level teams, build PvP lineups with one pet per species, and add gear right from the monster editor.</p>
+                        </div>
+                        <div className="flex flex-wrap gap-2 text-xs font-bold">
+                            <Link href="/team" className="rounded-lg bg-[#169cf5] px-4 py-2.5 text-[#061424] hover:bg-[#54c4ff]">Open Team Builder</Link>
+                            <Link href="/changelog" className="rounded-lg border border-[#4678aa] px-4 py-2.5 text-[#dcefff] hover:bg-[#153859]">Read Changelog</Link>
                         </div>
                     </div>
                 </section>

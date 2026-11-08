@@ -28,18 +28,31 @@ export function getTeamCombatOptions(builds: Build[]) {
   return { damageIncreasePercent, vulnerabilityPercentages: [...vulnerabilityPercentages].sort((a, b) => a - b), hasStatusCondition, hasBossCondition };
 }
 
-/** Normalize older per-member selections and share the strongest active effects. */
-export function applyTeamCombatConditions(builds: Build[]): Build[] {
+export type TeamCombatSelection = Pick<Build,
+  "rallyingWarCryActive" | "vulnerabilityActive" | "targetStatused" | "targetIsBoss" | "enemyVulnerabilityPercent">;
+
+export function getTeamCombatSelection(builds: Build[]): TeamCombatSelection {
   const members = builds.filter(build => build.monsterId);
-  const options = getTeamCombatOptions(members);
-  const requested = Math.max(0, ...members.filter(build => build.vulnerabilityActive).map(build => build.enemyVulnerabilityPercent ?? 0));
+  return {
+    rallyingWarCryActive: members.some(build => build.rallyingWarCryActive),
+    vulnerabilityActive: members.some(build => build.vulnerabilityActive),
+    targetStatused: members.some(build => build.targetStatused),
+    targetIsBoss: members.some(build => build.targetIsBoss),
+    enemyVulnerabilityPercent: Math.max(0, ...members.filter(build => build.vulnerabilityActive)
+      .map(build => build.enemyVulnerabilityPercent ?? 0)),
+  };
+}
+
+/** Share selected conditions, resolving effect strength against this lineup. */
+export function applyTeamCombatConditions(builds: Build[], selection = getTeamCombatSelection(builds)): Build[] {
+  const options = getTeamCombatOptions(builds);
+  const requested = selection.enemyVulnerabilityPercent ?? 0;
   const vulnerabilityPercent = options.vulnerabilityPercentages.includes(requested) ? requested
     : Math.max(0, ...options.vulnerabilityPercentages);
-  const rallyingWarCryActive = options.damageIncreasePercent > 0 && members.some(build => build.rallyingWarCryActive);
-  const vulnerabilityActive = vulnerabilityPercent > 0 && members.some(build => build.vulnerabilityActive);
-  const targetStatused = members.some(build => build.targetStatused);
-  const targetIsBoss = members.some(build => build.targetIsBoss);
-  return builds.map(build => ({ ...build, rallyingWarCryActive, vulnerabilityActive, targetStatused, targetIsBoss,
+  return builds.map(build => ({
+    ...build, ...selection,
+    rallyingWarCryActive: options.damageIncreasePercent > 0 && selection.rallyingWarCryActive,
+    vulnerabilityActive: vulnerabilityPercent > 0 && selection.vulnerabilityActive,
     enemyVulnerabilityPercent: vulnerabilityPercent,
     teamCombatEffects: { damageIncreasePercent: options.damageIncreasePercent, vulnerabilityPercent },
   }));

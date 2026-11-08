@@ -8,12 +8,29 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.41",
+        date: "November 8, 2026",
+        label: "Latest",
+        title: "Team Builder, PvP & Inventory Improvements",
+        changes: [
+            "Added Optimize Current Team. Compare one-pet swaps from your inventory, see changes in Skill DPS, weakest-member effective HP, and Synergy, and apply a swap while keeping the other two builds and their gear in place.",
+            "Added Max-Level Roster to preview teams with owned and unowned pets at max stats. It ranks shortlisted lineups without gear or traits and supports duplicate species in PvE.",
+            "Synced the Team Builder Combat Context selector with the site-wide PvP switch and added a PvP label to Team Recommendations. PvP enforces one pet per species across manual selection, saved-team loads, and optimizer results.",
+            "Unified the inventory and team-slot build editors. Click the level and rank badge to edit a pet, or open the three-dot menu for inventory actions.",
+            "Added Add & Equip to the weapon and armor selectors in both editors. The previous item returns to inventory with its attributes. Recommended gear shows its artwork and a Reassign badge when it needs to move.",
+            "Fixed Dungeon recommendations overwriting saved levels, optimizer gear transfers removing unrelated gear, and inventory sorting choosing a different copy from the one shown. Imports resolve conflicting assignments, and removing a pet copy releases its gear.",
+            "Applied shared combat conditions to optimizer results, added healing and shield details to the team skills preview, and made saved-team loads flag changes in assigned gear. The replacement picker now supports Escape and restores keyboard focus.",
+            "Added Discord and GitHub icons to the footer, with @jjeastside displayed under Community for Discord.",
+        ],
+    },
+    {
         version: "v1.0.40",
         date: "November 7, 2026",
-        label: "Latest",
         title: "Update 0.56 and Level 120",
         changes: [
             "Added Bonewraith and SoulPaladin to the monster roster and refreshed the homepage and New filter for Update 0.56.",
+            "Added the fifth Pet Quest in Shroomvale. Claiming it after the first four grants +8% Health, bringing the total Pet Quest bonuses to +24% Health and +16% Damage.",
+            "Fixed Monster Database DPS ranks so search and filters preserve each monster's position across the full roster. Ranks update when stat settings change.",
             "Raised the standard level cap to 120. Experimental Mode now previews levels 121–125.",
             "Published patch notes for the Pumpkin Mirage boss, Soulguard evolution, Treasure Hunt event, Admin Abuse sessions, and Bonewraith code.",
         ],

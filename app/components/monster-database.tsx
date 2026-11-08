@@ -342,7 +342,7 @@ function MonsterCard({
                     title={sortBy === "index"
                         ? `Index #${monster.indexPosition}`
                         : Number.isFinite(comparisonStats[sortBy])
-                            ? `Rank ${rank} by ${sortBy === "dps" ? "DPS" : sortBy} among filtered monsters using current settings`
+                            ? `Rank ${rank} by ${sortBy === "dps" ? "DPS" : sortBy} among ${sortBy === "dps" ? "all monsters" : "filtered monsters"} using current settings`
                             : "Ranking unavailable: missing stats"}
                     className={`${styles.rankBadge} ${sortBy === "index" ? styles.indexBadge : styles.statRankBadge}`}
                 >
@@ -1124,10 +1124,29 @@ export function MonsterDatabase() {
         );
     }, []);
 
+    const sortedMonsters = useMemo(() => {
+        return [...GENERATED_MONSTERS]
+            .sort((a, b) => {
+                if (sortBy === "index") return a.indexPosition - b.indexPosition;
+                const aValue = statsById.get(a.id)![sortBy];
+                const bValue = statsById.get(b.id)![sortBy];
+                if (!Number.isFinite(aValue)) return Number.isFinite(bValue) ? 1 : a.indexPosition - b.indexPosition;
+                if (!Number.isFinite(bValue)) return -1;
+                return bValue - aValue || a.indexPosition - b.indexPosition;
+            });
+    }, [sortBy, statsById]);
+
+    const dpsRanksById = useMemo(
+        () => sortBy === "dps"
+            ? new Map(sortedMonsters.map((monster, index) => [monster.id, index + 1]))
+            : undefined,
+        [sortBy, sortedMonsters],
+    );
+
     const filteredMonsters = useMemo(() => {
         const normalizedSearch = search.trim().toLowerCase();
 
-        return [...GENERATED_MONSTERS]
+        return sortedMonsters
             .filter((monster) => {
                 const exclusiveTraits = getMonsterExclusiveTraits(monster.id);
                 if (normalizedSearch && !monster.name.toLowerCase().includes(normalizedSearch) &&
@@ -1154,16 +1173,8 @@ export function MonsterDatabase() {
                 if (skillEffectFilter !== "all" && !monsterHasSkillEffect(monster, skillEffectFilter)) return false;
                 if (!matchesEvolutionFilter(monster, evolutionFilter)) return false;
                 return true;
-            })
-            .sort((a, b) => {
-                if (sortBy === "index") return a.indexPosition - b.indexPosition;
-                const aValue = statsById.get(a.id)![sortBy];
-                const bValue = statsById.get(b.id)![sortBy];
-                if (!Number.isFinite(aValue)) return Number.isFinite(bValue) ? 1 : a.indexPosition - b.indexPosition;
-                if (!Number.isFinite(bValue)) return -1;
-                return bValue - aValue || a.indexPosition - b.indexPosition;
             });
-    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, exclusiveTraitFilter, skillEffectFilter, evolutionFilter, sortBy, statsById]);
+    }, [search, rarity, element, sourceType, location, obtainability, passiveFilter, exclusiveTraitFilter, skillEffectFilter, evolutionFilter, sortedMonsters]);
 
     useEffect(() => {
         const frame = requestAnimationFrame(() => setVisibleMonsterCount(30));
@@ -1519,7 +1530,7 @@ export function MonsterDatabase() {
                                     <MonsterCard
                                         key={monster.id}
                                         monster={monster}
-                                        rank={index + 1}
+                                        rank={dpsRanksById?.get(monster.id) ?? index + 1}
                                         selected={selectedMonster?.id === monster.id}
                                         onSelect={() => {
                                             setFiltersOpen(false);

@@ -10,10 +10,11 @@ import { getAttribute } from "../data/attributes";
 import { calculateSkillSummary } from "./calculations/skill-summary";
 import { calculateStats } from "./calculations/stats";
 import { getAttributeSlotCount } from "./calculations/attributes";
-import { clampEvolutionPercent } from "./calculations/evolution";
+import { clampEvolutionPercent, MAX_EVOLUTION_PERCENT } from "./calculations/evolution";
 import { GENETIC_POTENTIAL_VALUES } from "./calculations/genetic-potential";
 import { CURRENT_MAX_LEVEL, MIN_LEVEL } from "./level-config";
-import { DUNGEON_TEAM_LEVEL } from "./team-dungeon-level";
+import { applyTeamCombatConditions, type TeamCombatSelection } from "./team-combat-conditions";
+import { withTeamDungeonLevel } from "./team-dungeon-level";
 import { calculateTeamSynergy, type TeamSynergy } from "./team-synergy";
 import { createDefaultBuild, type Build, type MonsterPassive, type Mutation, type Rank } from "../types/build";
 import type { Monster } from "../types/monster";
@@ -313,6 +314,10 @@ export function monsterDps(monster: Monster, build: Build): number {
  * and solo baseline for both views; no separate public optimizer rating.
  */
 export function teamSynergyForBuilds(builds: Build[], account: Build["accountMultipliers"], context: TeamCombatContext): TeamSynergy {
+  return evaluateTeamBuilds(builds, account, context).synergy;
+}
+
+export function evaluateTeamBuilds(builds: Build[], account: Build["accountMultipliers"], context: TeamCombatContext) {
   const members = builds.flatMap((saved, index) => {
     const monster = saved.monsterId ? monsterById.get(saved.monsterId) : null;
     if (!monster) return [];
@@ -325,12 +330,14 @@ export function teamSynergyForBuilds(builds: Build[], account: Build["accountMul
     const passives = getEffectiveTeamPassives(monster, build);
     const stats = calculateStats(statData, build, passives);
     if (!stats) return [];
+    let dps = 0;
     const skills = monster.skillIds.flatMap((id) => {
       const skill = getSkill(id);
       if (!skill) return [];
-      return [{ ...skill, cooldown: calculateSkillSummary(monster, skill, stats, build, passives).cooldown }];
+      const summary = calculateSkillSummary(monster, skill, stats, build, passives);
+      dps += summary.dps ?? 0;
+      return [{ ...skill, cooldown: summary.cooldown }];
     });
-    const dps = monsterDps(monster, build);
     const solo = { ...build, teammateMonsterIds: [null, null] as [null, null] };
     const soloStats = calculateStats(statData, solo, getEffectiveTeamPassives(monster, solo));
     const trait = getTrait(build.traitId);
@@ -342,7 +349,14 @@ export function teamSynergyForBuilds(builds: Build[], account: Build["accountMul
       soloEffectiveHealth: soloStats ? effectiveTeamHealth(monster, solo, soloStats.health) : 0,
       statusDamagePercent }];
   });
-  return calculateTeamSynergy(members, context);
+  const synergy = calculateTeamSynergy(members, context);
+  return {
+    synergy,
+    synergyScore: synergy.score,
+    totalDps: members.reduce((sum, member) => sum + member.dps, 0),
+    totalEffectiveHealth: members.reduce((sum, member) => sum + member.effectiveHealth, 0),
+    weakestEffectiveHp: members.length ? Math.min(...members.map(member => member.effectiveHealth)) : 0,
+  };
 }
 
 export function buildSignature(build: Build): string {
@@ -396,10 +410,7 @@ export function compactBuildLabel(build: Build): string {
 export function buildForGoal(build: Build, combatContext: TeamCombatContext): Build {
     build = applyBreedingLimits(build, build.monsterId);
   return {
-    ...build,
-    // Recommendations, previews and the visible cards must evaluate Dungeon
-    // at the same level even when an inventory copy is saved at another level.
-    level: combatContext === "dungeon" ? DUNGEON_TEAM_LEVEL : build.level,
+    ...withTeamDungeonLevel(build, combatContext === "dungeon"),
     targetIsBoss: build.combatMode !== "pvp" && (build.targetIsBoss || combatContext === "boss"),
     combatContext: combatContext === "boss" ? "standard" : combatContext,
   };
@@ -461,7 +472,33 @@ export function signedPercent(value: number): string {
   return `${value > 0 ? "+" : ""}${Math.round(value * 100)}%`;
 }
 
-export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build["accountMultipliers"], goal: TeamGoal, combatContext: TeamCombatContext = "standard", combatMode: "pve" | "pvp" = "pve") {
+/** Theoretical builds stay separate from owned copies and physical equipment. */
+export function maxLevelRoster(): InventoryBuilds {
+  const maxGp = Math.max(...GENETIC_POTENTIAL_VALUES);
+  return Object.fromEntries(availableMonsters.map(monster => [
+    monster.id,
+    sanitizeBuild({
+      level: CURRENT_MAX_LEVEL, rank: "SS", enhancement: 10,
+      damageGeneticPotential: maxGp, healthGeneticPotential: maxGp,
+      evolutionPercent: MAX_EVOLUTION_PERCENT,
+      mutations: ["huge-x", "shiny-x", "bloodlit-x", "fairy-x"],
+    }, monster.id),
+  ]));
+}
+
+export function duplicateTeamSlots(builds: Build[]): number[] {
+  const seen = new Set<string>();
+  return builds.flatMap(({ monsterId }, index) => {
+    if (!monsterId) return [];
+    if (seen.has(monsterId)) return [index];
+    seen.add(monsterId);
+    return [];
+  });
+}
+
+export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build["accountMultipliers"], goal: TeamGoal, combatContext: TeamCombatContext = "standard", combatMode: "pve" | "pvp" = "pve", selection?: TeamCombatSelection, theoreticalRoster = false) {
+  const uniqueSpecies = combatMode === "pvp";
+  const allowRepeatedSpecies = theoreticalRoster && !uniqueSpecies;
   const ownedIds = Object.keys(inventoryBuilds);
     const ownedCandidates = ownedIds
       .map((id) => ({ id, monster: monsterById.get(copyMonsterId(id)) }))
@@ -469,13 +506,13 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
       .map(({ id, monster }) => {
         const saved = inventoryBuilds[id] ?? makeBuild(monster.id);
         const baseBuild = buildForGoal(
-          {
+          applyTeamCombatConditions([{
             ...saved,
             combatMode,
             accountMultipliers: account,
             teammateMonsterIds: [null, null],
             evolutionPercent: monster.isEvolved ? saved.evolutionPercent : 100,
-          },
+          }], selection)[0],
           combatContext,
         );
         const statData = getMonsterStatData(monster.id);
@@ -486,10 +523,10 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
           combatContext: baseBuild.combatContext, targetIsBoss: baseBuild.targetIsBoss,
           currentHpPercent: baseBuild.currentHpPercent,
         });
-        const encounterDamage = combatContext === "boss" ? encounterPassives.bossDamage
-          : combatContext === "rift" ? encounterPassives.riftDamage
-          : combatContext === "spire" ? encounterPassives.spireDamage
-          : combatContext === "dungeon" ? encounterPassives.dungeonDamage : 0;
+        const encounterDamage = (baseBuild.targetIsBoss ? encounterPassives.bossDamage : 0)
+          + (combatContext === "rift" ? encounterPassives.riftDamage
+            : combatContext === "spire" ? encounterPassives.spireDamage
+            : combatContext === "dungeon" ? encounterPassives.dungeonDamage : 0);
         return {
           id,
           monster,
@@ -499,8 +536,9 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
           effectiveHealth: effectiveTeamHealth(monster, baseBuild, stats?.health ?? 0),
           encounterDamage,
           utility,
+          hasStats: stats !== null,
         };
-      });
+      }).filter(candidate => !theoreticalRoster || candidate.hasStats);
 
     if (ownedCandidates.length === 0) return null;
 
@@ -521,20 +559,29 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
     // Preserve encounter specialists even if their level-one base stats are
     // smaller than generalists. A transferable +Rift/Tower Damage passive can
     // raise all three members' DPS, and Guard can raise all three members' eHP.
-    const statLeaders = [...ownedCandidates].sort((a, b) => roughScore(b) - roughScore(a)).slice(0, 12);
-    const survivalLeaders = [...ownedCandidates].sort((a, b) => b.effectiveHealth - a.effectiveHealth).slice(0, 6);
-    const utilityLeaders = [...ownedCandidates].sort((a, b) => b.utility.total - a.utility.total).slice(0, 4);
-    const encounterDamageLeaders = combatContext === "standard" ? [] : [...ownedCandidates]
+    const takeLeaders = (ranked: typeof ownedCandidates, limit: number) => {
+      if (!uniqueSpecies) return ranked.slice(0, limit);
+      const seen = new Set<string>();
+      return ranked.filter(({ monster }) => {
+        if (seen.has(monster.id)) return false;
+        seen.add(monster.id);
+        return true;
+      }).slice(0, limit);
+    };
+    const statLeaders = takeLeaders([...ownedCandidates].sort((a, b) => roughScore(b) - roughScore(a)), 12);
+    const survivalLeaders = takeLeaders([...ownedCandidates].sort((a, b) => b.effectiveHealth - a.effectiveHealth), 6);
+    const utilityLeaders = takeLeaders([...ownedCandidates].sort((a, b) => b.utility.total - a.utility.total), 4);
+    const encounterDamageLeaders = takeLeaders(ownedCandidates
       .filter((item) => item.encounterDamage > 0)
-      .sort((a, b) => b.encounterDamage - a.encounterDamage).slice(0, 2);
-    const guardLeaders = [...ownedCandidates]
+      .sort((a, b) => b.encounterDamage - a.encounterDamage), 2);
+    const guardLeaders = takeLeaders(ownedCandidates
       .filter((item) => item.effectiveHealth > item.health * 1.001)
-      .sort((a, b) => (b.effectiveHealth / Math.max(1, b.health)) - (a.effectiveHealth / Math.max(1, a.health)))
-      .slice(0, 2);
+      .sort((a, b) => (b.effectiveHealth / Math.max(1, b.health)) - (a.effectiveHealth / Math.max(1, a.health))), 2);
     const poolMap = new Map<string, (typeof ownedCandidates)[number]>();
     [...statLeaders, ...survivalLeaders, ...utilityLeaders, ...encounterDamageLeaders, ...guardLeaders].forEach((item) => poolMap.set(item.id, item));
     const pool = [...poolMap.values()];
-    const targetSize = Math.min(3, pool.length);
+    const poolSize = uniqueSpecies ? new Set(pool.map(item => item.monster.id)).size : pool.length;
+    const targetSize = allowRepeatedSpecies ? 3 : Math.min(3, poolSize);
 
     const combinations: Array<Array<(typeof pool)[number]>> = [];
     const choose = (startIndex: number, selected: Array<(typeof pool)[number]>) => {
@@ -543,8 +590,10 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
         return;
       }
       for (let index = startIndex; index < pool.length; index += 1) {
-        selected.push(pool[index]);
-        choose(index + 1, selected);
+        const candidate = pool[index];
+        if (uniqueSpecies && selected.some(item => item.monster.id === candidate.monster.id)) continue;
+        selected.push(candidate);
+        choose(allowRepeatedSpecies ? index : index + 1, selected);
         selected.pop();
       }
     };
@@ -552,11 +601,12 @@ export function recommendTeams(inventoryBuilds: InventoryBuilds, account: Build[
 
     const evaluated = combinations.map((members) => {
       const memberIds = members.map((item) => item.monster.id);
+      const conditioned = applyTeamCombatConditions(members.map(item => item.savedBuild), selection);
       const resolvedMembers = members.map((item, memberIndex) => {
         const teammateIds = memberIds.filter((_, index) => index !== memberIndex);
         const build = buildForGoal(
           {
-            ...item.savedBuild,
+            ...conditioned[memberIndex],
             combatMode,
             accountMultipliers: account,
             teammateMonsterIds: [teammateIds[0] ?? null, teammateIds[1] ?? null],

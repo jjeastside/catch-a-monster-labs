@@ -21,12 +21,29 @@ const exploreLinks = [
     { label: "Privacy Policy", href: "/privacy" },
 ];
 
+const creatorGitHubUrl = "https://github.com/jjeastside";
+const discordUrl = process.env.NEXT_PUBLIC_DISCORD_URL?.trim();
+
+function SocialIcon({ platform }: { platform: "discord" | "github" }) {
+    return (
+        <Image
+            src={assetPath(platform === "discord" ? "/branding/discord-icon.svg" : "/branding/github-icon.webp")}
+            width={16}
+            height={16}
+            alt=""
+            unoptimized
+            className={`size-4 shrink-0 object-contain${platform === "github" ? " brightness-0 invert" : ""}`}
+        />
+    );
+}
+
 const projectLinks = [
     { label: "Suggest a Feature", feedbackCategory: "feature" },
     { label: "Report an Issue", feedbackCategory: "bug" },
     { label: "Send Feedback", feedbackCategory: "general" },
     { label: "Contact / Concerns", contact: true },
-    { label: "View on GitHub", href: "https://github.com/jjeastside/catch-a-monster-labs" },
+    { label: "View on GitHub", href: `${creatorGitHubUrl}/catch-a-monster-labs`, icon: "github" },
+    { label: "Discord · @jjeastside", href: discordUrl, icon: "discord" },
 ] as const;
 
 type FooterLinkProps = {
@@ -34,18 +51,20 @@ type FooterLinkProps = {
     href?: string;
     feedbackCategory?: "feature" | "bug" | "general";
     contact?: boolean;
+    icon?: "discord" | "github";
 };
 
-function FooterLink({ label, href, feedbackCategory, contact }: FooterLinkProps) {
+function FooterLink({ label, href, feedbackCategory, contact, icon }: FooterLinkProps) {
     const content = (
         <>
+            {icon && <SocialIcon platform={icon} />}
             <span>{label}</span>
-            <span
+            {(href || feedbackCategory || contact) && <span
                 aria-hidden="true"
                 className="translate-x-0 text-[#7182ff] opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100"
             >
                 →
-            </span>
+            </span>}
         </>
     );
     const className =
@@ -69,10 +88,12 @@ function FooterLink({ label, href, feedbackCategory, contact }: FooterLinkProps)
                 </button>
             ) : contact ? (
                 <ContactTrigger className={className}>{content}</ContactTrigger>
-            ) : (
-                <Link href={href ?? "/"} prefetch={false} className={className}>
+            ) : href ? (
+                <Link href={href} prefetch={false} className={className}>
                     {content}
                 </Link>
+            ) : (
+                <span className="inline-flex items-center gap-1.5 text-sm text-[#8f99aa]">{content}</span>
             )}
         </li>
     );
@@ -151,11 +172,12 @@ export function SiteFooter() {
                         </div>
                         <p className="mt-4 text-sm text-[#8f99aa]">Created by</p>
                         <a
-                            href="https://github.com/jjeastside"
+                            href={creatorGitHubUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-sm font-bold text-[#52aaff] transition hover:text-[#8dc8ff]"
+                            className="inline-flex items-center gap-1.5 text-sm font-bold text-[#52aaff] transition hover:text-[#8dc8ff]"
                         >
+                            <SocialIcon platform="github" />
                             @jjeastside
                         </a>
                     </div>
