@@ -18,6 +18,11 @@ export const gamePatches: readonly Patch[] = [
         label: "Latest",
         sections: [
             {
+                title: "Memory Chest 1",
+                date: "November 11, 2026",
+                changes: ["Lunaron and Palejack can be found in Memory Chest 1 in the Abyss Shop."],
+            },
+            {
                 title: "New Boss and Evolution",
                 changes: [
                     "Bonewraith, a Mythical Dark boss, has arrived on Pumpkin Mirage.",

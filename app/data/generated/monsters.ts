@@ -5476,6 +5476,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "rarity": "Mythical",
     "sources": [
       {
+        "type": "Chest",
+        "name": "Memory Chest 1",
+        "location": "Abyss Shop",
+        "status": "Current"
+      },
+      {
         "type": "Island Special Spawn",
         "name": "Special Spawn",
         "location": "Skyheart Isle",
@@ -5524,6 +5530,12 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "rarity": "Mythical",
     "sources": [
       {
+        "type": "Chest",
+        "name": "Memory Chest 1",
+        "location": "Abyss Shop",
+        "status": "Current"
+      },
+      {
         "type": "Island Special Spawn",
         "name": "Special Spawn",
         "location": "Pumpkin Mirage",
@@ -5552,12 +5564,16 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "rarity": "Mythical",
     "sources": [
       {
+        "type": "Chest",
+        "name": "Memory Chest 1",
+        "location": "Abyss Shop",
+        "status": "Current"
+      },
+      {
         "type": "Island Special Spawn",
-        "name": "Global Boss",
+        "name": "Special Spawn",
         "location": "Skyheart Isle",
-        "condition": "Every hour",
-        "status": "Current",
-        "notes": "Appears for 10 minutes each hour."
+        "status": "Unavailable"
       }
     ],
     "skillIds": [
@@ -5613,7 +5629,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "passives": [],
     "hasEvolution": false,
     "baseDamageELevel1": 48653000,
-    "baseHealthELevel1": 265600000,
+    "baseHealthELevel1": 265602000,
     "pvpBaseDamageELevel1": 503930,
     "pvpBaseHealthELevel1": 5503900,
     "baseCritChance": 0,

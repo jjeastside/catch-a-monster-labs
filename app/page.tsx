@@ -501,10 +501,10 @@ export default function HomePage() {
                         <div>
                             <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#66d3ff]">Cam Lab {releases[0].version}</p>
                             <h2 id="latest-cam-lab-title" className="mt-1 text-lg font-black text-white">{releases[0].title}</h2>
-                            <p className="mt-1 max-w-2xl text-sm leading-5 text-[#bcd0e5]">Try one-pet swaps or max-level teams, build PvP lineups with one pet per species, and add gear right from the monster editor.</p>
+                            <p className="mt-1 max-w-2xl text-sm leading-5 text-[#bcd0e5]">Find Lunaron and Palejack in Memory Chest 1 in the Abyss Shop.</p>
                         </div>
                         <div className="flex flex-wrap gap-2 text-xs font-bold">
-                            <Link href="/team" className="rounded-lg bg-[#169cf5] px-4 py-2.5 text-[#061424] hover:bg-[#54c4ff]">Open Team Builder</Link>
+                            <Link href="/monster-database" className="rounded-lg bg-[#169cf5] px-4 py-2.5 text-[#061424] hover:bg-[#54c4ff]">Open Monster Database</Link>
                             <Link href="/changelog" className="rounded-lg border border-[#4678aa] px-4 py-2.5 text-[#dcefff] hover:bg-[#153859]">Read Changelog</Link>
                         </div>
                     </div>

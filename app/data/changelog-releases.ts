@@ -8,9 +8,18 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.42",
+        date: "November 11, 2026",
+        label: "Latest",
+        title: "Memory Chest 1 & Fire Dash Import Fix",
+        changes: [
+            "The Monster Database lists Memory Chest 1 in the Abyss Shop as a source for Lunaron and Palejack.",
+            "Fixed the CSV import for Fire Dash (1.2) and Fire Dash (2). OblivionDrake and SoulPaladin still use the 2× variant.",
+        ],
+    },
+    {
         version: "v1.0.41",
         date: "November 8, 2026",
-        label: "Latest",
         title: "Team Builder, PvP & Inventory Improvements",
         changes: [
             "Added Optimize Current Team. Compare one-pet swaps from your inventory, see changes in Skill DPS, weakest-member effective HP, and Synergy, and apply a swap while keeping the other two builds and their gear in place.",

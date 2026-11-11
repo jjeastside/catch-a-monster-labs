@@ -22,7 +22,7 @@ Chest | Memory Chest | Abyss Shop | Current",14
 Zybit,Epic,Common,117.65,1258.8,417530,8934500,0,,Standard,Ex Air Bullet,Wind Disc,,,"Event | Abuse Egg | Abuse Event 2025 | Legacy
 Chest | Memory Chest 1 | Abyss Shop | Current",15
 Flarecub,Epic,Fire,141.66,1515.85,346740,7419700,0,,Standard,Wind Disc,Fire Tornado,,,Island Spawn | Natural Spawn | Volcano | Current,16
-Blazelord,Epic,Fire,205.412,2198,346740,7420300,0,,Standard,Fireball,Fire Dash,,,Island Spawn | Natural Spawn | Volcano | Current,17
+Blazelord,Epic,Fire,205.412,2198,346740,7420300,0,,Standard,Fireball,Fire Dash (1.2),,,Island Spawn | Natural Spawn | Volcano | Current,17
 Icevolf,Epic,Ice,431.9,4620,346740,7420300,0,,Standard,Iceball,Wind Disc,,,Island Spawn | Natural Spawn | Frost Isle | Current,18
 Frostoise,Epic,Water,626.25,6700,346740,7420300,0,,Standard,Ex Water Jet,Claw Attack,,,Island Spawn | Natural Spawn | Frost Isle | Current,19
 Fluffairy,Epic,Common,908.07,9716.4,346740,7420300,0,,Standard,Ex Air Bullet,Wind Disc,,,Island Spawn | Natural Spawn | Frost Isle | Current,20
@@ -58,7 +58,7 @@ Gloombat,Epic,Dark,14247000,152440000,346740,7420300,0,,Standard,Wind Disc (Purp
 Emberkit,Epic,Fire,16530000,176857700,346740,7420300,0,,Standard,Nether Fireball,Ghost Impact,,,Island Spawn | Natural Spawn | Pumpkin Mirage | Current,48
 Santavolf,Legendary,Ice,2767,29622,346740,7420300,0,,Standard,Ex Candy Bomb,Iceball,,,"Event | Christmas Event Summon | Christmas Event 2025 | Unavailable
 Chest | Memory Chest 2 | Abyss Shop | Current",49
-Pyrowulf,Legendary,Fire,297.86,3187,346740,7420300,0,,Standard,Fire Tornado,Fire Dash,,,Island Spawn | Natural Spawn | Volcano | Current,50
+Pyrowulf,Legendary,Fire,297.86,3187,346740,7420300,0,,Standard,Fire Tornado,Fire Dash (1.2),,,Island Spawn | Natural Spawn | Volcano | Current,50
 Noctane,Legendary,Common,358.66,3838,346740,7420300,0,,Standard,Air Bullet,Wind Disc,,,"Egg | Fire Egg | Volcano | Current
 Chest | Mythical Chest | Limited Events | Current",51
 YWendihoofs,Legendary,Ice,1316,14088,346740,7420300,0,,Standard,Ice Surge,Claw Attack,,,Island Spawn | Natural Spawn | Frost Isle | Current,52
@@ -68,7 +68,7 @@ Nightclaw,Legendary,Common,5821,62278,346740,7420300,0,,Standard,Toxic Grenade,E
 Floradelle,Legendary,Grass,14684,109115,501180,7445900,10,,Standard,Solar Beam,Petal Dance,,,"Egg | Blossom Egg | Neverland | Current
 Egg | Rosette Egg | Neverland | Current",56
 Hydribbit,Legendary,Water,10162,108740,346740,7420300,0,,Standard,Water Shuriken,Water Jet,,,Island Spawn | Natural Spawn | Neverland | Current,57
-Knockroo,Legendary,Fire,25727,275300,417530,8938700,0,,Standard,Fire Dash,Fireball,,,Island Spawn | Natural Spawn | Duneveil Isle | Current,58
+Knockroo,Legendary,Fire,25727,275300,417530,8938700,0,,Standard,Fire Dash (1.2),Fireball,,,Island Spawn | Natural Spawn | Duneveil Isle | Current,58
 Volcamel,Legendary,Fire,53904,400574,416100,6183400,0,,Standard,Fireball,Rallying War Cry (3 sec 50%),,,"Egg | Sand Egg | Duneveil Isle | Current
 Chest | Mythical Chest | Limited Events | Current",59
 Mistvolf,Legendary,Water,14787,227855,288970,8903000,0,Icevolf,Standard,Water Jet,Ripple Guard,,,Evolution | Icevolf Evolution |  | Current |  | Evolves from Icevolf.,60
@@ -234,10 +234,13 @@ Egg | Spritesprout Egg | Store | Current",158
 Cernunnos,Mythical,Grass,29951000,320487000,346740,7420300,10,,Standard,Healing Pulse,Root Spike,,Rift Guard | 30,Rift | Shroomvale Rift 3 | Shroomvale | Current,159
 Anubael,Mythical,Dark,14976000,640990000,173370,14843000,10,,Standard,Lightning Storm (Purple),Dark Singularity,,Trial Power | 50,Rift | Shroomvale Rift 3 | Shroomvale | Current,160
 Lunaron,Mythical,Dark,29952000,320486000,346750,7420300,0,,Standard,Soul Reap Chain (Scareharvest),The Ring,,"Capturer's Boon | 50
-Potential Seeker | 25",Island Special Spawn | Special Spawn | Skyheart Isle | Unavailable,161
-Palejack,Mythical,Dark,48653000,265602000,606810,6629000,0,,Standard,Soul Reap Chain (Scareharvest),Ghost Impact (Vulnerability),,,Island Special Spawn | Special Spawn | Pumpkin Mirage | Current,162
-Capejack,Mythical,Dark,34752400,371840000,346740,7420300,0,,Standard,Bloodthirsty Aura,Soul Reap Chain (Vulnerability),,Marigon Fortune Spirit | 20 | 50,Island Special Spawn | Global Boss | Skyheart Isle | Current | Every hour | Appears for 10 minutes each hour.,163
-Bonewraith,Mythical,Dark,48653000,265600000,503930,5503900,0,,Standard,Ghost Impact (Vulnerability),Demonic Lullaby,,,Egg | Bonewraith's Egg | Pumpkin Mirage | Current,164
+Potential Seeker | 25","Chest | Memory Chest 1 | Abyss Shop | Current
+Island Special Spawn | Special Spawn | Skyheart Isle | Unavailable",161
+Palejack,Mythical,Dark,48653000,265602000,606810,6629000,0,,Standard,Soul Reap Chain (Scareharvest),Ghost Impact (Vulnerability),,,"Chest | Memory Chest 1 | Abyss Shop | Current
+Island Special Spawn | Special Spawn | Pumpkin Mirage | Current",162
+Capejack,Mythical,Dark,34752400,371840000,346740,7420300,0,,Standard,Bloodthirsty Aura,Soul Reap Chain (Vulnerability),,Marigon Fortune Spirit | 20 | 50,"Chest | Memory Chest 1 | Abyss Shop | Current
+Island Special Spawn | Special Spawn | Skyheart Isle | Unavailable",163
+Bonewraith,Mythical,Dark,48653000,265602000,503930,5503900,0,,Standard,Ghost Impact (Vulnerability),Demonic Lullaby,,,Egg | Bonewraith's Egg | Pumpkin Mirage | Current,164
 Dragon Cannelloni,Mythical,Dragon,40,500,97904,2447600,0,,Dragon Cannelloni,Dragon's Breath,Fireball,,,Shop | 99 Robux Purachase | Skyheart Isle | Current,165
 Flaragflora,Mythical,Grass,15817,117530,416100,6183400,0,Flaragon,Standard,Grass Tornado,Solar Beam,,,Evolution | Flaragon Evolution |  | Current |  | Evolves from Flaragon.,166
 Flaragfrost,Mythical,Ice,10980,169250,288990,8904400,0,Flaragon,Standard,Ex Iceball,Ice Surge,,,Evolution | Flaragon Evolution |  | Current |  | Evolves from Flaragon.,167
@@ -261,14 +264,14 @@ Mudbit,Mythical,Ground,142635,2197840,288990,8904400,0,Hydribbit,Standard,Gravel
 Inferron,Mythical,Fire,158900,1700200,346750,7420300,0,Gildron,Standard,Inferno Maelstrom,Inferno Smash,,,Evolution | Gildron Evolution |  | Current |  | Evolves from Gildron.,184
 Mossron,Mythical,Grass,190680,1416900,416100,6183400,0,Gildron,Standard,Root Spike,Root Slam,,,Evolution | Gildron Evolution |  | Current |  | Evolves from Gildron.,185
 Glaciron,Mythical,Ice,222463,1214500,485474,5300300,0,Gildron,Standard,Glacial Smash,Ex Iceball,,,Evolution | Gildron Evolution |  | Current |  | Evolves from Gildron.,186
-BlazeVex,Mythical,Fire,309110,2296800,416100,6183400,0,TideVex,Standard,Fire Dash,Inferno Maelstrom,,,Evolution | TideVex Evolution |  | Current |  | Evolves from TideVex.,187
+BlazeVex,Mythical,Fire,309110,2296800,416100,6183400,0,TideVex,Standard,Fire Dash (1.2),Inferno Maelstrom,,,Evolution | TideVex Evolution |  | Current |  | Evolves from TideVex.,187
 Bramblevex,Mythical,Grass,214650,3307100,288990,8904400,0,TideVex,Standard,Root Spike,Healing Pulse,,,Evolution | TideVex Evolution |  | Current |  | Evolves from TideVex.,188
 Geogator,Mythical,Ground,418410,2284100,485474,5300300,0,Voltgator,Standard,Earth Smash,Ex Rock Toss,,,Evolution | Voltgator Evolution |  | Current |  | Evolves from voltgator.,189
 Glacigator,Mythical,Ice,298850,3197700,346750,7420300,0,Voltgator,Standard,Frost Beam,Ex Iceball,,Spire Dominance | 50,Evolution | Voltgator Evolution |  | Current |  | Evolves from voltgator.,190
 Blazewyrm,Mythical,Fire,521800,5583000,346750,7420300,0,Frostwyrm,Standard,Inferno Maelstrom,Ex Fireball,,,Evolution | Frostwyrm Evolution |  | Current |  | Evolves from Frostwyrm.,191
 Spinewyrm,Mythical,Grass,730500,3987800,485474,5300300,0,Frostwyrm,Standard,Healing Pulse,Galecut,,,Evolution | Frostwyrm Evolution |  | Current |  | Evolves from Frostwyrm.,192
 Marigon,Mythical,Water,1373930,7500500,485474,5300300,15,Nivisgon,Standard,Mighty Water Shuriken,Healing Water Ball,,Marigon Fortune Spirit | 20 | 50,Evolution | Nivisgon Evolution |  | Current |  | Evolves from Nivisgon.,193
-Cinderine,Mythical,Fire,1303900,5450200,427760,3575600,0,Undine,Standard,Fire Tornado,Fire Dash,,,Evolution | Undine Evolution |  | Current |  | Evolves from Undine.,194
+Cinderine,Mythical,Fire,1303900,5450200,427760,3575600,0,Undine,Standard,Fire Tornado,Fire Dash (1.2),,,Evolution | Undine Evolution |  | Current |  | Evolves from Undine.,194
 Tellurine,Mythical,Ground,407500,17441000,133660,11442500,0,Undine,Standard,Rock Road,Barrier,,,Evolution | Undine Evolution |  | Current |  | Evolves from Undine.,195
 Dracovine,Mythical,Grass,1057130,12368000,346750,8113600,0,Dracospike,Standard,Healing Pulse,Leaf Surge,,,Evolution | Dracospike Evolution |  | Current |  | Evolves from Dracospike.,196
 Dracosleet,Mythical,Ice,1480000,9589000,485474,6291100,0,Dracospike,Standard,Ice Road,Frozen Nova,,,Evolution | Dracospike Evolution |  | Current |  | Evolves from Dracospike.,197
@@ -325,7 +328,7 @@ Trial Power | 50",Evolution | Necro Dragon Cannelloni Evolution |  | Current |  
 Psyberion X,Secret,Mechanical,1677800,161568500,115583,22261000,10,Psyber,Standard,Violet Core Burst (Psyberion X),Lightning Thrust (Psyberion X),,Spire Guard | 35,Evolution | Psyber Evolution |  | Current |  | Evolves from Psyber.,243
 Celestian,Secret,Light,13225000,141510000,346750,7420300,15,,Standard,Soul Slash,Holy Aura (Frostvolf),,Critical Damage | 60,Egg | Celestian's Egg | Cinderclaw Castle | Current |  | Cataclysm Difficulty,244
 Scareharvest,Secret,Dark,9139800,49896000,485420,5300300,0,Scareaper,Standard,Reaper's Crescents (Scareharvest),Soul Reap Chain (Scareharvest),,Critical Chance | 30,Evolution | Scareaper Evolution |  | Current |  | Evolves from Scareaper.,245
-OblivionDrake,Secret,Fire,10604000,57892000,485420,5300300,0,AbyssalDrake,Standard,fire-dash-oblivion-drake,Earthshatter,,Spire Dominance | 50,Evolution | AbyssalDrake Evolution |  | Current |  | Evolves from AbyssalDrake.,246
+OblivionDrake,Secret,Fire,10604000,57892000,485420,5300300,0,AbyssalDrake,Standard,Fire Dash (2),Earthshatter,,Spire Dominance | 50,Evolution | AbyssalDrake Evolution |  | Current |  | Evolves from AbyssalDrake.,246
 Veloros,Secret,Dark,23883000,177470000,416100,6183400,15,,Standard,Crimson Burst,Soul Reap Chain (Scareharvest),,Critical Chance | 30,Egg | Veloro's Egg | Cinderclaw Castle | Current |  | Cataclysm Difficulty,247
 Corsairopus,Secret,Water,4912000,210240000,173375,14840600,0,Beatopus,Standard,Tsunami,Hydro Cannon,,Critical Damage | 60,Evolution | Beatopus Evolution |  | Current |  | Evolves from Beatopus.,248
 Plasmapanther,Secret,Dark,5915300,253100000,173375,14840600,0,Aetherpanther,Standard,Siphon Breath,Thunder Stun,,Spire Dominance | 50,Evolution | Aetherpanther Evolution |  | Current |  | Evolves from Aetherpanther.,249
@@ -334,7 +337,7 @@ Luminara,Secret,Light,24787000,184188000,416080,6183600,15,,Standard,Void Collap
 Umbra Sentinel,Secret,Dark,17151000,183550000,346750,7420300,0,Umbra Reaver,Standard,Overvolt Tempest,Lightning Thrust,,Spire Dominance | 50,Evolution | Umbra Reaver Evolution |  | Current |  | Evolves from Umbra Reaver.,252
 Lumen Sentinel,Secret,Mechanical,14300000,220260000,288990,8904400,0,Lumen Knight,Standard,Overvolt Tempest,Lightning Thrust,,Critical Chance | 30,Evolution | Lumen Knight Evolution |  | Current |  | Evolves from Lumen Knight.,253
 Gravitas,Secret,Dark,6392500,615580000,144480,27829000,0,Gravion,Standard,EX Dark Singularity,Oblivion Beam,,Spire Guard | 35,Evolution | Gravion Evolution |  | Current |  | Evolves from Gravion Knight.,254
-SoulPaladin,Secret,Fire,41845000,447750000,878010,18790000,0,Soulguard,Standard,fire-dash-oblivion-drake,Soul Slash,Ghost Fireball,Spire Dominance | 50,Evolution | Soulguard Evolution |  | Current |  | Evolves from Soulguard,255
+SoulPaladin,Secret,Fire,41845000,447750000,878010,18790000,0,Soulguard,Standard,Fire Dash (2),Soul Slash,Ghost Fireball,Spire Dominance | 50,Evolution | Soulguard Evolution |  | Current |  | Evolves from Soulguard,255
 Void Noctane,Void,Common,2227000,12158000,485420,5300300,0,,Standard,Air Bullet,Wind Disc,,Fortune Spirit | 35,"Event | Void Jars | Void Event 2025 | Legacy
 Chest | Memory Chest 2 | Abyss Shop | Current",256
 Void Dustwing,Void,Ground,1778100,19029000,346750,7420300,0,,Standard,Barrier,Gravel Scatter Shot,,Mentor Spirit | 35,"Event | Void Jars | Void Event 2025 | Legacy

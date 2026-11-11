@@ -765,6 +765,12 @@ for (const skill of skills) {
     }
 }
 
+// Spreadsheet labels distinguish Fire Dash variants by damage multiplier.
+const skillReferenceAliases = new Map([
+    ["fire-dash-1-2", "fire-dash"],
+    ["fire-dash-2", "fire-dash-oblivion-drake"],
+]);
+
 const monsterSkills = monsterRows.flatMap(
     (monster) =>
         ["Skill 1", "Skill 2", "Skill 3"].flatMap(
@@ -775,6 +781,8 @@ const monsterSkills = monsterRows.flatMap(
                 if (!skillName) {
                     return [];
                 }
+
+                const skillReference = slug(skillName);
 
                 return [
                     {
@@ -789,7 +797,9 @@ const monsterSkills = monsterRows.flatMap(
                         skill_id:
                             skillIdsByName.get(
                                 skillName.toLowerCase(),
-                            ) ?? slug(skillName),
+                            )
+                            ?? skillReferenceAliases.get(skillReference)
+                            ?? skillReference,
                         skill_slot: String(
                             index + 1,
                         ),
