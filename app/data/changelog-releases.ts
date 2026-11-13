@@ -8,9 +8,19 @@ export type ChangelogRelease = {
 
 export const releases: readonly ChangelogRelease[] = [
     {
+        version: "v1.0.43",
+        date: "November 13, 2026",
+        label: "Latest",
+        title: "Update 0.57 · Pumpkin Mirage Rift & Violetaether",
+        changes: [
+            "Added Rhinolith, Ravenclis, and Violetaether to the homepage and the Monster Database’s New filter.",
+            "Listed Pumpkin Mirage Rift 3 as the source for Rhinolith and Ravenclis, and Violetaegis as the evolution source for Violetaether.",
+            "Published Patch Notes for the new Rift, the Case Event, two Admin Abuse sessions, and the redeem codes raven, violet, and rhino.",
+        ],
+    },
+    {
         version: "v1.0.42",
         date: "November 11, 2026",
-        label: "Latest",
         title: "Memory Chest 1 & Fire Dash Import Fix",
         changes: [
             "The Monster Database lists Memory Chest 1 in the Abyss Shop as a source for Lunaron and Palejack.",

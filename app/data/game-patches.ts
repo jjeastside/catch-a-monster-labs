@@ -13,9 +13,35 @@ export type Patch = {
 
 export const gamePatches: readonly Patch[] = [
     {
+        version: "Update 0.57",
+        date: "November 13, 2026",
+        label: "Latest",
+        sections: [
+            {
+                title: "Pumpkin Mirage Rift 3",
+                changes: ["Rhinolith (Mythical Ground) and Ravenclis (Mythical Dark) are available from the new Pumpkin Mirage Rift."],
+            },
+            {
+                title: "Violetaegis Evolution",
+                changes: ["Violetaegis can now evolve into Violetaether, a Secret Light monster."],
+            },
+            {
+                title: "Case Event",
+                changes: ["The Case Event is live."],
+            },
+            {
+                title: "Admin Abuse",
+                changes: ["Admin Abuse will be held twice for different time zones."],
+            },
+            {
+                title: "Redeem Codes",
+                changes: ["raven", "violet", "rhino"],
+            },
+        ],
+    },
+    {
         version: "Update 0.56",
         date: "November 7, 2026",
-        label: "Latest",
         sections: [
             {
                 title: "Memory Chest 1",

@@ -83,12 +83,8 @@ const patchPreviewHighlights = latestGamePatch.sections
     .filter((section) => !/code/i.test(section.title))
     .flatMap((section) => section.changes)
     .slice(0, 4);
-const patchPreviewCode = latestGamePatch.sections
-    .flatMap((section) => section.changes)
-    .reverse()
-    .find((change) => /^New Code:/i.test(change))
-    ?.replace(/^New Code:\s*/i, "")
-    ?? latestGamePatch.sections.find((section) => /code/i.test(section.title))?.changes[0];
+const latestPatchCodes = latestGamePatch.sections
+    .find((section) => /code/i.test(section.title))?.changes ?? [];
 
 const featureCards = [
     {
@@ -396,10 +392,12 @@ function PatchPreview() {
                     </li>
                 ))}
             </ul>
-            {patchPreviewCode ? (
+            {latestPatchCodes.length > 0 ? (
                 <div className="mt-auto flex items-center gap-2 border-t border-[#1d3859] pt-1.5 text-[9px]">
-                    <span className="font-bold text-[#a2b4cd]">New code</span>
-                    <span className="truncate rounded bg-[#172c3f] px-1.5 py-0.5 font-black text-[#ffd764]">{patchPreviewCode}</span>
+                    <span className="font-bold text-[#a2b4cd]">Codes</span>
+                    {latestPatchCodes.map((code) => (
+                        <code key={code} className="rounded bg-[#172c3f] px-1.5 py-0.5 font-black text-[#ffd764]">{code}</code>
+                    ))}
                 </div>
             ) : null}
         </div>
@@ -438,7 +436,7 @@ export default function HomePage() {
                             <Link href="/updates" className="mt-4 inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-full border border-[#367eb7]/70 bg-[#072344]/90 px-3 py-1.5 text-xs font-bold text-[#bfe5ff] shadow-lg shadow-black/30 transition hover:border-[#60c8ff] hover:bg-[#0b3157]">
                                 <span className="text-[#66d8ff]">Game {latestGamePatch.version}</span>
                                 <span aria-hidden="true" className="text-[#5e83a4]">•</span>
-                                <span>Bonewraith · SoulPaladin</span>
+                                <span>Pumpkin Mirage Rift · Violetaether</span>
                                 <Icon name="arrow" className="size-3.5" />
                             </Link>
                             <h1 className="mt-4 max-w-[650px] text-[clamp(2.8rem,4.2vw,4.65rem)] font-black leading-[1.01] tracking-[-0.04em] text-white drop-shadow-[0_4px_18px_rgba(0,0,0,.7)]">
@@ -470,16 +468,20 @@ export default function HomePage() {
                     <div className="mx-auto grid w-full max-w-[1480px] gap-5 rounded-2xl border border-[#225681] bg-[linear-gradient(120deg,#0b2441,#07152a_70%)] p-5 shadow-[0_14px_35px_rgba(0,0,0,.25)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-center lg:p-6">
                         <div>
                             <p className="text-xs font-black uppercase tracking-[0.14em] text-[#66d3ff]">Latest game update · {latestGamePatch.date}</p>
-                            <h2 id="latest-update-title" className="mt-2 text-2xl font-black tracking-tight text-white sm:text-3xl">{latestGamePatch.version} · Bonewraith and SoulPaladin</h2>
-                            <p className="mt-3 max-w-[660px] text-sm leading-6 text-[#bcd0e5]">Battle Bonewraith on Pumpkin Mirage, evolve Soulguard into SoulPaladin, and build your monsters up to level {CURRENT_MAX_LEVEL}.</p>
-                            <p className="mt-3 text-xs leading-5 text-[#bcd0e5]">The Treasure Hunt is live. Redeem the new code <strong>Bonewraith</strong>.</p>
-                            <p className="mt-2 text-xs leading-5 text-[#bcd0e5]">The fifth Pet Quest in Shroomvale grants <strong>+8% Health</strong>, bringing the combined Pet Quest bonuses to <strong>+24% Health and +16% Damage</strong>.</p>
+                            <h2 id="latest-update-title" className="mt-2 text-2xl font-black tracking-tight text-white sm:text-3xl">{latestGamePatch.version} · Pumpkin Mirage Rift</h2>
+                            <p className="mt-3 max-w-[660px] text-sm leading-6 text-[#bcd0e5]">Find Rhinolith and Ravenclis in Pumpkin Mirage Rift 3 and evolve Violetaegis into Violetaether. The Case Event is live, and Admin Abuse will run twice for different time zones.</p>
+                            <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-[#bcd0e5]">
+                                <span className="font-bold">Redeem codes</span>
+                                {latestPatchCodes.map((code) => (
+                                    <code key={code} className="rounded bg-[#172c3f] px-2 py-1 font-bold text-[#ffd764]">{code}</code>
+                                ))}
+                            </div>
                             <div className="mt-4 flex flex-wrap gap-3">
                                 <Link href="/updates" className="inline-flex items-center gap-2 rounded-lg bg-[#169cf5] px-4 py-2.5 text-xs font-black text-[#061424] transition hover:bg-[#54c4ff]">Read Patch Notes <Icon name="arrow" className="size-4" /></Link>
                                 <a href={assetPath(NEW_MONSTERS_DATABASE_HREF)} className="inline-flex items-center gap-2 rounded-lg border border-[#4678aa] px-4 py-2.5 text-xs font-bold text-[#dcefff] transition hover:bg-[#153859]">Explore New Monsters <Icon name="arrow" className="size-4" /></a>
                             </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3">
                             {featuredUpdateMonsters.map((monster) => (
                                 <Link key={monster.id} href={`/monster-database/${monster.id}`} className="min-w-0 rounded-xl border border-[#295379] bg-[#07172d]/90 p-2 text-center transition hover:border-[#60c8ff] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#60c8ff] sm:p-3">
                                     <div className="mx-auto grid aspect-square max-w-28 place-items-center overflow-hidden rounded-lg bg-[#102b43]">
@@ -501,7 +503,7 @@ export default function HomePage() {
                         <div>
                             <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#66d3ff]">Cam Lab {releases[0].version}</p>
                             <h2 id="latest-cam-lab-title" className="mt-1 text-lg font-black text-white">{releases[0].title}</h2>
-                            <p className="mt-1 max-w-2xl text-sm leading-5 text-[#bcd0e5]">Find Lunaron and Palejack in Memory Chest 1 in the Abyss Shop.</p>
+                            <p className="mt-1 max-w-2xl text-sm leading-5 text-[#bcd0e5]">{releases[0].changes[0]}</p>
                         </div>
                         <div className="flex flex-wrap gap-2 text-xs font-bold">
                             <Link href="/monster-database" className="rounded-lg bg-[#169cf5] px-4 py-2.5 text-[#061424] hover:bg-[#54c4ff]">Open Monster Database</Link>

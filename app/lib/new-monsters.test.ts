@@ -14,12 +14,22 @@ describe("Explore New Monsters URL", () => {
         expect(getDatabaseSourceFilter("?source=Egg")).toBe("All");
         expect(getDatabaseSourceFilter("?source=New")).toBe("New");
     });
-    it("includes both Update 0.56 monsters", () => {
+    it("includes all three Update 0.57 monsters", () => {
         const result = GENERATED_MONSTERS.filter(m => isNewMonster(m.id));
-        expect(result.map(m => m.id)).toEqual(["bonewraith", "soulpaladin"]);
-        expect(result[0].sources).toEqual(expect.arrayContaining([expect.objectContaining({ location: "Pumpkin Mirage" })]));
-        expect(result.map(m => m.indexPosition)).toEqual([164, 255]);
-        expect(result[1]).toMatchObject({ evolutionSource: "soulguard" });
+        expect(result.map(m => m.id)).toEqual(["rhinolith", "ravenclis", "violetaether"]);
+        expect(result.map(m => m.indexPosition)).toEqual([165, 166, 258]);
+
+        for (const monster of result.slice(0, 2)) {
+            expect(monster.sources).toContainEqual({
+                type: "Rift",
+                name: "Pumpkin Mirage Rift 3",
+                location: "Pumpkin Mirage",
+                status: "Current",
+            });
+        }
+
+        expect(result[2]).toMatchObject({ evolutionSource: "violetaegis", isEvolved: true });
+        expect(GENERATED_MONSTERS.find(m => m.id === "violetaegis")).toMatchObject({ hasEvolution: true });
     });
 });
 
