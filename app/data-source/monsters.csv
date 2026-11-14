@@ -54,8 +54,8 @@ Mechizza,Epic,Fire,8465000,90606000,346740,7420300,0,,Standard,Wind Disc,Wind Di
 Geariff,Epic,Common,9120000,97596000,346740,7420300,0,,Standard,Soul Reap Chain,Inferno Blast,,,Island Spawn | Natural Spawn | Coilwork City | Current,44
 Toadstool,Epic,Grass,11400000,121970000,346740,7420300,0,,Standard,Toxic Grenade,Grass Tornado,,,Island Spawn | Natural Spawn | Shroomvale | Current,45
 Heartwood,Epic,Grass,12280000,131375000,346740,7420300,0,,Standard,Root Spike,Healing Pulse,,,Island Spawn | Natural Spawn | Shroomvale | Current,46
-Gloombat,Epic,Dark,14247000,152440000,346740,7420300,0,,Standard,Wind Disc (Purple),Wind Blast,,,Island Spawn | Natural Spawn | Pumpkin Mirage | Current,47
-Emberkit,Epic,Fire,16530000,176857700,346740,7420300,0,,Standard,Nether Fireball,Ghost Impact,,,Island Spawn | Natural Spawn | Pumpkin Mirage | Current,48
+Gloombat,Epic,Dark,14247000,152440000,346740,7420300,0,,Standard,Wind Disc (Purple),Wind Blast,,,Island Spawn | Natural Spawn | Pumpkin Miarge | Current,47
+Emberkit,Epic,Fire,16530000,176857700,346740,7420300,0,,Standard,Nether Fireball,Ghost Impact,,,Island Spawn | Natural Spawn | Pumpkin Miarge | Current,48
 Santavolf,Legendary,Ice,2767,29622,346740,7420300,0,,Standard,Ex Candy Bomb,Iceball,,,"Event | Christmas Event Summon | Christmas Event 2025 | Unavailable
 Chest | Memory Chest 2 | Abyss Shop | Current",49
 Pyrowulf,Legendary,Fire,297.86,3187,346740,7420300,0,,Standard,Fire Tornado,Fire Dash (1.2),,,Island Spawn | Natural Spawn | Volcano | Current,50
@@ -107,7 +107,7 @@ Snoozepink,Legendary,Water,5033040,53856700,346740,7420300,0,,Standard,Vortex No
 Froxy,Legendary,Ice,6290400,67308000,346740,7420300,0,,Standard,Glacial Wall,Ice Road,,,Island Spawn | Natural Spawn | Splash Isle | Current,83
 Lynxgear,Legendary,Common,9824000,105124000,346740,7420300,0,,Standard,Dark Singularity,Electro Nova,,,Island Spawn | Natural Spawn | Coilwork City | Current,84
 Bulbwarden,Legendary,Grass,13230000,141510000,346740,7420300,0,,Standard,Galecut,Ghost Impact,,,Island Spawn | Natural Spawn | Shroomvale | Current,85
-Grimveil,Legendary,Dark,19178000,205197000,346740,7420300,0,,Standard,Void Orb,Dark Singularity,,,Island Spawn | Natural Spawn | Pumpkin Mirage | Current,86
+Grimveil,Legendary,Dark,19178000,205197000,346740,7420300,0,,Standard,Void Orb,Dark Singularity,,,Island Spawn | Natural Spawn | Pumpkin Miarge | Current,86
 Flaragon,Mythical,Fire,754,8068,417520,8935600,0,,Standard,Claw Attack,Ex Fireball,,,Egg | Flaragon's Egg | Volcano | Current,87
 Glazadon,Mythical,Ice,4013,42951,346750,7421340,0,,Standard,Frost Breath,Ice Surge,,,Egg | Glacier Egg | Frost Isle | Current,88
 Mountusk,Mythical,Grass,4027,62063,288990,8904500,0,,Standard,Ex Seed Grenade,Healing Pulse,,,Egg | Sprout Egg | Frost Isle | Current,89
@@ -236,12 +236,12 @@ Anubael,Mythical,Dark,14976000,640990000,173370,14843000,10,,Standard,Lightning 
 Lunaron,Mythical,Dark,29952000,320486000,346750,7420300,0,,Standard,Soul Reap Chain (Scareharvest),The Ring,,"Capturer's Boon | 50
 Potential Seeker | 25","Chest | Memory Chest 1 | Abyss Shop | Current
 Island Special Spawn | Special Spawn | Skyheart Isle | Unavailable",161
-Palejack,Mythical,Dark,48653000,265602000,606810,6629000,0,,Standard,Soul Reap Chain (Scareharvest),Ghost Impact (Vulnerability),,,Island Special Spawn | Special Spawn | Pumpkin Mirage | Current,162
+Palejack,Mythical,Dark,48653000,265602000,606810,6629000,0,,Standard,Soul Reap Chain (Scareharvest),Ghost Impact (Vulnerability),,,Island Special Spawn | Special Spawn | Pumpkin Miarge | Current,162
 Capejack,Mythical,Dark,34752400,371840000,346740,7420300,0,,Standard,Bloodthirsty Aura,Soul Reap Chain (Vulnerability),,Marigon Fortune Spirit | 20 | 50,"Chest | Memory Chest 1 | Abyss Shop | Current
-Island Special Spawn | Special Spawn | Skyheart Isle | Unavilable",163
-Bonewraith,Mythical,Dark,48653000,265602000,503930,5503900,0,,Standard,Ghost Impact (Vulnerability),Demonic Lullaby,,,Egg | Bonewraith's Egg | Pumpkin Mirage | Current,164
-Rhinolith,Mythical,Ground,28953000,697060000,231170,11131000,10,,Standard,Emergency Thorn Shield,Ex Rock Toss,,Boss Resistance | 40,Rift | Pumpkin Mirage Rift 3 | Pumpkin Mirage | Current,165
-Ravenclis,Mythical,Dark,43431000,464707000,346740,7420300,10,,Standard,Dark Singularity,Soul Reap Chain,,Boss Slayer | 40,Rift | Pumpkin Mirage Rift 3 | Pumpkin Mirage | Current,166
+Island Special Spawn | Special Spawn | Skyheart Isle | Unavailable",163
+Bonewraith,Mythical,Dark,48653000,265602000,503930,5503900,0,,Standard,Ghost Impact (Vulnerability),Demonic Lullaby,,,Egg | Bonewraith's Egg | Pumpkin Miarge | Current,164
+Rhinolith,Mythical,Ground,28953000,697060000,231170,11131000,10,,Standard,Emergency Thorn Shield,Ex Rock Toss,,Boss Resistance | 40,Rift | Pumpkin Miarge Rift 3 | Pumpkin Miarge | Current,165
+Ravenclis,Mythical,Dark,43431000,464707000,346740,7420300,10,,Standard,Dark Singularity,Soul Reap Chain,,Boss Slayer | 40,Rift | Pumpkin Miarge Rift 3 | Pumpkin Miarge | Current,166
 Dragon Cannelloni,Mythical,Dragon,40,500,97904,2447600,0,,Dragon Cannelloni,Dragon's Breath,Fireball,,,Shop | 99 Robux Purachase | Skyheart Isle | Current,167
 Flaragflora,Mythical,Grass,15817,117530,416100,6183400,0,Flaragon,Standard,Grass Tornado,Solar Beam,,,Evolution | Flaragon Evolution |  | Current |  | Evolves from Flaragon.,168
 Flaragfrost,Mythical,Ice,10980,169250,288990,8904400,0,Flaragon,Standard,Ex Iceball,Ice Surge,,,Evolution | Flaragon Evolution |  | Current |  | Evolves from Flaragon.,169

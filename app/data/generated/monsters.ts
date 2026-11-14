@@ -1376,7 +1376,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       {
         "type": "Island Spawn",
         "name": "Natural Spawn",
-        "location": "Pumpkin Mirage",
+        "location": "Pumpkin Miarge",
         "status": "Current"
       }
     ],
@@ -1404,7 +1404,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       {
         "type": "Island Spawn",
         "name": "Natural Spawn",
-        "location": "Pumpkin Mirage",
+        "location": "Pumpkin Miarge",
         "status": "Current"
       }
     ],
@@ -2612,7 +2612,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       {
         "type": "Island Spawn",
         "name": "Natural Spawn",
-        "location": "Pumpkin Mirage",
+        "location": "Pumpkin Miarge",
         "status": "Current"
       }
     ],
@@ -5532,7 +5532,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       {
         "type": "Island Special Spawn",
         "name": "Special Spawn",
-        "location": "Pumpkin Mirage",
+        "location": "Pumpkin Miarge",
         "status": "Current"
       }
     ],
@@ -5567,7 +5567,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
         "type": "Island Special Spawn",
         "name": "Special Spawn",
         "location": "Skyheart Isle",
-        "status": "Unavilable"
+        "status": "Unavailable"
       }
     ],
     "skillIds": [
@@ -5612,7 +5612,7 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
       {
         "type": "Egg",
         "name": "Bonewraith's Egg",
-        "location": "Pumpkin Mirage",
+        "location": "Pumpkin Miarge",
         "status": "Current"
       }
     ],
@@ -5639,8 +5639,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "sources": [
       {
         "type": "Rift",
-        "name": "Pumpkin Mirage Rift 3",
-        "location": "Pumpkin Mirage",
+        "name": "Pumpkin Miarge Rift 3",
+        "location": "Pumpkin Miarge",
         "status": "Current"
       }
     ],
@@ -5680,8 +5680,8 @@ export const GENERATED_MONSTERS: GeneratedMonster[] = [
     "sources": [
       {
         "type": "Rift",
-        "name": "Pumpkin Mirage Rift 3",
-        "location": "Pumpkin Mirage",
+        "name": "Pumpkin Miarge Rift 3",
+        "location": "Pumpkin Miarge",
         "status": "Current"
       }
     ],
